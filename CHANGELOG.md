@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Colors: import palettes from Coolors URLs or text containing 3- or 6-digit hex codes.
 - Typography: a Compare toggle that shows the active font next to a pinned second font with the same text and settings, plus Swap and Close compare.
 - Brand Guidelines: three cover layouts (Gradient, Minimal, Editorial) that persist and apply to every PDF export.
 - Logo Studio: a favicon package (.zip) built from the app icon variant, also included in the logo pack as `favicon/`.
