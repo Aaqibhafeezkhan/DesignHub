@@ -65,7 +65,7 @@ From there:
 - `hooks/use-draw-context.ts` adds those surfaces, embedded font CSS and text measurement. Mockups, social assets and guideline pages are pure functions of this context that return SVG (`lib/mockups`, `lib/social`, `lib/guidelines`).
 - `lib/export/raster.ts` and `lib/export/pdf.ts` turn any of that SVG into PNG, JPEG or PDF; `lib/zip.ts` bundles packs.
 - `lib/projects/snapshot.ts` lists every brand-defining store. A project is a snapshot of them; opening one writes the snapshot back into the live stores, and `ProjectAutosave` keeps the open project current.
-- `lib/brand-dna` defines the `BrandDnaProvider` interface. Providers run in the browser and return editable results that are applied through the same stores.
+- `lib/brand-dna` defines the `BrandDnaProvider` interface. Providers run in the browser and return editable results that are applied through the same stores. See [Adding a Brand DNA provider](brand-dna-providers.md) for the provider contract and registration steps.
 
 ## Logic lives in `lib/`
 
