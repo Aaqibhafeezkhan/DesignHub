@@ -30,6 +30,22 @@ Route groups share layouts: `(marketing)` gets the header nav and footer; `(stud
 
 Most studios share `components/layout/studio-layout.tsx`: a resizable three-pane layout (controls · preview · code) built on react-resizable-panels, stacking on small screens. Vector previews use `components/canvas/svg-preview-canvas.tsx`.
 
+## PWA and offline shell
+
+The production build generates `public/sw.js` in the postbuild step. `scripts/generate-service-worker.mjs` reads the Next.js build ID from `.next/BUILD_ID`, discovers every App Router page, and collects every file under `.next/static` from the build output. It also includes public static assets in the precache list.
+
+The service worker uses two caches named with the build ID. The static cache contains the prerendered routes and build assets. Runtime requests use these policies:
+
+- `fonts.googleapis.com`: stale-while-revalidate.
+- `fonts.gstatic.com`: cache-first.
+- Iconify API hosts: network-first with a cache fallback.
+- App navigations: network-first with a precached route fallback.
+- Next.js static assets and other precached public assets: cache-first.
+
+A new worker does not call `skipWaiting()` during installation. When it reaches the waiting state, `components/layout/pwa-register.tsx` shows an "Update available" toast. Reloading is only triggered after the user chooses the reload action. Activation removes older DesignHub caches.
+
+The worker is registered only when `NODE_ENV` is production. Development builds never register it.
+
 ## State
 
 Each studio owns one [Zustand](https://zustand.docs.pmnd.rs) store in `store/`:

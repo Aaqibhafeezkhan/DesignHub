@@ -227,6 +227,21 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+### PWA and offline development
+
+Production builds register a service worker that precaches the prerendered routes and Next.js static assets. Google Fonts and Iconify responses are cached at runtime, so a studio that has been visited online can be reopened while offline.
+
+The service worker is generated after `next build` from the current Next.js build ID. Its caches are versioned by that build ID, and old DesignHub caches are removed when a new worker activates.
+
+The development server does not register the service worker. If a service worker from a previous production test is still registered in Chrome:
+
+1. Open DevTools.
+2. Go to **Application → Service Workers**.
+3. Click **Unregister** for DesignHub.
+4. Go to **Application → Storage** and use **Clear site data** if cached build assets also need to be removed.
+
+To test the production PWA locally, run `pnpm build && pnpm start`, then visit the app over `http://localhost`.
+
 ### Environment variables
 
 None are required. To set the public URL used for canonical links, the sitemap and social previews, copy the example file:

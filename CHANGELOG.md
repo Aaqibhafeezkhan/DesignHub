@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Export: a styled-components / Emotion theme token format.
 - Social: a Pinterest pin template (1000 x 1500).
 
+### Changed
+
+- Platform: add a production-only PWA service worker with versioned offline app-shell caching, runtime Google Fonts and Iconify caching, and user-controlled update handling.
+
 ## v1.0.0
 
 Released 2026-09-23. The first public release: a complete, local-first design and brand identity toolkit with seventeen studios.
