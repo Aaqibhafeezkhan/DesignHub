@@ -13,7 +13,7 @@ const eslintConfig = [
       "@typescript-eslint/consistent-type-imports": "warn",
     },
   },
-  { ignores: [".next/**", "node_modules/**", "next-env.d.ts"] },
+  { ignores: [".next/**", "node_modules/**", "next-env.d.ts", ".claude/**", ".lighthouseci/**"] },
 ];
 
 export default eslintConfig;

@@ -35,3 +35,6 @@ pnpm-debug.log*
 
 # Bundle size reports (pnpm bundle:size --json)
 /bundle-size*.json
+
+# local Claude Code agent worktrees
+/.claude/worktrees/
