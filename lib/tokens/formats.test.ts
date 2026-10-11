@@ -1,10 +1,13 @@
 import { describe, expect, test } from "vitest";
 
-import { fromHex } from "@/lib/color/color";
+import { contrastRatio, fromHex, parseColor, toHex } from "@/lib/color/color";
 import {
   tokenFormats,
   toBootstrapVariables,
   toChakraTheme,
+  toFigmaVariables,
+  toShadcnTheme,
+  type FigmaVariablesRequest,
   toJsModule,
   toPandaPreset,
   toSassMap,
@@ -91,7 +94,11 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "_bootstrap-variables.scss",
     ]),
   );
-  expect(formats.map((format) => format.id)).toEqual(expect.arrayContaining(["chakra", "bootstrap"]));
+  expect(formats.map((format) => format.id)).toEqual(
+    expect.arrayContaining(["chakra", "bootstrap", "shadcn", "figma-variables"]),
+  );
+  expect(formats.find((format) => format.id === "shadcn")?.filename).toBe("globals.css");
+  expect(formats.find((format) => format.id === "figma-variables")?.filename).toBe("figma-variables.json");
   // Chakra shares theme.ts with React and Vue, which the ZIP puts in a folder per format.
   expect(formats.find((format) => format.id === "chakra")?.filename).toBe("theme.ts");
 });
@@ -280,5 +287,216 @@ describe("Bootstrap", () => {
     expect(bootstrap).toContain("$headings-font-weight: 600;\n");
     expect(bootstrap).toContain("$line-height-base: 1.6;\n");
     expect(bootstrap).not.toContain("$body-bg");
+  });
+});
+
+/** The `--name: value` declarations inside one CSS block. */
+function cssBlock(css: string, selector: string): Map<string, string> {
+  const body = css.split(`\n${selector} {\n`)[1]?.split("\n}")[0] ?? "";
+  return new Map([...body.matchAll(/^ {2}--([\w-]+): (.+);$/gm)].map((match) => [match[1]!, match[2]!]));
+}
+
+const hexOf = (value: string | undefined) => toHex(parseColor(value ?? "") ?? fromHex("#000"));
+
+describe("shadcn/ui", () => {
+  const css = toShadcnTheme({
+    ...withRoles,
+    semantic: [...withRoles.semantic, { name: "accent", ref: "indigo", value: fromHex("#6366f1") }],
+  });
+  const variables = [
+    "background",
+    "foreground",
+    "card",
+    "card-foreground",
+    "popover",
+    "popover-foreground",
+    "primary",
+    "primary-foreground",
+    "secondary",
+    "secondary-foreground",
+    "muted",
+    "muted-foreground",
+    "accent",
+    "accent-foreground",
+    "destructive",
+    "border",
+    "input",
+    "ring",
+    "chart-1",
+    "sidebar",
+    "sidebar-primary",
+  ];
+
+  test(":root carries the light roles in OKLCH", () => {
+    const root = cssBlock(css, ":root");
+    expect([...root.keys()]).toEqual(expect.arrayContaining(["radius", ...variables]));
+    expect(root.get("radius")).toBe("0.75rem");
+    const colors = [...root.entries()].filter(([name]) => name !== "radius");
+    expect(colors.every(([, value]) => value.startsWith("oklch("))).toBe(true);
+    expect(root.get("background")).toBe("oklch(1 0 0)");
+    expect(hexOf(root.get("foreground"))).toBe("#0f172a");
+    expect(hexOf(root.get("primary"))).toBe("#6366f1");
+    expect(hexOf(root.get("primary-foreground"))).toBe("#ffffff");
+    expect(root.get("ring")).toBe(root.get("primary"));
+    expect(root.get("card")).toBe(root.get("background"));
+  });
+
+  test(".dark swaps background and foreground and lifts the brand colors", () => {
+    const dark = cssBlock(css, ".dark");
+    expect([...dark.keys()]).toEqual(expect.arrayContaining(variables));
+    expect(dark.has("radius")).toBe(false);
+    expect(hexOf(dark.get("background"))).toBe("#0f172a");
+    expect(dark.get("foreground")).toBe("oklch(1 0 0)");
+    expect(hexOf(dark.get("primary"))).toBe("#a5b4fc");
+    expect(hexOf(dark.get("primary-foreground"))).toBe("#0f172a");
+  });
+
+  test("muted text passes WCAG AA on the muted surface in both modes", () => {
+    [":root", ".dark"].forEach((selector) => {
+      const block = cssBlock(css, selector);
+      const text = parseColor(block.get("muted-foreground") ?? "")!;
+      const surface = parseColor(block.get("muted") ?? "")!;
+      expect(contrastRatio(text, surface)).toBeGreaterThanOrEqual(4.5);
+    });
+  });
+});
+
+/**
+ * A small schema check against the documented request body of Figma's
+ * `POST /v1/files/:file_key/variables`: the allowed keys and enums on each object, temporary ids
+ * that resolve within the request, a value for every mode of a variable's collection and
+ * colors as 0-1 floats.
+ */
+function figmaSchemaErrors(body: unknown): string[] {
+  const errors: string[] = [];
+  const isObject = (value: unknown): value is Record<string, unknown> =>
+    typeof value === "object" && value !== null && !Array.isArray(value);
+  const keys = (value: Record<string, unknown>, required: string[], optional: string[], at: string) => {
+    required.forEach((key) => {
+      if (!(key in value)) errors.push(`${at}: missing ${key}`);
+    });
+    Object.keys(value).forEach((key) => {
+      if (!required.includes(key) && !optional.includes(key)) errors.push(`${at}: unknown ${key}`);
+    });
+  };
+  const list = (value: unknown, at: string): Record<string, unknown>[] => {
+    if (!Array.isArray(value)) {
+      errors.push(`${at}: not an array`);
+      return [];
+    }
+    return value.filter((item, i): item is Record<string, unknown> => {
+      if (!isObject(item)) errors.push(`${at}[${i}]: not an object`);
+      return isObject(item);
+    });
+  };
+  if (!isObject(body)) return ["body: not an object"];
+  keys(body, [], ["variableCollections", "variableModes", "variables", "variableModeValues"], "body");
+
+  const collections = list(body.variableCollections, "variableCollections");
+  collections.forEach((item, i) => {
+    keys(item, ["action", "id"], ["name", "initialModeId", "hiddenFromPublishing"], `variableCollections[${i}]`);
+    if (item.action !== "CREATE" || typeof item.name !== "string") errors.push(`variableCollections[${i}]: create`);
+  });
+  const collectionIds = new Set(collections.map((item) => item.id));
+
+  const modes = list(body.variableModes, "variableModes");
+  const modesByCollection = new Map<unknown, unknown[]>();
+  modes.forEach((item, i) => {
+    keys(item, ["action", "id"], ["name", "variableCollectionId"], `variableModes[${i}]`);
+    if (!["CREATE", "UPDATE", "DELETE"].includes(String(item.action))) errors.push(`variableModes[${i}]: action`);
+    if (!collectionIds.has(item.variableCollectionId)) errors.push(`variableModes[${i}]: unknown collection`);
+    const siblings = modesByCollection.get(item.variableCollectionId) ?? [];
+    modesByCollection.set(item.variableCollectionId, [...siblings, item.id]);
+  });
+  collections.forEach((item, i) => {
+    // The initial mode already exists once the collection is created, so it can only be updated.
+    const initial = modes.find((mode) => mode.id === item.initialModeId);
+    if (initial?.action !== "UPDATE") errors.push(`variableCollections[${i}]: initial mode is not updated`);
+  });
+
+  const variables = list(body.variables, "variables");
+  variables.forEach((item, i) => {
+    const at = `variables[${i}]`;
+    const optional = ["name", "variableCollectionId", "resolvedType", "description", "hiddenFromPublishing"];
+    keys(item, ["action", "id"], [...optional, "scopes", "codeSyntax"], at);
+    if (item.action !== "CREATE") errors.push(`${at}: action`);
+    if (typeof item.name !== "string" || /[.{}]/.test(item.name)) errors.push(`${at}: name`);
+    if (!["BOOLEAN", "FLOAT", "STRING", "COLOR"].includes(String(item.resolvedType))) errors.push(`${at}: type`);
+    if (!collectionIds.has(item.variableCollectionId)) errors.push(`${at}: unknown collection`);
+    if (!Array.isArray(item.scopes) || item.scopes.length === 0) errors.push(`${at}: scopes`);
+    if (isObject(item.codeSyntax)) keys(item.codeSyntax, [], ["WEB", "ANDROID", "iOS"], `${at}.codeSyntax`);
+  });
+  const variablesById = new Map(variables.map((item) => [item.id, item]));
+  const ids = [...collections, ...modes, ...variables].map((item) => item.id);
+  if (ids.some((id) => typeof id !== "string") || new Set(ids).size !== ids.length) errors.push("ids: not unique");
+
+  const values = list(body.variableModeValues, "variableModeValues");
+  const unit = (value: unknown) => typeof value === "number" && value >= 0 && value <= 1;
+  values.forEach((item, i) => {
+    const at = `variableModeValues[${i}]`;
+    keys(item, ["variableId", "modeId", "value"], [], at);
+    const owner = variablesById.get(item.variableId);
+    if (!owner) {
+      errors.push(`${at}: unknown variable`);
+      return;
+    }
+    if (!modesByCollection.get(owner.variableCollectionId)?.includes(item.modeId)) errors.push(`${at}: mode`);
+    const value = item.value;
+    if (isObject(value) && value.type === "VARIABLE_ALIAS") {
+      keys(value, ["type", "id"], [], `${at}.value`);
+      if (variablesById.get(value.id)?.resolvedType !== owner.resolvedType) errors.push(`${at}: alias target`);
+    } else if (owner.resolvedType === "COLOR") {
+      if (!isObject(value) || !["r", "g", "b"].every((channel) => unit(value[channel]))) errors.push(`${at}: color`);
+      else keys(value, ["r", "g", "b"], ["a"], `${at}.value`);
+    } else if (owner.resolvedType === "FLOAT" && typeof value !== "number") {
+      errors.push(`${at}: float`);
+    }
+  });
+  variables.forEach((item, i) => {
+    const expected = modesByCollection.get(item.variableCollectionId) ?? [];
+    const set = values.filter((value) => value.variableId === item.id).map((value) => value.modeId);
+    if (expected.some((mode) => !set.includes(mode))) errors.push(`variables[${i}]: a mode has no value`);
+  });
+  return errors;
+}
+
+describe("Figma Variables", () => {
+  const request = JSON.parse(toFigmaVariables(withRoles)) as FigmaVariablesRequest;
+  const variableId = (name: string) => request.variables.find((item) => item.name === name)?.id;
+  const modeId = (name: string) => request.variableModes.find((mode) => mode.name === name)?.id;
+  const valueOf = (variable: string, mode: string) =>
+    request.variableModeValues.find((item) => item.variableId === variableId(variable) && item.modeId === modeId(mode))
+      ?.value;
+
+  test("validates against the documented request shape", () => {
+    expect(figmaSchemaErrors(request)).toEqual([]);
+    expect(figmaSchemaErrors(JSON.parse(toFigmaVariables(tokens())))).toEqual([]);
+    // The check itself catches a broken request.
+    const broken = { ...request, variableModeValues: request.variableModeValues.slice(1) };
+    expect(figmaSchemaErrors(broken)).not.toEqual([]);
+  });
+
+  test("writes colors as 0-1 floats and spacing and radius in pixels", () => {
+    expect(request.variableCollections.map((item) => item.name)).toEqual(["Primitives", "Semantic"]);
+    expect(valueOf("color/indigo/base", "Value")).toEqual({ r: 0.3882, g: 0.4, b: 0.9451, a: 1 });
+    expect(valueOf("spacing/0_5", "Value")).toBe(2);
+    expect(valueOf("radius/lg", "Value")).toBe(12);
+    expect(request.variables.find((item) => item.name === "radius/lg")?.scopes).toEqual(["CORNER_RADIUS"]);
+    expect(request.variables.find((item) => item.name === "color/primary")?.codeSyntax.WEB).toBe(
+      "var(--color-primary)",
+    );
+  });
+
+  test("Light and Dark modes alias the right role colors", () => {
+    const semanticModes = request.variableModes.filter((mode) => mode.variableCollectionId === "semantic");
+    expect(semanticModes.map((mode) => mode.name)).toEqual(["Light", "Dark"]);
+    const alias = (id: string | undefined) => ({ type: "VARIABLE_ALIAS", id });
+    expect(valueOf("color/primary", "Light")).toEqual(alias(variableId("color/indigo/base")));
+    expect(valueOf("color/primary", "Dark")).toEqual(alias(variableId("color/indigo/300")));
+    // Dark mode swaps background and foreground; white has no primitive, so it keeps its value.
+    expect(valueOf("color/background", "Light")).toEqual({ r: 1, g: 1, b: 1, a: 1 });
+    expect(valueOf("color/background", "Dark")).toEqual(alias(variableId("color/slate")));
+    expect(valueOf("color/foreground", "Light")).toEqual(alias(variableId("color/slate")));
+    expect(valueOf("color/foreground", "Dark")).toEqual({ r: 1, g: 1, b: 1, a: 1 });
   });
 });
