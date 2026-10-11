@@ -12,8 +12,12 @@
  */
 
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-space-grotesk), var(--font-inter), ui-sans-serif, sans-serif;
+  /* Inter and Space Grotesk have no Devanagari, so Hindi falls through to a system Devanagari face. */
+  --font-sans:
+    var(--font-inter), "Kohinoor Devanagari", "Noto Sans Devanagari", "Nirmala UI", ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    var(--font-space-grotesk), var(--font-inter), "Kohinoor Devanagari", "Noto Sans Devanagari", "Nirmala UI",
+    ui-sans-serif, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
 
   --color-background: var(--background);
@@ -203,4 +207,9 @@
 @utility scrollbar-thin {
   scrollbar-width: thin;
   scrollbar-color: var(--border-strong) transparent;
+}
+
+/* Letter spacing pulls Devanagari clusters apart, so Hindi keeps each font's own spacing. */
+:lang(hi) :is([class*="tracking-"], h1, h2, h3, h4) {
+  letter-spacing: normal;
 }

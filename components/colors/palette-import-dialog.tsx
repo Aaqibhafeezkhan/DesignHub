@@ -3,6 +3,7 @@
 import { useState, type RefObject } from "react";
 import { toast } from "sonner";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -25,6 +26,7 @@ type PaletteImportDialogProps = {
 
 /** Paste a Coolors URL or hex codes to replace the palette. Loaded the first time it opens. */
 export function PaletteImportDialog({ open, onOpenChange, triggerRef }: PaletteImportDialogProps) {
+  const { t, plural } = useI18n();
   const setSwatches = useColorStore((state) => state.setSwatches);
   const [importValue, setImportValue] = useState("");
 
@@ -32,9 +34,7 @@ export function PaletteImportDialog({ open, onOpenChange, triggerRef }: PaletteI
     const result = parsePaletteImport(importValue);
 
     if (result.colors.length < 2) {
-      toast.error("Import at least 2 colors", {
-        description: "Paste a Coolors URL or text containing 2 or more hex codes.",
-      });
+      toast.error(t("colors.import.tooFew"), { description: t("colors.import.tooFewDescription") });
       return;
     }
 
@@ -43,15 +43,11 @@ export function PaletteImportDialog({ open, onOpenChange, triggerRef }: PaletteI
     onOpenChange(false);
 
     if (result.dropped > 0) {
-      toast.success("Palette imported", {
-        description:
-          "Imported 10 colors and dropped " +
-          result.dropped +
-          " extra " +
-          (result.dropped === 1 ? "color." : "colors."),
+      toast.success(t("colors.import.done"), {
+        description: plural("colors.import.dropped", result.dropped, { kept: result.colors.length }),
       });
     } else {
-      toast.success("Palette imported");
+      toast.success(t("colors.import.done"));
     }
   }
 
@@ -65,22 +61,22 @@ export function PaletteImportDialog({ open, onOpenChange, triggerRef }: PaletteI
         }}
       >
         <DialogHeader>
-          <DialogTitle>Import palette</DialogTitle>
-          <DialogDescription>Paste a Coolors URL or text containing hex codes.</DialogDescription>
+          <DialogTitle>{t("colors.import.title")}</DialogTitle>
+          <DialogDescription>{t("colors.import.description")}</DialogDescription>
         </DialogHeader>
         <Textarea
           value={importValue}
           onChange={(event) => setImportValue(event.target.value)}
           placeholder="https://coolors.co/264653-2a9d8f-e9c46a-f4a261-e76f51"
-          aria-label="Palette import value"
+          aria-label={t("colors.import.value")}
           rows={5}
           autoFocus
         />
         <div className="flex justify-end gap-2">
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline">{t("common.cancel")}</Button>
           </DialogClose>
-          <Button onClick={importPalette}>Import</Button>
+          <Button onClick={importPalette}>{t("common.import")}</Button>
         </div>
       </DialogContent>
     </Dialog>

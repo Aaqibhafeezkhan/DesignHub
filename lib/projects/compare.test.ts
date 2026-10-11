@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { compareBrands, differenceSummary } from "@/lib/projects/compare";
+import { compareBrands, countDifferences, differenceSummary } from "@/lib/projects/compare";
 import { snapshotTokens } from "@/lib/projects/preview";
 import { defaultSnapshot } from "@/lib/projects/snapshot";
 
@@ -35,6 +35,7 @@ describe("compareBrands", () => {
     expect(rows.find((row) => row.id === "radius")?.b.text).toBe(`${b.tokens.settings.radiusBase}px`);
     expect(rows.find((row) => row.id === "shadow")?.b.text).toBe("none");
     expect(differenceSummary(rows)).toBe("4 differences");
+    expect(countDifferences(rows)).toBe(4);
   });
 
   test("colors compare by role, ignoring hex case", () => {

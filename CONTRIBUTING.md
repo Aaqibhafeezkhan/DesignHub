@@ -211,7 +211,7 @@ Background generators live in `lib/background/generators/` and are pure function
 
 UI text lives in typed message catalogs in `lib/i18n/messages/`. English (`en.ts`) is the source of truth; every other locale is a partial copy, and any key it leaves out shows in English. URLs never change with the language: the server renders English, and the browser switches to the viewer's choice (saved in `localStorage` as `designhub:locale`) or, when there is none, the first browser language with a translation.
 
-So far the app shell (navigation, header, command palette, theme and language controls) and Brand Projects are translated. Generated assets (exports, templates, the brand book) stay in English.
+The interface is available in English, Spanish (`es`) and Hindi (`hi`). So far the app shell (navigation, header, command palette, theme and language controls), Brand Projects (including the compare and history dialogs) and the Color Studio are translated. Generated assets (exports, templates, the brand book, CSS and token names) stay in English.
 
 ### Using messages in a component
 
@@ -227,6 +227,7 @@ So far the app shell (navigation, header, command palette, theme and language co
 2. Register it in `lib/i18n/locales.ts`: add the code to `locales`, the catalog to `catalogs` and its name, written in that language, to `localeNames`.
 3. Run `pnpm test`: `lib/i18n/messages.test.ts` checks that every key exists in English, that placeholders match and that no message contains an em dash.
 4. Pick the language in the header switcher and check the shell and Brand Projects at a mobile width, where longer words can wrap.
+5. Inter and Space Grotesk only cover Latin scripts. For another script, add system fonts that cover it to `--font-sans` and `--font-display` in `app/globals.css`, as Hindi does with Kohinoor and Noto Sans Devanagari.
 
 ## Component guidelines
 

@@ -5,8 +5,19 @@ export type CompareGroup = "Colors" | "Fonts" | "Radius" | "Spacing" | "Shadow";
 /** One side of a row: readable text, plus the hex values when the row is a set of colors. */
 export type CompareValue = { text: string; colors?: string[] };
 
+/** Stable row ids, so the interface can label each row in the viewer's language. */
+export type CompareRowId =
+  | "colors-primary"
+  | "colors-secondary"
+  | "colors-neutrals"
+  | "font-heading"
+  | "font-body"
+  | "radius"
+  | "spacing"
+  | "shadow";
+
 export type CompareRow = {
-  id: string;
+  id: CompareRowId;
   group: CompareGroup;
   label: string;
   a: CompareValue;
@@ -35,7 +46,7 @@ export function compareBrands(a: BrandTokens, b: BrandTokens): CompareRow[] {
   const colorRows = (["primary", "secondary", "neutrals"] as const).map((key): CompareRow => {
     const label = key === "neutrals" ? "Neutral" : key === "primary" ? "Primary" : "Secondary";
     return {
-      id: `colors-${key}`,
+      id: `colors-${key}` as const,
       group: "Colors",
       label,
       a: colorValue(a.colors[key]),
@@ -43,7 +54,7 @@ export function compareBrands(a: BrandTokens, b: BrandTokens): CompareRow[] {
       changed: !sameColors(a.colors[key], b.colors[key]),
     };
   });
-  const text = (id: string, group: CompareGroup, label: string, left: string, right: string): CompareRow => ({
+  const text = (id: CompareRowId, group: CompareGroup, label: string, left: string, right: string): CompareRow => ({
     id,
     group,
     label,
@@ -73,9 +84,14 @@ export function compareBrands(a: BrandTokens, b: BrandTokens): CompareRow[] {
   ];
 }
 
-/** "No differences", "1 difference" or "3 differences". */
+/** How many rows differ. */
+export function countDifferences(rows: CompareRow[]): number {
+  return rows.filter((row) => row.changed).length;
+}
+
+/** "No differences", "1 difference" or "3 differences" (English, for logs and tests). */
 export function differenceSummary(rows: CompareRow[]): string {
-  const count = rows.filter((row) => row.changed).length;
+  const count = countDifferences(rows);
   if (count === 0) return "No differences";
   return `${count} ${count === 1 ? "difference" : "differences"}`;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { ColorInput } from "@/components/colors/color-input";
+import { useI18n } from "@/components/layout/locale-provider";
 import { Label } from "@/components/ui/label";
 import { isSameColor, parseColor, toHex } from "@/lib/color/color";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,7 @@ type ColorWellProps = {
 
 /** Pick a color from the palette, the system picker, or type any CSS color. */
 export function ColorWell({ id, label, color, onChange }: ColorWellProps) {
+  const { locale, t } = useI18n();
   const swatches = useColorStore((state) => state.swatches);
 
   return (
@@ -26,7 +28,7 @@ export function ColorWell({ id, label, color, onChange }: ColorWellProps) {
           <span className="absolute inset-0" style={{ background: toHex(color) }} />
           <input
             type="color"
-            aria-label={`${label} system picker`}
+            aria-label={t("colors.well.picker", { label })}
             value={toHex({ ...color, alpha: 1 })}
             onChange={(event) => {
               const picked = parseColor(event.target.value);
@@ -39,12 +41,15 @@ export function ColorWell({ id, label, color, onChange }: ColorWellProps) {
           <ColorInput format="hex" color={color} onChange={onChange} idPrefix={id} />
         </div>
       </div>
-      <div className="flex flex-wrap gap-1" role="group" aria-label={`${label} from palette`}>
+      <div className="flex flex-wrap gap-1" role="group" aria-label={t("colors.well.palette", { label })}>
         {swatches.map((swatch) => (
           <button
             key={swatch.id}
             type="button"
-            aria-label={`Use ${toHex(swatch.color)} as ${label.toLowerCase()}`}
+            aria-label={t("colors.well.use", {
+              color: toHex(swatch.color),
+              label: label.toLocaleLowerCase(locale),
+            })}
             aria-pressed={isSameColor(swatch.color, color)}
             onClick={() => onChange(swatch.color)}
             className={cn(

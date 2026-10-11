@@ -2,6 +2,7 @@
 
 import { useRef, type KeyboardEvent, type PointerEvent } from "react";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { toHex } from "@/lib/color/color";
 import { colorAt, createStop, gradientCssFallback } from "@/lib/color/gradient";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,7 @@ const clamp = (value: number) => Math.min(100, Math.max(0, value));
  * one and use ←/→ (Shift for 10%). Click the bar to add a stop.
  */
 export function GradientStopsBar({ gradient, selectedId, onSelect, onChange }: GradientStopsBarProps) {
+  const { t } = useI18n();
   const trackRef = useRef<HTMLDivElement>(null);
   const dragging = useRef<string | null>(null);
 
@@ -59,7 +61,7 @@ export function GradientStopsBar({ gradient, selectedId, onSelect, onChange }: G
         onPointerDown={addAt}
         className="relative h-8 cursor-copy rounded-md border"
         style={{ background: gradientCssFallback({ ...gradient, type: "linear", angle: 90 }) }}
-        aria-label="Gradient stops. Click to add a stop."
+        aria-label={t("colors.gradient.bar")}
         role="group"
       >
         {gradient.stops.map((stop) => (
@@ -67,7 +69,7 @@ export function GradientStopsBar({ gradient, selectedId, onSelect, onChange }: G
             key={stop.id}
             type="button"
             role="slider"
-            aria-label={`Stop ${toHex(stop.color)}`}
+            aria-label={t("colors.gradient.stop", { color: toHex(stop.color) })}
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={Math.round(stop.position)}
@@ -94,9 +96,7 @@ export function GradientStopsBar({ gradient, selectedId, onSelect, onChange }: G
           />
         ))}
       </div>
-      <p className="text-[11px] text-subtle-foreground">
-        Click the bar to add a stop · drag or use arrow keys to move.
-      </p>
+      <p className="text-[11px] text-subtle-foreground">{t("colors.gradient.barHint")}</p>
     </div>
   );
 }

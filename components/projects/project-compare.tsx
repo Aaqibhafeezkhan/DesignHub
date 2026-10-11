@@ -3,13 +3,14 @@
 import { ArrowLeftRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { BrandDiffTable } from "@/components/projects/brand-diff-table";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { freshProject } from "@/lib/projects/actions";
-import { compareBrands, differenceSummary } from "@/lib/projects/compare";
+import { compareBrands, countDifferences } from "@/lib/projects/compare";
 import { snapshotTokens } from "@/lib/projects/preview";
 import { projectName, type BrandProject } from "@/lib/projects/types";
 
@@ -34,12 +35,13 @@ function ProjectPicker({
   projects: BrandProject[];
   onChange: (id: string) => void;
 }) {
+  const { t } = useI18n();
   return (
     <div className="flex min-w-0 flex-1 flex-col gap-1.5">
       <Label htmlFor={id}>{label}</Label>
       <Select value={value} onValueChange={onChange}>
         <SelectTrigger id={id} className="w-full [&>span]:truncate">
-          <SelectValue placeholder="Choose a project" />
+          <SelectValue placeholder={t("compare.choose")} />
         </SelectTrigger>
         <SelectContent>
           {projects.map((project) => (
@@ -58,6 +60,7 @@ function ProjectPicker({
  * or touches the live stores.
  */
 export function ProjectCompare({ open, onOpenChange, projects, initialId }: Props) {
+  const { locale, t, plural } = useI18n();
   const [leftId, setLeftId] = useState("");
   const [rightId, setRightId] = useState("");
   const [loaded, setLoaded] = useState<[BrandProject, BrandProject] | null>(null);
@@ -89,24 +92,34 @@ export function ProjectCompare({ open, onOpenChange, projects, initialId }: Prop
   );
   const current = loaded && loaded[0].id === leftId && loaded[1].id === rightId;
   const [labelA, labelB] = loaded ? [projectName(loaded[0]), projectName(loaded[1])] : ["", ""];
-  const summary = leftId === rightId ? "Same project on both sides" : differenceSummary(rows);
+  const differences = countDifferences(rows);
+  const summary =
+    leftId === rightId
+      ? t("compare.sameProject")
+      : differences === 0
+        ? t("compare.none")
+        : plural("compare.differences", differences);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Compare projects</DialogTitle>
-          <DialogDescription>
-            Colors, fonts, radius, spacing and shadow side by side. Neither project is opened or changed.
-          </DialogDescription>
+          <DialogTitle>{t("compare.title")}</DialogTitle>
+          <DialogDescription>{t("compare.description")}</DialogDescription>
         </DialogHeader>
         <div className="flex min-w-0 flex-col items-stretch gap-2 sm:flex-row sm:items-end">
-          <ProjectPicker id="compare-a" label="First" value={leftId} projects={projects} onChange={setLeftId} />
+          <ProjectPicker
+            id="compare-a"
+            label={t("compare.first")}
+            value={leftId}
+            projects={projects}
+            onChange={setLeftId}
+          />
           <Button
             variant="ghost"
             size="icon"
             className="size-9 self-center sm:self-end"
-            aria-label="Swap projects"
+            aria-label={t("compare.swap")}
             onClick={() => {
               setLeftId(rightId);
               setRightId(leftId);
@@ -114,15 +127,25 @@ export function ProjectCompare({ open, onOpenChange, projects, initialId }: Prop
           >
             <ArrowLeftRight />
           </Button>
-          <ProjectPicker id="compare-b" label="Second" value={rightId} projects={projects} onChange={setRightId} />
+          <ProjectPicker
+            id="compare-b"
+            label={t("compare.second")}
+            value={rightId}
+            projects={projects}
+            onChange={setRightId}
+          />
         </div>
         <p role="status" aria-live="polite" className="text-sm font-medium">
-          {projects.length < 2 ? "Create a second project to compare." : current ? summary : "Loading..."}
+          {projects.length < 2 ? t("compare.needTwo") : current ? summary : t("common.loading")}
         </p>
         {current ? (
           <BrandDiffTable
             rows={rows}
-            caption={`${labelA} compared with ${labelB}: ${summary.toLowerCase()}`}
+            caption={t("compare.caption", {
+              first: labelA,
+              second: labelB,
+              summary: summary.toLocaleLowerCase(locale),
+            })}
             labelA={labelA}
             labelB={labelB}
           />

@@ -2,6 +2,7 @@
 
 import { Download } from "lucide-react";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
 import { downloadText } from "@/lib/download";
@@ -15,6 +16,7 @@ type CodeBlockProps = {
 };
 
 export function CodeBlock({ code, filename, className, maxHeight = "28rem" }: CodeBlockProps) {
+  const { t } = useI18n();
   // Minified output is one very long line; wrap it instead of forcing a horizontal scroll.
   const singleLine = !code.trimEnd().includes("\n");
   return (
@@ -27,18 +29,18 @@ export function CodeBlock({ code, filename, className, maxHeight = "28rem" }: Co
               variant="ghost"
               size="icon"
               className="size-7"
-              aria-label={`Download ${filename}`}
+              aria-label={t("code.download", { filename })}
               onClick={() => downloadText(code, filename)}
             >
               <Download />
             </Button>
           ) : null}
-          <CopyButton value={code} label="Copy code" className="size-7" toastMessage="Code copied" />
+          <CopyButton value={code} label={t("code.copy")} className="size-7" toastMessage={t("code.copied")} />
         </span>
       </figcaption>
       <pre
         tabIndex={0}
-        aria-label={filename ? `${filename} contents` : "Code"}
+        aria-label={filename ? t("code.contents", { filename }) : t("code.label")}
         className={cn(
           "overflow-auto p-4 font-mono text-[12.5px] leading-relaxed scrollbar-thin",
           singleLine && "break-all whitespace-pre-wrap",

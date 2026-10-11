@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { CodeBlock } from "@/components/export/code-block";
+import { useI18n } from "@/components/layout/locale-provider";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { ExportFormat } from "@/types/export";
 
@@ -12,7 +13,8 @@ type ExportPanelProps = {
 };
 
 /** Format switcher + code view with one-click copy and download. */
-export function ExportPanel({ formats, label = "Export format" }: ExportPanelProps) {
+export function ExportPanel({ formats, label }: ExportPanelProps) {
+  const { t } = useI18n();
   const [active, setActive] = useState(formats[0]?.id ?? "");
   const format = formats.find((item) => item.id === active) ?? formats[0];
   if (!format) return null;
@@ -23,7 +25,7 @@ export function ExportPanel({ formats, label = "Export format" }: ExportPanelPro
         type="single"
         value={format.id}
         onValueChange={(value) => value && setActive(value)}
-        aria-label={label}
+        aria-label={label ?? t("code.format")}
         className="flex-wrap"
       >
         {formats.map((item) => (

@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { toHex } from "@/lib/color/color";
 import type { Oklch } from "@/types/color";
 
@@ -12,6 +13,7 @@ const r2 = (value: number) => Math.round(value * 100) / 100;
 
 /** Plots each palette color on an OKLCH hue wheel; distance from center is chroma. */
 export function HarmonyWheel({ colors }: { colors: Oklch[] }) {
+  const { t } = useI18n();
   const center = SIZE / 2;
   const point = (color: Oklch) => {
     const angle = ((color.h - 90) * Math.PI) / 180;
@@ -20,7 +22,7 @@ export function HarmonyWheel({ colors }: { colors: Oklch[] }) {
   };
 
   return (
-    <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="size-40 shrink-0" role="img" aria-label="Palette hue wheel">
+    <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="size-40 shrink-0" role="img" aria-label={t("colors.harmony.wheel")}>
       {RING.map((hue) => {
         const start = ((hue - 90) * Math.PI) / 180;
         const end = ((hue + 10 - 90) * Math.PI) / 180;

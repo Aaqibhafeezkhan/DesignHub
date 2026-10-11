@@ -2,6 +2,7 @@
 
 import { ChannelSlider } from "@/components/colors/channel-slider";
 import { ColorInput } from "@/components/colors/color-input";
+import { useI18n } from "@/components/layout/locale-provider";
 import { Badge } from "@/components/ui/badge";
 import { Panel } from "@/components/ui/panel";
 import { inGamut, oklch, parseColor, toHex } from "@/lib/color/color";
@@ -13,6 +14,7 @@ const formats: ColorFormat[] = ["hex", "rgb", "hsl", "oklch"];
 const HUE_STOPS = Array.from({ length: 13 }, (_, index) => index * 30);
 
 export function OklchEditor() {
+  const { t } = useI18n();
   const swatch = useSelectedSwatch();
   const updateColor = useColorStore((state) => state.updateColor);
 
@@ -29,17 +31,17 @@ export function OklchEditor() {
 
   return (
     <Panel
-      title="OKLCH editor"
-      description="Perceptual lightness, chroma and hue. Out-of-gamut colors are mapped to sRGB for HEX."
+      title={t("colors.editor.title")}
+      description={t("colors.editor.description")}
       actions={
         <label
           className="relative size-8 cursor-pointer overflow-hidden rounded-md border"
-          title="Pick with system picker"
+          title={t("colors.editor.pick")}
         >
           <span className="absolute inset-0" style={{ background: toHex(color) }} />
           <input
             type="color"
-            aria-label="System color picker"
+            aria-label={t("colors.editor.picker")}
             value={toHex({ ...color, alpha: 1 })}
             onChange={(event) => {
               const picked = parseColor(event.target.value);
@@ -57,13 +59,17 @@ export function OklchEditor() {
           <span className="font-mono text-xs text-muted-foreground">{toHex(color)}</span>
         </div>
         <div className="ml-auto flex gap-1">
-          <Badge variant={srgb ? "success" : "warning"}>{srgb ? "In sRGB" : "Outside sRGB"}</Badge>
-          <Badge variant={p3 ? "success" : "destructive"}>{p3 ? "In P3" : "Outside P3"}</Badge>
+          <Badge variant={srgb ? "success" : "warning"}>
+            {srgb ? t("colors.editor.inSrgb") : t("colors.editor.outSrgb")}
+          </Badge>
+          <Badge variant={p3 ? "success" : "destructive"}>
+            {p3 ? t("colors.editor.inP3") : t("colors.editor.outP3")}
+          </Badge>
         </div>
       </div>
 
       <ChannelSlider
-        label="Lightness"
+        label={t("colors.editor.lightness")}
         value={l}
         min={0}
         max={1}
@@ -73,7 +79,7 @@ export function OklchEditor() {
         onChange={(value) => set({ l: value })}
       />
       <ChannelSlider
-        label="Chroma"
+        label={t("colors.editor.chroma")}
         value={c}
         min={0}
         max={0.37}
@@ -83,7 +89,7 @@ export function OklchEditor() {
         onChange={(value) => set({ c: value })}
       />
       <ChannelSlider
-        label="Hue"
+        label={t("colors.editor.hue")}
         value={h}
         min={0}
         max={360}
@@ -93,7 +99,7 @@ export function OklchEditor() {
         onChange={(value) => set({ h: value })}
       />
       <ChannelSlider
-        label="Alpha"
+        label={t("colors.editor.alpha")}
         value={color.alpha}
         min={0}
         max={1}

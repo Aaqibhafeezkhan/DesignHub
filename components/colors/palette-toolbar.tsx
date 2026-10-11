@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { Bookmark, Download, Plus, Redo2, Shuffle, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -27,6 +28,7 @@ type PaletteToolbarProps = {
 };
 
 export function PaletteToolbar({ nextColors }: PaletteToolbarProps) {
+  const { t } = useI18n();
   const swatches = useColorStore((state) => state.swatches);
   const selectedId = useColorStore((state) => state.selectedId);
   const generate = useColorStore((state) => state.generate);
@@ -49,37 +51,45 @@ export function PaletteToolbar({ nextColors }: PaletteToolbarProps) {
     const colors = swatches.map((swatch) => swatch.color);
     const name = paletteNames(colors).slice(0, 3).join(" · ");
     savePalette({ id: createId("pal"), name, colors, createdAt: Date.now() });
-    toast.success("Palette saved", { description: "Stored locally in your browser." });
+    toast.success(t("colors.toolbar.saved"), { description: t("colors.toolbar.savedDescription") });
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2" role="toolbar" aria-label="Palette actions">
+    <div className="flex flex-wrap items-center gap-2" role="toolbar" aria-label={t("colors.toolbar.label")}>
       <Button onClick={run}>
-        <Shuffle /> Generate
-        <Kbd className="border-transparent bg-primary-foreground/15 text-primary-foreground">Space</Kbd>
+        <Shuffle /> {t("colors.toolbar.generate")}
+        <Kbd className="border-transparent bg-primary-foreground/15 text-primary-foreground">
+          {t("colors.toolbar.space")}
+        </Kbd>
       </Button>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline" size="icon" onClick={undo} disabled={!canUndo} aria-label="Undo">
+          <Button variant="outline" size="icon" onClick={undo} disabled={!canUndo} aria-label={t("common.undo")}>
             <Undo2 />
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Undo · Z</TooltipContent>
+        <TooltipContent>{t("colors.toolbar.undoHint")}</TooltipContent>
       </Tooltip>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline" size="icon" onClick={redo} disabled={!canRedo} aria-label="Redo">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={redo}
+            disabled={!canRedo}
+            aria-label={t("colors.toolbar.redo")}
+          >
             <Redo2 />
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Redo · ⇧Z</TooltipContent>
+        <TooltipContent>{t("colors.toolbar.redoHint")}</TooltipContent>
       </Tooltip>
       <Button
         variant="outline"
         onClick={() => addSwatch(randomColor(), selectedId ?? undefined)}
         disabled={swatches.length >= MAX_SWATCHES}
       >
-        <Plus /> Add color
+        <Plus /> {t("colors.toolbar.add")}
       </Button>
       <Button
         ref={importRef}
@@ -95,17 +105,15 @@ export function PaletteToolbar({ nextColors }: PaletteToolbarProps) {
           setImportOpen(true);
         }}
       >
-        <Download /> Import
+        <Download /> {t("common.import")}
       </Button>
       {importMounted ? (
         <PaletteImportDialog open={importOpen} onOpenChange={setImportOpen} triggerRef={importRef} />
       ) : null}
       <Button variant="outline" onClick={save}>
-        <Bookmark /> Save
+        <Bookmark /> {t("common.save")}
       </Button>
-      <p className="ml-auto hidden text-xs text-subtle-foreground md:block">
-        Lock colors to keep them between generations.
-      </p>
+      <p className="ml-auto hidden text-xs text-subtle-foreground md:block">{t("colors.toolbar.lockTip")}</p>
     </div>
   );
 }

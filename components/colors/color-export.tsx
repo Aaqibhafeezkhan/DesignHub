@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { ExportPanel } from "@/components/export/export-panel";
+import { useI18n } from "@/components/layout/locale-provider";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -22,12 +23,23 @@ import {
 } from "@/lib/color/export";
 import { gradientCss } from "@/lib/color/gradient";
 import { downloadBlob } from "@/lib/download";
+import { errorMessage } from "@/lib/i18n/errors";
+import type { PlainMessageKey } from "@/lib/i18n/translate";
 import { rasterize } from "@/lib/export/raster";
 import { slugify } from "@/lib/logo/pack";
 import { useBrandStore } from "@/store/brand-store";
 import { useColorStore } from "@/store/color-store";
 
+const formatLabels: Partial<Record<string, PlainMessageKey>> = {
+  css: "colors.export.format.css",
+  json: "colors.export.format.json",
+  svg: "colors.export.format.svg",
+  gpl: "colors.export.format.gpl",
+  sketch: "colors.export.sketch",
+};
+
 export function ColorExport() {
+  const { t, plural } = useI18n();
   const swatches = useColorStore((state) => state.swatches);
   const gradient = useColorStore((state) => state.gradient);
   const format = useColorStore((state) => state.format);
@@ -46,8 +58,12 @@ export function ColorExport() {
         includeShades,
         shadeOptions,
         name: brandName.trim() || undefined,
+      }).map((item) => {
+        // Only the tab label is translated; the file contents stay in English.
+        const key = formatLabels[item.id];
+        return key ? { ...item, label: t(key) } : item;
       }),
-    [swatches, gradient, format, includeShades, shadeOptions, brandName],
+    [swatches, gradient, format, includeShades, shadeOptions, brandName, t],
   );
 
   const filename = (extension: string) => `${slugify(brandName.trim() || "brand")}-colors.${extension}`;
@@ -65,9 +81,9 @@ export function ColorExport() {
       const image = await rasterize(paletteSvg(palette()), 2);
       const blob = new Blob([image.bytes.slice().buffer], { type: "image/png" });
       downloadBlob(blob, filename("png"));
-      toast.success("PNG download ready");
+      toast.success(t("colors.export.pngReady"));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "PNG export failed.");
+      toast.error(errorMessage(error, t, "colors.export.pngFailed"));
     } finally {
       setDownloading(false);
     }
@@ -78,7 +94,7 @@ export function ColorExport() {
     if (swatches.length === 0) return;
     const blob = new Blob([adobeSwatchExchange(palette(), includeShades)], { type: "application/octet-stream" });
     downloadBlob(blob, filename("ase"));
-    toast.success("ASE download ready");
+    toast.success(t("colors.export.aseReady"));
   }
 
   /** The palette for the Sketch Palettes plugin; shades follow the switch. */
@@ -88,7 +104,7 @@ export function ColorExport() {
       new Blob([sketchPalette(palette(), includeShades)], { type: "application/json" }),
       filename("sketchpalette"),
     );
-    toast.success("Sketch palette download ready");
+    toast.success(t("colors.export.sketchReady"));
   }
 
   /** Procreate swatches; shades go in only when the palette fits in Procreate's 30 slots. */
@@ -97,12 +113,12 @@ export function ColorExport() {
     const result = procreateSwatches(palette(), includeShades, brandName.trim() || undefined);
     downloadBlob(new Blob([result.bytes], { type: "application/zip" }), filename("swatches"));
     const notes = [
-      result.shadesDropped ? "Shades don't fit, so only the base colors are included." : "",
-      result.colorsDropped > 0 ? `The last ${result.colorsDropped} colors were left out.` : "",
+      result.shadesDropped ? t("colors.export.shadesDropped") : "",
+      result.colorsDropped > 0 ? plural("colors.export.colorsDropped", result.colorsDropped) : "",
     ].filter(Boolean);
-    toast.success("Procreate swatches ready", {
+    toast.success(t("colors.export.procreateReady"), {
       description: notes.length
-        ? `Procreate palettes hold ${procreateSwatchLimit} swatches. ${notes.join(" ")}`
+        ? [t("colors.export.procreateLimit", { limit: procreateSwatchLimit }), ...notes].join(" ")
         : undefined,
     });
   }
@@ -112,15 +128,15 @@ export function ColorExport() {
     if (swatches.length === 0) return;
     const bytes = kritaPalette(palette(), includeShades, brandName.trim() || undefined);
     downloadBlob(new Blob([bytes], { type: "application/zip" }), filename("kpl"));
-    toast.success("Krita palette ready");
+    toast.success(t("colors.export.kritaReady"));
   }
 
   const downloads = [
-    { label: "PNG image", hint: ".png", icon: ImageDown, run: downloadPng },
-    { label: "Adobe swatches", hint: ".ase", icon: SwatchBook, run: downloadAse },
-    { label: "Sketch palette", hint: ".sketchpalette", icon: Palette, run: downloadSketch },
-    { label: "Procreate swatches", hint: ".swatches", icon: Brush, run: downloadProcreate },
-    { label: "Krita palette", hint: ".kpl", icon: Paintbrush, run: downloadKrita },
+    { label: t("colors.export.png"), hint: ".png", icon: ImageDown, run: downloadPng },
+    { label: t("colors.export.ase"), hint: ".ase", icon: SwatchBook, run: downloadAse },
+    { label: t("colors.export.sketch"), hint: ".sketchpalette", icon: Palette, run: downloadSketch },
+    { label: t("colors.export.procreate"), hint: ".swatches", icon: Brush, run: downloadProcreate },
+    { label: t("colors.export.krita"), hint: ".kpl", icon: Paintbrush, run: downloadKrita },
   ];
 
   return (
@@ -134,17 +150,17 @@ export function ColorExport() {
         </div>
         <div className="flex items-center gap-2">
           <Switch id="export-shades" checked={includeShades} onCheckedChange={setIncludeShades} />
-          <Label htmlFor="export-shades">Include 50–950 shades</Label>
+          <Label htmlFor="export-shades">{t("colors.export.shades")}</Label>
         </div>
         <Popover open={menuOpen} onOpenChange={setMenuOpen}>
           <PopoverTrigger asChild>
             <Button size="sm" variant="outline" disabled={downloading || swatches.length === 0}>
               {downloading ? <Loader2 className="animate-spin" /> : <Download />}
-              Download
+              {t("colors.export.download")}
               <ChevronDown className="opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent align="end" className="w-72 p-1" aria-label="Download palette">
+          <PopoverContent align="end" className="w-72 p-1" aria-label={t("colors.export.menu")}>
             {downloads.map((item) => (
               <Button
                 key={item.label}
@@ -164,10 +180,8 @@ export function ColorExport() {
           </PopoverContent>
         </Popover>
       </div>
-      <p className="text-xs text-subtle-foreground">
-        Values use the {format.toUpperCase()} notation selected above. Switch notation to export HEX, RGB, HSL or OKLCH.
-      </p>
-      <ExportPanel formats={formats} label="Color export format" />
+      <p className="text-xs text-subtle-foreground">{t("colors.export.notation", { format: format.toUpperCase() })}</p>
+      <ExportPanel formats={formats} label={t("colors.export.formatLabel")} />
     </div>
   );
 }

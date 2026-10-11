@@ -1,5 +1,9 @@
+"use client";
+
+import { useI18n } from "@/components/layout/locale-provider";
 import { Badge } from "@/components/ui/badge";
-import type { CompareRow, CompareValue } from "@/lib/projects/compare";
+import type { PlainMessageKey } from "@/lib/i18n/translate";
+import type { CompareGroup, CompareRow, CompareRowId, CompareValue } from "@/lib/projects/compare";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -9,7 +13,29 @@ type Props = {
   labelB: string;
 };
 
+const groupKeys: Record<CompareGroup, PlainMessageKey> = {
+  Colors: "compare.group.Colors",
+  Fonts: "compare.group.Fonts",
+  Radius: "compare.group.Radius",
+  Spacing: "compare.group.Spacing",
+  Shadow: "compare.group.Shadow",
+};
+
+const rowKeys: Record<CompareRowId, PlainMessageKey> = {
+  "colors-primary": "compare.row.primary",
+  "colors-secondary": "compare.row.secondary",
+  "colors-neutrals": "compare.row.neutral",
+  "font-heading": "compare.row.heading",
+  "font-body": "compare.row.body",
+  radius: "compare.row.radius",
+  spacing: "compare.row.spacing",
+  shadow: "compare.row.shadow",
+};
+
 function Value({ value }: { value: CompareValue }) {
+  const { t } = useI18n();
+  // An empty color role reads "None"; other values (hex codes, fonts, CSS) are shown as they are.
+  const text = value.colors && value.colors.length === 0 ? t("compare.noColors") : value.text;
   return (
     <div className="flex min-w-0 flex-col gap-1">
       {value.colors?.length ? (
@@ -19,17 +45,33 @@ function Value({ value }: { value: CompareValue }) {
           ))}
         </span>
       ) : null}
-      <span className="break-words">{value.text}</span>
+      <span className="break-words">{text}</span>
     </div>
   );
 }
 
 function Status({ changed }: { changed: boolean }) {
-  return changed ? <Badge variant="warning">Different</Badge> : <span className="text-muted-foreground">Same</span>;
+  const { t } = useI18n();
+  return changed ? (
+    <Badge variant="warning">{t("compare.different")}</Badge>
+  ) : (
+    <span className="text-muted-foreground">{t("compare.same")}</span>
+  );
+}
+
+function RowLabel({ row }: { row: CompareRow }) {
+  const { t } = useI18n();
+  return (
+    <>
+      <span className="block text-[11px] font-normal text-muted-foreground">{t(groupKeys[row.group])}</span>
+      {t(rowKeys[row.id])}
+    </>
+  );
 }
 
 /** Two brands value by value. Changed rows are tinted and say "Different" in text, so it isn't color alone. */
 export function BrandDiffTable({ rows, caption, labelA, labelB }: Props) {
+  const { t } = useI18n();
   return (
     <>
       <ul aria-label={caption} className="max-h-[55vh] min-w-0 space-y-2 overflow-y-auto text-xs sm:hidden">
@@ -41,8 +83,7 @@ export function BrandDiffTable({ rows, caption, labelA, labelB }: Props) {
           >
             <div className="flex items-start justify-between gap-2">
               <h3 className="min-w-0 font-medium break-words">
-                <span className="block text-[11px] font-normal text-muted-foreground">{row.group}</span>
-                {row.label}
+                <RowLabel row={row} />
               </h3>
               <Status changed={row.changed} />
             </div>
@@ -69,7 +110,7 @@ export function BrandDiffTable({ rows, caption, labelA, labelB }: Props) {
           <thead className="sticky top-0 bg-popover text-muted-foreground">
             <tr className="border-b">
               <th scope="col" className="p-2 font-medium">
-                Value
+                {t("compare.value")}
               </th>
               <th scope="col" className="p-2 font-medium">
                 {labelA}
@@ -78,7 +119,7 @@ export function BrandDiffTable({ rows, caption, labelA, labelB }: Props) {
                 {labelB}
               </th>
               <th scope="col" className="p-2 font-medium">
-                Status
+                {t("compare.status")}
               </th>
             </tr>
           </thead>
@@ -90,8 +131,7 @@ export function BrandDiffTable({ rows, caption, labelA, labelB }: Props) {
                 data-changed={row.changed || undefined}
               >
                 <th scope="row" className="p-2 font-medium whitespace-nowrap">
-                  <span className="block text-[11px] font-normal text-muted-foreground">{row.group}</span>
-                  {row.label}
+                  <RowLabel row={row} />
                 </th>
                 <td className="p-2">
                   <Value value={row.a} />

@@ -2,6 +2,7 @@
 
 import { Trash2 } from "lucide-react";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { parseColor, toHex } from "@/lib/color/color";
@@ -18,12 +19,13 @@ type GradientStopListProps = {
 };
 
 export function GradientStopList({ gradient, selectedId, onSelect, onChange }: GradientStopListProps) {
+  const { t } = useI18n();
   const swatches = useColorStore((state) => state.swatches);
   const patch = (id: string, update: Partial<GradientStop>) =>
     onChange({ ...gradient, stops: gradient.stops.map((stop) => (stop.id === id ? { ...stop, ...update } : stop)) });
 
   return (
-    <ul className="flex flex-col gap-2" aria-label="Stops">
+    <ul className="flex flex-col gap-2" aria-label={t("colors.gradient.stops")}>
       {sortedStops(gradient).map((stop) => (
         <li
           key={stop.id}
@@ -38,7 +40,7 @@ export function GradientStopList({ gradient, selectedId, onSelect, onChange }: G
               <span className="absolute inset-0" style={{ background: toHex(stop.color) }} />
               <input
                 type="color"
-                aria-label="Stop color"
+                aria-label={t("colors.gradient.stopColor")}
                 value={toHex({ ...stop.color, alpha: 1 })}
                 onChange={(event) => {
                   const color = parseColor(event.target.value);
@@ -54,14 +56,14 @@ export function GradientStopList({ gradient, selectedId, onSelect, onChange }: G
               max={100}
               value={Math.round(stop.position)}
               onChange={(event) => patch(stop.id, { position: Math.min(100, Math.max(0, Number(event.target.value))) })}
-              aria-label="Stop position (%)"
+              aria-label={t("colors.gradient.stopPosition")}
               className="h-8 w-16 font-mono text-xs"
             />
             <Button
               variant="ghost"
               size="icon"
               className="size-8"
-              aria-label="Remove stop"
+              aria-label={t("colors.gradient.removeStop")}
               disabled={gradient.stops.length <= 2}
               onClick={() => onChange({ ...gradient, stops: gradient.stops.filter((item) => item.id !== stop.id) })}
             >
@@ -69,12 +71,12 @@ export function GradientStopList({ gradient, selectedId, onSelect, onChange }: G
             </Button>
           </div>
           {stop.id === selectedId ? (
-            <div className="flex flex-wrap gap-1" aria-label="Use a palette color">
+            <div className="flex flex-wrap gap-1" role="group" aria-label={t("colors.gradient.usePalette")}>
               {swatches.map((swatch) => (
                 <button
                   key={swatch.id}
                   type="button"
-                  aria-label={`Use ${toHex(swatch.color)}`}
+                  aria-label={t("colors.useColor", { color: toHex(swatch.color) })}
                   onClick={() => patch(stop.id, { color: swatch.color })}
                   className="size-5 rounded-sm border"
                   style={{ background: toHex(swatch.color) }}

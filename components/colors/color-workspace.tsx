@@ -11,9 +11,11 @@ import { PaletteStrip } from "@/components/colors/palette-strip";
 import { PaletteToolbar } from "@/components/colors/palette-toolbar";
 import { PaletteLibrary } from "@/components/colors/palette-library";
 import { SavedPalettes } from "@/components/colors/saved-palettes";
+import { useI18n } from "@/components/layout/locale-provider";
 import { TabSkeleton } from "@/components/ui/tab-skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useHarmonyGenerator } from "@/hooks/use-harmony";
+import type { PlainMessageKey } from "@/lib/i18n/translate";
 import { useColorStore, type ColorTab } from "@/store/color-store";
 
 // Secondary tabs are split out so the first tab paints fast.
@@ -36,17 +38,18 @@ const ColorExport = dynamic(() => import("@/components/colors/color-export").the
   loading: TabSkeleton,
 });
 
-const tabs: { value: ColorTab; label: string; icon: ReactNode }[] = [
-  { value: "palette", label: "Palette", icon: <Palette /> },
-  { value: "shades", label: "Shades", icon: <Layers /> },
-  { value: "gradient", label: "Gradient", icon: <Blend /> },
-  { value: "contrast", label: "Contrast", icon: <Contrast /> },
-  { value: "export", label: "Export", icon: <Braces /> },
+const tabs: { value: ColorTab; label: PlainMessageKey; icon: ReactNode }[] = [
+  { value: "palette", label: "colors.tab.palette", icon: <Palette /> },
+  { value: "shades", label: "colors.tab.shades", icon: <Layers /> },
+  { value: "gradient", label: "colors.tab.gradient", icon: <Blend /> },
+  { value: "contrast", label: "colors.tab.contrast", icon: <Contrast /> },
+  { value: "export", label: "colors.tab.export", icon: <Braces /> },
 ];
 
 const isTab = (value: string): value is ColorTab => tabs.some((tab) => tab.value === value);
 
 export function ColorWorkspace() {
+  const { t } = useI18n();
   const tab = useColorStore((state) => state.tab);
   const setTab = useColorStore((state) => state.setTab);
   const generate = useColorStore((state) => state.generate);
@@ -55,11 +58,11 @@ export function ColorWorkspace() {
   return (
     <Tabs value={tab} onValueChange={(value) => isTab(value) && setTab(value)} className="gap-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <TabsList aria-label="Color tools" className="w-full overflow-x-auto sm:w-fit">
+        <TabsList aria-label={t("colors.tools")} className="w-full overflow-x-auto sm:w-fit">
           {tabs.map((item) => (
             <TabsTrigger key={item.value} value={item.value}>
               {item.icon}
-              {item.label}
+              {t(item.label)}
             </TabsTrigger>
           ))}
         </TabsList>

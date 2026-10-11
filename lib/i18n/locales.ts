@@ -1,19 +1,21 @@
 import { en } from "@/lib/i18n/messages/en";
 import { es } from "@/lib/i18n/messages/es";
+import { hi } from "@/lib/i18n/messages/hi";
 import type { Catalog } from "@/lib/i18n/translate";
 
-export const locales = ["en", "es"] as const;
+export const locales = ["en", "es", "hi"] as const;
 
 export type Locale = (typeof locales)[number];
 
 export const defaultLocale: Locale = "en";
 
-export const catalogs: Record<Locale, Catalog> = { en, es };
+export const catalogs: Record<Locale, Catalog> = { en, es, hi };
 
 /** Each language in its own name, so people can find theirs whatever the interface shows. */
 export const localeNames: Record<Locale, string> = {
   en: "English",
   es: "Español",
+  hi: "हिन्दी",
 };
 
 /** Per-viewer UI setting, so it lives in localStorage rather than the IndexedDB stores. */

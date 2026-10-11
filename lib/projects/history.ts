@@ -19,16 +19,6 @@ export const MAX_VERSIONS = 20;
 /** While editing, at most one timed version per this many milliseconds. */
 export const AUTO_VERSION_INTERVAL = 5 * 60_000;
 
-export const versionReasonLabels: Record<VersionReason, string> = {
-  autosave: "While editing",
-  surprise: "Before Surprise me",
-  "token-import": "Before token import",
-  "brand-dna": "Before Brand DNA",
-  "share-import": "Before share link import",
-  palette: "Before loading a palette",
-  restore: "Before restoring a version",
-};
-
 /** JSON with sorted keys, so two snapshots with the same values match whatever order they were built in. */
 function stable(value: unknown): string {
   return JSON.stringify(value, (_key, item: unknown) =>

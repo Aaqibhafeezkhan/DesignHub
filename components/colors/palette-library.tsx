@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { useRovingRadio } from "@/hooks/use-roving-radio";
 import { fromHex } from "@/lib/color/color";
 import { palettePresets, paletteTags, type PaletteTag } from "@/lib/color/presets";
@@ -11,6 +12,7 @@ import { createSwatch, useColorStore } from "@/store/color-store";
 
 /** Curated palettes to start from, filterable by mood. */
 export function PaletteLibrary() {
+  const { t, plural } = useI18n();
   const radiosRef = useRovingRadio<HTMLDivElement>();
   const setSwatches = useColorStore((state) => state.setSwatches);
   const undo = useColorStore((state) => state.undo);
@@ -21,11 +23,11 @@ export function PaletteLibrary() {
     <section aria-labelledby="palette-library" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="palette-library" className="text-lg font-medium">
-          Palette library
+          {t("colors.library.title")}
         </h2>
-        <span className="text-xs text-subtle-foreground">{shown.length} palettes</span>
+        <span className="text-xs text-subtle-foreground">{plural("colors.library.count", shown.length)}</span>
       </div>
-      <div ref={radiosRef} role="radiogroup" aria-label="Palette mood" className="flex flex-wrap gap-1.5">
+      <div ref={radiosRef} role="radiogroup" aria-label={t("colors.library.mood")} className="flex flex-wrap gap-1.5">
         {[null, ...paletteTags].map((item) => (
           <button
             key={item ?? "all"}
@@ -38,7 +40,7 @@ export function PaletteLibrary() {
               tag === item && "border-brand/60 bg-surface-raised text-foreground",
             )}
           >
-            {item ?? "All"}
+            {item ? t(`colors.tag.${item}` as const) : t("colors.library.all")}
           </button>
         ))}
       </div>
@@ -49,10 +51,12 @@ export function PaletteLibrary() {
               type="button"
               onClick={() => {
                 setSwatches(preset.colors.map((hex) => createSwatch(fromHex(hex))));
-                toast.success(`Loaded ${preset.name}`, { action: { label: "Undo", onClick: undo } });
+                toast.success(t("colors.library.loaded", { name: preset.name }), {
+                  action: { label: t("common.undo"), onClick: undo },
+                });
               }}
               className="flex h-14 overflow-hidden rounded-md transition-transform duration-150 hover:scale-[1.02]"
-              aria-label={`Load palette ${preset.name}`}
+              aria-label={t("colors.saved.load", { name: preset.name })}
             >
               {preset.colors.map((hex) => (
                 <span key={hex} className="flex-1" style={{ background: hex }} />
@@ -60,7 +64,9 @@ export function PaletteLibrary() {
             </button>
             <div className="flex items-center justify-between gap-2 px-1">
               <span className="truncate text-xs">{preset.name}</span>
-              <span className="shrink-0 text-[11px] text-subtle-foreground">{preset.tags.join(" · ")}</span>
+              <span className="shrink-0 text-[11px] text-subtle-foreground">
+                {preset.tags.map((item) => t(`colors.tag.${item}` as const)).join(" · ")}
+              </span>
             </div>
           </li>
         ))}

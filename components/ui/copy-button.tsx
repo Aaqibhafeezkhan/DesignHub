@@ -2,6 +2,7 @@
 
 import { Check, Copy } from "lucide-react";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { useCopy } from "@/hooks/use-copy";
 
@@ -13,13 +14,14 @@ type CopyButtonProps = Omit<ButtonProps, "onClick"> & {
 
 function CopyButton({
   value,
-  label = "Copy",
+  label,
   toastMessage,
   variant = "ghost",
   size = "icon",
   children,
   ...props
 }: CopyButtonProps) {
+  const { t } = useI18n();
   const { copy, copied } = useCopy();
   const done = copied === value;
 
@@ -27,7 +29,7 @@ function CopyButton({
     <Button
       variant={variant}
       size={size}
-      aria-label={children ? undefined : label}
+      aria-label={children ? undefined : (label ?? t("copy.label"))}
       onClick={() => copy(value, toastMessage)}
       {...props}
     >

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { Input } from "@/components/ui/input";
 import { CopyButton } from "@/components/ui/copy-button";
 import { formatColor, parseColor } from "@/lib/color/color";
@@ -18,6 +19,7 @@ type ColorInputProps = {
 
 /** Text field for one color notation. Accepts any CSS color on commit (Enter / blur). */
 export function ColorInput({ format, color, onChange, idPrefix = "color-input", label }: ColorInputProps) {
+  const { t } = useI18n();
   const formatted = formatColor(color, format);
   const [draft, setDraft] = useState(formatted);
   const [invalid, setInvalid] = useState(false);
@@ -57,7 +59,12 @@ export function ColorInput({ format, color, onChange, idPrefix = "color-input", 
         }}
         className="h-8 font-mono text-xs"
       />
-      <CopyButton value={formatted} label={`Copy ${format}`} className="size-8" toastMessage={`Copied ${formatted}`} />
+      <CopyButton
+        value={formatted}
+        label={t("colors.input.copy", { format: format.toUpperCase() })}
+        className="size-8"
+        toastMessage={t("colors.copied", { value: formatted })}
+      />
     </div>
   );
 }

@@ -28,6 +28,19 @@ describe("message catalogs", () => {
       }
     });
   }
+
+  it("translates every translated area completely into Spanish", () => {
+    const areas = ["compare.", "history.", "colors.", "copy.", "code."];
+    const missing = Object.keys(en).filter(
+      (key) => areas.some((area) => key.startsWith(area)) && !Object.hasOwn(catalogs.es, key),
+    );
+    expect(missing).toEqual([]);
+  });
+
+  it("has a Hindi translation for every Spanish key", () => {
+    const missing = Object.keys(catalogs.es).filter((key) => !Object.hasOwn(catalogs.hi, key));
+    expect(missing).toEqual([]);
+  });
 });
 
 describe("translate", () => {
@@ -47,6 +60,10 @@ describe("translate", () => {
     const { plural } = createTranslator(catalogs.es, "es");
     expect(plural("projects.toast.exported", 1)).toBe("Se exportó 1 proyecto");
     expect(plural("projects.toast.exported", 3)).toBe("Se exportaron 3 proyectos");
+    // Hindi treats 0 and 1 as "one".
+    const hindi = createTranslator(catalogs.hi, "hi");
+    expect(hindi.plural("projects.toast.exported", 1)).toBe("1 प्रोजेक्ट एक्सपोर्ट किया गया");
+    expect(hindi.plural("projects.toast.exported", 3)).toBe("3 प्रोजेक्ट एक्सपोर्ट किए गए");
     const english = createTranslator(catalogs.en, "en");
     expect(english.plural("projects.toast.imported", 0)).toBe("Imported 0 projects");
     expect(english.plural("share.import.summary", 1, { heading: "Inter", body: "Lora" })).toBe(
@@ -66,6 +83,8 @@ describe("resolveLocale", () => {
     expect(resolveLocale(["es-MX", "en"])).toBe("es");
     expect(resolveLocale(["fr-FR", "ES"])).toBe("es");
     expect(resolveLocale(["en-GB", "es"])).toBe("en");
+    expect(resolveLocale(["hi-IN", "en"])).toBe("hi");
+    expect(resolveLocale(["fr", "HI"])).toBe("hi");
   });
 
   it("defaults to English", () => {

@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 
 import { ShadeRamp } from "@/components/colors/shade-ramp";
+import { useI18n } from "@/components/layout/locale-provider";
 import { SliderField } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { Panel } from "@/components/ui/panel";
@@ -15,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { useColorStore, useSelectedSwatch } from "@/store/color-store";
 
 export function ShadesStudio() {
+  const { t } = useI18n();
   const radiosRef = useRovingRadio<HTMLDivElement>();
   const swatches = useColorStore((state) => state.swatches);
   const select = useColorStore((state) => state.select);
@@ -34,22 +36,22 @@ export function ShadesStudio() {
     <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
       <div className="flex min-w-0 flex-col gap-8">
         {active && selected ? (
-          <section aria-label="Selected shades" className="flex flex-col gap-3">
+          <section aria-label={t("colors.shades.selected")} className="flex flex-col gap-3">
             <div className="flex items-baseline justify-between gap-2">
               <h2 className="text-lg font-medium capitalize">{names[selectedIndex]}</h2>
               <p className="text-xs text-subtle-foreground">
-                Base sits at {nearestStep(selected.color)} · click any shade to copy
+                {t("colors.shades.base", { step: nearestStep(selected.color) })}
               </p>
             </div>
             <ShadeRamp
-              name={names[selectedIndex] ?? "color"}
+              name={names[selectedIndex] ?? t("colors.colorFallback")}
               shades={active.shades}
               anchorStep={options.anchor ? nearestStep(selected.color) : undefined}
             />
           </section>
         ) : null}
-        <section aria-label="All palette shades" className="flex flex-col gap-3">
-          <h2 className="text-sm font-medium">Full scale</h2>
+        <section aria-label={t("colors.shades.all")} className="flex flex-col gap-3">
+          <h2 className="text-sm font-medium">{t("colors.shades.fullScale")}</h2>
           <div className="grid grid-cols-[72px_minmax(0,1fr)] items-center gap-x-4 gap-y-2">
             <span />
             <div className="grid grid-cols-11 text-center font-mono text-[10px] text-subtle-foreground">
@@ -60,17 +62,22 @@ export function ShadesStudio() {
             {ramps.map(({ swatch, shades }, index) => (
               <div key={swatch.id} className="contents">
                 <span className="truncate text-xs text-muted-foreground capitalize">{names[index]}</span>
-                <ShadeRamp name={names[index] ?? "color"} shades={shades} size="sm" />
+                <ShadeRamp name={names[index] ?? t("colors.colorFallback")} shades={shades} size="sm" />
               </div>
             ))}
           </div>
         </section>
       </div>
 
-      <Panel title="Shade options">
+      <Panel title={t("colors.shades.options")}>
         <div className="flex flex-col gap-2">
-          <Label>Base color</Label>
-          <div ref={radiosRef} className="flex flex-wrap gap-2" role="radiogroup" aria-label="Base color">
+          <Label>{t("colors.shades.baseColor")}</Label>
+          <div
+            ref={radiosRef}
+            className="flex flex-wrap gap-2"
+            role="radiogroup"
+            aria-label={t("colors.shades.baseColor")}
+          >
             {swatches.map((swatch, index) => (
               <button
                 key={swatch.id}
@@ -89,7 +96,7 @@ export function ShadesStudio() {
           </div>
         </div>
         <SliderField
-          label="Hue shift"
+          label={t("colors.shades.hueShift")}
           value={options.hueShift}
           min={-40}
           max={40}
@@ -97,13 +104,10 @@ export function ShadesStudio() {
           format={(value) => `${value}°`}
         />
         <div className="flex items-center justify-between gap-4">
-          <Label htmlFor="shade-anchor">Keep exact base color</Label>
+          <Label htmlFor="shade-anchor">{t("colors.shades.anchor")}</Label>
           <Switch id="shade-anchor" checked={options.anchor} onCheckedChange={(anchor) => setOptions({ anchor })} />
         </div>
-        <p className="text-xs text-subtle-foreground">
-          Shades are computed in OKLCH so every step is evenly spaced to the eye. Hue shift rotates light tints and dark
-          shades in opposite directions for richer ramps.
-        </p>
+        <p className="text-xs text-subtle-foreground">{t("colors.shades.help")}</p>
       </Panel>
     </div>
   );

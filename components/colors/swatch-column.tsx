@@ -4,6 +4,7 @@ import { m } from "framer-motion";
 import { ChevronLeft, ChevronRight, Copy, Lock, Unlock, X } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { useCopy } from "@/hooks/use-copy";
 import { formatColor, readableTextColor, toHex } from "@/lib/color/color";
 import { cn } from "@/lib/utils";
@@ -36,6 +37,7 @@ function SwatchAction({ label, onClick, children }: { label: string; onClick: ()
 }
 
 export function SwatchColumn({ swatch, name, index, total, selected }: SwatchColumnProps) {
+  const { t } = useI18n();
   const format = useColorStore((state) => state.format);
   const select = useColorStore((state) => state.select);
   const toggleLock = useColorStore((state) => state.toggleLock);
@@ -64,29 +66,35 @@ export function SwatchColumn({ swatch, name, index, total, selected }: SwatchCol
         type="button"
         onClick={() => select(swatch.id)}
         aria-pressed={selected}
-        aria-label={`Select ${name} ${value}`}
+        aria-label={t("colors.swatch.select", { name, value })}
         className="absolute inset-0 outline-none focus-visible:ring-4 focus-visible:ring-current/40 focus-visible:ring-inset"
       />
       <div className="pointer-events-none relative flex flex-col gap-3 p-4 md:items-center md:pb-8">
         <div className="pointer-events-auto flex flex-wrap gap-0.5 md:flex-col md:opacity-0 md:transition-opacity md:duration-150 md:group-focus-within:opacity-100 md:group-hover:opacity-100">
-          <SwatchAction label={swatch.locked ? `Unlock ${name}` : `Lock ${name}`} onClick={() => toggleLock(swatch.id)}>
+          <SwatchAction
+            label={t(swatch.locked ? "colors.swatch.unlock" : "colors.swatch.lock", { name })}
+            onClick={() => toggleLock(swatch.id)}
+          >
             {swatch.locked ? <Lock /> : <Unlock />}
           </SwatchAction>
-          <SwatchAction label={`Copy ${value}`} onClick={() => copy(value, `Copied ${value}`)}>
+          <SwatchAction
+            label={t("colors.copyValue", { value })}
+            onClick={() => copy(value, t("colors.copied", { value }))}
+          >
             <Copy />
           </SwatchAction>
           {index > 0 ? (
-            <SwatchAction label={`Move ${name} left`} onClick={() => moveSwatch(swatch.id, -1)}>
+            <SwatchAction label={t("colors.swatch.left", { name })} onClick={() => moveSwatch(swatch.id, -1)}>
               <ChevronLeft />
             </SwatchAction>
           ) : null}
           {index < total - 1 ? (
-            <SwatchAction label={`Move ${name} right`} onClick={() => moveSwatch(swatch.id, 1)}>
+            <SwatchAction label={t("colors.swatch.right", { name })} onClick={() => moveSwatch(swatch.id, 1)}>
               <ChevronRight />
             </SwatchAction>
           ) : null}
           {total > MIN_SWATCHES ? (
-            <SwatchAction label={`Remove ${name}`} onClick={() => removeSwatch(swatch.id)}>
+            <SwatchAction label={t("colors.swatch.remove", { name })} onClick={() => removeSwatch(swatch.id)}>
               <X />
             </SwatchAction>
           ) : null}

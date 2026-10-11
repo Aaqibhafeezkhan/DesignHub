@@ -2,12 +2,14 @@
 
 import { Trash2 } from "lucide-react";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { Button } from "@/components/ui/button";
 import { toHex } from "@/lib/color/color";
 import { createSwatch, useColorStore } from "@/store/color-store";
 import { useLibraryStore, type SavedPalette } from "@/store/library-store";
 
 export function SavedPalettes() {
+  const { t } = useI18n();
   const palettes = useLibraryStore((state) => state.savedPalettes);
   const deletePalette = useLibraryStore((state) => state.deletePalette);
   const setSwatches = useColorStore((state) => state.setSwatches);
@@ -28,7 +30,7 @@ export function SavedPalettes() {
   return (
     <section aria-labelledby="saved-palettes" className="flex flex-col gap-4">
       <h2 id="saved-palettes" className="text-lg font-medium">
-        Saved palettes
+        {t("colors.saved.title")}
       </h2>
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {palettes.map((palette) => (
@@ -37,7 +39,7 @@ export function SavedPalettes() {
               type="button"
               onClick={() => void load(palette)}
               className="flex h-14 overflow-hidden rounded-md"
-              aria-label={`Load palette ${palette.name}`}
+              aria-label={t("colors.saved.load", { name: palette.name })}
             >
               {palette.colors.map((color, index) => (
                 <span key={index} className="flex-1" style={{ background: toHex(color) }} />
@@ -49,7 +51,7 @@ export function SavedPalettes() {
                 variant="ghost"
                 size="icon"
                 className="size-7"
-                aria-label={`Delete palette ${palette.name}`}
+                aria-label={t("colors.saved.delete", { name: palette.name })}
                 onClick={() => deletePalette(palette.id)}
               >
                 <Trash2 />

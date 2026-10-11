@@ -6,6 +6,7 @@ import { useState } from "react";
 import { GradientStopList } from "@/components/colors/gradient-stop-list";
 import { GradientStopsBar } from "@/components/colors/gradient-stops-bar";
 import { CodeBlock } from "@/components/export/code-block";
+import { useI18n } from "@/components/layout/locale-provider";
 import { Button } from "@/components/ui/button";
 import { SliderField } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
@@ -16,6 +17,7 @@ import { useColorStore } from "@/store/color-store";
 import type { Gradient, GradientType } from "@/types/color";
 
 export function GradientStudio() {
+  const { locale, t } = useI18n();
   const gradient = useColorStore((state) => state.gradient);
   const setGradient = useColorStore((state) => state.setGradient);
   const updateGradient = useColorStore((state) => state.updateGradient);
@@ -32,7 +34,9 @@ export function GradientStudio() {
       <div className="flex min-w-0 flex-col gap-4">
         <div
           role="img"
-          aria-label={`${gradient.type} gradient preview`}
+          aria-label={t("colors.gradient.preview", {
+            type: t(`colors.gradient.type.${gradient.type}` as const).toLocaleLowerCase(locale),
+          })}
           className="aspect-[16/9] w-full rounded-xl border"
           style={{ background: css }}
         />
@@ -46,26 +50,26 @@ export function GradientStudio() {
       </div>
 
       <div className="flex flex-col gap-4">
-        <Panel title="Gradient">
+        <Panel title={t("colors.gradient.title")}>
           <div className="flex flex-col gap-2">
-            <Label>Type</Label>
+            <Label>{t("colors.gradient.type")}</Label>
             <ToggleGroup
               type="single"
               value={gradient.type}
               onValueChange={(value) => value && updateGradient({ type: value as GradientType })}
-              aria-label="Gradient type"
+              aria-label={t("colors.gradient.typeLabel")}
               className="w-full"
             >
               {(["linear", "radial", "conic"] as const).map((type) => (
-                <ToggleGroupItem key={type} value={type} className="flex-1 capitalize">
-                  {type}
+                <ToggleGroupItem key={type} value={type} className="flex-1">
+                  {t(`colors.gradient.type.${type}` as const)}
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
           </div>
           {usesAngle ? (
             <SliderField
-              label="Angle"
+              label={t("colors.gradient.angle")}
               value={gradient.angle}
               min={0}
               max={360}
@@ -76,7 +80,7 @@ export function GradientStudio() {
           {usesCenter ? (
             <div className="grid grid-cols-2 gap-4">
               <SliderField
-                label="Center X"
+                label={t("colors.gradient.centerX")}
                 value={gradient.x}
                 min={0}
                 max={100}
@@ -84,7 +88,7 @@ export function GradientStudio() {
                 format={(v) => `${v}%`}
               />
               <SliderField
-                label="Center Y"
+                label={t("colors.gradient.centerY")}
                 value={gradient.y}
                 min={0}
                 max={100}
@@ -94,12 +98,12 @@ export function GradientStudio() {
             </div>
           ) : null}
           <div className="flex flex-col gap-2">
-            <Label>Interpolation</Label>
+            <Label>{t("colors.gradient.interpolation")}</Label>
             <ToggleGroup
               type="single"
               value={gradient.interpolation}
               onValueChange={(value) => value && updateGradient({ interpolation: value as Gradient["interpolation"] })}
-              aria-label="Interpolation color space"
+              aria-label={t("colors.gradient.interpolationLabel")}
               className="w-full"
             >
               {(["oklch", "oklab", "srgb"] as const).map((space) => (
@@ -111,7 +115,7 @@ export function GradientStudio() {
           </div>
           <div className="grid grid-cols-3 gap-2">
             <Button variant="outline" size="sm" onClick={() => setGradient(randomGradient(gradient))}>
-              <Shuffle /> Random
+              <Shuffle /> {t("colors.gradient.random")}
             </Button>
             <Button
               variant="outline"
@@ -125,7 +129,7 @@ export function GradientStudio() {
                 )
               }
             >
-              <Palette /> Palette
+              <Palette /> {t("colors.gradient.palette")}
             </Button>
             <Button
               variant="outline"
@@ -137,11 +141,11 @@ export function GradientStudio() {
                 })
               }
             >
-              <ArrowLeftRight /> Reverse
+              <ArrowLeftRight /> {t("colors.gradient.reverse")}
             </Button>
           </div>
         </Panel>
-        <Panel title="Stops" description="Up to 8 stops.">
+        <Panel title={t("colors.gradient.stops")} description={t("colors.gradient.stopsLimit", { max: 8 })}>
           <GradientStopList
             gradient={gradient}
             selectedId={selectedStop}
