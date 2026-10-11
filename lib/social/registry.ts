@@ -18,6 +18,8 @@ import { dribbbleShot } from "@/lib/social/templates/dribbble";
 import { behanceCover } from "@/lib/social/templates/behance";
 import { patreonCover } from "@/lib/social/templates/patreon";
 import { kickBanner } from "@/lib/social/templates/kick";
+import { bandcampHeader } from "@/lib/social/templates/bandcamp";
+import { productHuntThumbnail } from "@/lib/social/templates/product-hunt-thumbnail";
 import type { SocialPlatform, SocialTemplate } from "@/lib/social/types";
 
 /** Templates register here as they are implemented. */
@@ -30,6 +32,7 @@ export const socialTemplates: SocialTemplate[] = [
   instagramStory,
   ...ogTemplates,
   productHuntGallery,
+  productHuntThumbnail,
   youtubeThumbnail,
   youtubeBanner,
   pinterestPin,
@@ -45,6 +48,7 @@ export const socialTemplates: SocialTemplate[] = [
   behanceCover,
   patreonCover,
   kickBanner,
+  bandcampHeader,
 ];
 
 export const socialPlatforms: SocialPlatform[] = [
@@ -67,6 +71,7 @@ export const socialPlatforms: SocialPlatform[] = [
   "Behance",
   "Patreon",
   "Kick",
+  "Bandcamp",
 ];
 
 /** Ids from earlier versions, so saved selections keep working. */

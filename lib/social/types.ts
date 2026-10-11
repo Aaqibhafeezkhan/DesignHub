@@ -52,7 +52,8 @@ export type SocialPlatform =
   | "Dribbble"
   | "Behance"
   | "Patreon"
-  | "Kick";
+  | "Kick"
+  | "Bandcamp";
 
 export type SocialTemplate = {
   id: string;

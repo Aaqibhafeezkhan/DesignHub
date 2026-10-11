@@ -34,6 +34,8 @@ test.each([
   ["behance-cover", 808, 632],
   ["patreon-cover", 1600, 400],
   ["kick-banner", 1920, 480],
+  ["bandcamp-header", 975, 180],
+  ["product-hunt-thumbnail", 240, 240],
 ])("%s is registered at %ix%i and included in the full pack", (id, width, height) => {
   const template = getSocialTemplate(id);
   expect(template).toMatchObject({ width, height });
