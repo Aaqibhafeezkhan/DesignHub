@@ -53,7 +53,7 @@ export const en = {
   "studio.svg.title": "SVG Playground",
   "studio.svg.short": "SVG Playground",
   "studio.svg.description":
-    "Inspect, edit and optimize SVG. Convert to JSX, React, React Native, Vue, Svelte or a sprite sheet.",
+    "Inspect, edit and optimize SVG. Convert to JSX, React, React Native, Vue, Svelte, Angular, Solid or a sprite sheet.",
   "studio.accessibility.title": "Accessibility Lab",
   "studio.accessibility.short": "Accessibility Lab",
   "studio.accessibility.description":

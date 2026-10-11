@@ -51,7 +51,7 @@ export const es = {
   "studio.svg.title": "Taller SVG",
   "studio.svg.short": "Taller SVG",
   "studio.svg.description":
-    "Inspecciona, edita y optimiza SVG. Conviértelo a JSX, React, React Native, Vue, Svelte o una hoja de sprites.",
+    "Inspecciona, edita y optimiza SVG. Conviértelo a JSX, React, React Native, Vue, Svelte, Angular, Solid o una hoja de sprites.",
   "studio.accessibility.title": "Laboratorio de accesibilidad",
   "studio.accessibility.short": "Accesibilidad",
   "studio.accessibility.description":

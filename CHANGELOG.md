@@ -39,6 +39,9 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - A translatable interface: typed message catalogs with English fallback, a language switcher in the header and Spanish as the first extra locale (the app shell, the command palette and Brand Projects). Routes and static prerendering are unchanged.
 - The Typography Studio and the home page no longer scroll sideways on phones.
 - Unit tests for shades, the color blindness simulation and logo recoloring; recoloring now handles `!important` style colors.
+- Hindi as a third interface language, and translated project compare and history dialogs and Color Studio. Devanagari falls back to a system font.
+- A More menu in the header holds the links hidden on medium screens.
+- Unit tests for SVG path lengths and the animated logo; they fixed `pathLength` handling in the animation and rounded rectangles with `rx="auto"`.
 
 #### Brand Studio
 
@@ -67,6 +70,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - A favicon package (.zip) built from the app icon variant, also included in the logo pack as `favicon/`.
 - A circular avatar variant for profile pictures, added to the logo pack as SVG, PDF and 400 and 1024 px PNGs.
 - Animated SVG export: the logo draws itself in from measured path lengths, then the fills fade in. It plays once or loops and shows the final logo under reduced motion.
+- Recoloring and monochrome now include colors set in `<style>` elements (class-based fills from Illustrator), and the output stays sanitized.
 
 #### Mockup Studio
 
@@ -95,18 +99,20 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Dribbble shot (1600 x 1200) and Behance project cover (808 x 632) templates.
 - Patreon cover (1600 x 400) and Kick channel banner (1920 x 480) templates.
 - Long websites, handles and names are shortened to fit their space in every template, so nothing runs past the safe area.
+- Bandcamp header (975 x 180) and Product Hunt thumbnail (240 x 240) templates.
 
 #### Brand Guidelines
 
 - A complete brand book generated from the brand: cover, introduction, logo usage, clear space, minimum size, incorrect usage, color palette, typography, iconography, imagery, UI components, accessibility, voice and tone, social media, and a two-page design token appendix.
 - Pages can be switched off; numbering and contents update automatically. Voice and tone are edited in place.
 - Export the full book as a PDF with pdf-lib, or any page as PNG.
-- Three cover layouts (Gradient, Minimal, Editorial) that persist and apply to every PDF export. The book is nineteen pages, with Imagery and Social media pages drawn from the brand.
+- Three cover layouts (Gradient, Minimal, Editorial) that persist and apply to every PDF export. The book is twenty pages, with Imagery and Social media pages drawn from the brand.
 - A Mission and values page: a statement and up to four values, edited in place and saved with brand projects.
 - The PDF has bookmarks for every included page and a clickable contents page.
 - Download website: the brand book as a static site ZIP with real HTML text, the page art, logo files and token downloads, ready for GitHub Pages or Netlify.
 - A Co-branding page: the logo next to a neutral partner mark, with the divider, clear space spacing, size balance and a do and a don't.
 - A Color usage page: 60 / 30 / 10 proportions from the color roles, approved text-on-color pairs with their real contrast, and two don'ts.
+- A Typography usage page: the hierarchy from the live type scale, line length and line height guidance, and two don'ts.
 
 #### Brand Projects
 
@@ -119,6 +125,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Share a brand as a link: the snapshot is compressed and checksummed into the URL hash, validated like an imported file and added as a new project after a prompt. The uploaded logo is left out if the link would be too long.
 - Compare two projects side by side, with differences highlighted and announced; on phones each property stacks.
 - Version history per project: a version every five minutes of editing and before Surprise me, token import, Brand DNA apply, share-link import and palette loads, capped at 20, with preview and undoable restore. Deleting a project removes its history (and undo brings it back).
+- Optionally include version history in project exports; imported versions are validated, sanitized and capped.
 
 #### Typography Studio
 
@@ -155,6 +162,8 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Download the palette as a PNG swatch strip, next to the code formats.
 - Download the palette as an Adobe Swatch Exchange (`.ase`) file, with shades grouped per color.
 - Sketch palette and Procreate swatches downloads, with every palette file in one Download menu.
+- Download the palette as a Krita palette (`.kpl`).
+- The starter palette now passes every color vision simulation.
 
 #### Icon Studio
 
@@ -169,10 +178,11 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Export an icon as a Svelte 5 component.
 - Export an icon as an Angular standalone component.
 - Export an icon as a SolidJS component.
+- Export an icon as a Qwik component.
 
 #### Background Studio
 
-- Twenty-six procedural generators: waves, organic blobs (Paper.js smoothing), mesh gradients, aurora, noise textures, dot, grid and isometric patterns, concentric rings, checkerboard, low-poly mosaic, bokeh, confetti, chevron, honeycomb hexagons, sunburst, topographic contour lines, rotated stripes, plus signs, a starfield, Voronoi cells (computed in plain TypeScript, edge to edge), crosshatch, a circuit board with non-overlapping traces, halftone dots (linear, radial or seeded), triangles and squiggles.
+- Twenty-seven procedural generators: waves, organic blobs (Paper.js smoothing), mesh gradients, aurora, noise textures, dot, grid and isometric patterns, concentric rings, checkerboard, low-poly mosaic, bokeh, confetti, chevron, honeycomb hexagons, sunburst, topographic contour lines, rotated stripes, plus signs, a starfield, Voronoi cells (computed in plain TypeScript, edge to edge), crosshatch, a circuit board with non-overlapping traces, halftone dots (linear, radial or seeded), triangles, squiggles and concentric squares.
 - Deterministic seeds with randomize (`Space`), color controls with a "use palette" shortcut, density, scale, rotation and canvas presets.
 - Exports: SVG, PNG (1× and 2×) and CSS backgrounds (native gradients where possible, inline SVG otherwise).
 - The dots, checks, chevron and hexagons patterns now follow the seed, so a new seed shifts them.
@@ -186,6 +196,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - A long shadow effect for boxes and text, with an angle, length and fade, at most 60 shadow steps.
 - The long shadow fades evenly on boxes: each step's opacity is set so the stacked copies follow a straight ramp.
 - A gradient text effect using the Color Studio gradient, with an optional animated shift that stops under reduced motion and a solid color fallback.
+- A skeleton shimmer effect in the brand's neutrals, static under reduced motion.
 
 #### SVG Playground
 
@@ -198,6 +209,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - A CSS data URI output that encodes only what it must, so it is shorter than base64. Sprite ids no longer collide when symbol and internal ids share hyphens.
 - An SVG to Svelte component converter. Renaming a sprite symbol is free while typing and is de-duplicated on blur or `Enter`, so two symbols never share an id.
 - An SVG to Angular component converter.
+- An SVG to SolidJS component converter.
 
 #### Accessibility Lab
 
@@ -229,6 +241,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - YAML tokens and a Sass map with a `token($group, $name)` function.
 - UnoCSS and Panda CSS presets; Panda gets semantic tokens with `_dark` values.
 - Bootstrap 5 Sass variables and a Chakra UI v3 theme with semantic tokens.
+- A shadcn/ui theme (OKLCH, light and dark) and Figma Variables JSON for the variables REST API.
 
 ### Performance
 
@@ -264,4 +277,4 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - `.env.example` documenting the one optional variable and every external service (none need a key).
 - README, ROADMAP and CONTRIBUTING cover every studio, including the brand platform.
 - A storage guide (`docs/storage.md`) listing everything DesignHub saves in the browser and how to reset it, plus Logo, Brand DNA and Projects screenshots in the README.
-- A FAQ (`docs/faq.md`), a keyboard shortcuts guide (`docs/shortcuts.md`) and a self-hosting guide for Vercel, Netlify, a Node server and Docker (`docs/self-hosting.md`), a design tokens glossary (`docs/glossary.md`) and a first contribution walkthrough (`docs/first-contribution.md`).
+- A FAQ (`docs/faq.md`), a keyboard shortcuts guide (`docs/shortcuts.md`) and a self-hosting guide for Vercel, Netlify, a Node server and Docker (`docs/self-hosting.md`), a design tokens glossary (`docs/glossary.md`) and a first contribution walkthrough (`docs/first-contribution.md`, building a SoundCloud header).
