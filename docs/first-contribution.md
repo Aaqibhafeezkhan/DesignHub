@@ -1,6 +1,6 @@
 # Your first contribution
 
-This walkthrough follows one real change from fork to merged pull request: adding a social template to the [Social Media Studio](../README.md#social-media-studio). The example is a Patreon cover (1600 x 400), but the steps are the same for any template, and most of them are the same for any change.
+This walkthrough follows one real change from fork to merged pull request: adding a social template to the [Social Media Studio](../README.md#social-media-studio). The example is a SoundCloud profile header (2480 x 520, the size the [SoundCloud help center](https://help.soundcloud.com/hc/en-us/articles/115003450007) recommends), but the steps are the same for any template, and most of them are the same for any change.
 
 [CONTRIBUTING.md](../CONTRIBUTING.md) is the reference for setup, code style and the other guides (mockups, export formats, backgrounds, effects). This page shows how the pieces fit together in order, and links back to it rather than repeating it. The [glossary](glossary.md) explains terms such as safe area and brand tokens.
 
@@ -27,7 +27,7 @@ Branch from an up-to-date `main`, with a prefix from the [branch naming table](.
 ```bash
 git switch main
 git pull upstream main
-git switch -c feat/patreon-cover
+git switch -c feat/soundcloud-header
 ```
 
 ## 4. Install and run
@@ -52,48 +52,48 @@ A social template is a pure function from a drawing context (the brand's colors,
 If the platform is new, add it to the `SocialPlatform` union in `lib/social/types.ts`:
 
 ```ts
-  | "Behance"
-  | "Patreon";
+  | "Bandcamp"
+  | "SoundCloud";
 ```
 
 TypeScript then makes sure every template's `platform` is spelled the same way.
 
 ### Write the template
 
-Create `lib/social/templates/patreon.ts`. Start from a template with a similar shape; `lib/social/templates/tumblr.ts` is a good wide banner to copy:
+Create `lib/social/templates/soundcloud.ts`. Start from a template with a similar shape; `lib/social/templates/tumblr.ts` is a good wide banner to copy:
 
 ```ts
 import { logo, mockupDoc, onPrimaryLarge, text, wrap } from "@/lib/mockups/kit";
 import { backdrop, gradientBackdrop, heading } from "@/lib/social/templates/shared";
 import type { SocialTemplate } from "@/lib/social/types";
 
-const W = 1600;
-const H = 400;
-// Patreon crops the cover on narrow screens, so keep content in the middle.
-const SAFE = { x: 200, y: 40, width: 1200, height: 320 };
+const W = 2480;
+const H = 520;
+// SoundCloud crops the header on smaller screens, so keep content in the middle.
+const SAFE = { x: 400, y: 60, width: 1680, height: 400 };
 
-export const patreonCover: SocialTemplate = {
-  id: "patreon-cover",
-  platform: "Patreon",
-  label: "Cover",
+export const soundcloudHeader: SocialTemplate = {
+  id: "soundcloud-header",
+  platform: "SoundCloud",
+  label: "Profile header",
   width: W,
   height: H,
-  description: "Creator page cover, 1600 × 400. Narrow screens crop the sides.",
+  description: "Profile header, 2480 × 520. Smaller screens crop the sides.",
   safe: SAFE,
   render(ctx) {
     const { surface, content } = ctx;
     const onColor = ctx.layout.background !== "solid";
     const on = onColor ? onPrimaryLarge(ctx) : surface.text;
-    const mark = 120;
+    const mark = 180;
     const left = SAFE.x + ctx.layout.padding / 2;
-    const textX = left + mark + 40;
+    const textX = left + mark + 60;
     const maxWidth = SAFE.x + SAFE.width - textX;
-    const name = heading(ctx, content.name, textX, 190, maxWidth, 72, on, { maxLines: 1 });
-    const headline = wrap(ctx, content.headline, maxWidth, 32, "b", 1)[0] ?? "";
+    const name = heading(ctx, content.name, textX, 250, maxWidth, 104, on, { maxLines: 1 });
+    const headline = wrap(ctx, content.headline, maxWidth, 44, "b", 1)[0] ?? "";
     const body = `${backdrop(ctx, W, H, () => gradientBackdrop(ctx, W, H))}
-      ${logo(ctx, { x: left, y: H / 2 - mark / 2, width: mark, height: mark }, onColor ? on : undefined, "patreon-mark")}
+      ${logo(ctx, { x: left, y: H / 2 - mark / 2, width: mark, height: mark }, onColor ? on : undefined, "soundcloud-mark")}
       ${name.markup}
-      ${text(textX, 250, headline, { size: 32, fill: on, opacity: 0.88 })}`;
+      ${text(textX, 330, headline, { size: 44, fill: on, opacity: 0.88 })}`;
     return mockupDoc(ctx, W, H, body);
   },
 };
@@ -112,18 +112,18 @@ The points that matter:
 Add the template, and the platform if it is new, in `lib/social/registry.ts`:
 
 ```ts
-import { patreonCover } from "@/lib/social/templates/patreon";
+import { soundcloudHeader } from "@/lib/social/templates/soundcloud";
 
 export const socialTemplates: SocialTemplate[] = [
   // ...
-  behanceCover,
-  patreonCover,
+  bandcampHeader,
+  soundcloudHeader,
 ];
 
 export const socialPlatforms: SocialPlatform[] = [
   // ...
-  "Behance",
-  "Patreon",
+  "Bandcamp",
+  "SoundCloud",
 ];
 ```
 
@@ -134,13 +134,13 @@ Registering is all it takes for the template to appear in the picker, the PNG ex
 `lib/social/templates.test.ts` already renders every registered template in light and dark mode, checks the SVG is well formed at the declared size, and renders it with a brand name full of characters that need escaping. `lib/social/registry.test.ts` checks that ids are unique and that safe areas fit the canvas. So the only test to add is the size row in `registry.test.ts`:
 
 ```ts
-  ["behance-cover", 808, 632],
-  ["patreon-cover", 1600, 400],
+  ["product-hunt-thumbnail", 240, 240],
+  ["soundcloud-header", 2480, 520],
 ```
 
 ## 6. Check it in the browser
 
-In the studio at `/social`, pick **Patreon > Cover** and turn on **Show safe area** in the Content panel. Then go through item 7 of the [template guidelines](../CONTRIBUTING.md#mockup-and-social-template-guidelines) and the pull request checklist:
+In the studio at `/social`, pick **SoundCloud > Profile header** and turn on **Show safe area** in the Content panel. Then go through item 7 of the [template guidelines](../CONTRIBUTING.md#mockup-and-social-template-guidelines) and the pull request checklist:
 
 - Light and dark themes (the theme toggle in the header).
 - A long brand name and a long headline, so nothing overflows the safe area.
@@ -171,8 +171,8 @@ Commit messages follow [Conventional Commits](../CONTRIBUTING.md#commit-style):
 
 ```bash
 git add lib/social
-git commit -m "feat(social): add Patreon cover template"
-git push -u origin feat/patreon-cover
+git commit -m "feat(social): add SoundCloud header template"
+git push -u origin feat/soundcloud-header
 ```
 
 Since this change adds a feature people will see, also add a line under the unreleased section of `CHANGELOG.md` and the platform to the Social Media list in `README.md`, in the same pull request.
@@ -209,7 +209,7 @@ A maintainer reviews the pull request. Answer feedback with new commits on the s
 
 ```bash
 git add lib/social
-git commit -m "fix(social): keep the Patreon headline inside the safe area"
+git commit -m "fix(social): keep the SoundCloud headline inside the safe area"
 git push
 ```
 
@@ -219,8 +219,8 @@ Once the checks are green and the review is approved, the maintainer merges it (
 git switch main
 git pull upstream main
 git push origin main
-git branch -d feat/patreon-cover
-git push origin --delete feat/patreon-cover
+git branch -d feat/soundcloud-header
+git push origin --delete feat/soundcloud-header
 ```
 
 After a squash merge `git branch -d` may say the branch is not fully merged; `git branch -D` deletes it anyway. That's it: your change ships with the next deploy. Pick another issue, or ask in [Discussions](https://github.com/yakew7/DesignHub/discussions) if you get stuck.
