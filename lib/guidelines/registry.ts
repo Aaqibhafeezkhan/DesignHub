@@ -12,6 +12,7 @@ import { coverPage, introductionPage, voicePage } from "@/lib/guidelines/pages/i
 import { missionPage } from "@/lib/guidelines/pages/mission";
 import { clearSpacePage, incorrectUsagePage, logoUsagePage, minimumSizePage } from "@/lib/guidelines/pages/logo";
 import { colorTokensPage, scaleTokensPage } from "@/lib/guidelines/pages/tokens";
+import { typographyUsagePage } from "@/lib/guidelines/pages/typography-usage";
 import type { GuidelinePage } from "@/lib/guidelines/types";
 
 /** Pages in book order. */
@@ -27,6 +28,7 @@ export const guidelinePages: GuidelinePage[] = [
   colorPalettePage,
   colorUsagePage,
   typographyPage,
+  typographyUsagePage,
   iconographyPage,
   imageryPage,
   componentsPage,

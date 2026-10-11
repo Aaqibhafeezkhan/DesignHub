@@ -13,6 +13,12 @@ import {
   textCombinations,
 } from "@/lib/guidelines/pages/color-usage";
 import { introductionPage } from "@/lib/guidelines/pages/intro";
+import {
+  BODY_MIN_LINE_HEIGHT,
+  typeHierarchy,
+  typographyUsagePage,
+  wrapToMeasure,
+} from "@/lib/guidelines/pages/typography-usage";
 import { guidelinePages } from "@/lib/guidelines/registry";
 import { brandSiteFiles, pageBlocks } from "@/lib/guidelines/site";
 import type { GuidelineContext } from "@/lib/guidelines/types";
@@ -20,6 +26,7 @@ import { measureText } from "@/lib/logo/measure";
 import { defaultSnapshot } from "@/lib/projects/snapshot";
 import { xmlError } from "@/lib/test/xml";
 import { buildTokens } from "@/lib/tokens/build";
+import { generateScale } from "@/lib/typography/scale";
 import type { BrandColor } from "@/types/brand";
 
 /** The default brand as the guideline pages see it, built the way the hooks build it. */
@@ -227,6 +234,93 @@ describe("color usage page", () => {
     for (const color of custom.brand.colors.all)
       expect(colorDistance(foreign, fromHex(color.hex))).toBeGreaterThan(0.1);
     expect(colorUsagePage.render(custom, 10)).toContain("Don't set text in Ember on Sun");
+  });
+});
+
+describe("typography usage page", () => {
+  test("is in the site and its contents unless switched off", () => {
+    const { files } = site();
+    const page = files.get("typography-usage/index.html") ?? "";
+    expect(page).toContain("<h1>Typography usage</h1>");
+    expect(page).toContain("<h2>HIERARCHY</h2>");
+    expect(page).toContain("<h2>LINE LENGTH AND LINE HEIGHT</h2>");
+    expect(page).toContain("<p>Don't set body text in all caps</p>");
+    expect(files.get("index.html")).toContain("Typography Usage");
+
+    const without = site(["typography-usage"]).files;
+    expect(without.has("typography-usage/index.html")).toBe(false);
+    expect(without.has("assets/pages/typography-usage.svg")).toBe(false);
+    expect(without.get("index.html")).not.toContain("Typography Usage");
+  });
+
+  test("numbers the page after Typography and lists it in the contents", () => {
+    const { ctx } = guidelineContext("Acme Labs", []);
+    const typography = ctx.contents.find((entry) => entry.id === "typography");
+    const usage = ctx.contents.find((entry) => entry.id === "typography-usage");
+    expect(usage?.number).toBe((typography?.number ?? 0) + 1);
+    expect(introductionPage.render(ctx, 2)).toContain(">Typography Usage</text>");
+    const skipped = guidelineContext("Acme Labs", ["typography-usage"]).ctx.contents;
+    expect(skipped.find((entry) => entry.id === "iconography")?.number).toBe(usage?.number);
+  });
+
+  test("builds the hierarchy from the type scale, largest first, without repeating a step", () => {
+    const scale = generateScale({
+      baseSize: 18,
+      ratio: 1.25,
+      minBase: 16,
+      minRatio: 1.2,
+      stepsUp: 2,
+      stepsDown: 1,
+      minViewport: 320,
+      maxViewport: 1280,
+    });
+    const levels = typeHierarchy(scale);
+    expect(levels.map((level) => level.role)).toEqual(["Heading 1", "Heading 2", "Body", "Small"]);
+    expect(new Set(levels.map((level) => level.step.step)).size).toBe(levels.length);
+    expect(levels.map((level) => level.step.step)).toEqual([2, 1, 0, -1]);
+    const { ctx } = guidelineContext("Acme Labs", []);
+    expect(typeHierarchy(ctx.brand.typography.scale).map((level) => level.role)).toEqual([
+      "Display",
+      "Heading 1",
+      "Heading 2",
+      "Heading 3",
+      "Body",
+      "Small",
+    ]);
+    expect(levels.find((level) => level.role === "Body")?.step.maxPx).toBe(18);
+    for (const level of levels)
+      if (level.font === "b") expect(level.lineHeight).toBeGreaterThanOrEqual(BODY_MIN_LINE_HEIGHT);
+    expect(typeHierarchy([])).toEqual([]);
+  });
+
+  test("sets the line length sample to the ideal measure", () => {
+    const lines = wrapToMeasure("one two three four five six seven eight nine ten", 14);
+    expect(lines).toEqual(["one two three", "four five six", "seven eight", "nine ten"]);
+    expect(wrapToMeasure("a reallylongwordthatcannotbreak b", 5)).toEqual(["a", "reallylongwordthatcannotbreak", "b"]);
+  });
+
+  test("draws sizes from the live scale in light and dark", () => {
+    for (const mode of ["light", "dark"] as const) {
+      const { ctx } = guidelineContext("Acme Labs", [], mode);
+      const svg = typographyUsagePage.render(ctx, 12);
+      expect(xmlError(svg)).toBeNull();
+      expect(svg).toContain(`fill="${ctx.surface.background}"`);
+      const body = ctx.brand.typography.scale.find((step) => step.step === 0);
+      expect(svg).toContain(`${Math.round(body?.minPx ?? 0)}-${Math.round(body?.maxPx ?? 0)}px`);
+    }
+    const { ctx } = guidelineContext("Acme Labs", []);
+    const bigger = {
+      ...ctx,
+      brand: {
+        ...ctx.brand,
+        typography: {
+          ...ctx.brand.typography,
+          scale: ctx.brand.typography.scale.map((step) => ({ ...step, minPx: step.minPx + 3, maxPx: step.maxPx + 7 })),
+        },
+      },
+    };
+    const top = bigger.brand.typography.scale.reduce((a, b) => (b.step > a.step ? b : a));
+    expect(typographyUsagePage.render(bigger, 12)).toContain(`${Math.round(top.minPx)}-${Math.round(top.maxPx)}px`);
   });
 });
 

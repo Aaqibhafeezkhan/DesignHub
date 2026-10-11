@@ -59,6 +59,16 @@ describe("brand book navigation", () => {
     expect(await titles(["color-usage"])).not.toContain("Color Usage");
   });
 
+  test("bookmarks the Typography Usage page after Typography unless it is switched off", async () => {
+    const titles = async (excluded: string[]) =>
+      outlineItems((await book(excluded)).pdf).map((item) =>
+        item.lookup(PDFName.of("Title"), PDFHexString).decodeText(),
+      );
+    const all = await titles([]);
+    expect(all[all.indexOf("Typography") + 1]).toBe("Typography Usage");
+    expect(await titles(["typography-usage"])).not.toContain("Typography Usage");
+  });
+
   test("links every contents entry on the Introduction page to its page", async () => {
     const { contents, pdf } = await book(["voice"]);
     const intro = pdf.getPage(contents.findIndex((entry) => entry.id === "introduction"));
