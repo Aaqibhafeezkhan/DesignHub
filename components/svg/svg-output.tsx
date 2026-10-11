@@ -12,6 +12,7 @@ import { svgBackgroundCss } from "@/lib/svg/data-uri";
 import { reactNativeComponent } from "@/lib/svg/react-native";
 import { minify, prettyPrint } from "@/lib/svg/serialize";
 import { buildSprite, spriteUsage } from "@/lib/svg/sprite";
+import { solidComponent } from "@/lib/svg/solid";
 import { svelteComponent } from "@/lib/svg/svelte";
 import { vueComponent } from "@/lib/svg/vue";
 import { useSvgStore } from "@/store/svg-store";
@@ -73,6 +74,13 @@ export function SvgOutput({ root }: { root: SvgNode | null }) {
         filename: `${componentNameFromFile(name)}.svelte`,
         language: "svelte",
         code: svelteComponent(codeTree),
+      },
+      {
+        id: "solid",
+        label: "Solid",
+        filename: `${componentNameFromFile(name)}.tsx`,
+        language: "tsx",
+        code: solidComponent(codeTree, name),
       },
       {
         id: "angular",
