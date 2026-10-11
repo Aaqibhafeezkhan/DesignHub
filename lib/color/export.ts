@@ -280,6 +280,56 @@ export function procreateSwatches(
   };
 }
 
+/** Krita's built-in sRGB profile, which it falls back to when a named profile is missing. */
+const kritaSrgbProfile = "sRGB-elle-V2-srgbtrc.icc";
+
+/** The colorset.xml inside a Krita palette. Exported for tests. */
+export function kritaColorsetXml(palette: NamedColor[], includeShades: boolean, name = "DesignHub palette"): string {
+  const entry = (color: Oklch, label: string, column: number, indent: string) => {
+    const { r, g, b } = toRgb(color);
+    return [
+      `${indent}<ColorSetEntry name="${escapeXml(label)}" id="${toHex({ ...color, alpha: 1 })}" spot="false" bitdepth="U8">`,
+      `${indent}  <RGB space="${kritaSrgbProfile}" r="${unit(r / 255)}" g="${unit(g / 255)}" b="${unit(b / 255)}"/>`,
+      `${indent}  <Position row="0" column="${column}"/>`,
+      `${indent}</ColorSetEntry>`,
+    ].join("\n");
+  };
+  const title = escapeXml(name.replace(/\s+/g, " ").trim() || "DesignHub palette");
+  // With shades, every color is a one-row group of itself and its shades; without, one global row.
+  const columns = includeShades ? (palette[0]?.shades.length ?? 0) + 1 : Math.max(1, palette.length);
+  const body = includeShades
+    ? palette.map(({ name: colorName, color, shades }) =>
+        [
+          `  <Group name="${escapeXml(colorName)}" rows="1">`,
+          entry(color, colorName, 0, "    "),
+          ...shades.map((shade, index) => entry(shade.color, `${colorName}-${shade.step}`, index + 1, "    ")),
+          "  </Group>",
+        ].join("\n"),
+      )
+    : palette.map(({ name: colorName, color }, index) => entry(color, colorName, index, "  "));
+  const rows = includeShades || palette.length === 0 ? 0 : 1;
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<ColorSet version="2.0" name="${title}" comment="Exported from DesignHub" columns="${columns}" rows="${rows}" readonly="false">
+${body.join("\n")}
+</ColorSet>
+`;
+}
+
+/**
+ * Krita palette (.kpl): a ZIP whose first entry is an uncompressed `mimetype` file, followed by
+ * colorset.xml. With shades, each color and its shades sit in a group named after the color.
+ */
+export function kritaPalette(
+  palette: NamedColor[],
+  includeShades: boolean,
+  name = "DesignHub palette",
+): Uint8Array<ArrayBuffer> {
+  return createZip([
+    { name: "mimetype", data: "krita/x-colorset" },
+    { name: "colorset.xml", data: kritaColorsetXml(palette, includeShades, name) },
+  ]);
+}
+
 /** SVG has no conic gradients; conic falls back to a linear gradient at the same angle. */
 export function gradientSvg(gradient: Gradient, width = 1200, height = 630): string {
   const stops = sortedStops(gradient)

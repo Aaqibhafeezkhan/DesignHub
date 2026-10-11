@@ -5,6 +5,7 @@ import {
   adobeSwatchExchange,
   colorExports,
   gimpPalette,
+  kritaPalette,
   paletteSvg,
   procreateSwatches,
   procreateSwatchLimit,
@@ -227,5 +228,63 @@ describe("Procreate swatches", () => {
     expect(json[0]?.swatches).toHaveLength(procreateSwatchLimit);
     expect(json[0]?.name).toBe("DesignHub palette");
     expect(result).toMatchObject({ shadesDropped: false, colorsDropped: 2 });
+  });
+});
+
+/** Every entry of a stored ZIP, in order. */
+function zipEntries(zip: Uint8Array): { name: string; text: string }[] {
+  const view = new DataView(zip.buffer, zip.byteOffset, zip.byteLength);
+  const decoder = new TextDecoder();
+  const entries: { name: string; text: string }[] = [];
+  let offset = 0;
+  while (view.getUint32(offset, true) === 0x04034b50) {
+    expect(view.getUint16(offset + 8, true)).toBe(0);
+    const size = view.getUint32(offset + 18, true);
+    const nameLength = view.getUint16(offset + 26, true);
+    const start = offset + 30 + nameLength;
+    entries.push({
+      name: decoder.decode(zip.subarray(offset + 30, start)),
+      text: decoder.decode(zip.subarray(start, start + size)),
+    });
+    offset = start + size;
+  }
+  return entries;
+}
+
+describe("Krita palette", () => {
+  test("starts with an uncompressed mimetype, then colorset.xml", () => {
+    const entries = zipEntries(kritaPalette(palette, false));
+    expect(entries.map((entry) => entry.name)).toEqual(["mimetype", "colorset.xml"]);
+    expect(entries[0]?.text).toBe("krita/x-colorset");
+  });
+
+  test("lists the base colors in one row without shades", () => {
+    const xml = zipEntries(kritaPalette(palette, false, "Acme & Co"))[1]?.text ?? "";
+    expect(xml).toContain('<ColorSet version="2.0" name="Acme &amp; Co"');
+    expect(xml).toContain('columns="2" rows="1"');
+    expect(xml).not.toContain("<Group");
+    expect(xml).toContain(
+      [
+        '  <ColorSetEntry name="amber" id="#f59e0b" spot="false" bitdepth="U8">',
+        '    <RGB space="sRGB-elle-V2-srgbtrc.icc" r="0.960784" g="0.619608" b="0.043137"/>',
+        '    <Position row="0" column="1"/>',
+        "  </ColorSetEntry>",
+      ].join("\n"),
+    );
+    expect(xml.match(/<ColorSetEntry /g)).toHaveLength(2);
+  });
+
+  test("groups each color with its shades", () => {
+    const xml = zipEntries(kritaPalette(palette, true))[1]?.text ?? "";
+    expect(xml).toContain('name="DesignHub palette"');
+    expect(xml).toContain('columns="2" rows="0"');
+    expect(xml.match(/<Group name="(\w+)" rows="1">/g)).toEqual([
+      '<Group name="indigo" rows="1">',
+      '<Group name="amber" rows="1">',
+    ]);
+    const amber = xml.slice(xml.indexOf('<Group name="amber"'));
+    expect(amber).toContain('<ColorSetEntry name="amber-50" id="#fff7e6"');
+    expect(amber).toContain('<Position row="0" column="1"/>');
+    expect(xml.match(/<ColorSetEntry /g)).toHaveLength(4);
   });
 });

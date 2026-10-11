@@ -1,6 +1,6 @@
 "use client";
 
-import { Brush, ChevronDown, Download, ImageDown, Loader2, Palette, SwatchBook } from "lucide-react";
+import { Brush, ChevronDown, Download, ImageDown, Loader2, Paintbrush, Palette, SwatchBook } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -13,6 +13,7 @@ import { toHex } from "@/lib/color/color";
 import {
   adobeSwatchExchange,
   colorExports,
+  kritaPalette,
   namedPalette,
   paletteSvg,
   procreateSwatches,
@@ -106,11 +107,20 @@ export function ColorExport() {
     });
   }
 
+  /** The palette for Krita; with shades, each color and its shades form a group. */
+  function downloadKrita() {
+    if (swatches.length === 0) return;
+    const bytes = kritaPalette(palette(), includeShades, brandName.trim() || undefined);
+    downloadBlob(new Blob([bytes], { type: "application/zip" }), filename("kpl"));
+    toast.success("Krita palette ready");
+  }
+
   const downloads = [
     { label: "PNG image", hint: ".png", icon: ImageDown, run: downloadPng },
     { label: "Adobe swatches", hint: ".ase", icon: SwatchBook, run: downloadAse },
     { label: "Sketch palette", hint: ".sketchpalette", icon: Palette, run: downloadSketch },
     { label: "Procreate swatches", hint: ".swatches", icon: Brush, run: downloadProcreate },
+    { label: "Krita palette", hint: ".kpl", icon: Paintbrush, run: downloadKrita },
   ];
 
   return (

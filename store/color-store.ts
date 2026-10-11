@@ -4,6 +4,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { fromHex } from "@/lib/color/color";
 import { randomPalette } from "@/lib/color/generate";
 import { defaultGradient } from "@/lib/color/gradient";
+import { starterPalette } from "@/lib/color/presets";
 import { defaultShadeOptions, type ShadeOptions } from "@/lib/color/shades";
 import { indexedDbStorage } from "@/lib/db";
 import { createId } from "@/lib/id";
@@ -11,8 +12,6 @@ import type { ColorFormat, Gradient, HarmonyMode, Oklch, Swatch } from "@/types/
 
 export const MIN_SWATCHES = 2;
 export const MAX_SWATCHES = 10;
-
-const starter = ["#0f172a", "#6366f1", "#f472b6", "#fbbf24", "#34d399"];
 
 export function createSwatch(color: Oklch, locked = false): Swatch {
   return { id: createId("sw"), color, locked };
@@ -57,14 +56,14 @@ export const useColorStore = create<ColorState>()(
   persist(
     (set) => ({
       tab: "palette",
-      swatches: starter.map((hex) => createSwatch(fromHex(hex))),
+      swatches: starterPalette.map((hex) => createSwatch(fromHex(hex))),
       selectedId: null,
       format: "hex",
       harmony: "random",
       setHarmony: (harmony) => set({ harmony }),
       shadeOptions: defaultShadeOptions,
       setShadeOptions: (patch) => set((state) => ({ shadeOptions: { ...state.shadeOptions, ...patch } })),
-      contrast: { fg: fromHex("#0f172a"), bg: fromHex("#fbbf24") },
+      contrast: { fg: fromHex("#0f172a"), bg: fromHex("#ffc935") },
       setContrast: (patch) => set((state) => ({ contrast: { ...state.contrast, ...patch } })),
       gradient: defaultGradient,
       setGradient: (gradient) => set({ gradient }),

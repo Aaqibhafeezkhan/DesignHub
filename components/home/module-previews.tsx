@@ -17,7 +17,7 @@ export function TypographyPreview() {
 }
 
 const ramp = ["#eef2ff", "#c7d2fe", "#a5b4fc", "#818cf8", "#6366f1", "#4f46e5", "#4338ca", "#3730a3", "#312e81"];
-const palette = ["#0f172a", "#6366f1", "#f472b6", "#fbbf24", "#34d399"];
+const palette = ["#0f172a", "#6366f1", "#f472b6", "#ffc935", "#34d399"];
 
 export function ColorPreview() {
   return (

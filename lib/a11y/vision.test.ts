@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import { DISTINGUISHABLE_THRESHOLD, paletteVisionSection } from "@/lib/a11y/vision";
 import { fromHex } from "@/lib/color/color";
+import { starterPalette } from "@/lib/color/presets";
 import { simulatedDistance } from "@/lib/color/vision";
 
 const red = { name: "Red", hex: "#e53935" };
@@ -46,6 +47,13 @@ describe("paletteVisionSection", () => {
   test("ignores tints that already look alike and skips invalid colors", () => {
     const section = paletteVisionSection([red, { name: "Red 2", hex: "#e53936" }, { name: "Bad", hex: "nope" }]);
     expect(section.colors.map((color) => color.name)).toEqual(["Red", "Red 2"]);
+    expect(section.pass).toBe(true);
+  });
+
+  test("passes the starter palette under every vision type", () => {
+    const section = paletteVisionSection(starterPalette.map((hex, index) => ({ name: `Color ${index + 1}`, hex })));
+    expect(section.colors).toHaveLength(starterPalette.length);
+    for (const entry of section.modes) expect(entry.pairs).toEqual([]);
     expect(section.pass).toBe(true);
   });
 });

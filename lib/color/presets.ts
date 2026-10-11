@@ -14,6 +14,12 @@ export type PaletteTag =
 
 export type PalettePreset = { name: string; tags: PaletteTag[]; colors: string[] };
 
+/**
+ * The palette a first visit starts with. The amber is a touch lighter than Tailwind's amber-400 so
+ * it stays apart from the emerald in grayscale, and the palette passes every color vision check.
+ */
+export const starterPalette = ["#0f172a", "#6366f1", "#f472b6", "#ffc935", "#34d399"];
+
 export const paletteTags: PaletteTag[] = [
   "SaaS",
   "Corporate",
