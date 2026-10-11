@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { extractColors, monochromeSvg, recolorSvg } from "@/lib/logo/recolor";
+import { sanitizeSvg } from "@/lib/svg/sanitize";
 import { xmlError } from "@/lib/test/xml";
 
 const logo = [
@@ -101,5 +102,73 @@ describe("monochromeSvg", () => {
     const out = monochromeSvg('<svg fill="none"><path d="M0 0" stroke="#000"/></svg>', "#ff6600");
     expect(out).toMatch(/^<svg fill="none"/);
     expect(out).toContain('stroke="#ff6600"');
+  });
+});
+
+describe("<style> elements", () => {
+  // As Illustrator exports it: classes in a stylesheet, one with !important, plus rules that must stay.
+  const illustrator = [
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">',
+    "<defs><style>",
+    ".cls-1{fill:#e94e1b;}",
+    ".cls-2 { fill: #1D1D1B; stroke: RED !important; stroke-width: 2px }",
+    ".cls-3{fill:none;stroke:#e94e1b;opacity:.5}",
+    ".cls-4{stop-color:rgb(0, 0, 255)}",
+    ".cls-5{fill:url(#g);fill-opacity:.8}",
+    "</style></defs>",
+    '<path class="cls-1" d="M0 0h50v50z"/>',
+    '<path class="cls-2" d="M50 50h50v50z"/>',
+    '<path class="cls-3" d="M0 50h50v50z"/>',
+    "</svg>",
+  ].join("");
+
+  test("lists colors set through classes", () => {
+    expect(extractColors(illustrator)).toEqual(["#e94e1b", "#1d1d1b", "#ff0000", "#0000ff"]);
+  });
+
+  test("recolors class colors and keeps the rest of the stylesheet", () => {
+    const out = recolorSvg(illustrator, { "#e94e1b": "#00aa55", "#ff0000": "#123456" });
+    expect(xmlError(out)).toBeNull();
+    expect(out).toContain(".cls-1{fill:#00aa55;}");
+    expect(out).toContain(".cls-2 { fill: #1D1D1B; stroke: #123456 !important; stroke-width: 2px }");
+    expect(out).toContain(".cls-3{fill:none;stroke:#00aa55;opacity:.5}");
+    expect(out).toContain(".cls-5{fill:url(#g);fill-opacity:.8}");
+    expect(extractColors(out)).toEqual(["#00aa55", "#1d1d1b", "#123456", "#0000ff"]);
+  });
+
+  test("turns class colors monochrome", () => {
+    const out = monochromeSvg(illustrator, "#ffffff");
+    expect(xmlError(out)).toBeNull();
+    expect(extractColors(out)).toEqual(["#ffffff"]);
+    expect(out).toContain("stroke: #ffffff !important;");
+    expect(out).toContain(".cls-3{fill:none;");
+    expect(out).toContain("fill:url(#g)");
+  });
+
+  test("reads every <style> element, including CDATA content", () => {
+    const svg = "<svg><style><![CDATA[.a{fill:#f00}]]></style><style>.b{stroke:#00f}</style></svg>";
+    expect(extractColors(svg)).toEqual(["#ff0000", "#0000ff"]);
+  });
+
+  test("leaves selectors and other properties that contain paint names alone", () => {
+    const svg = "<svg><style>.fill-color{flood-opacity:.5;fill-rule:evenodd}.color{color:#00ff00}</style></svg>";
+    expect(recolorSvg(svg, { "#00ff00": "#000000" })).toBe(
+      "<svg><style>.fill-color{flood-opacity:.5;fill-rule:evenodd}.color{color:#000000}</style></svg>",
+    );
+  });
+
+  test("never writes markup or extra rules into the stylesheet", () => {
+    const svg = "<svg><style>.a{fill:#ff0000}</style></svg>";
+    const out = recolorSvg(svg, { "#ff0000": "red}</style><script>alert(1)</script><style>" });
+    expect(out).toBe(svg);
+    expect(monochromeSvg(svg, "#000;}.b{fill:url(javascript:alert(1))")).toContain(".a{fill:#ff0000}");
+  });
+
+  test("keeps sanitized input sanitized", () => {
+    const clean = sanitizeSvg(`${illustrator.slice(0, -6)}<script>alert(1)</script></svg>`) ?? "";
+    expect(clean).not.toContain("<script");
+    const out = recolorSvg(clean, { "#e94e1b": "#00aa55" });
+    expect(out).toContain(".cls-1{fill:#00aa55;}");
+    expect(sanitizeSvg(out)).toBe(out);
   });
 });
