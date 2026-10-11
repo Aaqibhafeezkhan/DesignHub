@@ -132,6 +132,8 @@ export const en = {
   "projects.sort.newest": "Newest",
   "projects.import": "Import",
   "projects.exportAll": "Export all",
+  "projects.includeHistory": "Include history",
+  "projects.includeHistoryHint": "Adds each project's saved versions to exports. Share links never include them.",
   "projects.file": "Project file",
   "projects.new": "New project",
   "projects.storageBlocked":

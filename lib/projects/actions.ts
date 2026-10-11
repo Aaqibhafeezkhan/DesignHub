@@ -16,7 +16,7 @@ import {
 } from "@/lib/projects/repository";
 import { sameSnapshot, type ProjectVersion } from "@/lib/projects/history";
 import { addTag, removeTag } from "@/lib/projects/tags";
-import { parseProjectsFile } from "@/lib/projects/transfer";
+import { importedVersions, parseProjectsFile, type ProjectHistories } from "@/lib/projects/transfer";
 import { projectName, type BrandProject } from "@/lib/projects/types";
 import {
   autoVersion,
@@ -233,8 +233,16 @@ export async function importProjects(text: string): Promise<number> {
     uniqueName(entry.snapshot, existing);
     const project = await createProject(entry.snapshot, { tags: entry.tags });
     if (entry.favorite) await updateProject(project.id, { favorite: true });
+    if (entry.history.length) await putVersions(project.id, importedVersions(project.id, entry.history, newProjectId));
   }
   return entries.length;
+}
+
+/** The saved versions of each project, for an export that includes history. */
+export async function projectHistories(projects: BrandProject[]): Promise<ProjectHistories> {
+  const histories: ProjectHistories = new Map();
+  for (const project of projects) histories.set(project.id, await listVersions(project.id));
+  return histories;
 }
 
 /** Adds a brand from a share link as a new project and opens it. The open project is saved, never replaced. */

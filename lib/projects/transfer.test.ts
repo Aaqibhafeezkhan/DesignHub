@@ -1,7 +1,8 @@
 import { describe, expect, test } from "vitest";
 
 import { defaultSnapshot } from "@/lib/projects/snapshot";
-import { parseProjectsFile, projectsToJson, projectToJson } from "@/lib/projects/transfer";
+import { MAX_VERSIONS, type ProjectVersion, type VersionReason } from "@/lib/projects/history";
+import { importedVersions, parseProjectsFile, projectsToJson, projectToJson } from "@/lib/projects/transfer";
 import type { BrandProject } from "@/lib/projects/types";
 
 function project(name: string, patch: Partial<BrandProject> = {}): BrandProject {
@@ -175,5 +176,66 @@ describe("invalid files throw a readable error", () => {
     const snapshot = defaultSnapshot();
     const broken = { ...snapshot, brand: { profile: { ...snapshot.brand.profile, name: 42 } } };
     expect(() => parseProjectsFile(JSON.stringify({ format: "designhub.project", snapshot: broken }))).toThrow(/name/);
+  });
+});
+
+describe("version history", () => {
+  function version(id: string, createdAt: number, name: string, reason: VersionReason = "autosave"): ProjectVersion {
+    return { id, projectId: "id-Acme", createdAt, reason, snapshot: defaultSnapshot(name) };
+  }
+
+  test("is left out unless asked for, and files without it import with none", () => {
+    const original = project("Acme");
+    expect(JSON.parse(projectToJson(original))).not.toHaveProperty("history");
+    expect(parseProjectsFile(projectToJson(original))[0]?.history).toEqual([]);
+    expect(parseProjectsFile(projectsToJson([original]))[0]?.history).toEqual([]);
+  });
+
+  test("round-trips a single project and a project list, newest first, with fresh ids", () => {
+    const original = project("Acme");
+    const versions = [version("v1", 100, "Acme v1", "palette"), version("v2", 200, "Acme v2")];
+    const [entry] = parseProjectsFile(projectToJson(original, versions));
+    expect(entry?.history.map((item) => [item.createdAt, item.reason, item.snapshot.brand.profile.name])).toEqual([
+      [200, "autosave", "Acme v2"],
+      [100, "palette", "Acme v1"],
+    ]);
+    expect(entry?.history[0]?.snapshot.colors.swatches).toEqual(versions[1]?.snapshot.colors.swatches);
+    expect(JSON.stringify(entry)).not.toContain("id-Acme");
+
+    let n = 0;
+    const imported = importedVersions("new-project", entry?.history ?? [], () => `fresh-${++n}`);
+    expect(imported.map((item) => [item.id, item.projectId, item.createdAt])).toEqual([
+      ["fresh-1", "new-project", 200],
+      ["fresh-2", "new-project", 100],
+    ]);
+
+    const other = project("Other");
+    const histories = new Map([[original.id, versions]]);
+    const entries = parseProjectsFile(projectsToJson([original, other], histories));
+    expect(entries.map((item) => item.history.length)).toEqual([2, 0]);
+  });
+
+  test("drops a tampered version and keeps the rest", () => {
+    const file = JSON.parse(projectToJson(project("Acme"), [version("v1", 100, "Good"), version("v2", 200, "Bad")]));
+    file.history[0].snapshot.colors.swatches = [];
+    file.history.push({ createdAt: 300, reason: "hacked", snapshot: defaultSnapshot("Unknown reason") });
+    file.history.push({ createdAt: "soon", reason: "autosave", snapshot: defaultSnapshot("Bad date") });
+    file.history.push("not a version");
+    const [entry] = parseProjectsFile(JSON.stringify(file));
+    expect(entry?.snapshot.brand.profile.name).toBe("Acme");
+    expect(entry?.history.map((item) => item.snapshot.brand.profile.name)).toEqual(["Good"]);
+  });
+
+  test("re-sanitizes logos in versions and caps them at the newest MAX_VERSIONS", () => {
+    const evil = version("evil", 5_000, "Evil");
+    evil.snapshot.brand.profile.logoSvg = evilSvg;
+    const many = Array.from({ length: MAX_VERSIONS + 5 }, (_, i) => version(`v${i}`, i, `V${i}`));
+    const file = JSON.parse(projectToJson(project("Acme"), [evil]));
+    file.history.push(...many.map(({ createdAt, reason, snapshot }) => ({ createdAt, reason, snapshot })));
+    const history = parseProjectsFile(JSON.stringify(file))[0]?.history ?? [];
+    expect(history).toHaveLength(MAX_VERSIONS);
+    expect(history[0]?.snapshot.brand.profile.name).toBe("Evil");
+    expect(history[0]?.snapshot.brand.profile.logoSvg).not.toMatch(/<script|onload=|<foreignObject|javascript:/i);
+    expect(history[history.length - 1]?.createdAt).toBe(6);
   });
 });

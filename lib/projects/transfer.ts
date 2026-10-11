@@ -1,4 +1,11 @@
 import { LocalizedError } from "@/lib/i18n/errors";
+import {
+  MAX_VERSIONS,
+  sortVersions,
+  versionReasonLabels,
+  type ProjectVersion,
+  type VersionReason,
+} from "@/lib/projects/history";
 import { defaultSnapshot, type BrandSnapshot } from "@/lib/projects/snapshot";
 import { normalizeTags } from "@/lib/projects/tags";
 import { projectName, type BrandProject } from "@/lib/projects/types";
@@ -8,9 +15,24 @@ import { MAX_BRAND_VALUES } from "@/store/brand-store";
 export const PROJECT_FORMAT = "designhub.project";
 export const PROJECTS_FORMAT = "designhub.projects";
 
-type ProjectEntry = { favorite: boolean; tags: string[]; snapshot: BrandSnapshot };
+/** A version as it travels in a file: ids are local to a browser, so they are left out and made fresh on import. */
+export type VersionEntry = Pick<ProjectVersion, "createdAt" | "reason" | "snapshot">;
 
-export function projectToJson(project: BrandProject): string {
+/** `history` is newest first and empty when the file has none. */
+export type ProjectEntry = { favorite: boolean; tags: string[]; snapshot: BrandSnapshot; history: VersionEntry[] };
+
+/** Project id to its versions, for exports that include history. */
+export type ProjectHistories = Map<string, ProjectVersion[]>;
+
+const historyEntries = (versions: ProjectVersion[] | undefined): VersionEntry[] | undefined =>
+  versions?.length
+    ? sortVersions(versions)
+        .slice(0, MAX_VERSIONS)
+        .map(({ createdAt, reason, snapshot }) => ({ createdAt, reason, snapshot }))
+    : undefined;
+
+/** Pass `history` to include the project's versions; without it the file holds only the current state. */
+export function projectToJson(project: BrandProject, history?: ProjectVersion[]): string {
   return JSON.stringify(
     {
       format: PROJECT_FORMAT,
@@ -20,13 +42,14 @@ export function projectToJson(project: BrandProject): string {
       favorite: project.favorite,
       tags: project.tags,
       snapshot: project.snapshot,
+      history: historyEntries(history),
     },
     null,
     2,
   );
 }
 
-export function projectsToJson(projects: BrandProject[]): string {
+export function projectsToJson(projects: BrandProject[], histories?: ProjectHistories): string {
   return JSON.stringify(
     {
       format: PROJECTS_FORMAT,
@@ -36,6 +59,7 @@ export function projectsToJson(projects: BrandProject[]): string {
         favorite: project.favorite,
         tags: project.tags,
         snapshot: project.snapshot,
+        history: historyEntries(histories?.get(project.id)),
       })),
     },
     null,
@@ -129,6 +153,38 @@ function normalizeSnapshot(value: unknown): BrandSnapshot {
   return snapshot;
 }
 
+const isReason = (value: unknown): value is VersionReason =>
+  typeof value === "string" && Object.hasOwn(versionReasonLabels, value);
+
+/**
+ * Versions from a file, checked like the project itself (each snapshot is validated and its
+ * logos re-sanitized). A version that fails the checks is dropped rather than failing the
+ * import, and only the newest MAX_VERSIONS are kept, as in local history.
+ */
+function normalizeHistory(value: unknown): VersionEntry[] {
+  if (!Array.isArray(value)) return [];
+  const versions: VersionEntry[] = [];
+  for (const item of value) {
+    if (!isObject(item) || !isNumber(item.createdAt) || item.createdAt < 0 || !isReason(item.reason)) continue;
+    try {
+      versions.push({ createdAt: item.createdAt, reason: item.reason, snapshot: normalizeSnapshot(item.snapshot) });
+    } catch {
+      // A damaged or tampered version: skip it and keep the rest.
+    }
+  }
+  return versions.sort((a, b) => b.createdAt - a.createdAt).slice(0, MAX_VERSIONS);
+}
+
+function toEntry(value: Record<string, unknown>): ProjectEntry {
+  // Files from before tags have none; tags are untrusted, so they are trimmed and capped.
+  return {
+    favorite: value.favorite === true,
+    tags: normalizeTags(value.tags),
+    snapshot: normalizeSnapshot(value.snapshot),
+    history: normalizeHistory(value.history),
+  };
+}
+
 /** Parses an exported project or project list. Throws a readable error for anything else. */
 export function parseProjectsFile(text: string): ProjectEntry[] {
   let data: unknown;
@@ -138,24 +194,20 @@ export function parseProjectsFile(text: string): ProjectEntry[] {
     throw new LocalizedError("error.file.json");
   }
   if (!isObject(data)) throw new LocalizedError("error.file.notProject");
-  if (data.format === PROJECT_FORMAT) {
-    return [
-      { favorite: data.favorite === true, tags: normalizeTags(data.tags), snapshot: normalizeSnapshot(data.snapshot) },
-    ];
-  }
+  if (data.format === PROJECT_FORMAT) return [toEntry(data)];
   if (data.format === PROJECTS_FORMAT && Array.isArray(data.projects)) {
-    return data.projects.map((entry) => {
-      if (!isObject(entry)) throw new LocalizedError("error.file.damaged");
-      // Files from before tags have none; tags are untrusted, so they are trimmed and capped.
-      return {
-        favorite: entry.favorite === true,
-        tags: normalizeTags(entry.tags),
-        snapshot: normalizeSnapshot(entry.snapshot),
-      };
+    return data.projects.map((item) => {
+      if (!isObject(item)) throw new LocalizedError("error.file.damaged");
+      return toEntry(item);
     });
   }
   if (data.format === "designhub.brand") {
     throw new LocalizedError("error.file.brandJson");
   }
   throw new LocalizedError("error.file.notProject");
+}
+
+/** Turns imported history into versions of the project it was imported as, with fresh ids. */
+export function importedVersions(projectId: string, history: VersionEntry[], newId: () => string): ProjectVersion[] {
+  return history.map((version) => ({ ...version, id: newId(), projectId }));
 }

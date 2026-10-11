@@ -8,8 +8,11 @@ import type { ProjectSort } from "@/lib/projects/sort";
 type ProjectState = {
   activeId: string | null;
   sort: ProjectSort;
+  /** Whether project exports carry each project's version history. */
+  exportHistory: boolean;
   setActive: (activeId: string | null) => void;
   setSort: (sort: ProjectSort) => void;
+  setExportHistory: (exportHistory: boolean) => void;
 };
 
 export const useProjectStore = create<ProjectState>()(
@@ -17,8 +20,10 @@ export const useProjectStore = create<ProjectState>()(
     (set) => ({
       activeId: null,
       sort: "opened",
+      exportHistory: false,
       setActive: (activeId) => set({ activeId }),
       setSort: (sort) => set({ sort }),
+      setExportHistory: (exportHistory) => set({ exportHistory }),
     }),
     { name: "designhub:project", version: 1, storage: createJSONStorage(() => indexedDbStorage) },
   ),

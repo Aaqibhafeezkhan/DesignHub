@@ -125,6 +125,9 @@ export const es = {
   "projects.sort.newest": "Más recientes",
   "projects.import": "Importar",
   "projects.exportAll": "Exportar todo",
+  "projects.includeHistory": "Incluir historial",
+  "projects.includeHistoryHint":
+    "Añade a las exportaciones las versiones guardadas de cada proyecto. Los enlaces para compartir nunca las incluyen.",
   "projects.file": "Archivo de proyecto",
   "projects.new": "Nuevo proyecto",
   "projects.storageBlocked":

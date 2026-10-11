@@ -27,6 +27,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { useProjects } from "@/hooks/use-projects";
 import { downloadText } from "@/lib/download";
 import { errorMessage } from "@/lib/i18n/errors";
@@ -38,6 +39,7 @@ import {
   freshProject,
   importProjects,
   openProject,
+  projectHistories,
   removeProject,
   removeProjectTag,
   renameProject,
@@ -46,6 +48,7 @@ import {
   toggleFavorite,
 } from "@/lib/projects/actions";
 import { listProjects } from "@/lib/projects/repository";
+import { listVersions } from "@/lib/projects/versions";
 import { projectSorts, sortProjects, type ProjectSort } from "@/lib/projects/sort";
 import { projectTags } from "@/lib/projects/tags";
 import { projectsToJson, projectToJson } from "@/lib/projects/transfer";
@@ -74,6 +77,8 @@ export function ProjectManager() {
   const clearNewProjectRequest = useUiStore((state) => state.clearNewProjectRequest);
   const sort = useProjectStore((state) => state.sort);
   const setSort = useProjectStore((state) => state.setSort);
+  const exportHistory = useProjectStore((state) => state.exportHistory);
+  const setExportHistory = useProjectStore((state) => state.setExportHistory);
 
   // "New brand project..." in the command palette lands here with the dialog already open.
   useEffect(() => {
@@ -85,19 +90,22 @@ export function ProjectManager() {
 
   async function exportOne(project: BrandProject) {
     const latest = (await freshProject(project.id)) ?? project;
-    downloadText(projectToJson(latest), `${slugify(projectName(latest))}.designhub.json`);
+    const history = exportHistory ? await listVersions(latest.id) : undefined;
+    downloadText(projectToJson(latest, history), `${slugify(projectName(latest))}.designhub.json`);
   }
 
   async function exportAll() {
     await saveActiveProject();
     const all = await listProjects();
-    downloadText(projectsToJson(all), `designhub-projects-${new Date().toISOString().slice(0, 10)}.json`);
+    const histories = exportHistory ? await projectHistories(all) : undefined;
+    downloadText(projectsToJson(all, histories), `designhub-projects-${new Date().toISOString().slice(0, 10)}.json`);
     toast.success(plural("projects.toast.exported", all.length));
   }
 
   async function importFile(file: File | undefined) {
     if (!file) return;
-    if (file.size > 5_000_000) {
+    // Files with history hold up to MAX_VERSIONS snapshots per project.
+    if (file.size > 25_000_000) {
       toast.error(t("projects.toast.tooLarge"));
       return;
     }
@@ -241,6 +249,23 @@ export function ProjectManager() {
         >
           <Plus /> {t("projects.new")}
         </Button>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-sm">
+        <span id="export-history-hint" className="text-muted-foreground">
+          {t("projects.includeHistoryHint")}
+        </span>
+        <div className="flex items-center gap-2">
+          <Switch
+            id="export-history"
+            checked={exportHistory}
+            onCheckedChange={setExportHistory}
+            aria-describedby="export-history-hint"
+          />
+          <Label htmlFor="export-history" className="text-sm font-normal whitespace-nowrap">
+            {t("projects.includeHistory")}
+          </Label>
+        </div>
       </div>
 
       {!persistent ? (
