@@ -5,6 +5,7 @@ import { drawOnSvg } from "@/lib/logo/animate";
 import { logoVariants, renderVariant, type VariantContext } from "@/lib/logo/variants";
 import { parseSvg } from "@/lib/svg/parse";
 import { minify } from "@/lib/svg/serialize";
+import { xmlError } from "@/lib/test/xml";
 import type { SvgNode } from "@/types/svg";
 
 const ctx = (logo: string): VariantContext => ({
@@ -91,6 +92,37 @@ describe("drawOnSvg", () => {
       expect(parseSvg(animated!).ok, variant.id).toBe(true);
       expect(staticFrame(animated!), variant.id).toBe(staticFrame(source));
     }
+  });
+
+  test("the output is well-formed XML with a reduced motion rule, looping or not", () => {
+    for (const loop of [false, true]) {
+      const animated = drawOnSvg(uploaded, { loop })!;
+      expect(xmlError(animated)).toBeNull();
+      expect(animated).toContain("@media (prefers-reduced-motion:reduce)");
+    }
+  });
+
+  test("looping changes the iteration count and leaves the markup alone", () => {
+    const once = drawOnSvg(uploaded)!;
+    const looped = drawOnSvg(uploaded, { loop: true })!;
+    expect(once).not.toContain("animation-iteration-count:infinite");
+    expect(looped).not.toContain("animation-iteration-count:1");
+    expect(staticFrame(looped)).toBe(staticFrame(once));
+  });
+
+  test("uploaded scripts stay out of the looping output too", () => {
+    const animated = drawOnSvg(uploaded, { loop: true })!;
+    expect(animated).not.toContain("<script");
+    expect(animated).not.toContain("alert");
+    expect(animated).not.toContain("onload");
+  });
+
+  test("an author pathLength sets the dash length", () => {
+    // Dash values on this path are in units of 1000, whatever its real length.
+    const animated = drawOnSvg(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0 50 L100 50" pathLength="1000" stroke="#000" fill="none"/></svg>',
+    )!;
+    expect(animated).toContain(`--dh-l:${1000 * 1.02 + 1}`);
   });
 
   test("returns null for input that is not SVG", () => {

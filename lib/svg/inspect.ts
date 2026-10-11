@@ -260,9 +260,10 @@ export function shapeLength(name: string, attributes: Record<string, string>): n
       const width = n("width");
       const height = n("height");
       if (width === null || height === null) return null;
-      // A missing rx or ry takes the other's value, and both are capped at half the side.
-      const rx = lengthValue(attributes.rx ?? attributes.ry);
-      const ry = lengthValue(attributes.ry ?? attributes.rx);
+      // A missing (or "auto") rx or ry takes the other's value, and both are capped at half the side.
+      const corner = (raw: string | undefined) => (raw?.trim().toLowerCase() === "auto" ? undefined : raw);
+      const rx = lengthValue(corner(attributes.rx) ?? corner(attributes.ry));
+      const ry = lengthValue(corner(attributes.ry) ?? corner(attributes.rx));
       if (rx === null || ry === null) return null;
       const cornerX = Math.min(width / 2, Math.max(0, rx));
       const cornerY = Math.min(height / 2, Math.max(0, ry));

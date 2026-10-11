@@ -96,7 +96,9 @@ function collect(node: SvgNode, inherited: Inherited, out: Animated[]): void {
     scale,
   };
   if (SHAPES.has(node.name)) {
-    const length = shapeLength(node.name, node.attributes);
+    // An author `pathLength` rescales every dash value on the element, so the dash is measured in it.
+    const declared = Number.parseFloat(node.attributes.pathLength ?? "");
+    const length = declared > 0 ? declared : shapeLength(node.name, node.attributes);
     const stroked = !isNone(current.stroke) && Number.parseFloat(current.strokeWidth) !== 0;
     const filled = !isNone(current.fill) && node.name !== "line" && node.name !== "polyline";
     if (length !== null && length > 0 && (stroked || filled)) {
