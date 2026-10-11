@@ -2,7 +2,7 @@ import { LocalizedError } from "@/lib/i18n/errors";
 import {
   MAX_VERSIONS,
   sortVersions,
-  versionReasonLabels,
+  versionReasons,
   type ProjectVersion,
   type VersionReason,
 } from "@/lib/projects/history";
@@ -154,7 +154,7 @@ function normalizeSnapshot(value: unknown): BrandSnapshot {
 }
 
 const isReason = (value: unknown): value is VersionReason =>
-  typeof value === "string" && Object.hasOwn(versionReasonLabels, value);
+  typeof value === "string" && (versionReasons as readonly string[]).includes(value);
 
 /**
  * Versions from a file, checked like the project itself (each snapshot is validated and its

@@ -1,8 +1,16 @@
 import type { BrandSnapshot } from "@/lib/projects/snapshot";
 
 /** Why a version was kept: a timed save while editing, or the state just before a risky action. */
-export type VersionReason =
-  "autosave" | "surprise" | "token-import" | "brand-dna" | "share-import" | "palette" | "restore";
+export const versionReasons = [
+  "autosave",
+  "surprise",
+  "token-import",
+  "brand-dna",
+  "share-import",
+  "palette",
+  "restore",
+] as const;
+export type VersionReason = (typeof versionReasons)[number];
 
 /** One saved state of a project, stored in the `versions` table. */
 export type ProjectVersion = {
