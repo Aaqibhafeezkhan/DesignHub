@@ -66,6 +66,7 @@ export const es = {
   "nav.group.Tools": "Herramientas",
   "nav.studios": "Estudios",
   "nav.main": "Principal",
+  "nav.more": "Más",
   "nav.resources": "Recursos",
   "nav.project": "Proyecto",
   "nav.roadmap": "Hoja de ruta",

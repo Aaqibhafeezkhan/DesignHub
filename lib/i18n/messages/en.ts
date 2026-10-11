@@ -69,6 +69,7 @@ export const en = {
   "nav.group.Tools": "Tools",
   "nav.studios": "Studios",
   "nav.main": "Main",
+  "nav.more": "More",
   "nav.resources": "Resources",
   "nav.project": "Project",
   "nav.github": "GitHub",
