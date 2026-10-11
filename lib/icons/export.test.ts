@@ -89,4 +89,25 @@ describe("icon exports", () => {
     expect(solid?.code).toContain("class='a'");
     expect(solid?.code).toContain("<use href='#p'/>");
   });
+
+  test("Qwik component uses component$ and spreads props onto the svg", () => {
+    const qwik = iconExports("tabler:brand-github", icon, defaultIconStyle).find((format) => format.id === "qwik");
+    expect(qwik?.label).toBe("Qwik");
+    expect(qwik?.filename).toBe("BrandGithubIcon.tsx");
+    expect(qwik?.language).toBe("tsx");
+    expect(qwik?.code).toContain('import { component$, type PropsOf } from "@builder.io/qwik";');
+    expect(qwik?.code).toContain('export const BrandGithubIcon = component$((props: PropsOf<"svg">) => {');
+    expect(qwik?.code).toMatch(/<svg [^>]*width="1em" height="1em"[^>]*\{\.\.\.props\}>/);
+    expect(qwik?.code).toContain('stroke-width="2"');
+    expect(qwik?.code).not.toContain("className");
+    expect(qwik?.code.trimEnd().endsWith("});")).toBe(true);
+  });
+
+  test("Qwik component escapes braces and rewrites xlink:href", () => {
+    const styled = { ...icon, body: "<style>.a{fill:red}</style><path class='a' d='M0 0h24'/><use xlink:href='#p'/>" };
+    const qwik = iconExports("tabler:brand-github", styled, defaultIconStyle).find((format) => format.id === "qwik");
+    expect(qwik?.code).toContain(".a&#123;fill:red&#125;");
+    expect(qwik?.code).toContain("<use href='#p'/>");
+    expect(qwik?.code).not.toContain("xlink:");
+  });
 });
