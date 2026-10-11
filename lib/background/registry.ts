@@ -12,6 +12,7 @@ import { rings } from "@/lib/background/generators/rings";
 import { starfield } from "@/lib/background/generators/starfield";
 import { stripes } from "@/lib/background/generators/stripes";
 import { squiggle } from "@/lib/background/generators/squiggle";
+import { squares } from "@/lib/background/generators/squares";
 import { sunburst } from "@/lib/background/generators/sunburst";
 import { aurora } from "@/lib/background/generators/aurora";
 import { blobs } from "@/lib/background/generators/blobs";
@@ -55,6 +56,7 @@ export const backgroundGenerators: BackgroundDefinition[] = [
   halftone,
   triangles,
   squiggle,
+  squares,
 ];
 
 export function getGenerator(kind: BackgroundKind): BackgroundDefinition | undefined {

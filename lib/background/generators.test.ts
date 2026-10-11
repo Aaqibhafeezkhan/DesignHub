@@ -24,26 +24,55 @@ const settings = (kind: BackgroundKind, patch: Partial<BackgroundSettings> = {})
 
 const nodeCount = (svg: string) => (svg.match(/<[a-zA-Z]/g) ?? []).length;
 
-describe.each(["plus", "starfield", "voronoi", "crosshatch", "circuit", "halftone", "triangles", "squiggle"] as const)(
-  "%s",
-  (kind) => {
-    test("the same seed renders the same output", () => {
-      for (const patch of [{ seed: 7 }, { seed: 7, rotation: 30, density: 100, scale: 2 }]) {
-        expect(renderBackgroundSvg(settings(kind, patch))).toBe(renderBackgroundSvg(settings(kind, patch)));
-      }
-    });
+describe.each([
+  "plus",
+  "starfield",
+  "voronoi",
+  "crosshatch",
+  "circuit",
+  "halftone",
+  "triangles",
+  "squiggle",
+  "squares",
+] as const)("%s", (kind) => {
+  test("the same seed renders the same output", () => {
+    for (const patch of [{ seed: 7 }, { seed: 7, rotation: 30, density: 100, scale: 2 }]) {
+      expect(renderBackgroundSvg(settings(kind, patch))).toBe(renderBackgroundSvg(settings(kind, patch)));
+    }
+  });
 
-    test("different seeds render different output", () => {
-      expect(renderBackgroundSvg(settings(kind, { seed: 1 }))).not.toBe(
-        renderBackgroundSvg(settings(kind, { seed: 2 })),
-      );
-    });
+  test("different seeds render different output", () => {
+    expect(renderBackgroundSvg(settings(kind, { seed: 1 }))).not.toBe(renderBackgroundSvg(settings(kind, { seed: 2 })));
+  });
 
-    test("exports a CSS rule", () => {
-      expect(backgroundCss(settings(kind))).toContain("background-image:");
-    });
-  },
-);
+  test("exports a CSS rule", () => {
+    expect(backgroundCss(settings(kind))).toContain("background-image:");
+  });
+});
+
+test("squares nest around one center and alternate palette colors", () => {
+  const svg = renderBackgroundSvg(settings("squares"));
+  const rects = [
+    ...svg.matchAll(/<rect x="([\d.-]+)" y="([\d.-]+)" width="([\d.]+)" height="([\d.]+)" fill="(#\w+)"/g),
+  ];
+  expect(rects.length).toBeGreaterThan(5);
+  const centers = new Set(
+    rects.map(([, x, y, w]) => `${Math.round(Number(x) + Number(w) / 2)},${Math.round(Number(y) + Number(w) / 2)}`),
+  );
+  expect(centers.size).toBe(1);
+  // Each square is smaller than the one before it, and neighbors never share a color.
+  rects.slice(1).forEach((rect, i) => {
+    expect(Number(rect[3])).toBeLessThan(Number(rects[i]![3]));
+    expect(rect[5]).not.toBe(rects[i]![5]);
+  });
+  expect(new Set(rects.map((rect) => rect[5]))).toEqual(new Set(["#6366f1", "#ec4899", "#f59e0b"]));
+});
+
+test("squares alternate one color with the canvas", () => {
+  const svg = renderBackgroundSvg(settings("squares", { colors: ["#ffffff"] }));
+  expect(svg).toContain('fill="#ffffff"');
+  expect((svg.match(/fill="#0b1020"/g) ?? []).length).toBeGreaterThan(2);
+});
 
 test("plus draws through a <pattern>", () => {
   expect(renderBackgroundSvg(settings("plus"))).toContain("<pattern");
