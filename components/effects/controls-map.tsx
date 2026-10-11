@@ -9,6 +9,7 @@ import { InsetControls } from "@/components/effects/inset-controls";
 import { LongShadowControls } from "@/components/effects/long-shadow-controls";
 import { NeumorphismControls } from "@/components/effects/neumorphism-controls";
 import { ShadowControls } from "@/components/effects/shadow-controls";
+import { SkeletonControls } from "@/components/effects/skeleton-controls";
 import type { EffectKind } from "@/types/effects";
 
 /** Control panels per effect; each effect adds its own entry. */
@@ -22,4 +23,5 @@ export const effectControls: Partial<Record<EffectKind, ComponentType>> = {
   grain: GrainControls,
   "long-shadow": LongShadowControls,
   "gradient-text": GradientTextControls,
+  skeleton: SkeletonControls,
 };

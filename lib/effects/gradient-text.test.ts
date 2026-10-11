@@ -19,7 +19,7 @@ const studio: Gradient = {
 };
 
 function generate(patch: Partial<GradientTextSettings> = {}, gradient: Gradient = studio): EffectCss {
-  return generateEffect("gradient-text", { ...defaults, ...patch }, { gradient })!;
+  return generateEffect("gradient-text", { ...defaults, ...patch }, { gradient, neutrals: [] })!;
 }
 
 const value = (effect: EffectCss, property: string) =>
@@ -89,7 +89,7 @@ describe("gradient text", () => {
   });
 
   test("effects.css follows the studio gradient it is given", () => {
-    const bundle = effectsBundle(effectDefaults, { gradient: studio });
+    const bundle = effectsBundle(effectDefaults, { gradient: studio, neutrals: [] });
     expect(bundle).toContain(
       "/* Gradient text */\n.fx-gradient-text {\n  color: #ff0000;\n  background-image: linear-gradient(45deg, #ff0000 0%, #0000ff 100%);",
     );

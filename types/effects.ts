@@ -1,7 +1,16 @@
 import type { Gradient } from "@/types/color";
 
 export type EffectKind =
-  "glass" | "neumorphism" | "shadow" | "inset" | "glow" | "border" | "grain" | "long-shadow" | "gradient-text";
+  | "glass"
+  | "neumorphism"
+  | "shadow"
+  | "inset"
+  | "glow"
+  | "border"
+  | "grain"
+  | "long-shadow"
+  | "gradient-text"
+  | "skeleton";
 
 export type GlassSettings = {
   blur: number;
@@ -114,6 +123,27 @@ export type GradientTextSettings = {
   speed: number;
 };
 
+/** Where skeleton colors come from: tints of the brand's neutral color, or two colors set in the effect. */
+export type SkeletonSource = "brand" | "custom";
+
+/** Whether the placeholder sits on a light or a dark page (brand source only). */
+export type SkeletonTone = "light" | "dark";
+
+/** A loading placeholder: a muted block with a soft highlight sweeping across it. */
+export type SkeletonSettings = {
+  source: SkeletonSource;
+  tone: SkeletonTone;
+  /** Block color for the custom source. */
+  base: string;
+  /** Highlight color for the custom source. */
+  highlight: string;
+  /** Seconds for one sweep. */
+  speed: number;
+  /** Direction of the highlight band, in degrees. */
+  angle: number;
+  radius: number;
+};
+
 export type EffectSettingsMap = {
   glass: GlassSettings;
   neumorphism: NeumorphismSettings;
@@ -124,12 +154,15 @@ export type EffectSettingsMap = {
   grain: GrainSettings;
   "long-shadow": LongShadowSettings;
   "gradient-text": GradientTextSettings;
+  skeleton: SkeletonSettings;
 };
 
 /** State from other studios an effect may build on. Effects read it here instead of copying it into their settings. */
 export type EffectContext = {
   /** The Color Studio gradient. */
   gradient: Gradient;
+  /** Hex colors of the brand's neutral swatches (set or inferred roles), in palette order. */
+  neutrals: string[];
 };
 
 /** A CSS property/value pair. Vendor-prefixed duplicates are allowed. */

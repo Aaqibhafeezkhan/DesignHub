@@ -39,4 +39,13 @@ export const effectDefaults: EffectSettingsMap = {
     animated: false,
     speed: 6,
   },
+  skeleton: {
+    source: "brand",
+    tone: "light",
+    base: "#e4e4e7",
+    highlight: "#f4f4f5",
+    speed: 1.6,
+    angle: 100,
+    radius: 12,
+  },
 };

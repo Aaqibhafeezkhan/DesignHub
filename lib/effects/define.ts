@@ -2,7 +2,7 @@ import { defaultGradient } from "@/lib/color/gradient";
 import type { EffectContext, EffectCss, EffectKind, EffectSettingsMap } from "@/types/effects";
 
 /** Used where no studio state is at hand (tests, a fresh project): the Color Studio's default gradient. */
-export const defaultEffectContext: EffectContext = { gradient: defaultGradient };
+export const defaultEffectContext: EffectContext = { gradient: defaultGradient, neutrals: [] };
 
 export type EffectDefinition<K extends EffectKind> = {
   kind: K;
