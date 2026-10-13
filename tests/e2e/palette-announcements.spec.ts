@@ -7,8 +7,11 @@ test("palette changes are announced to screen readers", async ({ page }) => {
   if ((await status.count()) === 0) throw new Error("palette announcement live region missing");
   await expect(status).toHaveAttribute("aria-live", "polite");
 
-  await page.getByRole("button", { name: /^Lock / }).first().click();
-  await page.getByRole("button", { name: "Generate", exact: true }).click();
+  await page
+    .getByRole("button", { name: /^Lock / })
+    .first()
+    .click();
+  await page.getByRole("button", { name: "Generate Space", exact: true }).click();
   await expect(status).toContainText("New palette:");
   await expect(status).toContainText("1 locked swatch kept.");
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { useI18n } from "@/components/layout/locale-provider";
+import type { PaletteAnnouncer } from "@/components/colors/palette-announcement";
 import { useRovingRadio } from "@/hooks/use-roving-radio";
 import { fromHex } from "@/lib/color/color";
 import { palettePresets, paletteTags, type PaletteTag } from "@/lib/color/presets";
@@ -11,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { createSwatch, useColorStore } from "@/store/color-store";
 
 /** Curated palettes to start from, filterable by mood. */
-export function PaletteLibrary() {
+export function PaletteLibrary({ announce }: { announce: PaletteAnnouncer }) {
   const { t, plural } = useI18n();
   const radiosRef = useRovingRadio<HTMLDivElement>();
   const setSwatches = useColorStore((state) => state.setSwatches);
@@ -50,7 +51,9 @@ export function PaletteLibrary() {
             <button
               type="button"
               onClick={() => {
-                setSwatches(preset.colors.map((hex) => createSwatch(fromHex(hex))));
+                const swatches = preset.colors.map((hex) => createSwatch(fromHex(hex)));
+                setSwatches(swatches);
+                announce("loaded", swatches);
                 toast.success(t("colors.library.loaded", { name: preset.name }), {
                   action: { label: t("common.undo"), onClick: undo },
                 });

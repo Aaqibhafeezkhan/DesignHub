@@ -6,6 +6,7 @@ import { Bookmark, Download, Plus, Redo2, Shuffle, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useI18n } from "@/components/layout/locale-provider";
+import type { PaletteAnnouncer } from "@/components/colors/palette-announcement";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -25,9 +26,10 @@ const PaletteImportDialog = dynamic(loadImportDialog, { ssr: false });
 type PaletteToolbarProps = {
   /** Supplies colors for the next generation (harmony modes). */
   nextColors?: () => Oklch[];
+  announce: PaletteAnnouncer;
 };
 
-export function PaletteToolbar({ nextColors }: PaletteToolbarProps) {
+export function PaletteToolbar({ nextColors, announce }: PaletteToolbarProps) {
   const { t } = useI18n();
   const swatches = useColorStore((state) => state.swatches);
   const selectedId = useColorStore((state) => state.selectedId);
@@ -42,7 +44,10 @@ export function PaletteToolbar({ nextColors }: PaletteToolbarProps) {
   const [importMounted, setImportMounted] = useState(false);
   const importRef = useRef<HTMLButtonElement>(null);
 
-  const run = () => generate(nextColors?.());
+  const run = () => {
+    generate(nextColors?.());
+    announce("generated", useColorStore.getState().swatches);
+  };
   useHotkey("space", run);
   useHotkey("z", undo);
   useHotkey("shift+z", redo);
