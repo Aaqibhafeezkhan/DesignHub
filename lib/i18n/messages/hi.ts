@@ -150,7 +150,7 @@ export const hi = {
   "projects.list": "ब्रांड प्रोजेक्ट",
   "projects.includeHistory": "इतिहास शामिल करें",
   "projects.includeHistoryHint":
-    "हर प्रोजेक्ट के सहेजे गए संस्करण एक्सपोर्ट में जोड़ता है। शेयर लिंक में ये कभी शामिल नहीं होते।",
+    "हर प्रोजेक्ट के सेव किए गए वर्ज़न एक्सपोर्ट में जोड़ता है। शेयर लिंक में ये कभी शामिल नहीं होते।",
   "projects.compare": "तुलना करें",
   "projects.history": "{name} का इतिहास",
   "projects.duplicate": "{name} की कॉपी बनाएँ",
@@ -229,7 +229,7 @@ export const hi = {
   "compare.row.shadow": "शैडो",
 
   "history.description":
-    "संपादन के दौरान हर कुछ मिनट में और Surprise me, इंपोर्ट, ब्रांड DNA और पैलेट लोड करने से पहले एक वर्ज़न रखा जाता है। आख़िरी {max} वर्ज़न रखे जाते हैं।",
+    "संपादन के दौरान हर कुछ मिनट में और सरप्राइज़ मी, इंपोर्ट, ब्रांड DNA और पैलेट लोड करने से पहले एक वर्ज़न रखा जाता है। आख़िरी {max} वर्ज़न रखे जाते हैं।",
   "history.fallbackName": "प्रोजेक्ट",
   "history.empty": "अभी कोई वर्ज़न नहीं है। ये कुछ मिनट संपादन के बाद या किसी बड़े बदलाव से पहले दिखते हैं।",
   "history.versions": "वर्ज़न",
@@ -243,9 +243,9 @@ export const hi = {
   "history.now": "अभी",
   "history.thisVersion": "यह वर्ज़न",
   "history.restored": "{date} का वर्ज़न वापस लाया गया",
-  "history.restoredDescription": "जिस स्थिति की जगह यह आया, वह इतिहास में रखी गई है।",
+  "history.restoredDescription": "इसने जिस स्थिति को बदला, वह इतिहास में रखी गई है।",
   "history.reason.autosave": "संपादन के दौरान",
-  "history.reason.surprise": "Surprise me से पहले",
+  "history.reason.surprise": "सरप्राइज़ मी से पहले",
   "history.reason.token-import": "टोकन इंपोर्ट से पहले",
   "history.reason.brand-dna": "ब्रांड DNA से पहले",
   "history.reason.share-import": "शेयर लिंक इंपोर्ट से पहले",
