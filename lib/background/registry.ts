@@ -26,6 +26,7 @@ import { triangles } from "@/lib/background/generators/triangles";
 import { topographic } from "@/lib/background/generators/topographic";
 import { voronoi } from "@/lib/background/generators/voronoi";
 import { waves } from "@/lib/background/generators/waves";
+import { zigzag } from "@/lib/background/generators/zigzag";
 import { wrapSvg } from "@/lib/background/svg";
 import type { BackgroundDefinition, BackgroundKind, BackgroundSettings } from "@/types/background";
 
@@ -59,6 +60,7 @@ export const backgroundGenerators: BackgroundDefinition[] = [
   squiggle,
   squares,
   argyle,
+  zigzag,
 ];
 
 export function getGenerator(kind: BackgroundKind): BackgroundDefinition | undefined {
