@@ -1,18 +1,20 @@
 "use client";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useBrandStore } from "@/store/brand-store";
 
 export function BrandIdentityFields() {
+  const { t } = useI18n();
   const profile = useBrandStore((state) => state.profile);
   const updateProfile = useBrandStore((state) => state.updateProfile);
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="brand-name">Brand name</Label>
+        <Label htmlFor="brand-name">{t("brand.name")}</Label>
         <Input
           id="brand-name"
           value={profile.name}
@@ -21,7 +23,7 @@ export function BrandIdentityFields() {
         />
       </div>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="brand-description">Description</Label>
+        <Label htmlFor="brand-description">{t("brand.description")}</Label>
         <Textarea
           id="brand-description"
           value={profile.description}

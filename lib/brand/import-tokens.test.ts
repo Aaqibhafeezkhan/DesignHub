@@ -4,6 +4,9 @@ import { parseTokensFile, summarizeImport } from "@/lib/brand/import-tokens";
 import { fromHex, toHex } from "@/lib/color/color";
 import { defaultGradient } from "@/lib/color/gradient";
 import { defaultShadeOptions } from "@/lib/color/shades";
+import { translateLocalized } from "@/lib/i18n/errors";
+import { en } from "@/lib/i18n/messages/en";
+import { createTranslator } from "@/lib/i18n/translate";
 import { buildTokens } from "@/lib/tokens/build";
 import { toJsonTokens } from "@/lib/tokens/formats";
 import { defaultTokenSettings } from "@/store/tokens-store";
@@ -77,14 +80,19 @@ describe("importing a DTCG tokens file", () => {
     expect(imported.colors?.map((color) => toHex(color))).toEqual(["#111111", "#fafafa"]);
     expect(imported.radiusBase).toBe(12);
     expect(imported.ignored).toBe(1);
-    expect(summarizeImport(imported)).toEqual(["2 colors", "Radius 12px", "1 other tokens ignored"]);
+    const { t } = createTranslator(en, "en");
+    expect(summarizeImport(imported).map((line) => translateLocalized(t, line))).toEqual([
+      "Colors: 2",
+      "Radius: 12px",
+      "Other tokens ignored: 1",
+    ]);
   });
 
   test("fonts DesignHub can't load are skipped with a note", () => {
     const imported = parseTokensFile(exported(), { isKnownFont: (family) => family !== "Playfair Display" });
     expect(imported.headingFont).toBeNull();
     expect(imported.bodyFont).toBe("Source Sans 3");
-    expect(imported.notes[0]).toContain("Playfair Display");
+    expect(imported.notes[0]?.params?.name).toBe("Playfair Display");
   });
 });
 

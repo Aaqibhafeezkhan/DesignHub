@@ -3,6 +3,7 @@
 import { Search } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { Kbd } from "@/components/ui/kbd";
 import { useUiStore } from "@/store/ui-store";
 
@@ -11,6 +12,7 @@ import { useUiStore } from "@/store/ui-store";
  * as the user starts typing so there is exactly one search experience.
  */
 export function HeroSearch() {
+  const { t } = useI18n();
   const openCommand = useUiStore((state) => state.openCommand);
   const [value, setValue] = useState("");
 
@@ -29,7 +31,7 @@ export function HeroSearch() {
   return (
     <form role="search" onSubmit={onSubmit} className="relative w-full max-w-xl">
       <label htmlFor="hero-search" className="sr-only">
-        Search fonts, colors, icons
+        {t("home.search.label")}
       </label>
       <Search
         className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-subtle-foreground"
@@ -44,7 +46,7 @@ export function HeroSearch() {
           setValue(event.target.value);
           if (event.target.value.trim()) handoff(event.target.value);
         }}
-        placeholder="Search fonts, colors, icons..."
+        placeholder={t("home.search.placeholder")}
         className="h-12 w-full rounded-lg border border-border-strong bg-surface pr-20 pl-11 text-[15px] shadow-sm outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-subtle-foreground hover:border-foreground/20 focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/30 [&::-webkit-search-cancel-button]:hidden"
       />
       <span className="pointer-events-none absolute top-1/2 right-3 flex -translate-y-1/2 items-center gap-1">

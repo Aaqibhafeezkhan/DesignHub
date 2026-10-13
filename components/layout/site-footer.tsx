@@ -20,7 +20,9 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 md:grid-cols-[2fr_1fr_1fr]">
         <div className="flex flex-col gap-3">
           <Logo />
-          <p className="max-w-xs text-sm text-muted-foreground">{siteConfig.tagline}</p>
+          <p className="max-w-xs text-sm text-muted-foreground">
+            <Message id="home.tagline" />
+          </p>
         </div>
         <nav aria-labelledby="footer-studios" className="flex flex-col gap-2 text-sm">
           <h2 id="footer-studios" className="font-sans text-xs font-medium text-subtle-foreground">
@@ -51,8 +53,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t">
         <p className="mx-auto max-w-6xl px-4 py-6 text-xs text-subtle-foreground">
-          © {new Date().getFullYear()} DesignHub contributors · Released under the MIT License · Made for designers, by
-          designers.
+          <Message id="home.footer.legal" values={{ year: new Date().getFullYear() }} />
         </p>
       </div>
     </footer>

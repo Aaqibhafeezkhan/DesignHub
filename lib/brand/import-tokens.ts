@@ -1,4 +1,5 @@
 import { oklch, parseColor } from "@/lib/color/color";
+import { LocalizedError, localized, type Localized } from "@/lib/i18n/errors";
 import type { Oklch } from "@/types/color";
 
 /**
@@ -31,7 +32,7 @@ export type ImportedTokens = {
   /** Spacing base in px (the `2` step). */
   spacingBase: number | null;
   /** Readable notes for anything found but not applied. */
-  notes: string[];
+  notes: Localized[];
   /** Tokens in the file that DesignHub doesn't import (semantic aliases, type sizes, unknown groups). */
   ignored: number;
 };
@@ -101,7 +102,7 @@ function readDimension(value: unknown): number | null {
   return null;
 }
 
-function readColors(group: Json, notes: string[]): Oklch[] | null {
+function readColors(group: Json, notes: Localized[]): Oklch[] | null {
   const colors: Oklch[] = [];
   for (const [name, node] of Object.entries(group)) {
     if (name.startsWith("$") || !isObject(node)) continue;
@@ -111,15 +112,16 @@ function readColors(group: Json, notes: string[]): Oklch[] | null {
     const type = token.$type ?? node.$type ?? group.$type;
     if (type !== undefined && type !== "color") continue;
     const color = readColor(token.$value);
-    if (!color) throw new Error(`The color "${name}" isn't a valid color.`);
+    if (!color) throw new LocalizedError("error.tokens.badColor", { name });
     colors.push(color);
   }
   if (colors.length === 0) return null;
   if (colors.length < MIN_COLORS) {
-    notes.push(`The palette needs at least ${MIN_COLORS} colors, so the colors were not applied.`);
+    notes.push(localized("brand.import.note.tooFewColors", { min: MIN_COLORS }));
     return null;
   }
-  if (colors.length > MAX_COLORS) notes.push(`Only the first ${MAX_COLORS} of ${colors.length} colors were used.`);
+  if (colors.length > MAX_COLORS)
+    notes.push(localized("brand.import.note.tooManyColors", { max: MAX_COLORS, count: colors.length }));
   return colors.slice(0, MAX_COLORS);
 }
 
@@ -153,18 +155,26 @@ function readBase(
   steps: Record<string, number>,
   label: string,
   range: [number, number],
-  notes: string[],
+  notes: Localized[],
 ): number | null {
   if (!isObject(group)) return null;
   for (const [name, multiplier] of Object.entries(steps)) {
     const token = group[name];
     if (!isToken(token)) continue;
     const px = readDimension(token.$value);
-    if (px === null) throw new Error(`The ${label} token "${name}" isn't a valid size.`);
+    if (px === null)
+      throw new LocalizedError(label === "radius" ? "error.tokens.badRadius" : "error.tokens.badSpacing", { name });
     const base = Math.round(px / multiplier);
     const clamped = Math.min(range[1], Math.max(range[0], base));
     if (clamped !== base)
-      notes.push(`A ${label} base of ${base}px is outside ${range[0]} to ${range[1]}px, so ${clamped}px was used.`);
+      notes.push(
+        localized(label === "radius" ? "brand.import.note.radiusRange" : "brand.import.note.spacingRange", {
+          base,
+          min: range[0],
+          max: range[1],
+          used: clamped,
+        }),
+      );
     return clamped;
   }
   return null;
@@ -176,14 +186,14 @@ export function parseTokensFile(text: string, options: ImportOptions = {}): Impo
   try {
     data = JSON.parse(text);
   } catch {
-    throw new Error("That file isn't valid JSON.");
+    throw new LocalizedError("error.file.json");
   }
-  if (!isObject(data)) throw new Error("That file isn't a tokens file.");
+  if (!isObject(data)) throw new LocalizedError("error.tokens.notTokens");
   if (data.format === "designhub.project" || data.format === "designhub.projects") {
-    throw new Error("That is a project file. Import it from Brand Projects instead.");
+    throw new LocalizedError("error.tokens.isProject");
   }
 
-  const notes: string[] = [];
+  const notes: Localized[] = [];
   const colors = isObject(data.color) ? readColors(data.color, notes) : null;
   const gradient = readGradient(data.gradient);
 
@@ -194,7 +204,9 @@ export function parseTokensFile(text: string, options: ImportOptions = {}): Impo
   const pickFont = (role: string): string | null => {
     const name = readFamily(family[role]);
     if (name && !known(name)) {
-      notes.push(`${name} isn't in the Google Fonts catalog, so the ${role} font was kept.`);
+      notes.push(
+        localized(role === "heading" ? "brand.import.note.headingFont" : "brand.import.note.bodyFont", { name }),
+      );
       return null;
     }
     return name;
@@ -207,9 +219,7 @@ export function parseTokensFile(text: string, options: ImportOptions = {}): Impo
   const spacingBase = readBase(data.spacing, spacingSteps, "spacing", SPACING_RANGE, notes);
 
   if (!colors && !headingFont && !bodyFont && radiusBase === null && spacingBase === null) {
-    throw new Error(
-      notes[0] ?? "No colors, fonts, radius or spacing tokens were found. Export tokens.json from the Export Engine.",
-    );
+    throw new LocalizedError(notes[0] ?? localized("error.tokens.empty"));
   }
 
   // Everything outside the groups read above (and type sizes, which follow the scale) is left alone.
@@ -237,17 +247,16 @@ export function parseTokensFile(text: string, options: ImportOptions = {}): Impo
 }
 
 /** One line per applied group, for the import toast. */
-export function summarizeImport(imported: ImportedTokens): string[] {
-  const lines: string[] = [];
-  if (imported.colors) lines.push(`${imported.colors.length} colors`);
-  if (imported.gradient) lines.push("Gradient");
-  const fonts = [
-    imported.headingFont && `heading ${imported.headingFont}`,
-    imported.bodyFont && `body ${imported.bodyFont}`,
-  ];
-  if (fonts.some(Boolean)) lines.push(`Fonts: ${fonts.filter(Boolean).join(", ")}`);
-  if (imported.radiusBase !== null) lines.push(`Radius ${imported.radiusBase}px`);
-  if (imported.spacingBase !== null) lines.push(`Spacing ${imported.spacingBase}px`);
-  if (imported.ignored) lines.push(`${imported.ignored} other tokens ignored`);
+export function summarizeImport(imported: ImportedTokens): Localized[] {
+  const lines: Localized[] = [];
+  if (imported.colors) lines.push(localized("brand.import.summary.colors", { count: imported.colors.length }));
+  if (imported.gradient) lines.push(localized("brand.import.summary.gradient"));
+  if (imported.headingFont) lines.push(localized("brand.import.summary.headingFont", { name: imported.headingFont }));
+  if (imported.bodyFont) lines.push(localized("brand.import.summary.bodyFont", { name: imported.bodyFont }));
+  if (imported.radiusBase !== null)
+    lines.push(localized("brand.import.summary.radius", { value: imported.radiusBase }));
+  if (imported.spacingBase !== null)
+    lines.push(localized("brand.import.summary.spacing", { value: imported.spacingBase }));
+  if (imported.ignored) lines.push(localized("brand.import.summary.ignored", { count: imported.ignored }));
   return lines;
 }

@@ -4,7 +4,9 @@ import { FileUp } from "lucide-react";
 import { useRef } from "react";
 import { toast } from "sonner";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { Button } from "@/components/ui/button";
+import { errorMessage, translateLocalized } from "@/lib/i18n/errors";
 import type { ImportedTokens } from "@/lib/brand/import-tokens";
 import { createStop } from "@/lib/color/gradient";
 import { loadFontCatalog } from "@/lib/typography/catalog";
@@ -36,12 +38,13 @@ function applyImport(imported: ImportedTokens) {
 
 /** Imports colors, fonts, radius and spacing from a DTCG tokens.json, with undo. */
 export function ImportTokensButton() {
+  const { t } = useI18n();
   const fileRef = useRef<HTMLInputElement>(null);
 
   async function importFile(file: File | undefined) {
     if (!file) return;
     if (file.size > 2_000_000) {
-      toast.error("That file is too large to be a tokens file.");
+      toast.error(t("brand.import.tooLarge"));
       return;
     }
     try {
@@ -59,13 +62,15 @@ export function ImportTokensButton() {
       const before = captureSnapshot();
       applyImport(imported);
       void checkpoint("token-import", before);
-      toast.success("Tokens imported", {
-        description: `${[...summarizeImport(imported), ...imported.notes].join(". ")}.`,
-        action: { label: "Undo", onClick: () => applySnapshot(before) },
+      toast.success(t("brand.import.done"), {
+        description: [...summarizeImport(imported), ...imported.notes]
+          .map((line) => translateLocalized(t, line))
+          .join(" · "),
+        action: { label: t("common.undo"), onClick: () => applySnapshot(before) },
       });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Could not import that file.", {
-        description: "Nothing was changed.",
+      toast.error(errorMessage(error, t, "brand.import.failed"), {
+        description: t("share.import.nothingChanged"),
       });
     }
   }
@@ -74,11 +79,11 @@ export function ImportTokensButton() {
     <>
       <Button
         variant="outline"
-        className="w-full"
+        className="h-auto min-h-9 w-full whitespace-normal py-1.5"
         onClick={() => fileRef.current?.click()}
-        title="Import colors, fonts, radius and spacing from a DTCG tokens.json"
+        title={t("brand.import.hint")}
       >
-        <FileUp /> Import tokens
+        <FileUp /> {t("brand.import.button")}
       </Button>
       <input
         ref={fileRef}
@@ -86,7 +91,7 @@ export function ImportTokensButton() {
         accept=".json,application/json"
         className="sr-only"
         tabIndex={-1}
-        aria-label="Tokens file"
+        aria-label={t("brand.import.fileLabel")}
         onChange={(event) => {
           void importFile(event.target.files?.[0]);
           event.target.value = "";

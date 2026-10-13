@@ -1,17 +1,21 @@
+"use client";
+
 import type { CSSProperties } from "react";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import type { BrandSurface, BrandTokens } from "@/types/brand";
 
 type BrandUiKitProps = { brand: BrandTokens; surface: BrandSurface; heading: CSSProperties };
 
 /** Components drawn purely from brand tokens: radius, spacing, shadow and colors. */
 export function BrandUiKit({ brand, surface, heading }: BrandUiKitProps) {
+  const { t } = useI18n();
   const radius = brand.radius;
   const pad = `${brand.spacing}px ${brand.spacing * 2}px`;
 
   return (
     <section
-      aria-label="Components"
+      aria-label={t("brand.kit.label")}
       className="grid gap-6 border-t p-6 md:grid-cols-2"
       style={{ borderColor: surface.border }}
     >
@@ -21,13 +25,13 @@ export function BrandUiKit({ brand, surface, heading }: BrandUiKitProps) {
             className="text-sm font-semibold"
             style={{ background: surface.primary, color: surface.onPrimary, borderRadius: radius, padding: pad }}
           >
-            Get started
+            {t("brand.kit.primary")}
           </span>
           <span
             className="border text-sm font-semibold"
             style={{ borderColor: surface.border, borderRadius: radius, padding: pad }}
           >
-            Learn more
+            {t("brand.kit.secondary")}
           </span>
           <span
             className="text-xs font-semibold"
@@ -38,7 +42,7 @@ export function BrandUiKit({ brand, surface, heading }: BrandUiKitProps) {
               padding: "2px 10px",
             }}
           >
-            New
+            {t("brand.kit.badge")}
           </span>
         </div>
         <span
@@ -48,7 +52,7 @@ export function BrandUiKit({ brand, surface, heading }: BrandUiKitProps) {
         >
           name@{brand.name.toLowerCase().replace(/[^a-z0-9]+/g, "") || "brand"}.com
         </span>
-        <div className="flex items-end gap-1.5" aria-label="Spacing scale">
+        <div className="flex items-end gap-1.5" aria-label={t("brand.kit.spacing")}>
           {[1, 2, 3, 4, 6, 8].map((step) => (
             <span key={step} className="flex flex-col items-center gap-1">
               <span
@@ -72,7 +76,7 @@ export function BrandUiKit({ brand, surface, heading }: BrandUiKitProps) {
         style={{ background: surface.surface, borderRadius: radius * 1.5, boxShadow: brand.shadow }}
       >
         <span className="text-xs" style={{ color: surface.muted }}>
-          Monthly revenue
+          {t("brand.kit.metric")}
         </span>
         <span className="text-3xl" style={heading}>
           $48,210
@@ -81,7 +85,7 @@ export function BrandUiKit({ brand, surface, heading }: BrandUiKitProps) {
           <span className="block h-full w-2/3" style={{ background: brand.gradient }} />
         </span>
         <span className="text-xs" style={{ color: surface.muted }}>
-          66% of goal · radius {radius}px · spacing {brand.spacing}px
+          {t("brand.kit.goal", { radius, spacing: brand.spacing })}
         </span>
       </div>
     </section>

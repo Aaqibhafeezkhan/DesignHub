@@ -12,6 +12,8 @@ import {
   SvgPreview,
   TypographyPreview,
 } from "@/components/home/module-previews";
+import { Message } from "@/components/layout/message";
+import type { PlainMessageKey } from "@/lib/i18n/translate";
 import { studios, type StudioId } from "@/lib/navigation";
 
 const previews: Partial<Record<StudioId, ReactNode>> = {
@@ -25,15 +27,18 @@ const previews: Partial<Record<StudioId, ReactNode>> = {
   export: <ExportPreview />,
 };
 
-const highlights: Partial<Record<StudioId, string[]>> = {
-  typography: ["Google Fonts", "Pairing", "Fluid scale", "OpenType"],
-  colors: ["OKLCH", "Harmonies", "Shades 50–950", "WCAG"],
-  icons: ["Iconify", "Restyle", "SVG · React · PNG", "Favicons"],
-  backgrounds: ["8 generators", "Seeded", "SVG · PNG · CSS", "Palette aware"],
-  effects: ["Glass", "Neumorphism", "Shadows", "CSS · Tailwind"],
-  svg: ["Optimize", "Inspect", "JSX · React Native", "Sprites"],
-  accessibility: ["WCAG", "Color vision", "Readability", "Touch targets"],
-  export: ["CSS", "SCSS", "Tailwind", "JSON tokens"],
+/** A highlight is a catalog key, or a format and product name that reads the same in every language. */
+type Highlight = PlainMessageKey | { name: string };
+
+const highlights: Partial<Record<StudioId, Highlight[]>> = {
+  typography: [{ name: "Google Fonts" }, "home.hl.pairing", "home.hl.fluidScale", { name: "OpenType" }],
+  colors: [{ name: "OKLCH" }, "home.hl.harmonies", "home.hl.shades", { name: "WCAG" }],
+  icons: [{ name: "Iconify" }, "home.hl.restyle", { name: "SVG · React · PNG" }, "home.hl.favicons"],
+  backgrounds: ["home.hl.generators", "home.hl.seeded", { name: "SVG · PNG · CSS" }, "home.hl.paletteAware"],
+  effects: ["home.hl.glass", "home.hl.neumorphism", "home.hl.shadows", { name: "CSS · Tailwind" }],
+  svg: ["home.hl.optimize", "home.hl.inspect", { name: "JSX · React Native" }, "home.hl.sprites"],
+  accessibility: [{ name: "WCAG" }, "home.hl.colorVision", "home.hl.readability", "home.hl.touchTargets"],
+  export: [{ name: "CSS" }, { name: "SCSS" }, { name: "Tailwind" }, "home.hl.jsonTokens"],
 };
 
 function GenericPreview({ icon: Icon }: { icon: LucideIcon }) {
@@ -49,10 +54,10 @@ export function ModuleCards() {
     <section aria-labelledby="modules-title" className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-16 md:py-24">
       <div className="flex flex-col gap-2">
         <p className="text-xs font-medium uppercase tracking-[0.14em] text-subtle-foreground">
-          {studios.length} studios
+          <Message id="home.modules.eyebrow" values={{ count: studios.length }} />
         </p>
         <h2 id="modules-title" className="text-3xl font-medium md:text-4xl">
-          One workspace. Every design decision.
+          <Message id="home.modules.title" />
         </h2>
       </div>
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -69,20 +74,25 @@ export function ModuleCards() {
                   <div className="flex items-center justify-between gap-4">
                     <h3 className="flex items-center gap-2 text-lg font-medium">
                       <Icon className="size-4 text-brand" aria-hidden />
-                      {studio.title}
+                      <Message id={`studio.${studio.id}.title`} />
                     </h3>
                     <ArrowUpRight
                       className="size-4 text-subtle-foreground transition-transform duration-150 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground"
                       aria-hidden
                     />
                   </div>
-                  <p className="text-sm text-muted-foreground">{studio.description}</p>
-                  <ul className="flex flex-wrap gap-1.5 pt-2" aria-label="Highlights">
-                    {(highlights[studio.id] ?? []).map((item) => (
-                      <li key={item} className="rounded-sm border px-1.5 py-0.5 text-[11px] text-muted-foreground">
-                        {item}
-                      </li>
-                    ))}
+                  <p className="text-sm text-muted-foreground">
+                    <Message id={`studio.${studio.id}.description`} />
+                  </p>
+                  <ul className="flex flex-wrap gap-1.5 pt-2">
+                    {(highlights[studio.id] ?? []).map((item) => {
+                      const id = typeof item === "string" ? item : item.name;
+                      return (
+                        <li key={id} className="rounded-sm border px-1.5 py-0.5 text-[11px] text-muted-foreground">
+                          {typeof item === "string" ? <Message id={item} /> : item.name}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               </Link>

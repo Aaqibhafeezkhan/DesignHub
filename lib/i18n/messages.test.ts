@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { LocalizedError } from "@/lib/i18n/errors";
+import { LocalizedError, translateLocalized } from "@/lib/i18n/errors";
 import { catalogs, locales, resolveLocale } from "@/lib/i18n/locales";
 import { en } from "@/lib/i18n/messages/en";
 import { createTranslator, format } from "@/lib/i18n/translate";
@@ -37,9 +37,20 @@ describe("message catalogs", () => {
     expect(missing).toEqual([]);
   });
 
-  it("has a Hindi translation for every Spanish key", () => {
-    const missing = Object.keys(catalogs.es).filter((key) => !Object.hasOwn(catalogs.hi, key));
-    expect(missing).toEqual([]);
+  it("has a Hindi and a French translation for every Spanish key", () => {
+    for (const locale of ["hi", "fr"] as const) {
+      const missing = Object.keys(catalogs.es).filter((key) => !Object.hasOwn(catalogs[locale], key));
+      expect(missing, locale).toEqual([]);
+    }
+  });
+
+  it("translates the Brand Studio and the home page in every locale", () => {
+    const areas = ["brand.", "home.", "error.svg.", "error.tokens."];
+    const keys = Object.keys(en).filter((key) => areas.some((area) => key.startsWith(area)));
+    for (const locale of ["es", "fr", "hi"] as const) {
+      const missing = keys.filter((key) => !Object.hasOwn(catalogs[locale], key));
+      expect(missing, locale).toEqual([]);
+    }
   });
 });
 
@@ -74,21 +85,22 @@ describe("translate", () => {
   it("keeps localized errors readable in English", () => {
     const error = new LocalizedError("error.file.json");
     expect(error.message).toBe("That file isn't valid JSON.");
-    expect(createTranslator(catalogs.es, "es").t(error.key)).toBe("Ese archivo no es un JSON válido.");
+    expect(translateLocalized(createTranslator(catalogs.es, "es").t, error)).toBe("Ese archivo no es un JSON válido.");
   });
 });
 
 describe("resolveLocale", () => {
   it("uses the first browser language with a translation", () => {
     expect(resolveLocale(["es-MX", "en"])).toBe("es");
-    expect(resolveLocale(["fr-FR", "ES"])).toBe("es");
+    expect(resolveLocale(["fr-FR", "ES"])).toBe("fr");
+    expect(resolveLocale(["de-DE", "ES"])).toBe("es");
     expect(resolveLocale(["en-GB", "es"])).toBe("en");
     expect(resolveLocale(["hi-IN", "en"])).toBe("hi");
-    expect(resolveLocale(["fr", "HI"])).toBe("hi");
+    expect(resolveLocale(["de", "HI"])).toBe("hi");
   });
 
   it("defaults to English", () => {
-    expect(resolveLocale(["fr", "de-DE"])).toBe("en");
+    expect(resolveLocale(["de", "ja-JP"])).toBe("en");
     expect(resolveLocale([])).toBe("en");
   });
 });
