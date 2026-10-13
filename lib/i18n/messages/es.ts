@@ -453,6 +453,7 @@ export const es = {
   "colors.export.format.json": "Tokens JSON",
   "colors.export.format.svg": "Degradado SVG",
   "colors.export.format.gpl": "Paleta de GIMP",
+  "colors.export.format.markdown": "Markdown",
 
   "share.button": "Copiar enlace para compartir",
   "share.buttonHint": "Copia un enlace que importa esta marca como un proyecto nuevo",
