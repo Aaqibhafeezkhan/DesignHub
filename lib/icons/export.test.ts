@@ -103,6 +103,34 @@ describe("icon exports", () => {
     expect(qwik?.code.trimEnd().endsWith("});")).toBe(true);
   });
 
+  test("Lit component defines size and color properties and renders the body with svg", () => {
+    const lit = iconExports("tabler:brand-github", icon, { ...defaultIconStyle, color: "#ef4444" }).find(
+      (format) => format.id === "lit",
+    );
+    expect(lit?.label).toBe("Lit");
+    expect(lit?.filename).toBe("brand-github-icon.ts");
+    expect(lit?.language).toBe("ts");
+    expect(lit?.code).toContain('import { LitElement, html, svg } from "lit";');
+    expect(lit?.code).toContain("export class BrandGithubIcon extends LitElement {");
+    expect(lit?.code).toContain("size: { type: String },");
+    expect(lit?.code).toContain('this.size = "1em";');
+    expect(lit?.code).toContain('this.color = "#ef4444";');
+    expect(lit?.code).toContain('customElements.define("brand-github-icon", BrandGithubIcon);');
+    expect(lit?.code).toMatch(/width=\$\{this\.size\} height=\$\{this\.size\}/);
+    expect(lit?.code).toContain('style="color: ${this.color}"');
+    expect(lit?.code).toContain("${svg`");
+    // The body keeps currentColor so the color property can recolor it.
+    expect(lit?.code).toContain('stroke="currentColor"');
+    expect(lit?.code).toContain('stroke-width="2"');
+  });
+
+  test("Lit component escapes backticks, backslashes and ${ in the artwork", () => {
+    const tricky = { ...icon, body: "<text>`${x}` \\ done</text><path d='M0 0h24'/>" };
+    const lit = iconExports("tabler:brand-github", tricky, defaultIconStyle).find((format) => format.id === "lit");
+    expect(lit?.code).toContain("<text>\\`\\${x}\\` \\\\ done</text>");
+    expect(lit?.code).not.toMatch(/[^\\]`\$\{x\}/);
+  });
+
   test("Qwik component escapes braces and rewrites xlink:href", () => {
     const styled = { ...icon, body: "<style>.a{fill:red}</style><path class='a' d='M0 0h24'/><use xlink:href='#p'/>" };
     const qwik = iconExports("tabler:brand-github", styled, defaultIconStyle).find((format) => format.id === "qwik");
