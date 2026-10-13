@@ -754,7 +754,111 @@ export default tokens;
 `;
 }
 
-/** Vue 3: the theme object, an injection key and a plugin that exposes it as CSS variables. */
+/**
+ * React Native (theme.ts): the palette, light and dark semantic colors (from `roleColor()`, like
+ * the Compose export), spacing and radius as numbers, font families and a type scale typed as
+ * `TextStyle`, plus a `useTheme()` hook that follows the device color scheme.
+ */
+export function toReactNativeTheme(tokens: DesignTokens): string {
+  const round = (value: number) => Math.round(value * 100) / 100;
+  const rows = (entries: [string, string | number][], indent = "  ") =>
+    entries.map(([key, value]) => `${indent}${objectKey(key)}: ${JSON.stringify(value)},`).join("\n");
+  const unique = (entries: [string, string | number][]) => [...new Map(entries)];
+
+  const palette = unique(
+    tokens.colors.flatMap((color) => [
+      [camel(color.name), toHex(color.value)] as [string, string],
+      ...color.shades.map((shade) => [camel(`${color.name}-${shade.step}`), toHex(shade.value)] as [string, string]),
+    ]),
+  );
+  const roles = (dark: boolean) =>
+    tokens.semantic.flatMap((role): [string, string][] => {
+      const entry = roleColor(tokens, role.name, dark);
+      return entry ? [[camel(role.name), toHex(entry.value)]] : [];
+    });
+  const size = (items: { name: string; px: number }[]) =>
+    unique(items.map((item): [string, number] => [item.name, round(item.px)]));
+
+  const t = tokens.typography;
+  const fonts = t
+    ? `export const fonts = {\n${rows([
+        ["heading", t.heading.family],
+        ["body", t.body.family],
+      ])}\n} as const;`
+    : "";
+  const weight = (value: number) => String(Math.min(900, Math.max(100, Math.round(value / 100) * 100)));
+  const typeScale = t
+    ? t.steps
+        .map((step) => {
+          const heading = step.maxPx >= 24;
+          const rhythm = heading
+            ? { weight: t.rhythm.headingWeight, line: t.rhythm.headingLineHeight, track: t.rhythm.headingTracking }
+            : { weight: t.rhythm.bodyWeight, line: t.rhythm.bodyLineHeight, track: t.rhythm.bodyTracking };
+          const style = {
+            fontFamily: heading ? t.heading.family : t.body.family,
+            fontSize: round(step.maxPx),
+            lineHeight: round(step.maxPx * rhythm.line),
+            fontWeight: weight(rhythm.weight),
+            letterSpacing: round(step.maxPx * rhythm.track),
+          };
+          return `  ${objectKey(step.name)}: {\n${rows(Object.entries(style), "    ")}\n  },`;
+        })
+        .join("\n")
+    : "";
+
+  return `${header(tokens, (text) => `// ${text}`)}
+// Load the fonts (expo-font, @expo-google-fonts or linked assets) for the family names to apply.
+import { useColorScheme, type TextStyle } from "react-native";
+
+export const palette = {
+${rows(palette)}
+} as const;
+
+export const lightColors = {
+${rows(roles(false))}
+} as const;
+
+export type ColorName = keyof typeof lightColors;
+export type Colors = Record<ColorName, string>;
+
+export const darkColors: Colors = {
+${rows(roles(true))}
+};
+
+export const spacing = {
+${rows(size(tokens.spacing))}
+} as const;
+
+export const radius = {
+${rows(size(tokens.radius))}
+} as const;
+${fonts ? `\n${fonts}\n` : ""}${
+    typeScale
+      ? `
+export const typography = {
+${typeScale}
+} as const satisfies Record<string, TextStyle>;
+`
+      : ""
+  }
+export type Theme = {
+  dark: boolean;
+  colors: Colors;
+  spacing: typeof spacing;
+  radius: typeof radius;
+};
+
+export const lightTheme: Theme = { dark: false, colors: lightColors, spacing, radius };
+export const darkTheme: Theme = { dark: true, colors: darkColors, spacing, radius };
+
+/** The light or dark theme for the device setting: const theme = useTheme(); then theme.colors.primary. */
+export function useTheme(): Theme {
+  return useColorScheme() === "dark" ? darkTheme : lightTheme;
+}
+`;
+}
+
+/** Vue 3: the theme object,an injection key and a plugin that exposes it as CSS variables. */
 export function toVueTheme(tokens: DesignTokens): string {
   const groups = new Map<string, Record<string, string>>();
   flatten(tokens).forEach((token) => {
@@ -874,6 +978,117 @@ export function toJsonTokens(tokens: DesignTokens): string {
       : {}),
   };
   return `${JSON.stringify(document, null, 2)}\n`;
+}
+
+type StyleDictionaryNode = { $value: string | number; $type?: string };
+type StyleDictionaryTree = { [key: string]: StyleDictionaryNode | StyleDictionaryTree };
+
+/**
+ * Style Dictionary v4 (style-dictionary.tokens.json): DTCG tokens with `$value` and `$type`,
+ * where semantic colors are `{color.indigo.base}` references to palette tokens. Names follow
+ * the CSS export ("color-indigo-500", "spacing-4"), so the built CSS has the same variables.
+ * A palette color with shades keeps its own value at `.base`, because a token can't also be a
+ * group; a dot in a key (spacing "0.5") becomes an underscore, which the kebab-case name
+ * transform builds into `spacing-0-5`, so the name stays a valid identifier.
+ */
+export function toStyleDictionaryTokens(tokens: DesignTokens): string {
+  const tree: StyleDictionaryTree = {};
+  const put = (path: string[], node: StyleDictionaryNode) => {
+    let level = tree;
+    path.slice(0, -1).forEach((key) => {
+      const next = level[key];
+      level = next && !("$value" in next) ? next : (level[key] = {});
+    });
+    level[path[path.length - 1]!] = node;
+  };
+  // "font-weight-heading" -> ["font", "weight-heading"]; the first hyphen is the group.
+  const split = (name: string) => {
+    const at = name.indexOf("-");
+    return (at < 0 ? [name] : [name.slice(0, at), name.slice(at + 1)]).map((key) => key.replace(/\./g, "_"));
+  };
+  const types: Record<string, string> = {
+    gradient: "gradient",
+    text: "dimension",
+    spacing: "dimension",
+    radius: "dimension",
+  };
+  const typeOf = (group: string, name: string): string | undefined => {
+    if (types[group]) return types[group];
+    if (name.startsWith("font-weight-")) return "fontWeight";
+    if (name.startsWith("leading-")) return "number";
+    if (name.startsWith("tracking-")) return "dimension";
+    if (name.startsWith("font-")) return "fontFamily";
+    if (name.startsWith("shadow")) return "shadow";
+    return undefined;
+  };
+  const asNumber = (value: string) => (/^-?\d+(\.\d+)?$/.test(value) ? Number(value) : value);
+
+  const color = (value: Oklch) => formatColor(value, tokens.meta.colorFormat);
+  tokens.colors.forEach((token) => {
+    const hasShades = token.shades.length > 0;
+    put(hasShades ? ["color", token.name, "base"] : ["color", token.name], {
+      $value: color(token.value),
+      $type: "color",
+    });
+    token.shades.forEach((shade) =>
+      put(["color", token.name, String(shade.step)], { $value: color(shade.value), $type: "color" }),
+    );
+  });
+  tokens.semantic.forEach((role) => {
+    const source = tokens.colors.find((item) => item.name === role.ref);
+    // References only resolve to palette colors; synthesized white and black are written as values.
+    put(["color", role.name], {
+      $value: source ? `{color.${role.ref}${source.shades.length ? ".base" : ""}}` : color(role.value),
+      $type: "color",
+    });
+  });
+  flatten(tokens)
+    .filter((token) => token.group !== "color" && token.group !== "semantic")
+    .forEach((token) => {
+      const type = typeOf(token.group, token.name);
+      const numeric = type === "fontWeight" || type === "number";
+      put(split(token.name), {
+        $value: numeric ? asNumber(token.value) : token.value,
+        ...(type ? { $type: type } : {}),
+      });
+    });
+
+  const description = `${tokens.meta.name} - generated by DesignHub on ${tokens.meta.generatedAt}`;
+  return `${JSON.stringify({ $description: description, ...tree }, null, 2)}\n`;
+}
+
+/**
+ * Style Dictionary v4 config (config.json): builds CSS custom properties, SCSS variables and an
+ * ES module from style-dictionary.tokens.json. It lists only naming transforms, so values reach
+ * the output exactly as written in the tokens file (the same as the CSS export). Put both files
+ * in one folder and run `npx style-dictionary build`.
+ */
+export function toStyleDictionaryConfig(tokens: DesignTokens): string {
+  const prefix = tokens.meta.prefix ? { prefix: tokens.meta.prefix } : {};
+  const config = {
+    source: ["style-dictionary.tokens.json"],
+    platforms: {
+      css: {
+        ...prefix,
+        transforms: ["name/kebab"],
+        buildPath: "build/css/",
+        files: [{ destination: "tokens.css", format: "css/variables", options: { outputReferences: true } }],
+      },
+      scss: {
+        ...prefix,
+        transforms: ["name/kebab"],
+        buildPath: "build/scss/",
+        files: [{ destination: "_tokens.scss", format: "scss/variables", options: { outputReferences: true } }],
+      },
+      js: {
+        ...prefix,
+        transforms: ["name/camel"],
+        buildPath: "build/js/",
+        files: [{ destination: "tokens.js", format: "javascript/es6" }],
+      },
+    },
+  };
+  return `${JSON.stringify(config, null, 2)}\n`;
 }
 
 type FigmaColor = { r: number; g: number; b: number; a: number };
@@ -1043,6 +1258,13 @@ export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
     },
     { id: "vue", label: "Vue theme", filename: "theme.ts", language: "ts", code: toVueTheme(tokens) },
     { id: "flutter", label: "Flutter", filename: "theme.dart", language: "dart", code: toFlutterTheme(tokens) },
+    {
+      id: "react-native",
+      label: "React Native",
+      filename: "theme.ts",
+      language: "ts",
+      code: toReactNativeTheme(tokens),
+    },
     { id: "swiftui", label: "SwiftUI", filename: "Theme.swift", language: "swift", code: toSwiftUITheme(tokens) },
     { id: "compose", label: "Jetpack Compose", filename: "Theme.kt", language: "kotlin", code: toComposeTheme(tokens) },
     { id: "json", label: "JSON tokens", filename: "tokens.json", language: "json", code: toJsonTokens(tokens) },
@@ -1053,6 +1275,20 @@ export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
       filename: "tokens-studio.json",
       language: "json",
       code: toTokensStudio(tokens),
+    },
+    {
+      id: "style-dictionary",
+      label: "Style Dictionary",
+      filename: "style-dictionary.tokens.json",
+      language: "json",
+      code: toStyleDictionaryTokens(tokens),
+    },
+    {
+      id: "style-dictionary-config",
+      label: "Style Dictionary config",
+      filename: "config.json",
+      language: "json",
+      code: toStyleDictionaryConfig(tokens),
     },
     {
       id: "figma-variables",

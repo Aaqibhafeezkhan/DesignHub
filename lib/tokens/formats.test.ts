@@ -500,3 +500,109 @@ describe("Figma Variables", () => {
     expect(valueOf("color/foreground", "Dark")).toEqual({ r: 1, g: 1, b: 1, a: 1 });
   });
 });
+
+const typed = (prefix = ""): DesignTokens => ({
+  ...tokens(prefix),
+  semantic: [
+    { name: "primary", ref: "indigo", value: fromHex("#6366f1") },
+    { name: "foreground", ref: "indigo-2", value: fromHex("#0f172a") },
+    { name: "background", ref: "white", value: fromHex("#ffffff") },
+  ],
+  typography: {
+    heading: { family: "Inter", category: "sans-serif", weights: [700], italic: false, rank: 1 },
+    body: { family: "Lora", category: "serif", weights: [400], italic: false, rank: 2 },
+    steps: [
+      { name: "base", step: 0, minPx: 15, maxPx: 16, clamp: "clamp(0.9375rem, 1rem, 1rem)" },
+      { name: "2xl", step: 5, minPx: 28, maxPx: 32, clamp: "clamp(1.75rem, 2rem, 2rem)" },
+    ],
+    rhythm: {
+      headingWeight: 700,
+      bodyWeight: 400,
+      headingLineHeight: 1.25,
+      bodyLineHeight: 1.5,
+      headingTracking: -0.02,
+      bodyTracking: 0,
+    },
+  },
+});
+
+type SdNode = { $value?: unknown; $type?: string; [key: string]: unknown };
+
+describe("Style Dictionary", () => {
+  const formatCode = (id: string, prefix = "") => tokenFormats(typed(prefix)).find((format) => format.id === id)!.code;
+  const doc = JSON.parse(formatCode("style-dictionary")) as Record<string, SdNode>;
+
+  test("writes DTCG tokens with $value and $type", () => {
+    const color = doc.color as Record<string, SdNode>;
+    expect((color.indigo as SdNode).base).toEqual({ $value: "#6366f1", $type: "color" });
+    expect((color.indigo as SdNode)["250"]).toEqual({ $value: "#cdd9f3", $type: "color" });
+    expect((doc.spacing as Record<string, SdNode>)["0_5"]).toEqual({ $value: "0.125rem", $type: "dimension" });
+    expect((doc.font as Record<string, SdNode>)["weight-heading"]).toEqual({ $value: 700, $type: "fontWeight" });
+    expect((doc.text as Record<string, SdNode>).base!.$value).toBe("clamp(0.9375rem, 1rem, 1rem)");
+    expect((doc.shadow as Record<string, SdNode>).md).toEqual({
+      $value: "0 1px 2px rgb(0 0 0 / 0.1)",
+      $type: "shadow",
+    });
+  });
+
+  test("semantic colors reference palette tokens and keep unmatched colors as values", () => {
+    const color = doc.color as Record<string, SdNode>;
+    expect(color.primary).toEqual({ $value: "{color.indigo.base}", $type: "color" });
+    expect(color.foreground!.$value).toBe("{color.indigo-2.base}");
+    expect(color.background!.$value).toBe("#ffffff");
+  });
+
+  test("every reference points at a token that exists", () => {
+    const lookup = (path: string) =>
+      path.split(".").reduce<SdNode | undefined>((node, key) => node?.[key] as SdNode | undefined, doc as SdNode);
+    const refs = [...JSON.stringify(doc).matchAll(/"\{([^}]+)\}"/g)].map((match) => match[1]!);
+    expect(refs.length).toBeGreaterThan(0);
+    refs.forEach((ref) => expect(lookup(ref)?.$value, ref).toBeDefined());
+  });
+
+  test("config.json builds CSS, SCSS and JS from the tokens file, with the prefix", () => {
+    type Config = {
+      source: string[];
+      platforms: Record<string, { prefix?: string; files: { destination: string }[] }>;
+    };
+    const config = JSON.parse(formatCode("style-dictionary-config", "acme")) as Config;
+    expect(config.source).toEqual(["style-dictionary.tokens.json"]);
+    expect(tokenFormats(typed()).map((format) => format.filename)).toContain(config.source[0]);
+    expect(Object.keys(config.platforms)).toEqual(["css", "scss", "js"]);
+    expect(config.platforms.css!.files[0]!.destination).toBe("tokens.css");
+    expect(config.platforms.js!.prefix).toBe("acme");
+    expect((JSON.parse(formatCode("style-dictionary-config")) as Config).platforms.css).not.toHaveProperty("prefix");
+  });
+});
+
+describe("React Native theme", () => {
+  const code = tokenFormats(typed()).find((format) => format.id === "react-native")!.code;
+  const section = (start: string) => code.split(start)[1]!.split("}")[0]!;
+
+  test("exports light and dark colors from roleColor()", () => {
+    expect(section("export const lightColors = {")).toContain('primary: "#6366f1"');
+    expect(section("export const lightColors = {")).toContain('background: "#ffffff"');
+    // Dark mode swaps the background and foreground roles.
+    expect(section("export const darkColors: Colors = {")).toContain('background: "#0f172a"');
+    expect(section("export const darkColors: Colors = {")).toContain('foreground: "#ffffff"');
+  });
+
+  test("spacing and radius are numbers", () => {
+    expect(code).toContain('"0.5": 2,');
+    expect(code).toContain("4: 16,");
+    expect(code).toContain("lg: 12,");
+  });
+
+  test("includes fonts, a TextStyle type scale and a useTheme hook", () => {
+    expect(code).toContain('heading: "Inter",');
+    expect(code).toContain('fontWeight: "700",');
+    expect(code).toContain("lineHeight: 40,");
+    expect(code).toContain("as const satisfies Record<string, TextStyle>");
+    expect(code).toContain('from "react-native"');
+    expect(code).toContain("export function useTheme(): Theme");
+  });
+
+  test("is registered with the other native themes", () => {
+    expect(tokenFormats(typed()).find((format) => format.id === "react-native")?.filename).toBe("theme.ts");
+  });
+});
