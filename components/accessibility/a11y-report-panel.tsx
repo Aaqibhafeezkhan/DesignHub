@@ -1,11 +1,11 @@
 "use client";
 
-import { FileJson, FileText } from "lucide-react";
+import { FileCode, FileJson, FileText } from "lucide-react";
 
 import { CodeBlock } from "@/components/export/code-block";
 import { Button } from "@/components/ui/button";
 import { downloadText } from "@/lib/download";
-import { stampMarkdown, stampReport, type A11yReport } from "@/lib/a11y/report";
+import { stampHtml, stampMarkdown, stampReport, type A11yReport } from "@/lib/a11y/report";
 
 export function A11yReportPanel({ report }: { report: A11yReport }) {
   const json = `${JSON.stringify(report, null, 2)}\n`;
@@ -21,6 +21,14 @@ export function A11yReportPanel({ report }: { report: A11yReport }) {
             onClick={() => downloadText(stampMarkdown(report), "accessibility-report.md")}
           >
             <FileText /> Markdown
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            aria-label="Download HTML"
+            onClick={() => downloadText(stampHtml(report), "accessibility-report.html")}
+          >
+            <FileCode /> HTML
           </Button>
           <Button
             size="sm"

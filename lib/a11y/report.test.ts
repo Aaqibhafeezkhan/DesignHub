@@ -7,7 +7,10 @@ import {
   contrastTable,
   focusTable,
   gradientTable,
+  contrastHtmlTable,
+  escapeHtml,
   paletteVisionTable,
+  reportToHtml,
   reportToMarkdown,
   type A11yReportInput,
 } from "@/lib/a11y/report";
@@ -164,5 +167,61 @@ describe("reportToMarkdown", () => {
 
   test("escapes pipes so labels cannot break a table", () => {
     expect(markdown).toContain("Icon \\| button");
+  });
+});
+
+describe("reportToHtml", () => {
+  const page = reportToHtml({ ...report, generatedAt: "2026-01-01T00:00:00.000Z" });
+
+  test("is a standalone page with no scripts, one h1 and a caption on every table", () => {
+    expect(page.startsWith("<!doctype html>")).toBe(true);
+    expect(page).toContain(`<html lang="en">`);
+    expect(page).not.toMatch(/<script|<link|<img|javascript:/i);
+    expect(page.match(/<h1>/g)).toHaveLength(1);
+    const tables = page.match(/<table>/g) ?? [];
+    expect(tables.length).toBeGreaterThanOrEqual(7);
+    expect(page.match(/<caption>/g)).toHaveLength(tables.length);
+    expect(page).toContain("2026-01-01T00:00:00.000Z");
+  });
+
+  test("has a heading per section, like the Markdown", () => {
+    const headings = [...page.matchAll(/<h2 id="[a-z-]+">([^<]+)<\/h2>/g)].map((match) => match[1]);
+    const markdownHeadings = reportToMarkdown(report)
+      .split("\n")
+      .filter((line) => line.startsWith("## "))
+      .map((line) => line.slice(3));
+    expect(headings).toEqual(markdownHeadings);
+  });
+
+  test("the contrast table has header cells and the same numbers as the JSON", () => {
+    const section = report.sections.contrast;
+    const table = contrastHtmlTable(section);
+    expect(table).toContain("<caption>Contrast of each color pair</caption>");
+    expect(table.match(/<th scope="col">/g)).toHaveLength(11);
+    const bodyRows = table
+      .split("<tbody>")[1]!
+      .split("</tr>")
+      .filter((row) => row.includes("<tr>"));
+    expect(bodyRows).toHaveLength(section.length);
+    section.forEach((pair, index) => {
+      const row = bodyRows[index]!;
+      expect(row).toContain(`<th scope="row">${escapeHtml(pair.check)}</th>`);
+      expect(row).toContain(`<td>${pair.ratio.toFixed(2)}:1</td>`);
+      expect(row).toContain(`<td>${pair.required.toFixed(2)}:1</td>`);
+      expect(row).toContain(`<td>${pair.apca.lc} (min ${pair.apca.target})</td>`);
+      expect(row).toContain(`<code>${pair.foreground}</code>`);
+      expect(row).toContain(`<span class="badge ${pair.pass ? "pass" : "fail"}">${pair.pass ? "Pass" : "Fail"}</span>`);
+    });
+  });
+
+  test("escapes labels so they cannot inject markup", () => {
+    const hostile = reportToHtml(
+      buildReport(input, {
+        ...report.sections,
+        touchTargets: targetsSection([{ id: "x", label: "<b onclick=1>Icon</b> & co", width: 20, height: 20 }], 8),
+      }),
+    );
+    expect(hostile).toContain("&lt;b onclick=1&gt;Icon&lt;/b&gt; &amp; co");
+    expect(hostile).not.toContain("<b onclick");
   });
 });
