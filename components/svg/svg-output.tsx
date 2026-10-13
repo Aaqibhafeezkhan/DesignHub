@@ -9,6 +9,7 @@ import { useOptimizedTree } from "@/hooks/use-optimized-tree";
 import { angularComponent, kebabCase } from "@/lib/svg/angular";
 import { componentNameFromFile, reactComponent, toJsx, withCurrentColor } from "@/lib/svg/jsx";
 import { svgBackgroundCss } from "@/lib/svg/data-uri";
+import { qwikComponent } from "@/lib/svg/qwik";
 import { reactNativeComponent } from "@/lib/svg/react-native";
 import { minify, prettyPrint } from "@/lib/svg/serialize";
 import { buildSprite, spriteUsage } from "@/lib/svg/sprite";
@@ -81,6 +82,13 @@ export function SvgOutput({ root }: { root: SvgNode | null }) {
         filename: `${componentNameFromFile(name)}.tsx`,
         language: "tsx",
         code: solidComponent(codeTree, name),
+      },
+      {
+        id: "qwik",
+        label: "Qwik",
+        filename: `${componentNameFromFile(name)}.tsx`,
+        language: "tsx",
+        code: qwikComponent(codeTree, name),
       },
       {
         id: "angular",

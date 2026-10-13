@@ -5,9 +5,9 @@ import type { SvgNode } from "@/types/svg";
 /**
  * Attributes Solid would treat as code instead of a string: event handlers (onclick) and the
  * properties that write markup or take a ref (innerHTML, textContent, ref). Its namespaced forms
- * (on:click, use:x, prop:x) fail the name check below.
+ * (on:click, use:x, prop:x) fail the name check below. The Qwik converter shares this list.
  */
-const SPECIAL = /^(?:on|ref$|classList$|innerHTML$|innerText$|textContent$|children$)/i;
+const SPECIAL = /^(?:on|ref$|key$|classList$|innerHTML$|innerText$|textContent$|children$|dangerouslySetInnerHTML$)/i;
 
 /**
  * A JSX attribute name Solid's types accept: an identifier with hyphens and no namespace. Solid
@@ -70,6 +70,18 @@ function markup(node: SvgNode, depth: number, extra = "", prefix: string[] = [])
 }
 
 /**
+ * The JSX for the <svg> root and everything inside it, written as the SVG source spells it (the
+ * Solid and Qwik converters). The root is sized with 1em, `extra` goes on the root after its own
+ * attributes, and `prefix` lines open its children.
+ */
+export function verbatimJsx(root: SvgNode, extra: string, prefix: string[], depth: number): string {
+  const tree = structuredClone(root);
+  for (const attribute of ["width", "height", "role", "aria-hidden"]) delete tree.attributes[attribute];
+  tree.attributes = { ...tree.attributes, width: "1em", height: "1em" };
+  return markup(tree, depth, extra, prefix).trimStart();
+}
+
+/**
  * SolidJS component. Solid sets SVG attributes as written, so they keep their SVG spelling (class,
  * stroke-width) apart from xlink:href, which becomes href. Extra props such as class and style are
  * spread onto the <svg>, and an optional `title` prop, split off with splitProps so it stays
@@ -77,15 +89,12 @@ function markup(node: SvgNode, depth: number, extra = "", prefix: string[] = [])
  */
 export function solidComponent(root: SvgNode, fileName: string): string {
   const name = componentNameFromFile(fileName);
-  const tree = structuredClone(root);
-  for (const attribute of ["width", "height", "role", "aria-hidden"]) delete tree.attributes[attribute];
-  tree.attributes = { ...tree.attributes, width: "1em", height: "1em" };
-  const template = markup(
-    tree,
-    2,
+  const template = verbatimJsx(
+    root,
     ` role={local.title ? "img" : undefined} aria-hidden={local.title ? undefined : "true"} {...rest}`,
     ["{local.title ? <title>{local.title}</title> : null}"],
-  ).trimStart();
+    2,
+  );
 
   return `import { splitProps, type JSX } from "solid-js";
 
