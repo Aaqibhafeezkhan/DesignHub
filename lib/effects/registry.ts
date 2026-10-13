@@ -9,6 +9,7 @@ import { longShadow } from "@/lib/effects/long-shadow";
 import { neumorphism } from "@/lib/effects/neumorphism";
 import { shadow } from "@/lib/effects/shadow";
 import { skeleton } from "@/lib/effects/skeleton";
+import { textOutline } from "@/lib/effects/text-outline";
 import type { EffectContext, EffectCss, EffectKind, EffectSettingsMap } from "@/types/effects";
 
 /** Effects register here as they are implemented. */
@@ -23,6 +24,7 @@ export const effectDefinitions: AnyEffectDefinition[] = [
   longShadow,
   gradientText,
   skeleton,
+  textOutline,
 ];
 
 export function generateEffect<K extends EffectKind>(

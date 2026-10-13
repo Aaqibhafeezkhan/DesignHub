@@ -48,4 +48,14 @@ export const effectDefaults: EffectSettingsMap = {
     angle: 100,
     radius: 12,
   },
+  "text-outline": {
+    color: "#6366f1",
+    width: 2,
+    hollow: true,
+    fill: "#ffffff",
+    shadow: true,
+    shadowX: 4,
+    shadowY: 4,
+    shadowColor: "#f472b6",
+  },
 };

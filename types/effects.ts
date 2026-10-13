@@ -10,7 +10,8 @@ export type EffectKind =
   | "grain"
   | "long-shadow"
   | "gradient-text"
-  | "skeleton";
+  | "skeleton"
+  | "text-outline";
 
 export type GlassSettings = {
   blur: number;
@@ -144,6 +145,23 @@ export type SkeletonSettings = {
   radius: number;
 };
 
+/** Outlined text (-webkit-text-stroke), with an optional hard shadow copy offset behind it. */
+export type TextOutlineSettings = {
+  /** Outline color. */
+  color: string;
+  /** Outline width in px. */
+  width: number;
+  /** Empty glyphs (only the outline shows). Off fills them with `fill`. */
+  hollow: boolean;
+  /** Glyph fill when not hollow. */
+  fill: string;
+  /** Adds a hard-edged copy of the outline offset behind the text. */
+  shadow: boolean;
+  shadowX: number;
+  shadowY: number;
+  shadowColor: string;
+};
+
 export type EffectSettingsMap = {
   glass: GlassSettings;
   neumorphism: NeumorphismSettings;
@@ -155,6 +173,7 @@ export type EffectSettingsMap = {
   "long-shadow": LongShadowSettings;
   "gradient-text": GradientTextSettings;
   skeleton: SkeletonSettings;
+  "text-outline": TextOutlineSettings;
 };
 
 /** State from other studios an effect may build on. Effects read it here instead of copying it into their settings. */
