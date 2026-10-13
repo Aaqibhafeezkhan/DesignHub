@@ -1,23 +1,112 @@
 import { describe, expect, test } from "vitest";
 
-import { fromHex } from "@/lib/color/color";
+import { formatColor, fromHex, toHex } from "@/lib/color/color";
 import {
   adobeSwatchExchange,
   colorExports,
   gimpPalette,
   kritaPalette,
+  markdownPalette,
+  namedPalette,
   paletteSvg,
   procreateSwatches,
   procreateSwatchLimit,
   sketchPalette,
   type NamedColor,
 } from "@/lib/color/export";
-import { defaultShadeOptions } from "@/lib/color/shades";
+import { defaultShadeOptions, SHADE_STEPS } from "@/lib/color/shades";
+import type { ColorFormat } from "@/types/color";
 
 const palette: NamedColor[] = [
   { name: "indigo", color: fromHex("#6366f1"), shades: [{ step: 50, color: fromHex("#0a0b0c") }] },
   { name: "amber", color: fromHex("#f59e0b"), shades: [{ step: 50, color: fromHex("#fff7e6") }] },
 ];
+
+describe("Markdown palette", () => {
+  test.each([
+    ["hex", "#6366f1"],
+    ["rgb", "rgb(99 102 241)"],
+    ["hsl", "hsl(239 84% 67%)"],
+    ["oklch", "oklch(58.54% 0.2041 277.12)"],
+  ] as const)("keeps HEX and OKLCH details with the selected %s value", (format, value) => {
+    expect(markdownPalette([palette[0]], format, false)).toBe(
+      `| Name | HEX | OKLCH | Value (${format.toUpperCase()}) |\n` +
+        "| --- | --- | --- | --- |\n" +
+        `| indigo | #6366f1 | oklch(58.54% 0.2041 277.12) | ${value} |\n`,
+    );
+  });
+
+  test("includes each color's shades only when enabled, in palette order", () => {
+    const names = (includeShades: boolean) =>
+      markdownPalette(palette, "hex", includeShades)
+        .trim()
+        .split("\n")
+        .slice(2)
+        .map((row) => row.split("|")[1].trim());
+    expect(names(false)).toEqual(["indigo", "amber"]);
+    expect(names(true)).toEqual(["indigo", "indigo-50", "amber", "amber-50"]);
+    expect(markdownPalette(palette, "hex", true)).toContain("| indigo-50 | #0a0b0c |");
+  });
+
+  test.each([false, true])("writes a valid empty table with shades %s", (includeShades) => {
+    expect(markdownPalette([], "rgb", includeShades)).toBe(
+      "| Name | HEX | OKLCH | Value (RGB) |\n| --- | --- | --- | --- |\n",
+    );
+  });
+
+  test("escapes table delimiters, inline markup and line breaks in names", () => {
+    const colors = [{ ...palette[0], name: "a|b\\c`*_[x]~<br>&#124;\r\nnext\nline" }];
+    const markdown = markdownPalette(colors, "hex", true);
+    expect(markdown).toContain("| a&#124;b&#92;c&#96;&#42;&#95;&#91;x&#93;&#126;&#60;br&#62;&#38;#124; next line |");
+    expect(markdown.trim().split("\n")).toHaveLength(4);
+    for (const row of markdown.trim().split("\n")) expect(row.split("|")).toHaveLength(6);
+  });
+
+  test.each<ColorFormat>(["hex", "rgb", "hsl", "oklch"])(
+    "preserves alpha and wide-gamut formatting conventions in %s",
+    (format) => {
+      const colors = [fromHex("#6366f180"), fromHex("#00000000"), { l: 0.7, c: 0.4, h: 145, alpha: 0.25 }];
+      const named = colors.map((color, index) => ({ name: `color-${index}`, color, shades: [] }));
+      const rows = markdownPalette(named, format, false).trim().split("\n").slice(2);
+      expect(rows).toEqual(
+        colors.map(
+          (color, index) =>
+            `| color-${index} | ${toHex(color)} | ${formatColor(color, "oklch")} | ${formatColor(color, format)} |`,
+        ),
+      );
+      expect(rows[0]).toContain("#6366f180");
+      expect(rows[1]).toContain("#00000000");
+      expect(rows[2]).toContain("oklch(70% 0.4 145 / 0.25)");
+    },
+  );
+
+  test("registers the format with existing names and all configured 50-950 shades", () => {
+    const colors = [fromHex("#6366f1"), fromHex("#6366f1")];
+    const shadeOptions = { hueShift: 17, anchor: false };
+    const formats = colorExports({
+      colors,
+      gradient: { type: "linear", angle: 90, x: 50, y: 50, interpolation: "oklch", stops: [] },
+      format: "hsl",
+      includeShades: true,
+      shadeOptions,
+    });
+    const markdown = formats.find((format) => format.id === "markdown");
+    expect(markdown).toMatchObject({ label: "Markdown", filename: "palette.md", language: "text" });
+    expect(markdown?.code).toBe(markdownPalette(namedPalette(colors, shadeOptions), "hsl", true));
+    const names = markdown?.code
+      .trim()
+      .split("\n")
+      .slice(2)
+      .map((row) => row.split("|")[1].trim());
+    expect(names).toEqual([
+      "indigo",
+      ...SHADE_STEPS.map((step) => `indigo-${step}`),
+      "indigo-2",
+      ...SHADE_STEPS.map((step) => `indigo-2-${step}`),
+    ]);
+    expect(markdown?.code).not.toBe(markdownPalette(namedPalette(colors, defaultShadeOptions), "hsl", true));
+  });
+});
 
 describe("GIMP palette", () => {
   test("writes the header and one R G B<TAB>name line per color", () => {

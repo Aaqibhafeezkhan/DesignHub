@@ -217,6 +217,21 @@ function paletteEntries(palette: NamedColor[], includeShades: boolean): { name: 
   ]);
 }
 
+/** Keep each value in one plain-text GFM table cell, including imported names. */
+function escapeMarkdownCell(value: string): string {
+  return value.replace(/[\r\n]+/g, " ").replace(/[&<>|\\`*_[\]~]/g, (character) => `&#${character.charCodeAt(0)};`);
+}
+
+export function markdownPalette(palette: NamedColor[], format: ColorFormat, includeShades: boolean): string {
+  const rows = paletteEntries(palette, includeShades).map(({ name, color }) => {
+    const cells = [name, toHex(color), formatColor(color, "oklch"), formatColor(color, format)];
+    return `| ${cells.map(escapeMarkdownCell).join(" | ")} |`;
+  });
+  return (
+    [`| Name | HEX | OKLCH | Value (${format.toUpperCase()}) |`, "| --- | --- | --- | --- |", ...rows].join("\n") + "\n"
+  );
+}
+
 const unit = (value: number) => Number(value.toFixed(6));
 
 /**
@@ -384,6 +399,13 @@ export function colorExports(input: ColorExportInput): ExportFormat[] {
       filename: "palette.sketchpalette",
       language: "json",
       code: sketchPalette(palette, input.includeShades),
+    },
+    {
+      id: "markdown",
+      label: "Markdown",
+      filename: "palette.md",
+      language: "text",
+      code: markdownPalette(palette, input.format, input.includeShades),
     },
   ];
 }

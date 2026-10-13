@@ -455,6 +455,7 @@ export const hi = {
   "colors.export.format.json": "JSON टोकन",
   "colors.export.format.svg": "SVG ग्रेडिएंट",
   "colors.export.format.gpl": "GIMP पैलेट",
+  "colors.export.format.markdown": "Markdown",
 
   "share.button": "शेयर लिंक कॉपी करें",
   "share.buttonHint": "एक ऐसा लिंक कॉपी करें जो इस ब्रांड को नए प्रोजेक्ट के रूप में इंपोर्ट करता है",

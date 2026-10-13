@@ -36,6 +36,7 @@ const formatLabels: Partial<Record<string, PlainMessageKey>> = {
   svg: "colors.export.format.svg",
   gpl: "colors.export.format.gpl",
   sketch: "colors.export.sketch",
+  markdown: "colors.export.format.markdown",
 };
 
 export function ColorExport() {
