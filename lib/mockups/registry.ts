@@ -8,6 +8,7 @@ import { envelope } from "@/lib/mockups/templates/envelope";
 import { idBadge } from "@/lib/mockups/templates/id-badge";
 import { letterhead } from "@/lib/mockups/templates/letterhead";
 import { laptopLanding } from "@/lib/mockups/templates/laptop-landing";
+import { lockScreenMockup } from "@/lib/mockups/templates/lock-screen";
 import { merch } from "@/lib/mockups/templates/merch";
 import { mobileApp } from "@/lib/mockups/templates/mobile-app";
 import { poster } from "@/lib/mockups/templates/poster";
@@ -31,6 +32,7 @@ export const mockupTemplates: MockupTemplate[] = [
   laptopLanding,
   desktopDashboard,
   mobileApp,
+  lockScreenMockup,
   tabletScreens,
   browserTab,
   emailSignature,

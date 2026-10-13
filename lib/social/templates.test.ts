@@ -212,6 +212,12 @@ test("the browser tab draws the app icon favicon at 16 px in the tab, the 1x cal
   expect(favicons).toHaveLength(3);
 });
 
+test("the lock screen draws the app icon variant in both notifications", () => {
+  const svg = getTemplate("lock-screen")!.render(mockupContext("dark"));
+  const icons = svg.match(/<svg[^>]* width="40" height="40" viewBox="0 0 512 512"/g) ?? [];
+  expect(icons).toHaveLength(2);
+});
+
 describe("landing page nav", () => {
   const sixty = "Northwind Analytics Cooperative for Sustainable Data Systems";
   const boxes = (nav: ReturnType<typeof landingNav>) =>
