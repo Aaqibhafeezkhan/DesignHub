@@ -239,6 +239,8 @@ export const fr = {
   "history.versions": "Versions",
   "history.preview": "Aperçu de la version",
   "history.fonts": "{heading} et {body}",
+  "history.newProject": "Nouveau projet à partir de cette version",
+  "history.newProjectLabel": "version {date}",
   "history.restore": "Restaurer",
   "history.comparedWithNow": "Comparée à l'actuelle : {summary}",
   "history.caption": "{name} actuel comparé à la version du {date}",
