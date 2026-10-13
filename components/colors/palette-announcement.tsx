@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, type ReactNode } from "react";
+import { useCallback, useState } from "react";
 
 import { useI18n } from "@/components/layout/locale-provider";
 import { paletteNames } from "@/lib/color/names";
@@ -9,11 +9,7 @@ import type { Swatch } from "@/types/color";
 export type PaletteAnnouncementKind = "generated" | "loaded";
 export type PaletteAnnouncer = (kind: PaletteAnnouncementKind, swatches: Swatch[]) => void;
 
-type PaletteAnnouncementProps = {
-  children: (announce: PaletteAnnouncer) => ReactNode;
-};
-
-export function PaletteAnnouncement({ children }: PaletteAnnouncementProps) {
+export function usePaletteAnnouncement() {
   const { t, plural } = useI18n();
   const [message, setMessage] = useState("");
 
@@ -35,12 +31,5 @@ export function PaletteAnnouncement({ children }: PaletteAnnouncementProps) {
     [plural, t],
   );
 
-  return (
-    <>
-      <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
-        {message}
-      </p>
-      {children(announce)}
-    </>
-  );
+  return { announce, message };
 }

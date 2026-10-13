@@ -10,7 +10,7 @@ import { FormatSwitcher } from "@/components/colors/format-switcher";
 import { PaletteStrip } from "@/components/colors/palette-strip";
 import { PaletteToolbar } from "@/components/colors/palette-toolbar";
 import { PaletteLibrary } from "@/components/colors/palette-library";
-import { PaletteAnnouncement } from "@/components/colors/palette-announcement";
+import { usePaletteAnnouncement } from "@/components/colors/palette-announcement";
 import { SavedPalettes } from "@/components/colors/saved-palettes";
 import { useI18n } from "@/components/layout/locale-provider";
 import { TabSkeleton } from "@/components/ui/tab-skeleton";
@@ -55,54 +55,54 @@ export function ColorWorkspace() {
   const setTab = useColorStore((state) => state.setTab);
   const generate = useColorStore((state) => state.generate);
   const nextColors = useHarmonyGenerator();
+  const { announce, message } = usePaletteAnnouncement();
 
   return (
-    <PaletteAnnouncement>
-      {(announce) => (
-        <Tabs value={tab} onValueChange={(value) => isTab(value) && setTab(value)} className="gap-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <TabsList aria-label={t("colors.tools")} className="w-full overflow-x-auto sm:w-fit">
-              {tabs.map((item) => (
-                <TabsTrigger key={item.value} value={item.value}>
-                  {item.icon}
-                  {t(item.label)}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            <FormatSwitcher />
-          </div>
+    <Tabs value={tab} onValueChange={(value) => isTab(value) && setTab(value)} className="gap-6">
+      <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {message}
+      </p>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <TabsList aria-label={t("colors.tools")} className="w-full overflow-x-auto sm:w-fit">
+          {tabs.map((item) => (
+            <TabsTrigger key={item.value} value={item.value}>
+              {item.icon}
+              {t(item.label)}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        <FormatSwitcher />
+      </div>
 
-          <TabsContent value="palette" className="flex flex-col gap-6">
-            <PaletteToolbar nextColors={nextColors} announce={announce} />
-            <PaletteStrip />
-            <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
-              <HarmonyPanel
-                onApply={() => {
-                  generate(nextColors());
-                  announce("generated", useColorStore.getState().swatches);
-                }}
-              />
-              <OklchEditor />
-            </div>
-            <SavedPalettes announce={announce} />
-            <PaletteLibrary announce={announce} />
-          </TabsContent>
-          <TabsContent value="shades">
-            <ShadesStudio />
-          </TabsContent>
-          <TabsContent value="gradient">
-            <GradientStudio />
-          </TabsContent>
-          <TabsContent value="contrast" className="flex flex-col gap-10">
-            <ContrastChecker />
-            <ContrastMatrix />
-            <VisionPreview />
-          </TabsContent>
-          <TabsContent value="export">
-            <ColorExport />
-          </TabsContent>
-        </Tabs>
-      )}
-    </PaletteAnnouncement>
+      <TabsContent value="palette" className="flex flex-col gap-6">
+        <PaletteToolbar nextColors={nextColors} announce={announce} />
+        <PaletteStrip />
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+          <HarmonyPanel
+            onApply={() => {
+              generate(nextColors());
+              announce("generated", useColorStore.getState().swatches);
+            }}
+          />
+          <OklchEditor />
+        </div>
+        <SavedPalettes announce={announce} />
+        <PaletteLibrary announce={announce} />
+      </TabsContent>
+      <TabsContent value="shades">
+        <ShadesStudio />
+      </TabsContent>
+      <TabsContent value="gradient">
+        <GradientStudio />
+      </TabsContent>
+      <TabsContent value="contrast" className="flex flex-col gap-10">
+        <ContrastChecker />
+        <ContrastMatrix />
+        <VisionPreview />
+      </TabsContent>
+      <TabsContent value="export">
+        <ColorExport />
+      </TabsContent>
+    </Tabs>
   );
 }
