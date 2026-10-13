@@ -34,6 +34,7 @@ describe.each([
   "triangles",
   "squiggle",
   "squares",
+  "argyle",
 ] as const)("%s", (kind) => {
   test("the same seed renders the same output", () => {
     for (const patch of [{ seed: 7 }, { seed: 7, rotation: 30, density: 100, scale: 2 }]) {
@@ -72,6 +73,13 @@ test("squares alternate one color with the canvas", () => {
   const svg = renderBackgroundSvg(settings("squares", { colors: ["#ffffff"] }));
   expect(svg).toContain('fill="#ffffff"');
   expect((svg.match(/fill="#0b1020"/g) ?? []).length).toBeGreaterThan(2);
+});
+
+test("argyle uses a seeded pattern with diamonds and dashed stitch lines", () => {
+  const svg = renderBackgroundSvg(settings("argyle"));
+  expect(svg).toContain("<pattern");
+  expect(svg).toContain("stroke-dasharray");
+  expect(backgroundCss(settings("argyle"))).toContain("data:image/svg+xml");
 });
 
 test("plus draws through a <pattern>", () => {

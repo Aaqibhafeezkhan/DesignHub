@@ -1,3 +1,4 @@
+import { argyle } from "@/lib/background/generators/argyle";
 import { bokeh } from "@/lib/background/generators/bokeh";
 import { checks } from "@/lib/background/generators/checks";
 import { chevron } from "@/lib/background/generators/chevron";
@@ -57,6 +58,7 @@ export const backgroundGenerators: BackgroundDefinition[] = [
   triangles,
   squiggle,
   squares,
+  argyle,
 ];
 
 export function getGenerator(kind: BackgroundKind): BackgroundDefinition | undefined {
