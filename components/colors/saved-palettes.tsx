@@ -3,7 +3,7 @@
 import { Trash2 } from "lucide-react";
 
 import { useI18n } from "@/components/layout/locale-provider";
-import type { PaletteAnnouncer } from "@/components/colors/palette-announcement";
+import type { PaletteAnnouncer } from "@/components/colors/palette-toolbar";
 import { Button } from "@/components/ui/button";
 import { toHex } from "@/lib/color/color";
 import { createSwatch, useColorStore } from "@/store/color-store";

@@ -1,12 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Bookmark, Download, Plus, Redo2, Shuffle, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useI18n } from "@/components/layout/locale-provider";
-import type { PaletteAnnouncer } from "@/components/colors/palette-announcement";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -16,12 +15,39 @@ import { paletteNames } from "@/lib/color/names";
 import { createId } from "@/lib/id";
 import { useLibraryStore } from "@/store/library-store";
 import { MAX_SWATCHES, useColorStore } from "@/store/color-store";
-import type { Oklch } from "@/types/color";
+import type { Oklch, Swatch } from "@/types/color";
 
 const loadImportDialog = () => import("@/components/colors/palette-import-dialog").then((m) => m.PaletteImportDialog);
 
 // The import dialog (a modal) loads the first time it's opened, not with the page.
 const PaletteImportDialog = dynamic(loadImportDialog, { ssr: false });
+
+export type PaletteAnnouncementKind = "generated" | "loaded";
+export type PaletteAnnouncer = (kind: PaletteAnnouncementKind, swatches: Swatch[]) => void;
+
+export function usePaletteAnnouncement() {
+  const { t, plural } = useI18n();
+  const [message, setMessage] = useState("");
+  const announce = useCallback<PaletteAnnouncer>(
+    (kind, swatches) => {
+      const names = paletteNames(swatches.map((swatch) => swatch.color)).join(", ");
+      const announcement =
+        kind === "generated"
+          ? t("colors.announcement.generated", { names })
+          : t("colors.announcement.loaded", { names });
+      const lockedCount = kind === "generated" ? swatches.filter((swatch) => swatch.locked).length : 0;
+      const completeMessage =
+        lockedCount > 0 ? `${announcement} ${plural("colors.announcement.locked", lockedCount)}` : announcement;
+
+      // Clear first so repeating the same palette is still a live-region change.
+      setMessage("");
+      window.setTimeout(() => setMessage(completeMessage), 0);
+    },
+    [plural, t],
+  );
+
+  return { announce, message };
+}
 
 type PaletteToolbarProps = {
   /** Supplies colors for the next generation (harmony modes). */

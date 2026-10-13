@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { useI18n } from "@/components/layout/locale-provider";
-import type { PaletteAnnouncer } from "@/components/colors/palette-announcement";
+import type { PaletteAnnouncer } from "@/components/colors/palette-toolbar";
 import { useRovingRadio } from "@/hooks/use-roving-radio";
 import { fromHex } from "@/lib/color/color";
 import { palettePresets, paletteTags, type PaletteTag } from "@/lib/color/presets";
