@@ -15,6 +15,7 @@ import {
   updateProject,
 } from "@/lib/projects/repository";
 import { sameSnapshot, type ProjectVersion } from "@/lib/projects/history";
+import { versionProjectName } from "@/lib/projects/names";
 import { addTag, removeTag } from "@/lib/projects/tags";
 import { importedVersions, parseProjectsFile, type ProjectHistories } from "@/lib/projects/transfer";
 import { projectName, type BrandProject } from "@/lib/projects/types";
@@ -214,6 +215,23 @@ export async function duplicateProject(id: string): Promise<BrandProject | undef
   if (!source) return undefined;
   const snapshot = structuredClone(source.snapshot);
   snapshot.brand.profile.name = `${projectName(source)} copy`.slice(0, 60);
+  return createProject(snapshot, { tags: source.tags });
+}
+
+/**
+ * Copies a saved version into a new project named like "Acme (version 3 May)". The new project is
+ * not opened, and the source project and its history are left exactly as they were.
+ */
+export async function createProjectFromVersion(
+  projectId: string,
+  version: ProjectVersion,
+  label: string,
+): Promise<BrandProject | undefined> {
+  const source = await getProject(projectId);
+  if (!source) return undefined;
+  const taken = new Set((await listProjects()).map(projectName));
+  const snapshot = structuredClone(version.snapshot);
+  snapshot.brand.profile.name = versionProjectName(projectName(source), label, taken);
   return createProject(snapshot, { tags: source.tags });
 }
 

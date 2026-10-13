@@ -238,6 +238,8 @@ export const es = {
   "history.preview": "Vista previa de la versión",
   "history.fonts": "{heading} y {body}",
   "history.restore": "Restaurar",
+  "history.newProject": "Nuevo proyecto desde esta versión",
+  "history.newProjectLabel": "versión {date}",
   "history.comparedWithNow": "Comparada con la actual: {summary}",
   "history.caption": "{name} actual comparado con la versión del {date}",
   "history.now": "Ahora",

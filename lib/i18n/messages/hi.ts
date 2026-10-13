@@ -236,6 +236,8 @@ export const hi = {
   "history.preview": "वर्ज़न प्रीव्यू",
   "history.fonts": "{heading} और {body}",
   "history.restore": "वापस लाएँ",
+  "history.newProject": "इस वर्ज़न से नया प्रोजेक्ट",
+  "history.newProjectLabel": "वर्ज़न {date}",
   "history.comparedWithNow": "अभी की तुलना में: {summary}",
   "history.caption": "मौजूदा {name} की तुलना {date} के वर्ज़न से",
   "history.now": "अभी",

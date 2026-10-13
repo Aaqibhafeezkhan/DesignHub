@@ -1,6 +1,6 @@
 "use client";
 
-import { RotateCcw } from "lucide-react";
+import { CopyPlus, RotateCcw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { svgToDataUrl } from "@/lib/icons/svg";
 import type { PlainMessageKey } from "@/lib/i18n/translate";
-import { freshProject, restoreVersion, undoRestore } from "@/lib/projects/actions";
+import { createProjectFromVersion, freshProject, restoreVersion, undoRestore } from "@/lib/projects/actions";
 import { compareBrands, countDifferences } from "@/lib/projects/compare";
 import { MAX_VERSIONS, type ProjectVersion, type VersionReason } from "@/lib/projects/history";
 import { snapshotTokens } from "@/lib/projects/preview";
@@ -85,6 +85,20 @@ export function ProjectHistory({ project, onClose, onChanged }: Props) {
     }
   }
 
+  async function branch(version: ProjectVersion) {
+    if (!id) return;
+    setBusy(true);
+    try {
+      const date = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" }).format(version.createdAt);
+      const created = await createProjectFromVersion(id, version, t("history.newProjectLabel", { date }));
+      if (!created) return;
+      onChanged();
+      toast.success(t("projects.toast.created", { name: projectName(created) }));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const name = project ? projectName(project) : t("history.fallbackName");
   const differences = countDifferences(rows);
   const summary = differences === 0 ? t("compare.none") : plural("compare.differences", differences);
@@ -126,7 +140,7 @@ export function ProjectHistory({ project, onClose, onChanged }: Props) {
             </ul>
             {selected && preview ? (
               <section aria-label={t("history.preview")} className="flex min-w-0 flex-col gap-3">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element -- sanitized SVG data URL */}
                   <img src={svgToDataUrl(preview.logo.svg)} alt="" className="size-10 object-contain" />
                   <div className="min-w-0 flex-1">
@@ -135,6 +149,9 @@ export function ProjectHistory({ project, onClose, onChanged }: Props) {
                       {t("history.fonts", { heading: preview.typography.heading, body: preview.typography.body })}
                     </p>
                   </div>
+                  <Button size="sm" variant="outline" onClick={() => void branch(selected)} disabled={busy}>
+                    <CopyPlus /> {t("history.newProject")}
+                  </Button>
                   <Button size="sm" onClick={() => void restore(selected)} disabled={busy}>
                     <RotateCcw /> {t("history.restore")}
                   </Button>

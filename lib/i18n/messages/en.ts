@@ -246,6 +246,8 @@ export const en = {
   "history.preview": "Version preview",
   "history.fonts": "{heading} and {body}",
   "history.restore": "Restore",
+  "history.newProject": "New project from this version",
+  "history.newProjectLabel": "version {date}",
   "history.comparedWithNow": "Compared with now: {summary}",
   "history.caption": "Current {name} compared with the version from {date}",
   "history.now": "Now",
