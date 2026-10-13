@@ -1,7 +1,9 @@
 import { expect, test } from "@playwright/test";
 
 test("palette changes are announced to screen readers", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
   await page.goto("/colors");
+  await expect(page.locator("html")).toHaveClass(/dark/);
 
   const status = page.locator('[role="status"][aria-live="polite"]');
   if ((await status.count()) === 0) throw new Error("palette announcement live region missing");
@@ -30,6 +32,8 @@ test("palette changes are announced to screen readers", async ({ page }) => {
   await expect(status).toContainText("New palette:");
   await expect(status).toContainText("1 locked swatch kept.");
 
+  await page.getByRole("button", { name: "Switch to light theme" }).click();
+  await expect(page.locator("html")).toHaveClass(/light/);
   await page.getByRole("button", { name: "Load palette Indigo launch" }).click();
   await expect(status).toContainText("Loaded palette:");
 });
