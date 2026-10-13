@@ -11,6 +11,8 @@ import { linkedinCompanyCover } from "@/lib/social/templates/linkedin-company";
 import { discordBanner } from "@/lib/social/templates/discord";
 import { mastodonHeader } from "@/lib/social/templates/mastodon";
 import { twitchBanner } from "@/lib/social/templates/twitch";
+import { twitchOffline } from "@/lib/social/templates/twitch-offline";
+import { linkedinEvent } from "@/lib/social/templates/linkedin-event";
 import { youtubeBanner } from "@/lib/social/templates/youtube-banner";
 import { redditBanner } from "@/lib/social/templates/reddit";
 import { tumblrHeader } from "@/lib/social/templates/tumblr";
@@ -49,6 +51,8 @@ export const socialTemplates: SocialTemplate[] = [
   patreonCover,
   kickBanner,
   bandcampHeader,
+  twitchOffline,
+  linkedinEvent,
 ];
 
 export const socialPlatforms: SocialPlatform[] = [
