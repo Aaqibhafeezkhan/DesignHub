@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("palette changes are announced to screen readers", async ({ page }) => {
   await page.goto("/colors");
 
-  const status = page.getByRole("status");
+  const status = page.locator('[role="status"][aria-live="polite"]');
   if ((await status.count()) === 0) throw new Error("palette announcement live region missing");
   await expect(status).toHaveAttribute("aria-live", "polite");
 
