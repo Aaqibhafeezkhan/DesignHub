@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Added
+### Changed
 
-- Markdown palette export with names, HEX, OKLCH, selected-notation values and optional 50–950 shades, using Color Studio's existing preview, copy and download controls.
+- Announce generated and loaded Color Studio palettes to screen readers, including locked swatches kept during generation.
 
 ## v1.0.0
 

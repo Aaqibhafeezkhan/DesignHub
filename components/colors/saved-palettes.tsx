@@ -3,12 +3,13 @@
 import { Trash2 } from "lucide-react";
 
 import { useI18n } from "@/components/layout/locale-provider";
+import type { PaletteAnnouncer } from "@/components/colors/palette-toolbar";
 import { Button } from "@/components/ui/button";
 import { toHex } from "@/lib/color/color";
 import { createSwatch, useColorStore } from "@/store/color-store";
 import { useLibraryStore, type SavedPalette } from "@/store/library-store";
 
-export function SavedPalettes() {
+export function SavedPalettes({ announce }: { announce: PaletteAnnouncer }) {
   const { t } = useI18n();
   const palettes = useLibraryStore((state) => state.savedPalettes);
   const deletePalette = useLibraryStore((state) => state.deletePalette);
@@ -21,7 +22,9 @@ export function SavedPalettes() {
       import("@/lib/projects/versions"),
     ]);
     const before = captureSnapshot();
-    setSwatches(palette.colors.map((color) => createSwatch(color)));
+    const swatches = palette.colors.map((color) => createSwatch(color));
+    setSwatches(swatches);
+    announce("loaded", swatches);
     void checkpoint("palette", before);
   }
 
