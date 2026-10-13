@@ -42,6 +42,9 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Hindi as a third interface language, and translated project compare and history dialogs and Color Studio. Devanagari falls back to a system font.
 - A More menu in the header holds the links hidden on medium screens.
 - Unit tests for SVG path lengths and the animated logo; they fixed `pathLength` handling in the animation and rounded rectangles with `rx="auto"`.
+- French as a fourth interface language, and a translated Brand Studio and home page.
+- Playwright smoke tests open every route and fail on page errors, console errors or a missing heading; they run in CI (`pnpm test:e2e`).
+- Refreshed README screenshots for every studio.
 
 #### Brand Studio
 
@@ -60,6 +63,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Paste an image from the clipboard anywhere on the page, and an Ignore background option that leaves the flat border color out of the palette.
 - Each extracted color shows its contrast on white and black, with screen-reader text.
 - Combine up to five images into one result, weighted by image area, each with its own Ignore background switch.
+- Each extracted color shows which of the combined images it came from, with their share.
 
 #### Logo Studio
 
@@ -83,6 +87,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Shopping bag and browser tab mockups; the browser tab shows the app icon as a favicon at 16 px with a 2x callout.
 - Long brand names no longer overlap the landing page navigation in the laptop and browser tab mockups: links move, drop or the name shrinks and truncates.
 - A tablet mockup: the dashboard in landscape and a one-column landing page in portrait.
+- A phone lock screen mockup with a brand wallpaper, the time and two notifications that use the app icon.
 
 #### Social Media Studio
 
@@ -100,19 +105,21 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Patreon cover (1600 x 400) and Kick channel banner (1920 x 480) templates.
 - Long websites, handles and names are shortened to fit their space in every template, so nothing runs past the safe area.
 - Bandcamp header (975 x 180) and Product Hunt thumbnail (240 x 240) templates.
+- Twitch offline screen (1920 x 1080) and LinkedIn event cover (1776 x 444) templates.
 
 #### Brand Guidelines
 
 - A complete brand book generated from the brand: cover, introduction, logo usage, clear space, minimum size, incorrect usage, color palette, typography, iconography, imagery, UI components, accessibility, voice and tone, social media, and a two-page design token appendix.
 - Pages can be switched off; numbering and contents update automatically. Voice and tone are edited in place.
 - Export the full book as a PDF with pdf-lib, or any page as PNG.
-- Three cover layouts (Gradient, Minimal, Editorial) that persist and apply to every PDF export. The book is twenty pages, with Imagery and Social media pages drawn from the brand.
+- Three cover layouts (Gradient, Minimal, Editorial) that persist and apply to every PDF export. The book is twenty-one pages, with Imagery and Social media pages drawn from the brand.
 - A Mission and values page: a statement and up to four values, edited in place and saved with brand projects.
 - The PDF has bookmarks for every included page and a clickable contents page.
 - Download website: the brand book as a static site ZIP with real HTML text, the page art, logo files and token downloads, ready for GitHub Pages or Netlify.
 - A Co-branding page: the logo next to a neutral partner mark, with the divider, clear space spacing, size balance and a do and a don't.
 - A Color usage page: 60 / 30 / 10 proportions from the color roles, approved text-on-color pairs with their real contrast, and two don'ts.
 - A Typography usage page: the hierarchy from the live type scale, line length and line height guidance, and two don'ts.
+- A Spacing and layout page: the spacing scale drawn to size, the radius scale and a 12-column grid, from the live tokens.
 
 #### Brand Projects
 
@@ -126,6 +133,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Compare two projects side by side, with differences highlighted and announced; on phones each property stacks.
 - Version history per project: a version every five minutes of editing and before Surprise me, token import, Brand DNA apply, share-link import and palette loads, capped at 20, with preview and undoable restore. Deleting a project removes its history (and undo brings it back).
 - Optionally include version history in project exports; imported versions are validated, sanitized and capped.
+- Start a new project from any history version, leaving the current one untouched.
 
 #### Typography Studio
 
@@ -179,10 +187,11 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Export an icon as an Angular standalone component.
 - Export an icon as a SolidJS component.
 - Export an icon as a Qwik component.
+- Export an icon as a Lit web component.
 
 #### Background Studio
 
-- Twenty-seven procedural generators: waves, organic blobs (Paper.js smoothing), mesh gradients, aurora, noise textures, dot, grid and isometric patterns, concentric rings, checkerboard, low-poly mosaic, bokeh, confetti, chevron, honeycomb hexagons, sunburst, topographic contour lines, rotated stripes, plus signs, a starfield, Voronoi cells (computed in plain TypeScript, edge to edge), crosshatch, a circuit board with non-overlapping traces, halftone dots (linear, radial or seeded), triangles, squiggles and concentric squares.
+- Twenty-eight procedural generators: waves, organic blobs (Paper.js smoothing), mesh gradients, aurora, noise textures, dot, grid and isometric patterns, concentric rings, checkerboard, low-poly mosaic, bokeh, confetti, chevron, honeycomb hexagons, sunburst, topographic contour lines, rotated stripes, plus signs, a starfield, Voronoi cells (computed in plain TypeScript, edge to edge), crosshatch, a circuit board with non-overlapping traces, halftone dots (linear, radial or seeded), triangles, squiggles, concentric squares and argyle.
 - Deterministic seeds with randomize (`Space`), color controls with a "use palette" shortcut, density, scale, rotation and canvas presets.
 - Exports: SVG, PNG (1× and 2×) and CSS backgrounds (native gradients where possible, inline SVG otherwise).
 - The dots, checks, chevron and hexagons patterns now follow the seed, so a new seed shifts them.
@@ -197,6 +206,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - The long shadow fades evenly on boxes: each step's opacity is set so the stacked copies follow a straight ramp.
 - A gradient text effect using the Color Studio gradient, with an optional animated shift that stops under reduced motion and a solid color fallback.
 - A skeleton shimmer effect in the brand's neutrals, static under reduced motion.
+- A text outline effect with an optional offset shadow copy and a solid color fallback.
 
 #### SVG Playground
 
@@ -210,6 +220,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - An SVG to Svelte component converter. Renaming a sprite symbol is free while typing and is de-duplicated on blur or `Enter`, so two symbols never share an id.
 - An SVG to Angular component converter.
 - An SVG to SolidJS component converter.
+- An SVG to Qwik component converter.
 
 #### Accessibility Lab
 
@@ -224,6 +235,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - A focus indicator check (WCAG 2.4.13 and 1.4.11): the brand's focus ring against the page and the focused component, with a one-click fix, in both reports.
 - Text contrast across the brand gradient: the worst point for white, black and the brand text color, in both reports.
 - A check that flags palette colors that become hard to tell apart under protanopia, deuteranopia, tritanopia or grayscale, with a lightness suggestion, in both reports.
+- Download the report as a standalone HTML page with captioned tables and no scripts (checked with axe: no violations).
 
 #### Export Engine
 
@@ -242,6 +254,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - UnoCSS and Panda CSS presets; Panda gets semantic tokens with `_dark` values.
 - Bootstrap 5 Sass variables and a Chakra UI v3 theme with semantic tokens.
 - A shadcn/ui theme (OKLCH, light and dark) and Figma Variables JSON for the variables REST API.
+- A Style Dictionary build (tokens plus config, checked against the real tool) and a React Native theme with light and dark colors.
 
 ### Performance
 

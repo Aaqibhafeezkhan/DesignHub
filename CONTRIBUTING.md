@@ -226,7 +226,7 @@ Background generators live in `lib/background/generators/` and are pure function
 
 UI text lives in typed message catalogs in `lib/i18n/messages/`. English (`en.ts`) is the source of truth; every other locale is a partial copy, and any key it leaves out shows in English. URLs never change with the language: the server renders English, and the browser switches to the viewer's choice (saved in `localStorage` as `designhub:locale`) or, when there is none, the first browser language with a translation.
 
-The interface is available in English, Spanish (`es`) and Hindi (`hi`). So far the app shell (navigation, header, command palette, theme and language controls), Brand Projects (including the compare and history dialogs) and the Color Studio are translated. Generated assets (exports, templates, the brand book, CSS and token names) stay in English.
+The interface is available in English, Spanish (`es`), French (`fr`) and Hindi (`hi`). So far the app shell (navigation, header, command palette, theme and language controls), the home page, the Brand Studio, Brand Projects (including the compare and history dialogs) and the Color Studio are translated. The Hindi and French translations were not reviewed by native speakers, so wording fixes are very welcome. Generated assets (exports, templates, the brand book, CSS and token names) stay in English.
 
 ### Using messages in a component
 
