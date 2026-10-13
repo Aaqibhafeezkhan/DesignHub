@@ -139,7 +139,8 @@ A typical design session bounces between a font site, a palette generator, a con
 - Gradient builder: **linear, radial and conic**, draggable stops, OKLCH / OKLab / sRGB interpolation
 - **WCAG** contrast checker with AA / AAA results, one-click fixes and a full palette contrast matrix
 - Color blindness preview (protanopia, deuteranopia, tritanopia, achromatopsia)
-- Exports: **CSS variables, Tailwind, JSON tokens, SVG gradient**, a **GIMP / Inkscape palette** (`.gpl`), an **Adobe Swatch Exchange** file (`.ase`), a **Sketch palette**, **Procreate swatches**, a **Krita palette** and a **PNG swatch strip**
+- Exports: **CSS variables, Tailwind, JSON tokens, SVG gradient**, a **Markdown palette table** (`.md`), a **GIMP / Inkscape palette** (`.gpl`), an **Adobe Swatch Exchange** file (`.ase`), a **Sketch palette**, **Procreate swatches**, a **Krita palette** and a **PNG swatch strip**
+- Markdown tables include color names, HEX, OKLCH and the selected notation, with optional **50–950** shade rows. Preview, copy or download them from the Export tab.
 
 ### Icon Studio
 

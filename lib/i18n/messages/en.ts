@@ -460,6 +460,7 @@ export const en = {
   "colors.export.format.json": "JSON tokens",
   "colors.export.format.svg": "SVG gradient",
   "colors.export.format.gpl": "GIMP palette",
+  "colors.export.format.markdown": "Markdown",
 
   // Share links
   "share.button": "Copy share link",

@@ -49,6 +49,8 @@ test.describe("go shortcuts", () => {
     test(`g ${studio.shortcut} opens ${studio.title}`, async ({ page }) => {
       await page.goto("/brand");
       await expect(page.locator("h1").first()).toBeVisible();
+      // The heading is server-rendered; the theme label changes after shell hydration.
+      await expect(page.getByRole("button", { name: /^Switch to (light|dark) theme$/ })).toBeVisible();
       await page.keyboard.press("g");
       await page.keyboard.press(studio.shortcut);
       await expect(page).toHaveURL(new RegExp(`${studio.href}$`));
