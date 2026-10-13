@@ -42,6 +42,19 @@ const radiusMultipliers: [string, number][] = [
   ["full", 9999],
 ];
 
+/** The spacing scale for a base unit, the same steps the Export Engine emits. */
+export function spacingScale(base: number): DesignTokens["spacing"] {
+  return spacingMultipliers.map(([name, multiplier]) => ({ name, px: multiplier * base }));
+}
+
+/** The radius scale for a base radius; `full` is 9999. */
+export function radiusScale(base: number): DesignTokens["radius"] {
+  return radiusMultipliers.map(([name, multiplier]) => ({
+    name,
+    px: multiplier === 9999 ? 9999 : Math.round(multiplier * base),
+  }));
+}
+
 /**
  * Chooses semantic roles from the palette: the most chromatic color becomes
  * primary, the darkest neutral-ish color becomes foreground, the lightest background.
@@ -98,14 +111,7 @@ export function buildTokens(sources: TokenSources, settings: TokenSettings): Des
     typography,
     // Older saved settings predate this section, so treat "missing" as enabled.
     effects: (sections.effects ?? true) ? sources.effects : [],
-    spacing: sections.spacing
-      ? spacingMultipliers.map(([name, multiplier]) => ({ name, px: multiplier * settings.spacingBase }))
-      : [],
-    radius: sections.radius
-      ? radiusMultipliers.map(([name, multiplier]) => ({
-          name,
-          px: multiplier === 9999 ? 9999 : Math.round(multiplier * settings.radiusBase),
-        }))
-      : [],
+    spacing: sections.spacing ? spacingScale(settings.spacingBase) : [],
+    radius: sections.radius ? radiusScale(settings.radiusBase) : [],
   };
 }

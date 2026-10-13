@@ -19,6 +19,7 @@ import {
   typographyUsagePage,
   wrapToMeasure,
 } from "@/lib/guidelines/pages/typography-usage";
+import { fitGutter, gridColumns, spacingLayoutPage } from "@/lib/guidelines/pages/spacing-layout";
 import { guidelinePages } from "@/lib/guidelines/registry";
 import { brandSiteFiles, pageBlocks } from "@/lib/guidelines/site";
 import type { GuidelineContext } from "@/lib/guidelines/types";
@@ -321,6 +322,65 @@ describe("typography usage page", () => {
     };
     const top = bigger.brand.typography.scale.reduce((a, b) => (b.step > a.step ? b : a));
     expect(typographyUsagePage.render(bigger, 12)).toContain(`${Math.round(top.minPx)}-${Math.round(top.maxPx)}px`);
+  });
+});
+
+describe("spacing and layout page", () => {
+  test("is in the site and its contents unless switched off", () => {
+    const { files } = site();
+    const page = files.get("spacing-layout/index.html") ?? "";
+    expect(page).toContain("<h1>Spacing and layout</h1>");
+    expect(page).toContain("<h2>SPACING SCALE</h2>");
+    expect(page).toContain("<h2>RADIUS SCALE</h2>");
+    expect(page).toContain("<h2>12-COLUMN GRID</h2>");
+    expect(files.get("index.html")).toContain("Spacing &amp; Layout");
+
+    const without = site(["spacing-layout"]).files;
+    expect(without.has("spacing-layout/index.html")).toBe(false);
+    expect(without.has("assets/pages/spacing-layout.svg")).toBe(false);
+    expect(without.get("index.html")).not.toContain("Spacing &amp; Layout");
+  });
+
+  test("numbers the page after Imagery and lists it in the contents", () => {
+    const { ctx } = guidelineContext("Acme Labs", []);
+    const imagery = ctx.contents.find((entry) => entry.id === "imagery");
+    const layout = ctx.contents.find((entry) => entry.id === "spacing-layout");
+    expect(layout?.number).toBe((imagery?.number ?? 0) + 1);
+    expect(introductionPage.render(ctx, 2)).toContain(">Spacing &amp; Layout</text>");
+    const skipped = guidelineContext("Acme Labs", ["spacing-layout"]).ctx.contents;
+    expect(skipped.find((entry) => entry.id === "ui-components")?.number).toBe(layout?.number);
+  });
+
+  test("lays out twelve columns that fill the width, and keeps them visible with a huge gutter", () => {
+    const columns = gridColumns(600, 24);
+    expect(columns).toHaveLength(12);
+    expect(columns[0]?.x).toBe(0);
+    const last = columns[11];
+    expect((last?.x ?? 0) + (last?.width ?? 0)).toBeCloseTo(600);
+    expect((columns[1]?.x ?? 0) - (columns[0]?.width ?? 0)).toBeCloseTo(24);
+    expect(fitGutter(600, 24)).toBe(24);
+    expect(fitGutter(600, 500)).toBeLessThan(500);
+    for (const column of gridColumns(600, 500)) expect(column.width).toBeGreaterThanOrEqual(8);
+  });
+
+  test("draws values from the live tokens in light and dark", () => {
+    for (const mode of ["light", "dark"] as const) {
+      const { ctx } = guidelineContext("Acme Labs", [], mode);
+      const svg = spacingLayoutPage.render(ctx, 14);
+      expect(xmlError(svg)).toBeNull();
+      expect(svg).toContain(`fill="${ctx.surface.background}"`);
+      expect(svg).toContain(`>${ctx.brand.spacing * 3}px (spacing-6)`.replace(">", ", gutter "));
+      expect(svg).toContain(`>${Math.round(ctx.brand.radius * 2)}px</text>`);
+    }
+    const { ctx } = guidelineContext("Acme Labs", []);
+    const custom = { ...ctx, brand: { ...ctx.brand, spacing: 10, radius: 6 } };
+    const svg = spacingLayoutPage.render(custom, 14);
+    expect(svg).toContain("gutter 30px (spacing-6)");
+    expect(svg).toContain(">60px</text>");
+    expect(svg).toContain(">12px</text>");
+    const huge = spacingLayoutPage.render({ ...ctx, brand: { ...ctx.brand, spacing: 400 } }, 14);
+    expect(xmlError(huge)).toBeNull();
+    expect(huge).toContain("scaled down");
   });
 });
 

@@ -69,6 +69,16 @@ describe("brand book navigation", () => {
     expect(await titles(["typography-usage"])).not.toContain("Typography Usage");
   });
 
+  test("bookmarks the Spacing & Layout page after Imagery unless it is switched off", async () => {
+    const titles = async (excluded: string[]) =>
+      outlineItems((await book(excluded)).pdf).map((item) =>
+        item.lookup(PDFName.of("Title"), PDFHexString).decodeText(),
+      );
+    const all = await titles([]);
+    expect(all[all.indexOf("Imagery") + 1]).toBe("Spacing & Layout");
+    expect(await titles(["spacing-layout"])).not.toContain("Spacing & Layout");
+  });
+
   test("links every contents entry on the Introduction page to its page", async () => {
     const { contents, pdf } = await book(["voice"]);
     const intro = pdf.getPage(contents.findIndex((entry) => entry.id === "introduction"));
