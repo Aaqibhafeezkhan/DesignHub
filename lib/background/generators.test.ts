@@ -35,6 +35,7 @@ describe.each([
   "squiggle",
   "squares",
   "argyle",
+  "zigzag",
 ] as const)("%s", (kind) => {
   test("the same seed renders the same output", () => {
     for (const patch of [{ seed: 7 }, { seed: 7, rotation: 30, density: 100, scale: 2 }]) {
@@ -80,6 +81,30 @@ test("argyle uses a seeded pattern with diamonds and dashed stitch lines", () =>
   expect(svg).toContain("<pattern");
   expect(svg).toContain("stroke-dasharray");
   expect(backgroundCss(settings("argyle"))).toContain("data:image/svg+xml");
+});
+
+test("zigzag keeps density on row spacing and scale on amplitude", () => {
+  const sparse = renderBackgroundSvg(settings("zigzag", { density: 0 }));
+  const dense = renderBackgroundSvg(settings("zigzag", { density: 100 }));
+  const small = renderBackgroundSvg(settings("zigzag", { scale: 0.25 }));
+  const large = renderBackgroundSvg(settings("zigzag", { scale: 4 }));
+  const dimensions = (svg: string) => {
+    const match = svg.match(/<pattern\b[^>]*width="([\d.]+)" height="([\d.]+)"/);
+    if (!match) throw new Error("Expected a repeating zigzag pattern");
+    return { width: Number(match[1]), height: Number(match[2]) };
+  };
+  const pathData = (svg: string) => {
+    const match = svg.match(/<path d="([^"]+)"/);
+    if (!match) throw new Error("Expected zigzag path data");
+    return match[1];
+  };
+
+  expect(sparse).toContain("<pattern");
+  expect(nodeCount(sparse)).toBeLessThan(1000);
+  expect(dimensions(sparse).height).toBeGreaterThan(dimensions(dense).height);
+  expect(dimensions(small)).toEqual(dimensions(large));
+  expect(pathData(small)).not.toBe(pathData(large));
+  expect(backgroundCss(settings("zigzag"))).toContain("data:image/svg+xml");
 });
 
 test("plus draws through a <pattern>", () => {

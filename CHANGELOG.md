@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Zigzag background generator with seeded palette-colored rows and independent density and amplitude controls.
+
 ### Changed
 
 - Announce generated and loaded Color Studio palettes to screen readers, including locked swatches kept during generation.

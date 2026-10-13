@@ -26,7 +26,8 @@ export type BackgroundKind =
   | "triangles"
   | "squiggle"
   | "squares"
-  | "argyle";
+  | "argyle"
+  | "zigzag";
 
 /** Halftone gradient shape: forced linear or radial, or picked by the seed. */
 export type HalftoneGradientChoice = "seeded" | "linear" | "radial";
