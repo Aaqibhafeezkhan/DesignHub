@@ -71,7 +71,7 @@ Persistent stores use Zustand's `persist` middleware with `indexedDbStorage` fro
 
 For a user-facing list of every store and how to reset them, see [storage.md](storage.md).
 
-A second Dexie table (`icons`) caches Iconify glyph bodies, which is why icons you have opened keep working offline. A third (`projects`, schema v3) stores brand projects. Every Dexie call goes through `safeDb`, which times out and falls back to memory, so blocked storage never breaks a studio.
+A second Dexie table (`icons`) caches Iconify glyph bodies, which is why icons you have opened keep working offline. A third (`projects`, schema v3) stores brand projects. A fourth (`versions`, schema v4) stores per-project version history. Every Dexie call goes through `safeDb`, which times out and falls back to memory, so blocked storage never breaks a studio.
 
 ## Brand architecture
 
@@ -116,3 +116,75 @@ OKLCH is the source of truth for every color in the app. It is perceptually unif
 - Brand assets in the Export Engine and project autosave load after hydration with `next/dynamic`.
 - Color.js uses its tree-shakable `colorjs.io/fn` entry with only the spaces we need registered.
 - Third-party SVG is rendered through `<img>` data URLs, never injected into the DOM.
+
+## Translation layer
+
+The UI language is chosen per viewer, not per brand. Catalogs live in `lib/i18n/messages/` (`en`, `es`, `fr`, `hi`). `lib/i18n/locales.ts` lists the locales; `lib/i18n/translate.ts` builds `t` and `plural` with English as the fallback for missing keys. `lib/i18n/errors.ts` wraps throwables as `LocalizedError` so toasts can translate them. `components/layout/locale-provider.tsx` (mounted from `components/layout/providers.tsx`) holds the live locale; Server Components use `components/layout/message.tsx` (`<Message id="…" />`) because they cannot call `useI18n()`.
+
+**Persists in:** `localStorage` key `designhub:locale` via `lib/i18n/storage.ts`. Without it, the browser language is used (`resolveLocale`). Theme and brand stores stay separate; locale is never part of a project snapshot.
+
+```
+viewer preference (or navigator.languages)
+        │
+        ▼
+preferredLocale() ──► LocaleProvider ──► createTranslator(catalog)
+        │                     │
+        │                     ├── useI18n().t / .plural  (client UI)
+        │                     └── <Message id>           (server pages)
+        ▼
+localStorage "designhub:locale"
+```
+
+## Version history
+
+Each open project keeps up to 20 earlier brand snapshots. Pure rules live in `lib/projects/history.ts` (`planVersion`, `sameSnapshot`, caps and reasons). IndexedDB reads and writes go through `lib/projects/versions.ts` (`listVersions`, `recordVersion`, `autoVersion`, `checkpoint`). Project actions in `lib/projects/actions.ts` call those on save, restore and delete. The **History** dialog is `components/projects/project-history.tsx`.
+
+**Persists in:** Dexie `versions` table (`id, projectId, createdAt`), added in database schema v4 in `lib/db.ts`. Memory fallback mirrors projects when IndexedDB is blocked. Deleting a project deletes its versions; undo restores both. Optional project JSON export can include history (`exportHistory` in `store/project-store.ts` via `lib/projects/transfer.ts`). Share links never include history. See [storage.md](storage.md#version-history).
+
+```
+edit / risky action / restore
+        │
+        ├── saveActiveProject ──► autoVersion (every few minutes, previous snapshot)
+        ├── checkpoint(reason) ──► recordVersion (surprise, import, Brand DNA, …)
+        └── restoreVersion ──► recordVersion("restore") then apply snapshot
+                │
+                ▼
+        Dexie versions (≤20 per project) ──► ProjectHistory UI
+```
+
+## Share links
+
+A share link packs one brand into the URL hash so nothing is uploaded: `#share=1.<crc32 of JSON>.<deflate-raw JSON as base64url>`. Encoding and checks live in `lib/projects/share.ts` (`createShareLink`, `readShareToken`, `shareToken`). Copying uses `components/projects/copy-share-link.ts`. Opening a link is handled by `components/projects/share-link-import.tsx` (lazy-mounted as `LazyShareLinkImport` from the studio layout). Confirming calls `importSharedProject` in `lib/projects/actions.ts`, which adds a **new** project and never overwrites the open one. Long links drop uploaded logos (`MAX_SHARE_LENGTH`); the payload is validated like an imported `.designhub.json` file (including SVG sanitization).
+
+**Persists in:** nowhere on a server. The brand travels only in the hash. After import it becomes a normal row in the `projects` table. History is not part of the link.
+
+```
+BrandSnapshot ──► createShareLink ──► clipboard URL (#share=…)
+                                              │
+                         open /brand#share=… ──┤
+                                              ▼
+                                    readShareToken (crc + inflate + parse)
+                                              │
+                                              ▼
+                                    ShareLinkImport dialog
+                                              │
+                                              ▼
+                                    importSharedProject ──► projects table
+```
+
+## End-to-end tests
+
+Playwright smoke tests live in `tests/e2e/` (`routes.spec.ts`). Config is `playwright.config.ts`: it serves the production build with `pnpm start` on port 3100 (`E2E_PORT` to change it). The suite opens `/` and every studio from `lib/navigation.ts`, asserts a non-empty `h1`, fails on page or console errors, clicks a tab when present, checks the not-found page, and walks every `g` shortcut. CI runs them in `.github/workflows/e2e.yml` after `pnpm build`. Locally: `pnpm exec playwright install chromium`, then `pnpm build && pnpm test:e2e`. Vitest only picks up `lib/**/*.test.ts`, so these specs never run under `pnpm test`.
+
+**Persists in:** nothing in the app. Failures keep a trace under `test-results/` (gitignored).
+
+```
+pnpm build ──► pnpm start (:3100) ──► playwright test (tests/e2e/)
+                                            │
+                                            ├── each route: 200, h1, no errors
+                                            ├── unknown route: 404
+                                            └── g <shortcut> → studio URL
+                                            │
+                                            ▼
+                               CI: e2e.yml (Chromium) / local: pnpm test:e2e
+```
