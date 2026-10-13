@@ -5,3 +5,5 @@ lib/typography/catalog.json
 public/sw.js
 .claude
 .lighthouseci
+test-results
+playwright-report

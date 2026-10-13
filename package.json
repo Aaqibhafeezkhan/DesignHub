@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "fonts:catalog": "node scripts/generate-font-catalog.mjs",
@@ -51,6 +52,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.7",
     "@iconify/types": "^2.0.0",
+    "@playwright/test": "^1.64.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",

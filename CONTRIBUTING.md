@@ -37,6 +37,7 @@ The app runs at [http://localhost:3000](http://localhost:3000). There is no back
 | `pnpm lint`          | ESLint (Next.js + TypeScript rules)                                 |
 | `pnpm typecheck`     | `tsc --noEmit` in strict mode                                       |
 | `pnpm test`          | Unit tests with Vitest (`lib/**/*.test.ts`)                         |
+| `pnpm test:e2e`      | Playwright smoke tests against the production build (see below)     |
 | `pnpm format`        | Format all files with Prettier                                      |
 | `pnpm format:check`  | Verify formatting without writing                                   |
 | `pnpm fonts:catalog` | Regenerate `lib/typography/catalog.json` from Google Fonts metadata |
@@ -50,6 +51,20 @@ pnpm typecheck && pnpm test && pnpm lint && pnpm format:check && pnpm check:dash
 ```
 
 CI (`.github/workflows/ci.yml`, `lint.yml`, `typecheck.yml` and `em-dash.yml`) runs these on every push and pull request with Node 22.
+
+### End-to-end smoke tests
+
+`e2e.yml` runs [Playwright](https://playwright.dev) on every pull request and push to `main`. `tests/e2e/routes.spec.ts` opens the home page and every studio from `lib/navigation.ts` in Chromium and fails on a page error, a console error or a missing main heading. It also opens a tab in each studio and checks every `g` shortcut. A new studio added to `lib/navigation.ts` is covered automatically.
+
+To run it locally:
+
+```bash
+pnpm exec playwright install chromium   # once
+pnpm build
+pnpm test:e2e
+```
+
+The config starts `pnpm start` on port 3100 (set `E2E_PORT` to change it) and reuses a server already running there. Failed runs keep a trace in `test-results/` (gitignored); open it with `pnpm exec playwright show-trace <trace.zip>`. Vitest only reads `lib/**/*.test.ts`, so the e2e specs never run under `pnpm test`.
 
 ### Lighthouse
 
