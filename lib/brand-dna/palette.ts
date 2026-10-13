@@ -1,7 +1,15 @@
 import { colorDistance, fromHex, toHex } from "@/lib/color/color";
 import type { Oklch } from "@/types/color";
 
-export type WeightedColor = { color: Oklch; weight: number };
+/** How much of a color one source image supplied, as a fraction of that color (a color's shares sum to 1). */
+export type SourceShare = { id: string; share: number };
+
+export type WeightedColor = {
+  color: Oklch;
+  weight: number;
+  /** The images the color came from, largest share first. */
+  sources: SourceShare[];
+};
 
 /** Colors closer than this (OKLab distance) to the background count as background. */
 const BACKGROUND_DISTANCE = 0.08;
@@ -45,6 +53,8 @@ export function detectBackground(pixels: Uint8ClampedArray, width: number, heigh
 
 /** One image's pixels for a combined palette. */
 export type PixelSet = {
+  /** Names the image in the attribution of each color. Defaults to its index in the list. */
+  id?: string;
   pixels: Uint8ClampedArray;
   /** Relative share of the result, usually the image's area. Defaults to 1. */
   weight?: number;
@@ -53,7 +63,33 @@ export type PixelSet = {
 };
 
 /** A color bucket: its averaged RGB and its share of the (combined) image. */
-export type BucketShare = { key: number; r: number; g: number; b: number; share: number };
+export type BucketShare = {
+  key: number;
+  r: number;
+  g: number;
+  b: number;
+  share: number;
+  /** Each image's part of `share`, in the same units; adds up to `share`. */
+  sources: SourceShare[];
+};
+
+/** Adds `parts` into `into`, summing shares of the same image. */
+function addSources(into: Map<string, number>, parts: SourceShare[]) {
+  for (const part of parts) into.set(part.id, (into.get(part.id) ?? 0) + part.share);
+}
+
+/** Largest share first, ties by id so the order is stable. */
+function sourceList(parts: Map<string, number>): SourceShare[] {
+  return [...parts]
+    .map(([id, share]) => ({ id, share }))
+    .sort((a, b) => b.share - a.share || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+}
+
+/** Rescales shares so they add up to 1. */
+function normalizeSources(parts: SourceShare[]): SourceShare[] {
+  const total = parts.reduce((sum, part) => sum + part.share, 0) || 1;
+  return parts.map((part) => ({ id: part.id, share: part.share / total }));
+}
 
 const hexFromRgb = (r: number, g: number, b: number) =>
   `#${[r, g, b].map((value) => Math.round(value).toString(16).padStart(2, "0")).join("")}`;
@@ -62,7 +98,7 @@ const hexFromRgb = (r: number, g: number, b: number) =>
  * Buckets one image's opaque pixels (5 bits per channel) as fractions of the pixels kept.
  * The excluded color is left out, unless it is all there is (a blank canvas).
  */
-function bucketShares(pixels: Uint8ClampedArray, exclude?: Oklch | null): BucketShare[] {
+function bucketShares(pixels: Uint8ClampedArray, exclude?: Oklch | null): Omit<BucketShare, "sources">[] {
   const buckets = new Map<number, { r: number; g: number; b: number; n: number }>();
   for (let i = 0; i < pixels.length; i += 4) {
     const alpha = pixels[i + 3] ?? 0;
@@ -102,8 +138,9 @@ function bucketShares(pixels: Uint8ClampedArray, exclude?: Oklch | null): Bucket
 export function mergePixelSets(sets: PixelSet[]): BucketShare[] {
   const weights = sets.map((set) => Math.max(0, set.weight ?? 1));
   const totalWeight = weights.reduce((sum, weight) => sum + weight, 0) || 1;
-  const merged = new Map<number, BucketShare>();
+  const merged = new Map<number, Omit<BucketShare, "sources"> & { from: Map<string, number> }>();
   sets.forEach((set, index) => {
+    const id = set.id ?? String(index);
     const factor = (weights[index] ?? 0) / totalWeight;
     for (const item of bucketShares(set.pixels, set.exclude)) {
       const share = item.share * factor;
@@ -115,11 +152,26 @@ export function mergePixelSets(sets: PixelSet[]): BucketShare[] {
         bucket.g += item.g * share;
         bucket.b += item.b * share;
         bucket.share += share;
-      } else merged.set(item.key, { key: item.key, r: item.r * share, g: item.g * share, b: item.b * share, share });
+        bucket.from.set(id, (bucket.from.get(id) ?? 0) + share);
+      } else
+        merged.set(item.key, {
+          key: item.key,
+          r: item.r * share,
+          g: item.g * share,
+          b: item.b * share,
+          share,
+          from: new Map([[id, share]]),
+        });
     }
   });
   return [...merged.values()]
-    .map((item) => ({ ...item, r: item.r / item.share, g: item.g / item.share, b: item.b / item.share }))
+    .map(({ from, ...item }) => ({
+      ...item,
+      r: item.r / item.share,
+      g: item.g / item.share,
+      b: item.b / item.share,
+      sources: sourceList(from),
+    }))
     .sort((a, b) => b.share - a.share || a.key - b.key);
 }
 
@@ -130,26 +182,41 @@ export function mergePixelSets(sets: PixelSet[]): BucketShare[] {
 export function extractCombinedPalette(sets: PixelSet[], count = 5): WeightedColor[] {
   const ranked = mergePixelSets(sets)
     .slice(0, 256)
-    .map((item) => ({ color: fromHex(hexFromRgb(item.r, item.g, item.b)), weight: item.share }));
+    .map((item) => ({
+      color: fromHex(hexFromRgb(item.r, item.g, item.b)),
+      weight: item.share,
+      sources: item.sources,
+    }));
   if (ranked.length === 0) return [];
   // Weigh what is left (after any excluded background) as the whole image.
   const kept = ranked.reduce((sum, item) => sum + item.weight, 0) || 1;
   ranked.forEach((item) => (item.weight /= kept));
 
-  const picked: WeightedColor[] = [];
+  // Each picked color also tallies what every image contributed, normalized at the end.
+  const picked: (WeightedColor & { from: Map<string, number> })[] = [];
   for (const candidate of ranked) {
     const near = picked.find((item) => colorDistance(item.color, candidate.color) < 0.12);
-    if (near) near.weight += candidate.weight;
-    else if (picked.length < count) picked.push({ color: candidate.color, weight: candidate.weight });
+    if (near) {
+      near.weight += candidate.weight;
+      addSources(near.from, candidate.sources);
+    } else if (picked.length < count) {
+      const from = new Map<string, number>();
+      addSources(from, candidate.sources);
+      picked.push({ color: candidate.color, weight: candidate.weight, sources: [], from });
+    }
   }
   // A logo on white is mostly white; make sure the colorful part is represented.
   const vivid = ranked.find(
     (item) => item.color.c > 0.08 && !picked.some((p) => colorDistance(p.color, item.color) < 0.12),
   );
   if (vivid && !picked.some((item) => item.color.c > 0.08)) {
-    picked[picked.length - 1] = { color: vivid.color, weight: vivid.weight };
+    const from = new Map<string, number>();
+    addSources(from, vivid.sources);
+    picked[picked.length - 1] = { color: vivid.color, weight: vivid.weight, sources: [], from };
   }
-  return picked.sort((a, b) => b.weight - a.weight);
+  return picked
+    .sort((a, b) => b.weight - a.weight)
+    .map(({ from, ...item }) => ({ ...item, sources: normalizeSources(sourceList(from)) }));
 }
 
 /** Dominant colors of a single image. See `extractCombinedPalette`. */

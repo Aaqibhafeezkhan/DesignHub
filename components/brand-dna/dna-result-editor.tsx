@@ -10,12 +10,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useFontCatalog } from "@/hooks/use-font-catalog";
-import type { BrandDna } from "@/lib/brand-dna/types";
+import type { BrandDna, DnaColor, DnaImage } from "@/lib/brand-dna/types";
 import { contrastRatio, oklch, parseColor } from "@/lib/color/color";
 import { formatRatio } from "@/lib/color/contrast";
 import type { ColorRole } from "@/types/brand";
 
-type Props = { dna: BrandDna; onChange: (dna: BrandDna) => void };
+type Props = {
+  dna: BrandDna;
+  onChange: (dna: BrandDna) => void;
+  /** The analyzed images, so each color can show where it came from when there are several. */
+  images?: DnaImage[];
+};
 
 const roles: ColorRole[] = ["primary", "secondary", "neutral"];
 
@@ -54,7 +59,33 @@ function SurfaceContrast({ hex }: { hex: string }) {
   );
 }
 
-export function DnaResultEditor({ dna, onChange }: Props) {
+/** Small thumbnails of the images a color came from, each with its share of that color. */
+function ColorSources({ color, images }: { color: DnaColor; images: DnaImage[] }) {
+  const shown = (color.sources ?? []).flatMap((source) => {
+    const image = images.find((item) => item.id === source.imageId);
+    return image ? [{ image, percent: Math.max(1, Math.round(source.share * 100)) }] : [];
+  });
+  if (shown.length === 0) return null;
+  return (
+    <ul aria-label={`Source images for ${color.hex}`} className="col-span-4 flex flex-wrap gap-x-3 gap-y-1">
+      {shown.map(({ image, percent }) => (
+        <li
+          key={image.id}
+          title={`${image.name}: ${percent}% of this color`}
+          className="flex items-center gap-1 text-[11px] text-muted-foreground tabular-nums"
+        >
+          {/* A blob preview of the user's own file, so next/image has nothing to optimize. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={image.url} alt="" className="size-5 rounded-[3px] border object-cover" />
+          <span aria-hidden>{percent}%</span>
+          <span className="sr-only">{`${image.name}, ${percent}% of this color`}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export function DnaResultEditor({ dna, onChange, images = [] }: Props) {
   const { fonts } = useFontCatalog();
   const set = (patch: Partial<BrandDna>) => onChange({ ...dna, ...patch });
 
@@ -65,7 +96,9 @@ export function DnaResultEditor({ dna, onChange }: Props) {
         <ul className="flex flex-col gap-1.5" aria-label="Extracted colors">
           {dna.colors.map((color, index) => (
             <li key={index} className="grid grid-cols-[2rem_minmax(0,1fr)_auto_auto_auto] items-center gap-x-2 gap-y-1">
-              <label className="relative row-span-2 size-8 shrink-0 cursor-pointer overflow-hidden rounded-md border">
+              <label
+                className={`relative ${images.length > 1 && color.sources?.length ? "row-span-3" : "row-span-2"} size-8 shrink-0 cursor-pointer overflow-hidden rounded-md border`}
+              >
                 <span className="absolute inset-0" style={{ background: color.hex }} />
                 <input
                   type="color"
@@ -119,6 +152,7 @@ export function DnaResultEditor({ dna, onChange }: Props) {
                 <X />
               </Button>
               <SurfaceContrast hex={color.hex} />
+              {images.length > 1 ? <ColorSources color={color} images={images} /> : null}
             </li>
           ))}
         </ul>

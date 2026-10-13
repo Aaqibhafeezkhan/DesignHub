@@ -349,7 +349,7 @@ export function BrandDnaWorkspace() {
           <h2 className="text-sm font-medium">Brand DNA</h2>
           {dna ? (
             <>
-              <DnaResultEditor dna={dna} onChange={setDna} />
+              <DnaResultEditor dna={dna} onChange={setDna} images={images} />
               <div className="flex gap-2">
                 <Button className="flex-1" onClick={apply}>
                   <Sparkles /> Apply to brand

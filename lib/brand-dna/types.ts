@@ -20,7 +20,13 @@ export type DnaImage = {
 /** A moodboard combines at most this many images into one result. */
 export const MAX_DNA_IMAGES = 5;
 
-export type DnaColor = { hex: string; weight: number; role: ColorRole };
+export type DnaColor = {
+  hex: string;
+  weight: number;
+  role: ColorRole;
+  /** Which images the color came from (`DnaImage.id`) and their share of it, largest first. Absent for added colors. */
+  sources?: { imageId: string; share: number }[];
+};
 
 /** What a provider returns. Every field is editable before it is applied to the brand. */
 export type BrandDna = {

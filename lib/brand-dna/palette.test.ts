@@ -117,6 +117,45 @@ describe("merging pixel sets", () => {
     expect(c.map((item) => hexOf(item.color))).toEqual(a.map((item) => hexOf(item.color)));
   });
 
+  test("attributes each bucket to the images it came from, by weighted share", () => {
+    const merged = mergePixelSets([
+      { id: "a", pixels: image(() => [200, 0, 0]), weight: 3 },
+      { id: "b", pixels: image(() => [202, 0, 0]), weight: 1 },
+      { id: "c", pixels: blue, weight: 1 },
+    ]);
+    const shared = merged.find((item) => item.r > 150)!;
+    expect(shared.sources.map((source) => source.id)).toEqual(["a", "b"]);
+    expect(shared.sources[0]!.share).toBeCloseTo(0.6, 5);
+    expect(shared.sources[1]!.share).toBeCloseTo(0.2, 5);
+    expect(shared.sources.reduce((sum, source) => sum + source.share, 0)).toBeCloseTo(shared.share, 5);
+    expect(merged.find((item) => item.b > 150)!.sources).toEqual([{ id: "c", share: expect.closeTo(0.2, 5) }]);
+  });
+
+  test("palette colors list their source images, normalized per color", () => {
+    const palette = extractCombinedPalette([
+      { id: "a", pixels: red, weight: 3 },
+      { id: "b", pixels: blue, weight: 1 },
+      { id: "c", pixels: image(() => [231, 57, 53]), weight: 1 },
+    ]);
+    const redColor = palette.find((item) => hexOf(item.color).startsWith("#e"))!;
+    expect(redColor.sources.map((source) => source.id)).toEqual(["a", "c"]);
+    expect(redColor.sources[0]!.share).toBeCloseTo(0.75, 5);
+    expect(redColor.sources[1]!.share).toBeCloseTo(0.25, 5);
+    const blueColor = palette.find((item) => item !== redColor)!;
+    expect(blueColor.sources).toEqual([{ id: "b", share: 1 }]);
+  });
+
+  test("dropping an image drops it from the attribution", () => {
+    const sets = [
+      { id: "a", pixels: red },
+      { id: "b", pixels: blue },
+    ];
+    const both = extractCombinedPalette(sets);
+    expect(both.flatMap((item) => item.sources.map((source) => source.id)).sort()).toEqual(["a", "b"]);
+    const only = extractCombinedPalette(sets.slice(1));
+    expect(only.flatMap((item) => item.sources.map((source) => source.id))).toEqual(["b"]);
+  });
+
   test("a single set matches extractPalette", () => {
     expect(extractCombinedPalette([{ pixels: gradient }], 5)).toEqual(extractPalette(gradient, 5));
   });

@@ -79,7 +79,12 @@ export const localProvider: BrandDnaProvider = {
     );
     // An image that is nothing but its background (a blank canvas) still counts as that color.
     const palette = extractCombinedPalette(
-      images.map((image, i) => ({ pixels: image.pixels, weight: image.width * image.height, exclude: backgrounds[i] })),
+      images.map((image, i) => ({
+        id: image.id,
+        pixels: image.pixels,
+        weight: image.width * image.height,
+        exclude: backgrounds[i],
+      })),
       6,
     );
     if (palette.length === 0)
@@ -98,6 +103,7 @@ export const localProvider: BrandDnaProvider = {
     const colors: DnaColor[] = palette.map((item) => ({
       hex: hexOf(item.color),
       weight: item.weight,
+      sources: item.sources.map((source) => ({ imageId: source.id, share: source.share })),
       role:
         item === primary ? "primary" : item === secondary ? "secondary" : item.color.c < 0.05 ? "neutral" : "secondary",
     }));
