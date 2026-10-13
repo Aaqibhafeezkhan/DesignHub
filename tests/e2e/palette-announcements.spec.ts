@@ -5,7 +5,6 @@ test("palette changes are announced to screen readers", async ({ page }) => {
 
   const status = page.locator('[role="status"][aria-live="polite"]');
   if ((await status.count()) === 0) throw new Error("palette announcement live region missing");
-  await expect(status).toHaveAttribute("aria-live", "polite");
 
   await page
     .getByRole("button", { name: /^Lock / })
