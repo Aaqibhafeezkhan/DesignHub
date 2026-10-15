@@ -53,7 +53,10 @@ export type SocialPlatform =
   | "Behance"
   | "Patreon"
   | "Kick"
-  | "Bandcamp";
+  | "Bandcamp"
+  | "Telegram"
+  | "Substack"
+  | "Spotify";
 
 export type SocialTemplate = {
   id: string;

@@ -38,6 +38,9 @@ test.each([
   ["product-hunt-thumbnail", 240, 240],
   ["twitch-offline", 1920, 1080],
   ["linkedin-event", 1776, 444],
+  ["telegram-cover", 1280, 720],
+  ["substack-banner", 1100, 220],
+  ["spotify-playlist-cover", 640, 640],
 ])("%s is registered at %ix%i and included in the full pack", (id, width, height) => {
   const template = getSocialTemplate(id);
   expect(template).toMatchObject({ width, height });
