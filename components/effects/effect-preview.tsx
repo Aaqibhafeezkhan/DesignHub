@@ -31,6 +31,8 @@ export function EffectPreview({ effect }: { effect: EffectCss | null }) {
   // A gradient fill disappears into a busy backdrop, so those effects fall back to the dark one.
   const backdrop = plain && !PLAIN.has(chosen) ? "dark" : chosen;
   const dark = surface ? isDark(surface) : backdrop !== "light";
+  const cardFill = effect?.fill ?? (effect?.needsFill ? (dark ? "#18181b" : "#ffffff") : undefined);
+  const cardDark = effect?.fill ? isDark(effect.fill) : dark;
 
   return (
     <>
@@ -54,8 +56,8 @@ export function EffectPreview({ effect }: { effect: EffectCss | null }) {
       {effect ? <style>{effectStylesheet(effect, PREVIEW_SELECTOR)}</style> : null}
       <EffectBackdrop backdrop={backdrop} surface={surface}>
         <article
-          style={effect?.needsFill ? { backgroundColor: dark ? "#18181b" : "#ffffff" } : undefined}
-          className={`dh-effect-preview flex w-full max-w-sm flex-col gap-3 p-8 ${dark ? "text-white" : "text-slate-800"}`}
+          style={cardFill ? { backgroundColor: cardFill } : undefined}
+          className={`dh-effect-preview flex w-full max-w-sm flex-col gap-3 p-8 ${cardDark ? "text-white" : "text-slate-800"}`}
         >
           <p className="text-xs font-semibold tracking-[0.16em] uppercase opacity-80">Effects Lab</p>
           <h3 className="font-display text-2xl font-semibold">Depth without the fuss.</h3>

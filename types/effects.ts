@@ -11,7 +11,8 @@ export type EffectKind =
   | "long-shadow"
   | "gradient-text"
   | "skeleton"
-  | "text-outline";
+  | "text-outline"
+  | "focus-ring";
 
 export type GlassSettings = {
   blur: number;
@@ -162,6 +163,22 @@ export type TextOutlineSettings = {
   shadowColor: string;
 };
 
+/** A two-tone :focus-visible ring (outline plus an inner gap ring) checked against a page and a component. */
+export type FocusRingSettings = {
+  /** Outer ring (the outline) color. This is the color the contrast check measures. */
+  color: string;
+  /** Inner ring color, painted in the gap between the component and the outer ring. */
+  inner: string;
+  /** Outer ring width in px. */
+  width: number;
+  /** Gap (and inner ring width) in px. */
+  offset: number;
+  /** The page behind the focused component, for the contrast check and the preview. */
+  background: string;
+  /** The focused component's own color (a button), for the contrast check. */
+  component: string;
+};
+
 export type EffectSettingsMap = {
   glass: GlassSettings;
   neumorphism: NeumorphismSettings;
@@ -174,6 +191,7 @@ export type EffectSettingsMap = {
   "gradient-text": GradientTextSettings;
   skeleton: SkeletonSettings;
   "text-outline": TextOutlineSettings;
+  "focus-ring": FocusRingSettings;
 };
 
 /** State from other studios an effect may build on. Effects read it here instead of copying it into their settings. */
@@ -197,6 +215,8 @@ export type EffectCss = {
   tailwindNote?: string;
   /** The page color this effect is designed to sit on (e.g. neumorphism needs a matching surface). */
   surface?: string;
+  /** Preview-only: the sample card's solid fill color (wins over `needsFill`). */
+  fill?: string;
   /** Preview-only: give the sample card a solid fill (shadows and glows need something to cast from). */
   needsFill?: boolean;
   /** Preview-only: the effect paints its own gradient, so it is shown on the light or dark backdrop, not a busy one. */

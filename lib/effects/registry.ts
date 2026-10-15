@@ -1,5 +1,6 @@
 import { border } from "@/lib/effects/border";
 import { defaultEffectContext, type AnyEffectDefinition, type EffectDefinition } from "@/lib/effects/define";
+import { focusRing } from "@/lib/effects/focus-ring";
 import { glass } from "@/lib/effects/glass";
 import { gradientText } from "@/lib/effects/gradient-text";
 import { glow } from "@/lib/effects/glow";
@@ -25,6 +26,7 @@ export const effectDefinitions: AnyEffectDefinition[] = [
   gradientText,
   skeleton,
   textOutline,
+  focusRing,
 ];
 
 export function generateEffect<K extends EffectKind>(

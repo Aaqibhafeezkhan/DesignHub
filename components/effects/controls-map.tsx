@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 
 import { BorderControls } from "@/components/effects/border-controls";
+import { FocusRingControls } from "@/components/effects/focus-ring-controls";
 import { GlassControls } from "@/components/effects/glass-controls";
 import { GlowControls } from "@/components/effects/glow-controls";
 import { GradientTextControls } from "@/components/effects/gradient-text-controls";
@@ -26,4 +27,5 @@ export const effectControls: Partial<Record<EffectKind, ComponentType>> = {
   "gradient-text": GradientTextControls,
   skeleton: SkeletonControls,
   "text-outline": TextOutlineControls,
+  "focus-ring": FocusRingControls,
 };

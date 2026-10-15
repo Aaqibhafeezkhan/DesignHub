@@ -58,4 +58,12 @@ export const effectDefaults: EffectSettingsMap = {
     shadowY: 4,
     shadowColor: "#f472b6",
   },
+  "focus-ring": {
+    color: "#4f46e5",
+    inner: "#ffffff",
+    width: 3,
+    offset: 2,
+    background: "#ffffff",
+    component: "#e4e4e7",
+  },
 };
