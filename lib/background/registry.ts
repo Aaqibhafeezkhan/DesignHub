@@ -12,6 +12,7 @@ import { plus } from "@/lib/background/generators/plus";
 import { rings } from "@/lib/background/generators/rings";
 import { starfield } from "@/lib/background/generators/starfield";
 import { stripes } from "@/lib/background/generators/stripes";
+import { spirograph } from "@/lib/background/generators/spirograph";
 import { squiggle } from "@/lib/background/generators/squiggle";
 import { squares } from "@/lib/background/generators/squares";
 import { sunburst } from "@/lib/background/generators/sunburst";
@@ -61,6 +62,7 @@ export const backgroundGenerators: BackgroundDefinition[] = [
   squares,
   argyle,
   zigzag,
+  spirograph,
 ];
 
 export function getGenerator(kind: BackgroundKind): BackgroundDefinition | undefined {

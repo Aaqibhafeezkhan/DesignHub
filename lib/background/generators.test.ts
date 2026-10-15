@@ -3,6 +3,7 @@ import { describe, expect, test } from "vitest";
 import { backgroundCss } from "@/lib/background/export";
 import { circuitTraces, type GridNode } from "@/lib/background/generators/circuit";
 import { halftoneGradient, halftoneStrength } from "@/lib/background/generators/halftone";
+import { hypotrochoid, maxSpirographPoints } from "@/lib/background/generators/spirograph";
 import { triangleSlot } from "@/lib/background/generators/triangles";
 import { voronoiCells, type Point } from "@/lib/background/generators/voronoi";
 import { createRandom } from "@/lib/background/random";
@@ -36,6 +37,7 @@ describe.each([
   "squares",
   "argyle",
   "zigzag",
+  "spirograph",
 ] as const)("%s", (kind) => {
   test("the same seed renders the same output", () => {
     for (const patch of [{ seed: 7 }, { seed: 7, rotation: 30, density: 100, scale: 2 }]) {
@@ -309,4 +311,26 @@ describe("triangles", () => {
     const dense = tileWidth(renderBackgroundSvg(settings("triangles", { density: 100 })));
     expect(sparse).toBeGreaterThan(dense * 3);
   });
+});
+
+test("spirograph stays small and bounded at every density", () => {
+  for (const density of [0, 50, 100]) {
+    const svg = renderBackgroundSvg(settings("spirograph", { density }));
+    expect(nodeCount(svg)).toBeLessThan(30);
+    expect(svg.length).toBeLessThan(60_000);
+    expect(svg).toContain("<pattern");
+    for (const [, d] of svg.matchAll(/ d="([^"]+)"/g)) {
+      expect((d!.match(/L/g) ?? []).length + 1).toBeLessThanOrEqual(maxSpirographPoints);
+    }
+  }
+});
+
+test("a hypotrochoid is a closed curve inside its radius", () => {
+  const d = hypotrochoid(100, 100, 50, [7, 3], 0.8, 0.4);
+  const points = d
+    .slice(1, -1)
+    .split("L")
+    .map((pair) => pair.split(" ").map(Number) as [number, number]);
+  expect(points.length).toBeGreaterThan(100);
+  points.forEach(([x, y]) => expect(Math.hypot(x - 100, y - 100)).toBeLessThanOrEqual(50.2));
 });
