@@ -5,6 +5,8 @@ import {
   tokenFormats,
   toBootstrapVariables,
   toChakraTheme,
+  toCss,
+  toCssProperties,
   toFigmaVariables,
   toShadcnTheme,
   type FigmaVariablesRequest,
@@ -15,6 +17,7 @@ import {
   toStyledTheme,
   toStylus,
   toUnoConfig,
+  toXcodeColorSets,
   toYaml,
   yamlString,
 } from "@/lib/tokens/formats";
@@ -604,5 +607,77 @@ describe("React Native theme", () => {
 
   test("is registered with the other native themes", () => {
     expect(tokenFormats(typed()).find((format) => format.id === "react-native")?.filename).toBe("theme.ts");
+  });
+});
+
+describe("CSS @property", () => {
+  const css = toCssProperties(typed("acme"));
+
+  test("registers a color, a length and a number", () => {
+    expect(css).toContain(
+      '@property --acme-color-primary {\n  syntax: "<color>";\n  inherits: true;\n  initial-value: #6366f1;\n}',
+    );
+    expect(css).toContain(
+      '@property --acme-spacing-4 {\n  syntax: "<length>";\n  inherits: true;\n  initial-value: 1rem;',
+    );
+    expect(css).toContain(
+      '@property --acme-leading-body {\n  syntax: "<number>";\n  inherits: true;\n  initial-value: 1.5;',
+    );
+    expect(css).toContain("@property --acme-spacing-0\\.5 {");
+  });
+
+  test("uses exactly the names of the CSS variables export", () => {
+    const declared = [...toCss(typed("acme")).matchAll(/^ {2}(--[^:]+):/gm)].map((match) => match[1]);
+    const registered = [...css.matchAll(/@property (--\S+) \{/g)].map((match) => match[1]);
+    expect(registered.length).toBeGreaterThan(0);
+    registered.forEach((name) => expect(declared).toContain(name));
+    expect(registered).not.toContain("--acme-font-heading");
+  });
+
+  test("is registered in the Export Engine", () => {
+    expect(tokenFormats(typed()).find((format) => format.id === "css-properties")?.filename).toBe("properties.css");
+  });
+});
+
+describe("Xcode asset catalog", () => {
+  type ColorSet = {
+    colors: {
+      idiom: string;
+      appearances?: { appearance: string; value: string }[];
+      color: { "color-space": string; components: Record<string, number> };
+    }[];
+    info: { author: string; version: number };
+  };
+
+  test("writes light and dark appearances for a color", () => {
+    const set = toXcodeColorSets(typed()).find((item) => item.role === "primary")!;
+    expect(set.name).toBe("Primary");
+    const json = JSON.parse(set.code) as ColorSet;
+    expect(json.info).toEqual({ author: "xcode", version: 1 });
+    const [light, dark] = json.colors;
+    expect(light!.appearances).toBeUndefined();
+    expect(light!.color).toEqual({
+      "color-space": "srgb",
+      components: { red: 0.388, green: 0.4, blue: 0.945, alpha: 1 },
+    });
+    expect(dark!.appearances).toEqual([{ appearance: "luminosity", value: "dark" }]);
+    expect(dark!.idiom).toBe("universal");
+    expect(dark!.color["color-space"]).toBe("srgb");
+  });
+
+  test("swaps background and foreground in dark mode", () => {
+    const sets = toXcodeColorSets(typed());
+    const background = JSON.parse(sets.find((item) => item.role === "background")!.code) as ColorSet;
+    expect(background.colors[0]!.color.components.red).toBe(1);
+    expect(background.colors[1]!.color.components.red).toBe(0.059);
+  });
+
+  test("each color set is its own ExportFormat file", () => {
+    const formats = tokenFormats(typed()).filter((format) => format.id.startsWith("xcode-"));
+    expect(formats.map((format) => format.filename)).toEqual([
+      "Primary.colorset/Contents.json",
+      "Foreground.colorset/Contents.json",
+      "Background.colorset/Contents.json",
+    ]);
   });
 });

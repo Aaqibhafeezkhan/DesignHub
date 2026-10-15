@@ -1214,9 +1214,79 @@ export function toFigmaVariables(tokens: DesignTokens): string {
   return `${JSON.stringify(request, null, 2)}\n`;
 }
 
+/** Typed custom properties: each numeric or color token is registered so the browser can animate it. */
+export function toCssProperties(tokens: DesignTokens): string {
+  const syntaxes: Record<string, string> = {
+    color: "<color>",
+    semantic: "<color>",
+    spacing: "<length>",
+    radius: "<length>",
+    text: "<length>",
+  };
+  const numbers = new Set(["font-weight-heading", "font-weight-body", "leading-heading", "leading-body"]);
+  const blocks = flatten(tokens).flatMap((token) => {
+    const syntax = numbers.has(token.name)
+      ? "<number>"
+      : token.name.startsWith("tracking-")
+        ? "<length>"
+        : syntaxes[token.group];
+    if (!syntax) return [];
+    return [
+      `@property ${variable(tokens, token.name)} {\n  syntax: "${syntax}";\n  inherits: true;\n  initial-value: ${token.value};\n}\n`,
+    ];
+  });
+  return `${header(tokens, (text) => `/* ${text} */`)}\n${blocks.join("\n")}`;
+}
+
+const pascal = (value: string) =>
+  value
+    .split(/[^a-zA-Z0-9]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+
+/** Apple writes components as decimals with three places. */
+const unit = (value: number) => Math.round((value / 255) * 1000) / 1000;
+
+function xcodeColor(value: Oklch) {
+  const { r, g, b, alpha } = toRgb(value);
+  return {
+    "color-space": "srgb",
+    components: { red: unit(r), green: unit(g), blue: unit(b), alpha: Math.round(alpha * 1000) / 1000 },
+  };
+}
+
+/** One `<Name>.colorset/Contents.json` per semantic role, with a dark luminosity variant from roleColor(). */
+export function toXcodeColorSets(tokens: DesignTokens): { name: string; role: string; code: string }[] {
+  return tokens.semantic.flatMap((item) => {
+    const light = roleColor(tokens, item.name);
+    const dark = roleColor(tokens, item.name, true);
+    if (!light || !dark) return [];
+    const catalog = {
+      colors: [
+        { idiom: "universal", color: xcodeColor(light.value) },
+        {
+          idiom: "universal",
+          appearances: [{ appearance: "luminosity", value: "dark" }],
+          color: xcodeColor(dark.value),
+        },
+      ],
+      info: { author: "xcode", version: 1 },
+    };
+    return [{ name: pascal(item.name), role: item.name, code: `${JSON.stringify(catalog, null, 2)}\n` }];
+  });
+}
+
 export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
   return [
     { id: "css", label: "CSS variables", filename: "tokens.css", language: "css", code: toCss(tokens) },
+    {
+      id: "css-properties",
+      label: "CSS @property",
+      filename: "properties.css",
+      language: "css",
+      code: toCssProperties(tokens),
+    },
     { id: "scss", label: "SCSS", filename: "_tokens.scss", language: "scss", code: toScss(tokens) },
     {
       id: "sass-map",
@@ -1297,6 +1367,13 @@ export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
       language: "json",
       code: toFigmaVariables(tokens),
     },
+    ...toXcodeColorSets(tokens).map((set) => ({
+      id: `xcode-${set.role}`,
+      label: `Xcode color set: ${set.name}`,
+      filename: `${set.name}.colorset/Contents.json`,
+      language: "json" as const,
+      code: set.code,
+    })),
   ];
 }
 
