@@ -9,6 +9,7 @@ import { useOptimizedTree } from "@/hooks/use-optimized-tree";
 import { angularComponent, kebabCase } from "@/lib/svg/angular";
 import { componentNameFromFile, reactComponent, toJsx, withCurrentColor } from "@/lib/svg/jsx";
 import { svgBackgroundCss } from "@/lib/svg/data-uri";
+import { litComponent } from "@/lib/svg/lit";
 import { qwikComponent } from "@/lib/svg/qwik";
 import { reactNativeComponent } from "@/lib/svg/react-native";
 import { minify, prettyPrint } from "@/lib/svg/serialize";
@@ -96,6 +97,13 @@ export function SvgOutput({ root }: { root: SvgNode | null }) {
         filename: `${kebabCase(componentNameFromFile(name))}.component.ts`,
         language: "ts",
         code: angularComponent(codeTree, name),
+      },
+      {
+        id: "lit",
+        label: "Lit",
+        filename: `${kebabCase(componentNameFromFile(name))}.ts`,
+        language: "ts",
+        code: litComponent(codeTree, name),
       },
       {
         id: "css",

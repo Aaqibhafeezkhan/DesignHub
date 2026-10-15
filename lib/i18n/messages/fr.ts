@@ -52,7 +52,7 @@ export const fr = {
   "studio.svg.title": "Atelier SVG",
   "studio.svg.short": "Atelier SVG",
   "studio.svg.description":
-    "Inspectez, modifiez et optimisez du SVG. Convertissez-le en JSX, React, React Native, Vue, Svelte, Angular, Solid ou en planche de sprites.",
+    "Inspectez, modifiez et optimisez du SVG. Convertissez-le en JSX, React, React Native, Vue, Svelte, Angular, Solid, Lit ou en planche de sprites.",
   "studio.accessibility.title": "Labo d'accessibilité",
   "studio.accessibility.short": "Accessibilité",
   "studio.accessibility.description":
