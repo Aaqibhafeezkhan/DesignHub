@@ -131,6 +131,27 @@ describe("icon exports", () => {
     expect(lit?.code).not.toMatch(/[^\\]`\$\{x\}/);
   });
 
+  test("Astro component reads size and color from Astro.props and spreads the rest on the svg", () => {
+    const astro = iconExports("tabler:brand-github", icon, { ...defaultIconStyle, color: "#ef4444" }).find(
+      (format) => format.id === "astro",
+    );
+    expect(astro?.label).toBe("Astro");
+    expect(astro?.filename).toBe("BrandGithubIcon.astro");
+    expect(astro?.code.startsWith("---\n")).toBe(true);
+    expect(astro?.code).toContain('const { size = "1em", color = "#ef4444", ...rest } = Astro.props;');
+    expect(astro?.code).toMatch(/<svg [^>]*width=\{size\} height=\{size\}[^>]*\{\.\.\.rest\}>/);
+    // The body keeps currentColor so the color prop can recolor it.
+    expect(astro?.code).toContain('stroke="currentColor"');
+    expect(astro?.code).toContain('stroke-width="2"');
+  });
+
+  test("Astro component escapes braces in the body and keeps style CSS inline", () => {
+    const styled = { ...icon, body: "<style>.a{fill:red}</style><text>{x}</text><path class='a' d='M0 0h24'/>" };
+    const astro = iconExports("tabler:brand-github", styled, defaultIconStyle).find((format) => format.id === "astro");
+    expect(astro?.code).toContain("<style is:inline>.a{fill:red}</style>");
+    expect(astro?.code).toContain("<text>&#123;x&#125;</text>");
+  });
+
   test("Qwik component escapes braces and rewrites xlink:href", () => {
     const styled = { ...icon, body: "<style>.a{fill:red}</style><path class='a' d='M0 0h24'/><use xlink:href='#p'/>" };
     const qwik = iconExports("tabler:brand-github", styled, defaultIconStyle).find((format) => format.id === "qwik");

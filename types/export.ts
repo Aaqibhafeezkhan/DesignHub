@@ -14,7 +14,8 @@ export type ExportLanguage =
   | "text"
   | "vue"
   | "yaml"
-  | "svelte";
+  | "svelte"
+  | "astro";
 
 export type ExportFormat = {
   id: string;
