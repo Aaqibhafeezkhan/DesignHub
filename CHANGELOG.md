@@ -55,6 +55,9 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - French as a fourth interface language, and a translated Brand Studio and home page.
 - Playwright smoke tests open every route and fail on page errors, console errors or a missing heading; they run in CI (`pnpm test:e2e`).
 - Refreshed README screenshots for every studio.
+- Switch the interface language from the command palette: type "language" or a language name, in any supported language.
+- Unit tests for color names, ICO encoding and the favicon helpers; the favicon tests fixed an unescaped theme color in the generated `<meta>` tag.
+- Palette changes (a new palette, loading one from the library) are announced to screen readers.
 
 #### Brand Studio
 
@@ -116,6 +119,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Long websites, handles and names are shortened to fit their space in every template, so nothing runs past the safe area.
 - Bandcamp header (975 x 180) and Product Hunt thumbnail (240 x 240) templates.
 - Twitch offline screen (1920 x 1080) and LinkedIn event cover (1776 x 444) templates.
+- Telegram channel cover (central 60 percent safe area), Substack publication banner and Spotify playlist cover templates.
 
 #### Brand Guidelines
 
@@ -144,6 +148,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Version history per project: a version every five minutes of editing and before Surprise me, token import, Brand DNA apply, share-link import and palette loads, capped at 20, with preview and undoable restore. Deleting a project removes its history (and undo brings it back).
 - Optionally include version history in project exports; imported versions are validated, sanitized and capped.
 - Start a new project from any history version, leaving the current one untouched.
+- Autosave to a folder (Chromium): pick a folder and every autosave also writes `<name>-<id>.designhub.json` there, with a status line, permission re-request, rename cleanup and nothing written outside the folder.
 
 #### Typography Studio
 
@@ -182,6 +187,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Sketch palette and Procreate swatches downloads, with every palette file in one Download menu.
 - Download the palette as a Krita palette (`.kpl`).
 - The starter palette now passes every color vision simulation.
+- Export the palette as a Markdown table.
 
 #### Icon Studio
 
@@ -198,10 +204,11 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Export an icon as a SolidJS component.
 - Export an icon as a Qwik component.
 - Export an icon as a Lit web component.
+- Export an icon as an Astro component.
 
 #### Background Studio
 
-- Twenty-eight procedural generators: waves, organic blobs (Paper.js smoothing), mesh gradients, aurora, noise textures, dot, grid and isometric patterns, concentric rings, checkerboard, low-poly mosaic, bokeh, confetti, chevron, honeycomb hexagons, sunburst, topographic contour lines, rotated stripes, plus signs, a starfield, Voronoi cells (computed in plain TypeScript, edge to edge), crosshatch, a circuit board with non-overlapping traces, halftone dots (linear, radial or seeded), triangles, squiggles, concentric squares and argyle.
+- Thirty procedural generators: waves, organic blobs (Paper.js smoothing), mesh gradients, aurora, noise textures, dot, grid and isometric patterns, concentric rings, checkerboard, low-poly mosaic, bokeh, confetti, chevron, honeycomb hexagons, sunburst, topographic contour lines, rotated stripes, plus signs, a starfield, Voronoi cells (computed in plain TypeScript, edge to edge), crosshatch, a circuit board with non-overlapping traces, halftone dots (linear, radial or seeded), triangles, squiggles, concentric squares, argyle, zigzag and a spirograph.
 - Deterministic seeds with randomize (`Space`), color controls with a "use palette" shortcut, density, scale, rotation and canvas presets.
 - Exports: SVG, PNG (1× and 2×) and CSS backgrounds (native gradients where possible, inline SVG otherwise).
 - The dots, checks, chevron and hexagons patterns now follow the seed, so a new seed shifts them.
@@ -217,6 +224,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - A gradient text effect using the Color Studio gradient, with an optional animated shift that stops under reduced motion and a solid color fallback.
 - A skeleton shimmer effect in the brand's neutrals, static under reduced motion.
 - A text outline effect with an optional offset shadow copy and a solid color fallback.
+- A focus ring effect: an outer outline and an inner ring with a WCAG contrast check against the page and the component, and a nearest passing color suggestion.
 
 #### SVG Playground
 
@@ -231,6 +239,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - An SVG to Angular component converter.
 - An SVG to SolidJS component converter.
 - An SVG to Qwik component converter.
+- An SVG to Lit component converter.
 
 #### Accessibility Lab
 
@@ -265,6 +274,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Bootstrap 5 Sass variables and a Chakra UI v3 theme with semantic tokens.
 - A shadcn/ui theme (OKLCH, light and dark) and Figma Variables JSON for the variables REST API.
 - A Style Dictionary build (tokens plus config, checked against the real tool) and a React Native theme with light and dark colors.
+- Xcode asset catalog color sets (light and dark appearances) and typed CSS custom property registrations with `@property`.
 
 ### Performance
 

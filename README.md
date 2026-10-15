@@ -38,23 +38,23 @@ A typical design session bounces between a font site, a palette generator, a con
 
 ## Features
 
-| Studio                | What it does                                                      | Exports                                                                                                                                                                                             |
-| --------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Brand Studio**      | Name, logo, colors with roles, type, radius, spacing, shadow      | Brand JSON · design tokens · DTCG import                                                                                                                                                            |
-| **Brand DNA** (beta)  | Palette, mood, type and personality from up to five images        | Applies to the brand                                                                                                                                                                                |
-| **Logo Studio**       | SVG editor, construction grid, clear space, eight variants        | SVG · animated SVG · PNG · PDF · logo pack ZIP                                                                                                                                                      |
-| **Mockup Studio**     | Stationery, merch, signage, laptop, tablet and mobile mockups     | PNG · WebP (up to 4×) · PDF                                                                                                                                                                         |
-| **Social Media**      | GitHub, LinkedIn, X, Instagram, YouTube, Twitch, Patreon, OG…     | PNG (1× / 2×) · OG meta tags · social ZIP                                                                                                                                                           |
-| **Brand Guidelines**  | A 21-page brand book generated from the brand                     | PDF · PNG per page · static website                                                                                                                                                                 |
-| **Brand Projects**    | Local brands with tags, share links, compare and version history  | Project JSON (one or all)                                                                                                                                                                           |
-| **Typography Studio** | Google Fonts, variable axes, pairing, fluid type scale, OpenType  | CSS · Tailwind · SCSS · React · JSON tokens                                                                                                                                                         |
-| **Color Studio**      | Palettes, harmonies, OKLCH, shades 50–950, gradients, WCAG        | CSS variables · Tailwind · JSON tokens · SVG gradient · GIMP · ASE · Sketch · Procreate · Krita · PNG                                                                                               |
-| **Icon Studio**       | 200,000+ Iconify icons, restyling, favicons                       | SVG · React · Vue · Svelte · Angular · Solid · Qwik · Lit · CSS · PNG · ICO · favicon ZIP                                                                                                           |
-| **Background Studio** | 29 generators: waves, mesh, aurora, voronoi, argyle, halftone…    | SVG · PNG (1× / 2×) · CSS background                                                                                                                                                                |
-| **Effects Lab**       | Glass, neumorphism, shadows, gradient text, skeleton, grain       | CSS · Tailwind classes · Tailwind `@utility` · SCSS · React                                                                                                                                         |
-| **SVG Playground**    | Inspect, edit, optimize, convert, build sprites                   | Optimized SVG · JSX · React · React Native · Vue · Svelte · Angular · Solid · CSS data URI · sprite                                                                                                 |
-| **Accessibility Lab** | WCAG contrast, color vision, readability, dyslexia, touch targets | JSON and Markdown audit report                                                                                                                                                                      |
-| **Export Engine**     | One token model from every studio, plus brand assets              | CSS · SCSS · Sass map · Less · Stylus · Tailwind · JS · YAML · UnoCSS · Panda · Chakra · shadcn · Bootstrap · Style Dictionary · React · Vue · Flutter · SwiftUI · Compose · Android · JSON · Figma |
+| Studio                | What it does                                                      | Exports                                                                                                                                                                                                                 |
+| --------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Brand Studio**      | Name, logo, colors with roles, type, radius, spacing, shadow      | Brand JSON · design tokens · DTCG import                                                                                                                                                                                |
+| **Brand DNA** (beta)  | Palette, mood, type and personality from up to five images        | Applies to the brand                                                                                                                                                                                                    |
+| **Logo Studio**       | SVG editor, construction grid, clear space, eight variants        | SVG · animated SVG · PNG · PDF · logo pack ZIP                                                                                                                                                                          |
+| **Mockup Studio**     | Stationery, merch, signage, laptop, tablet and mobile mockups     | PNG · WebP (up to 4×) · PDF                                                                                                                                                                                             |
+| **Social Media**      | GitHub, LinkedIn, X, YouTube, Twitch, Telegram, Spotify, OG…      | PNG (1× / 2×) · OG meta tags · social ZIP                                                                                                                                                                               |
+| **Brand Guidelines**  | A 21-page brand book generated from the brand                     | PDF · PNG per page · static website                                                                                                                                                                                     |
+| **Brand Projects**    | Local brands with tags, share links, compare and version history  | Project JSON (one or all)                                                                                                                                                                                               |
+| **Typography Studio** | Google Fonts, variable axes, pairing, fluid type scale, OpenType  | CSS · Tailwind · SCSS · React · JSON tokens                                                                                                                                                                             |
+| **Color Studio**      | Palettes, harmonies, OKLCH, shades 50–950, gradients, WCAG        | CSS variables · Tailwind · JSON tokens · SVG gradient · GIMP · ASE · Sketch · Procreate · Krita · PNG                                                                                                                   |
+| **Icon Studio**       | 200,000+ Iconify icons, restyling, favicons                       | SVG · React · Vue · Svelte · Angular · Solid · Qwik · Lit · Astro · CSS · PNG · ICO · favicon ZIP                                                                                                                       |
+| **Background Studio** | 30 generators: waves, mesh, aurora, voronoi, spirograph, zigzag…  | SVG · PNG (1× / 2×) · CSS background                                                                                                                                                                                    |
+| **Effects Lab**       | Glass, neumorphism, shadows, gradient text, skeleton, grain       | CSS · Tailwind classes · Tailwind `@utility` · SCSS · React                                                                                                                                                             |
+| **SVG Playground**    | Inspect, edit, optimize, convert, build sprites                   | Optimized SVG · JSX · React · React Native · Vue · Svelte · Angular · Solid · CSS data URI · sprite                                                                                                                     |
+| **Accessibility Lab** | WCAG contrast, color vision, readability, dyslexia, touch targets | JSON and Markdown audit report                                                                                                                                                                                          |
+| **Export Engine**     | One token model from every studio, plus brand assets              | CSS · SCSS · Sass map · Less · Stylus · Tailwind · JS · YAML · UnoCSS · Panda · Chakra · shadcn · Bootstrap · Style Dictionary · @property · Xcode · React · Vue · Flutter · SwiftUI · Compose · Android · JSON · Figma |
 
 ### Brand Studio
 
@@ -108,7 +108,7 @@ A typical design session bounces between a font site, a palette generator, a con
 - Create, open, rename, duplicate, delete (with undo) and favorite; last edited and last opened; search, a favorites filter, tags with a tag filter and four sort orders
 - **Compare** two projects side by side, and **version history** per project: a version every few minutes of editing and before risky actions like Surprise me or imports, with preview and undoable restore
 - **Share a brand as a link**: the brand is compressed into the link itself (no server); opening it asks before adding it as a new project
-- The open project **autosaves** while you work anywhere in the app
+- The open project **autosaves** while you work anywhere in the app, and in Chromium it can also write each project to a folder you choose (`.designhub.json` files you can keep in Git or a cloud folder)
 - **Import and export JSON**, one project or all of them (optionally with version history), validated and sanitized on import
 - Compare project values in a desktop table or stacked property cards on phones, with highlighted differences and readable status labels
 
@@ -148,13 +148,13 @@ A typical design session bounces between a font site, a palette generator, a con
 - Browse by collection, with license information
 - Browse by topic before you search: 10 curated packs of 24 icons (UI essentials, arrows, brands, developer, design, commerce, communication, media, files, weather), plus one-click search suggestions
 - Restyle: color, stroke width, rounded or sharp corners, rotate, flip, padding and background shapes
-- Exports: **SVG, React (TSX), Vue, Svelte, Angular, SolidJS, Qwik and Lit components, CSS data URI, PNG (16–1024 px) and ICO**
+- Exports: **SVG, React (TSX), Vue, Svelte, Angular, SolidJS, Qwik, Lit and Astro components, CSS data URI, PNG (16–1024 px) and ICO**
 - Favicon generator: `favicon.ico`, `icon.svg`, Apple touch icon, PWA icons, `site.webmanifest` and HTML - zipped
 
 ### Export Engine
 
 - One shared design-token model built live from every studio
-- Generates **CSS variables, SCSS, a Sass map, Less, Stylus, Tailwind v4 `@theme`, Tailwind v3 config, a JavaScript module, UnoCSS, Panda CSS and Chakra UI v3 themes, a shadcn/ui theme, Figma Variables JSON, a Style Dictionary build, a React Native theme, Bootstrap 5 Sass variables, React theme, styled-components / Emotion theme, Vue theme, Flutter `ThemeData`, SwiftUI, Jetpack Compose, Android `colors.xml`, JSON and YAML tokens** (W3C DTCG format) and **Tokens Studio for Figma** JSON
+- Generates **CSS variables, SCSS, a Sass map, Less, Stylus, Tailwind v4 `@theme`, Tailwind v3 config, a JavaScript module, UnoCSS, Panda CSS and Chakra UI v3 themes, a shadcn/ui theme, Figma Variables JSON, a Style Dictionary build, a React Native theme, Bootstrap 5 Sass variables, typed CSS `@property` registrations, Xcode asset catalog color sets, React theme, styled-components / Emotion theme, Vue theme, Flutter `ThemeData`, SwiftUI, Jetpack Compose, Android `colors.xml`, JSON and YAML tokens** (W3C DTCG format) and **Tokens Studio for Figma** JSON
 - Semantic roles (primary, accent, foreground, background) inferred from your palette
 - 8px spacing scale and 12px radius scale, both configurable
 - Live preview UI kit, one-click copy, **Download JSON**, all formats as `.zip`, preview PNG and a PDF style guide
@@ -164,7 +164,7 @@ A typical design session bounces between a font site, a palette generator, a con
 
 ### Background Studio
 
-- Twenty-nine procedural generators: **waves, blobs, mesh gradients, aurora, noise texture, dots, grid, isometric, rings, concentric squares, argyle, checks, plus signs, crosshatch, triangles, squiggle, low poly, voronoi cells, circuit board, halftone, bokeh, starfield, confetti, chevron, zigzag, hexagons, sunburst, topographic contours and stripes**
+- Thirty procedural generators: **waves, blobs, mesh gradients, aurora, noise texture, dots, grid, isometric, rings, concentric squares, argyle, checks, plus signs, crosshatch, triangles, squiggle, low poly, voronoi cells, circuit board, halftone, bokeh, starfield, confetti, chevron, zigzag, spirograph, hexagons, sunburst, topographic contours and stripes**
 - Seeded and deterministic - every seed reproduces exactly; **Randomize** (or `Space`) rolls a new one
 - Shared controls for colors (or one click to use your Color Studio palette), density, scale, rotation and canvas size (desktop, Full HD, Open Graph, square, story)
 - Blobs are smoothed with **Paper.js** (loaded on demand); noise uses SVG `feTurbulence`
@@ -180,6 +180,7 @@ A typical design session bounces between a font site, a palette generator, a con
 - **Long shadow** - the flat-design shadow at any angle, for boxes or text, with an optional fade
 - **Gradient text** - text filled with the Color Studio gradient, with an optional animated shift and a solid fallback
 - **Skeleton** - the loading placeholder shimmer in the brand's neutrals, static under reduced motion
+- **Focus ring** - a double `:focus-visible` ring with a built-in WCAG contrast check and a one-click fix
 - **Text outline** - outlined text with an optional offset shadow copy and a solid fallback
 - **Glow generator** - color, radius and intensity with optional text glow
 - **Border generator** - gradient borders with no extra markup, and animated conic borders via `@property` (respects reduced motion)
@@ -196,7 +197,7 @@ A typical design session bounces between a font site, a palette generator, a con
 - **Fill & stroke editor** for the selected element or every shape at once
 - **Optimization engine** (built on svgson): metadata and editor-data removal, id cleanup, group collapsing, precision control, shortest absolute/relative path data, color shortening, style-to-attribute conversion - scripts and event handlers are always stripped
 - **Minify** or **pretty print**, with byte savings
-- Converters: **SVG → JSX, SVG → React component (TypeScript), SVG → React Native** (react-native-svg) and **SVG → Vue**, **SVG → Svelte**, **SVG → Angular** and **SVG → SolidJS** components, plus a **CSS data URI** that is shorter than base64
+- Converters: **SVG → JSX, SVG → React component (TypeScript), SVG → React Native** (react-native-svg) and **SVG → Vue**, **SVG → Svelte**, **SVG → Angular** and **SVG → SolidJS**, **SVG → Qwik** and **SVG → Lit** components, plus a **CSS data URI** that is shorter than base64
 - **Sprite generator**: combine many SVGs into one `<symbol>` sprite with namespaced ids and usage snippets
 - **Download optimized SVG**
 
@@ -302,7 +303,7 @@ The most used shortcuts are below. See [docs/shortcuts.md](docs/shortcuts.md) fo
 
 | Keys                   | Action                                                                                                                                                                                                                           |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `⌘K` / `Ctrl K` or `/` | Command palette: studios, fonts, icons, brand projects and brand downloads                                                                                                                                                       |
+| `⌘K` / `Ctrl K` or `/` | Command palette: studios, fonts, icons, brand projects, brand downloads and languages                                                                                                                                            |
 | `?`                    | Show all shortcuts                                                                                                                                                                                                               |
 | `⌥T`                   | Toggle dark / light theme                                                                                                                                                                                                        |
 | `G` then a letter      | Go to a studio: `H` Home, `R` Brand, `D` Brand DNA, `L` Logo, `M` Mockups, `O` Social, `U` Guidelines, `P` Projects, `T` Typography, `C` Colors, `I` Icons, `B` Backgrounds, `F` Effects, `S` SVG, `A` Accessibility, `E` Export |
