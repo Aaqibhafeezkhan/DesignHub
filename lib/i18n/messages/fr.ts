@@ -94,6 +94,8 @@ export const fr = {
   "command.group.brand": "Marque",
   "command.group.fonts": "Polices",
   "command.group.icons": "Icônes",
+  "command.group.language": "Langue",
+  "command.currentLanguage": "Langue actuelle",
   "command.shortcuts": "Raccourcis clavier",
   "command.github": "Voir le code source sur GitHub",
   "command.searchIcons": "Rechercher des icônes pour “{term}”",

@@ -93,6 +93,8 @@ export const es = {
   "command.group.brand": "Marca",
   "command.group.fonts": "Fuentes",
   "command.group.icons": "Iconos",
+  "command.group.language": "Idioma",
+  "command.currentLanguage": "Idioma actual",
   "command.shortcuts": "Atajos de teclado",
   "command.github": "Ver el código en GitHub",
   "command.searchIcons": "Buscar iconos de “{term}”",

@@ -92,6 +92,8 @@ export const hi = {
   "command.group.brand": "ब्रांड",
   "command.group.fonts": "फ़ॉन्ट",
   "command.group.icons": "आइकन",
+  "command.group.language": "भाषा",
+  "command.currentLanguage": "वर्तमान भाषा",
   "command.shortcuts": "कीबोर्ड शॉर्टकट",
   "command.github": "GitHub पर सोर्स देखें",
   "command.searchIcons": "“{term}” के आइकन खोजें",

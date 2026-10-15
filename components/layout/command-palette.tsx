@@ -7,6 +7,7 @@ import { useRef, type ReactNode } from "react";
 
 import { FontCommands } from "@/components/layout/font-commands";
 import { IconCommands } from "@/components/layout/icon-commands";
+import { LanguageCommands } from "@/components/layout/language-commands";
 import { GithubIcon } from "@/components/layout/github-icon";
 import { useI18n } from "@/components/layout/locale-provider";
 import { useThemeToggle } from "@/components/layout/theme-toggle";
@@ -71,6 +72,7 @@ export function CommandPalette({ children }: { children?: ReactNode }) {
           <CommandInput ref={inputRef} value={query} onValueChange={setQuery} placeholder={t("command.placeholder")} />
           <CommandList>
             <CommandEmpty>{t("command.empty", { query })}</CommandEmpty>
+            {open ? <LanguageCommands query={query} onDone={() => setOpen(false)} /> : null}
             {children}
             {open ? <FontCommands query={query} onDone={() => setOpen(false)} /> : null}
             {open ? <BrandCommands onDone={() => setOpen(false)} /> : null}
