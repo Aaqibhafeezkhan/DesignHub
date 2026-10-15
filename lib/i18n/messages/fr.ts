@@ -149,6 +149,25 @@ export const fr = {
     "Ajoute aux exports les versions enregistrées de chaque projet. Les liens de partage ne les contiennent jamais.",
   "projects.file": "Fichier de projet",
   "projects.new": "Nouveau projet",
+  "projects.folder.title": "Enregistrement automatique dans un dossier",
+  "projects.folder.hint":
+    "Écrit aussi chaque projet sous forme de fichier .designhub.json dans un dossier de cet ordinateur, pour que les projets survivent à l'effacement des données du site et puissent vivre dans Git ou un dossier cloud.",
+  "projects.folder.choose": "Choisir un dossier",
+  "projects.folder.change": "Changer de dossier",
+  "projects.folder.stop": "Arrêter",
+  "projects.folder.saveNow": "Enregistrer maintenant",
+  "projects.folder.allow": "Autoriser l'accès",
+  "projects.folder.active": "Enregistrement dans {name}",
+  "projects.folder.savedAt": "dernier enregistrement {time}",
+  "projects.folder.notSaved": "rien d'enregistré pour l'instant",
+  "projects.folder.saving": "enregistrement...",
+  "projects.folder.needsPermission":
+    "Votre navigateur a de nouveau besoin de votre autorisation pour écrire dans {name}.",
+  "projects.folder.error.write":
+    "Impossible d'écrire dans le dossier. Vérifiez qu'il existe toujours et qu'il reste de la place.",
+  "projects.folder.error.pick": "Impossible d'ouvrir le sélecteur de dossier.",
+  "projects.folder.error.denied": "L'autorisation d'écrire dans le dossier n'a pas été accordée.",
+  "projects.folder.error.missing": "Dossier introuvable. Choisissez-le à nouveau.",
   "projects.storageBlocked":
     "Ce navigateur bloque le stockage local, donc les projets ne durent que jusqu'à la fermeture de l'onglet. Exportez-les en JSON pour en garder une copie.",
   "projects.loading": "Chargement des projets",

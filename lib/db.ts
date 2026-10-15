@@ -20,11 +20,20 @@ export type CachedIconRecord = {
   cachedAt: number;
 };
 
+/** The folder DesignHub also writes projects to. Directory handles are structured-cloneable, so they live in IndexedDB. */
+export type FolderRecord = {
+  key: string;
+  handle: FileSystemDirectoryHandle;
+  name: string;
+  connectedAt: number;
+};
+
 type DesignHubDatabase = Dexie & {
   kv: EntityTable<KeyValueRecord, "key">;
   icons: EntityTable<CachedIconRecord, "id">;
   projects: EntityTable<BrandProject, "id">;
   versions: EntityTable<ProjectVersion, "id">;
+  handles: EntityTable<FolderRecord, "key">;
 };
 
 /** Opens the database. Dexie is loaded on first use, so it stays out of every page's first load. */
@@ -42,6 +51,14 @@ async function createDatabase(): Promise<DesignHubDatabase> {
     icons: "id, cachedAt",
     projects: "id, updatedAt, lastOpenedAt",
     versions: "id, projectId, createdAt",
+  });
+  // v5: the local folder for project autosave. Only a new table, so older databases keep every row.
+  db.version(5).stores({
+    kv: "key, updatedAt",
+    icons: "id, cachedAt",
+    projects: "id, updatedAt, lastOpenedAt",
+    versions: "id, projectId, createdAt",
+    handles: "key",
   });
   // An older tab must let go, or this tab's upgrade would block forever.
   db.on("versionchange", () => {
@@ -116,7 +133,8 @@ export const indexedDbStorage: StateStorage = {
 /** Removes every locally stored DesignHub record. */
 export async function clearLocalData(): Promise<void> {
   await safeDb(
-    (db) => Promise.all([db.kv.clear(), db.icons.clear(), db.projects.clear(), db.versions.clear()]),
+    (db) =>
+      Promise.all([db.kv.clear(), db.icons.clear(), db.projects.clear(), db.versions.clear(), db.handles.clear()]),
     undefined,
   );
 }

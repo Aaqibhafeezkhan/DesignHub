@@ -23,9 +23,18 @@ export async function getProject(id: string): Promise<BrandProject | undefined> 
   return project && withTags(project);
 }
 
+const savedListeners = new Set<(id: string) => void>();
+
+/** Calls `listener` with the project id after every save (autosave, rename, import...). Returns an unsubscribe. */
+export function onProjectSaved(listener: (id: string) => void): () => void {
+  savedListeners.add(listener);
+  return () => void savedListeners.delete(listener);
+}
+
 export async function saveProject(project: BrandProject): Promise<void> {
   memory.set(project.id, project);
   await safeDb((db) => db.projects.put(project), undefined);
+  for (const listener of savedListeners) listener(project.id);
 }
 
 export async function updateProject(id: string, patch: Partial<Omit<BrandProject, "id">>): Promise<void> {

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 
 import { saveActiveProject } from "@/lib/projects/actions";
+import { flushFolderSync, initFolderSync } from "@/lib/projects/folder-sync";
 import { subscribeToSnapshot } from "@/lib/projects/snapshot";
 
 const DELAY = 800;
@@ -10,6 +11,8 @@ const DELAY = 800;
 /** Keeps the open project in sync with edits made in any studio. Renders nothing. */
 export function ProjectAutosave() {
   useEffect(() => {
+    // Reconnects the saved folder (if any) so edits are written to it on every page, not only Brand Projects.
+    void initFolderSync();
     let timer: ReturnType<typeof setTimeout> | undefined;
     const flush = () => {
       clearTimeout(timer);
@@ -21,7 +24,9 @@ export function ProjectAutosave() {
       timer = setTimeout(flush, DELAY);
     });
     const onHide = () => {
-      if (document.visibilityState === "hidden" && timer) flush();
+      if (document.visibilityState !== "hidden") return;
+      if (timer) flush();
+      flushFolderSync();
     };
     document.addEventListener("visibilitychange", onHide);
     return () => {

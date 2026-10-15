@@ -10,6 +10,7 @@ DesignHub has no accounts and no server. Everything you make is saved in your ow
 | IndexedDB     | `designhub` database, `icons` table         | Icons you have opened, cached so Icon Studio keeps working offline.                                                                    |
 | IndexedDB     | `designhub` database, `projects` table      | Your brand projects: one full snapshot of the brand per project.                                                                       |
 | IndexedDB     | `designhub` database, `versions` table      | Version history: up to 20 earlier snapshots per project, deleted with the project.                                                     |
+| IndexedDB     | `designhub` database, `handles` table       | The folder you chose for autosave (a directory handle, never its contents). Chromium browsers only.                                    |
 | localStorage  | `theme`                                     | Your light or dark theme choice (written by `next-themes`).                                                                            |
 | localStorage  | `designhub:locale`                          | The interface language you picked (`en` or `es`). Without it, DesignHub follows your browser language.                                 |
 | localStorage  | `designhub:panes:<studio>`                  | How wide you dragged each studio pane. Double-click a divider to reset it.                                                             |
@@ -50,6 +51,18 @@ Each project keeps up to 20 versions in the `versions` table (added in database 
 - just before Surprise me, a token import, Brand DNA's Apply to brand, a share link import or loading a saved palette.
 
 A version identical to the newest one is skipped, and the oldest is dropped once a project has 20. **History** on a project card lists them with a preview of what each one changes. Restoring keeps the replaced state as a new version, and the toast's **Undo** puts it straight back. Deleting a project deletes its history (undoing the delete brings both back). History is not included in project exports or share links.
+
+## Autosave to a folder (Chromium)
+
+In Chrome, Edge, Brave and other Chromium browsers, **Brand Projects** has an **Autosave to a folder** control. Pick a folder on your computer and DesignHub also writes every project there as `<project-name>-<project-id>.designhub.json` (the same file **Export** produces, without history), so your work survives clearing site data and can live in Git or a cloud-synced folder. Firefox and Safari don't offer folder access to websites, so the control is hidden there and everything works as before.
+
+- **When it writes:** about 1.5 seconds after a project is saved (itself a moment after your last edit), one file at a time. A file that already holds the same project is left alone, so reloading never touches your files. **Save now** writes every project at once.
+- **File names:** the slugified project name (at most 40 characters), a hyphen and the project id. Renaming a project writes the new file and removes the old one with the same id. DesignHub only ever creates, overwrites or removes `*.designhub.json` files directly inside the chosen folder, never in subfolders or anywhere else. Deleting a project in DesignHub does not delete its file.
+- **The folder is remembered:** the directory handle is stored in the `handles` table (added in database version 5; older databases upgrade in place and keep every row), not the files themselves. After a reload the browser may require permission again before DesignHub can write. The control then shows **Allow access**, and one click restores autosave. If the browser still remembers the permission, nothing is asked.
+- **Status:** the control shows the folder name, when the last write finished, and a message if something failed (permission refused, folder moved or deleted, disk full). Failed writes are retried the next time something saves or you click **Save now**.
+- **Stop:** forgets the folder and removes the saved handle. The files already in the folder stay.
+
+Importing a file from the folder works like any other import, from **Import** on the same page.
 
 ## Private browsing and blocked storage
 

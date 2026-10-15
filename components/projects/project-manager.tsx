@@ -19,6 +19,7 @@ import { toast } from "sonner";
 
 import { useI18n } from "@/components/layout/locale-provider";
 import { copyShareLink } from "@/components/projects/copy-share-link";
+import { FolderAutosave } from "@/components/projects/folder-autosave";
 import { ProjectCard } from "@/components/projects/project-card";
 import { ProjectCompare } from "@/components/projects/project-compare";
 import { ProjectHistory } from "@/components/projects/project-history";
@@ -267,6 +268,8 @@ export function ProjectManager() {
           </Label>
         </div>
       </div>
+
+      <FolderAutosave />
 
       {!persistent ? (
         <p role="status" className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm">
