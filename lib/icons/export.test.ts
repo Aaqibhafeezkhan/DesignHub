@@ -131,6 +131,42 @@ describe("icon exports", () => {
     expect(lit?.code).not.toMatch(/[^\\]`\$\{x\}/);
   });
 
+  test("React Native component uses react-native-svg elements and spreads props on the Svg", () => {
+    const native = iconExports("tabler:brand-github", icon, defaultIconStyle).find((format) => format.id === "native");
+    expect(native?.label).toBe("React Native");
+    expect(native?.filename).toBe("BrandGithubIcon.native.tsx");
+    expect(native?.language).toBe("tsx");
+    expect(native?.code).toContain('import type { SvgProps } from "react-native-svg";');
+    expect(native?.code).toContain('import Svg, { G, Path } from "react-native-svg";');
+    expect(native?.code).toContain("export function BrandGithubIcon(props: SvgProps) {");
+    expect(native?.code).toMatch(/<Svg [^>]*viewBox="0 0 1000 1000"[^>]*\{\.\.\.props\}>/);
+    expect(native?.code).toContain('strokeWidth="2"');
+    expect(native?.code).toContain('stroke="currentColor"');
+    expect(native?.code).not.toMatch(/<(svg|path|g)[ >]/);
+    expect(native?.code).not.toContain("xmlns");
+  });
+
+  test("React Native component for an icon with a gradient keeps the gradient stops", () => {
+    const gradient = {
+      ...icon,
+      body: '<defs><linearGradient id="g"><stop offset="0" stop-color="#f00"/><stop offset="1" stop-color="#00f"/></linearGradient></defs><path fill="url(#g)" d="M0 0h24v24H0z"/>',
+    };
+    const native = iconExports("tabler:brand-github", gradient, defaultIconStyle).find(
+      (format) => format.id === "native",
+    );
+    expect(native?.code).toContain("LinearGradient");
+    expect(native?.code).toContain("stopColor");
+  });
+
+  test("React Native component notes the <style> rules it drops", () => {
+    const styled = { ...icon, body: "<style>.a{fill:red}</style><path class='a' d='M0 0h24'/>" };
+    const native = iconExports("tabler:brand-github", styled, defaultIconStyle).find(
+      (format) => format.id === "native",
+    );
+    expect(native?.code).toContain("// Note: <style> isn't supported");
+    expect(native?.code).not.toContain("fill:red");
+  });
+
   test("Astro component reads size and color from Astro.props and spreads the rest on the svg", () => {
     const astro = iconExports("tabler:brand-github", icon, { ...defaultIconStyle, color: "#ef4444" }).find(
       (format) => format.id === "astro",
