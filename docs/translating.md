@@ -61,8 +61,13 @@ Start the application using the instructions in the repository README. Use the l
 
 ## 7. Capture screenshots
 
-Include screenshots showing the language switcher and examples of the translated interface when submitting a translation change. Capture the application itself, not just the source code. Make sure the selected language and any overflow problems are easy to see.
+Include screenshots that show the language switcher and the translated interface when contributing translation changes.
 
+The existing Home screenshot can be used as a visual reference:
+
+![DesignHub Home screenshot showing the language selector](screenshots/home.png)
+
+To capture an updated screenshot, run the application, select a language using the header language switcher, and take a screenshot of the application. Save the image in `docs/screenshots/` and link it from this guide.
 ## 8. Final checklist
 
 - [ ] Translation keys match the English catalog.
