@@ -68,6 +68,7 @@ The existing Home screenshot can be used as a visual reference:
 ![DesignHub Home screenshot showing the language selector](screenshots/home.png)
 
 To capture an updated screenshot, run the application, select a language using the header language switcher, and take a screenshot of the application. Save the image in `docs/screenshots/` and link it from this guide.
+
 ## 8. Final checklist
 
 - [ ] Translation keys match the English catalog.

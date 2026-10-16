@@ -1,7 +1,7 @@
 <div align="center">
 
 <img src="app/icon.svg" width="64" height="64" alt="DesignHub logo" />
- 
+
 # DesignHub
 
 **Stop opening 15 design websites. Open one.**
