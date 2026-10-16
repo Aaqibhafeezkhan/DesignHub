@@ -48,6 +48,10 @@ Exported assets, such as tokens, logo packs, social assets and the brand book, a
 
 See the [storage guide](storage.md#back-up-your-work).
 
+## Something is not working. Where do I look?
+
+See the [troubleshooting guide](troubleshooting.md) for work lost after clearing site data, fonts or icons failing offline, blocked downloads, folder autosave permissions, old versions after an update, language problems and how to reset everything.
+
 ## How do I add a new mockup or social template?
 
 Follow the Mockup and social template guidelines in the [Contributing guide](../CONTRIBUTING.md), which explains how to add and register templates.
