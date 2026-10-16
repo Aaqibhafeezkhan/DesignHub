@@ -3,9 +3,12 @@ import { describe, expect, test } from "vitest";
 import { contrastRatio, fromHex, parseColor, toHex } from "@/lib/color/color";
 import {
   tokenFormats,
+  toAndroidColors,
+  toAndroidTheme,
   toBootstrapVariables,
   toChakraTheme,
   toCss,
+  toCssLightDark,
   toCssProperties,
   toFigmaVariables,
   toShadcnTheme,
@@ -21,6 +24,7 @@ import {
   toYaml,
   yamlString,
 } from "@/lib/tokens/formats";
+import { xmlError } from "@/lib/test/xml";
 import type { DesignTokens } from "@/types/tokens";
 
 const tokens = (prefix = ""): DesignTokens => ({
@@ -679,5 +683,82 @@ describe("Xcode asset catalog", () => {
       "Foreground.colorset/Contents.json",
       "Background.colorset/Contents.json",
     ]);
+  });
+});
+
+/** Typed tokens whose primary has a 300 shade, so dark mode lifts it. */
+const themed = (prefix = ""): DesignTokens => ({
+  ...typed(prefix),
+  colors: [
+    { name: "indigo", value: fromHex("#6366f1"), shades: [{ step: 300, value: fromHex("#a5b4fc") }] },
+    { name: "slate", value: fromHex("#0f172a"), shades: [{ step: 300, value: fromHex("#cbd5e1") }] },
+  ],
+  semantic: [
+    { name: "primary", ref: "indigo", value: fromHex("#6366f1") },
+    { name: "accent", ref: "indigo", value: fromHex("#6366f1") },
+    { name: "foreground", ref: "slate", value: fromHex("#0f172a") },
+    { name: "background", ref: "white", value: fromHex("#ffffff") },
+  ],
+});
+
+describe("CSS light-dark()", () => {
+  test("writes a role as light-dark() with color-scheme on :root", () => {
+    const css = toCssLightDark(themed());
+    expect(css).toContain(":root {\n  color-scheme: light dark;");
+    expect(css).toContain("--color-primary: light-dark(#6366f1, #a5b4fc);");
+    // Background and foreground swap in dark mode.
+    expect(css).toContain("--color-background: light-dark(#ffffff, #0f172a);");
+  });
+
+  test("uses the same names and prefix as the CSS variables export", () => {
+    const names = (css: string) => css.match(/--[\w-]+(?=:)/g) ?? [];
+    const dark = names(toCssLightDark(themed("brand")));
+    expect(dark).toContain("--brand-color-primary");
+    const plain = names(toCss(themed("brand")));
+    dark.forEach((name) => expect(plain).toContain(name));
+  });
+
+  test("is registered in the Export Engine", () => {
+    expect(tokenFormats(themed()).find((format) => format.id === "css-light-dark")?.filename).toBe("light-dark.css");
+  });
+});
+
+describe("Android Material 3 theme", () => {
+  const item = (xml: string, name: string) => new RegExp(`<item name="${name}">([^<]*)</item>`).exec(xml)?.[1];
+
+  test("maps primary, surface and outline for light and dark", () => {
+    const light = toAndroidTheme(themed());
+    const dark = toAndroidTheme(themed(), true);
+    expect(light).toContain('parent="Theme.Material3.DayNight.NoActionBar"');
+    expect(item(light, "colorPrimary")).toBe("@color/primary");
+    expect(item(dark, "colorPrimary")).toBe("@color/indigo_300");
+    expect(item(light, "colorSurface")).toBe("@color/background");
+    expect(item(dark, "colorSurface")).toBe("@color/foreground");
+    expect(item(light, "colorOnSurface")).toBe("@color/foreground");
+    // Same pick as Compose: whichever of white and black contrasts more with #6366f1.
+    expect(item(light, "colorOnPrimary")).toBe("@android:color/black");
+    expect(item(light, "android:colorBackground")).toBe("@color/background");
+    expect(item(light, "colorOutline")).toMatch(/^#FF[0-9A-F]{6}$/);
+    expect(item(light, "colorOutline")).not.toBe(item(dark, "colorOutline"));
+    expect(item(light, "colorPrimaryContainer")).toMatch(/^#FF[0-9A-F]{6}$/);
+  });
+
+  test("only references colors that colors.xml defines", () => {
+    const colors = toAndroidColors(themed("brand"));
+    for (const dark of [false, true]) {
+      const xml = toAndroidTheme(themed("brand"), dark);
+      for (const [, id] of xml.matchAll(/@color\/(\w+)/g)) expect(colors).toContain(`<color name="${id}">`);
+    }
+  });
+
+  test("is well-formed XML", () => {
+    expect(xmlError(toAndroidTheme(themed()))).toBeNull();
+    expect(xmlError(toAndroidTheme(themed(), true))).toBeNull();
+    expect(xmlError(toAndroidTheme({ ...themed(), meta: { ...themed().meta, name: "A -- B & <C>" } }))).toBeNull();
+  });
+
+  test("both files are separate ExportFormat entries", () => {
+    const files = tokenFormats(themed()).filter((format) => format.id.startsWith("android-theme"));
+    expect(files.map((format) => format.filename)).toEqual(["themes.xml", "values-night/themes.xml"]);
   });
 });

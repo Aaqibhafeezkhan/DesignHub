@@ -283,6 +283,70 @@ const upperFirst = (value: string) => value.charAt(0).toUpperCase() + value.slic
 const white: Oklch = { l: 1, c: 0, h: 0, alpha: 1 };
 const black: Oklch = { l: 0, c: 0, h: 0, alpha: 1 };
 
+/** A Material 3 color slot: `key` names its source token (see ColorEntry) or "white"/"black"; derived colors have none. */
+export type MaterialSlot = { slot: string; key?: string; value: Oklch };
+
+/** Moves `from` toward `to` by `amount` (0 to 1) in lightness and chroma, keeping the hue of `from`. */
+function mixToward(from: Oklch, to: Oklch, amount: number): Oklch {
+  return {
+    l: from.l + (to.l - from.l) * amount,
+    c: from.c + (to.c - from.c) * amount,
+    h: from.h,
+    alpha: 1,
+  };
+}
+
+/**
+ * The Material 3 color scheme for the brand roles, shared by the Compose theme and the Android
+ * themes.xml so both agree. Slots use Compose names (`primary`, `onPrimary`, `outline`, ...).
+ * Outline and the containers are derived from the roles: outline sits halfway between foreground
+ * and background, containers are the brand color pulled toward the background.
+ */
+export function materialSlots(tokens: DesignTokens, dark: boolean): MaterialSlot[] {
+  const slots: MaterialSlot[] = [];
+  const keyOf = (entry: RoleColor) =>
+    entry.step !== undefined ? `${entry.color}/${entry.step}` : `role:${entry.role}`;
+  const on = (value: Oklch) => (contrastRatio(value, white) >= contrastRatio(value, black) ? "white" : "black");
+  const onSlot = (slot: string, value: Oklch) => {
+    const key = on(value);
+    slots.push({ slot, key, value: key === "white" ? white : black });
+  };
+  const background = roleColor(tokens, "background", dark);
+  const foreground = roleColor(tokens, "foreground", dark);
+  const brand = (slot: string, roleName: string) => {
+    const entry = roleColor(tokens, roleName, dark);
+    if (!entry) return;
+    slots.push({ slot, key: keyOf(entry), value: entry.value });
+    onSlot(`on${upperFirst(slot)}`, entry.value);
+  };
+  brand("primary", "primary");
+  brand("secondary", "accent");
+  if (background) {
+    slots.push({ slot: "background", key: keyOf(background), value: background.value });
+    slots.push({ slot: "surface", key: keyOf(background), value: background.value });
+  }
+  if (foreground) {
+    slots.push({ slot: "onBackground", key: keyOf(foreground), value: foreground.value });
+    slots.push({ slot: "onSurface", key: keyOf(foreground), value: foreground.value });
+  }
+  if (background && foreground) {
+    slots.push({ slot: "outline", value: mixToward(foreground.value, background.value, 0.5) });
+  }
+  if (background) {
+    for (const [slot, roleName] of [
+      ["primary", "primary"],
+      ["secondary", "accent"],
+    ] as const) {
+      const entry = roleColor(tokens, roleName, dark);
+      if (!entry) continue;
+      const container = mixToward(entry.value, background.value, dark ? 0.7 : 0.8);
+      slots.push({ slot: `${slot}Container`, value: container });
+      onSlot(`on${upperFirst(slot)}Container`, container);
+    }
+  }
+  return slots;
+}
+
 /** Material 3 shape slots, smallest to largest, and the radius step each one uses. */
 const composeShapes: [slot: string, radius: string][] = [
   ["extraSmall", "sm"],
@@ -304,8 +368,6 @@ export function toComposeTheme(tokens: DesignTokens): string {
   const members = new Map(colors.map((color) => [color.key, `${name}Colors.${color.id}`]));
   // Refer to the colors object where the token survived de-duplication, otherwise inline the value.
   const color = (key: string, value: Oklch) => members.get(key) ?? argbColor(value);
-  const on = (value: Oklch) =>
-    contrastRatio(value, white) >= contrastRatio(value, black) ? "Color.White" : "Color.Black";
   const dps = (items: { name: string; px: number }[]) =>
     unique(items.map((item) => ({ id: kotlinMember(ident(item.name, "s")), name: item.name, px: item.px })));
   const spacing = dps(tokens.spacing);
@@ -313,28 +375,18 @@ export function toComposeTheme(tokens: DesignTokens): string {
   const body = (lines: string[]) => (lines.length ? `\n${lines.join("\n")}\n` : "");
   const t = tokens.typography;
 
-  /** A semantic role as a color reference: the lifted shade in dark mode, otherwise the role itself. */
-  const role = (roleName: string, dark: boolean) => {
-    const entry = roleColor(tokens, roleName, dark);
-    if (!entry) return undefined;
-    return entry.step !== undefined
-      ? { code: color(`${entry.color}/${entry.step}`, entry.value), value: entry.value }
-      : { code: color(`role:${entry.role}`, entry.value), value: entry.value };
-  };
-  const scheme = (dark: boolean) => {
-    const lines: string[] = [];
-    const brand = (slot: string, roleName: string) => {
-      const entry = role(roleName, dark);
-      if (entry) lines.push(`    ${slot} = ${entry.code},`, `    on${upperFirst(slot)} = ${on(entry.value)},`);
-    };
-    brand("primary", "primary");
-    brand("secondary", "accent");
-    const background = role("background", dark);
-    const foreground = role("foreground", dark);
-    if (background) lines.push(`    background = ${background.code},`, `    surface = ${background.code},`);
-    if (foreground) lines.push(`    onBackground = ${foreground.code},`, `    onSurface = ${foreground.code},`);
-    return lines;
-  };
+  const scheme = (dark: boolean) =>
+    materialSlots(tokens, dark).map((slot) => {
+      const code =
+        slot.key === "white"
+          ? "Color.White"
+          : slot.key === "black"
+            ? "Color.Black"
+            : slot.key
+              ? color(slot.key, slot.value)
+              : argbColor(slot.value);
+      return `    ${slot.slot} = ${code},`;
+    });
   const shapes = composeShapes.flatMap(([slot, step]) => {
     const item = radius.find((entry) => entry.name === step);
     return item ? [`    ${slot} = RoundedCornerShape(${name}Radius.${item.id}),`] : [];

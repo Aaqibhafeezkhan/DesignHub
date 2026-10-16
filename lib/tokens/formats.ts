@@ -4,6 +4,7 @@ import { gradientCss, gradientCssFallback } from "@/lib/color/gradient";
 import { fontStack } from "@/lib/typography/css";
 import { siteConfig } from "@/lib/site";
 import {
+  materialSlots,
   roleColor,
   toComposeTheme,
   toFlutterTheme,
@@ -216,40 +217,80 @@ ${groups}
 `;
 }
 
-/** Android `res/values/colors.xml`: palette, shades and semantic roles as #AARRGGBB resources. */
-export function toAndroidColors(tokens: DesignTokens): string {
+/** Android resource names allow only lowercase letters, digits and underscores, and can't start with a digit. */
+function androidResource(tokens: DesignTokens, name: string): string {
   const prefix = tokens.meta.prefix ? `${tokens.meta.prefix}_` : "";
-  // Resource names allow only lowercase letters, digits and underscores, and can't start with a digit.
-  const resource = (name: string) => {
-    const clean = `${prefix}${name}`
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "_")
-      .replace(/^_+|_+$/g, "");
-    return /^[0-9]/.test(clean) ? `c_${clean}` : clean;
-  };
-  const argb = (value: Oklch) => {
-    const { r, g, b, alpha } = toRgb(value);
-    return `#${[Math.round(alpha * 255), r, g, b]
-      .map((channel) => channel.toString(16).padStart(2, "0"))
-      .join("")
-      .toUpperCase()}`;
-  };
-  const seen = new Set<string>();
-  const lines: string[] = [];
+  const clean = `${prefix}${name}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+  return /^[0-9]/.test(clean) ? `c_${clean}` : clean;
+}
+
+const androidArgb = (value: Oklch) => {
+  const { r, g, b, alpha } = toRgb(value);
+  return `#${[Math.round(alpha * 255), r, g, b]
+    .map((channel) => channel.toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase()}`;
+};
+
+/** Every color written to colors.xml, by resource name. The first token to claim a name wins. */
+function androidColorResources(tokens: DesignTokens): Map<string, Oklch> {
+  const colors = new Map<string, Oklch>();
   const add = (name: string, value: Oklch) => {
-    const id = resource(name);
-    if (!id || seen.has(id)) return;
-    seen.add(id);
-    lines.push(`    <color name="${id}">${argb(value)}</color>`);
+    const id = androidResource(tokens, name);
+    if (id && !colors.has(id)) colors.set(id, value);
   };
   tokens.colors.forEach((token) => {
     add(token.name, token.value);
     token.shades.forEach((shade) => add(`${token.name}_${shade.step}`, shade.value));
   });
   tokens.semantic.forEach((role) => add(role.name, role.value));
-  // "--" is not allowed inside XML comments.
-  const comment = header(tokens, (text) => `<!-- ${text.replace(/-{2,}/g, "-")} -->`);
-  return `<?xml version="1.0" encoding="utf-8"?>\n${comment}\n<resources>\n${lines.join("\n")}\n</resources>\n`;
+  return colors;
+}
+
+/** "--" is not allowed inside XML comments. */
+const xmlHeader = (tokens: DesignTokens) => header(tokens, (text) => `<!-- ${text.replace(/-{2,}/g, "-")} -->`);
+
+/** Android `res/values/colors.xml`: palette, shades and semantic roles as #AARRGGBB resources. */
+export function toAndroidColors(tokens: DesignTokens): string {
+  const lines = [...androidColorResources(tokens)].map(
+    ([id, value]) => `    <color name="${id}">${androidArgb(value)}</color>`,
+  );
+  return `<?xml version="1.0" encoding="utf-8"?>\n${xmlHeader(tokens)}\n<resources>\n${lines.join("\n")}\n</resources>\n`;
+}
+
+/** Material 3 theme attribute for a slot. Only the window background lives in the android namespace. */
+const materialAttribute = (slot: string) =>
+  slot === "background" ? "android:colorBackground" : `color${slot.charAt(0).toUpperCase()}${slot.slice(1)}`;
+
+/**
+ * Android Material 3 theme: `res/values/themes.xml`, or `res/values-night/themes.xml` when `dark`.
+ * The slots come from materialSlots(), the same mapping the Compose export uses. Colors that exist
+ * in colors.xml are referenced as `@color/...`; derived ones (outline, containers) are written inline.
+ */
+export function toAndroidTheme(tokens: DesignTokens, dark = false): string {
+  const resources = androidColorResources(tokens);
+  const reference = (key: string | undefined, value: Oklch) => {
+    if (key === "white") return "@android:color/white";
+    if (key === "black") return "@android:color/black";
+    const id = key ? androidResource(tokens, key.startsWith("role:") ? key.slice(5) : key.replace("/", "_")) : "";
+    const stored = resources.get(id);
+    // A resource that lost its name to an earlier token holds another color, so write the value instead.
+    return stored && androidArgb(stored) === androidArgb(value) ? `@color/${id}` : androidArgb(value);
+  };
+  const items = materialSlots(tokens, dark).map(
+    (slot) => `        <item name="${materialAttribute(slot.slot)}">${reference(slot.key, slot.value)}</item>`,
+  );
+  return `<?xml version="1.0" encoding="utf-8"?>
+${xmlHeader(tokens)}
+<resources>
+    <style name="Theme.${pascal(tokens.meta.name) || "Brand"}" parent="Theme.Material3.DayNight.NoActionBar">
+${items.join("\n")}
+    </style>
+</resources>
+`;
 }
 
 /** Tailwind v4 reads design tokens from CSS `@theme` variables. */
@@ -1277,6 +1318,18 @@ export function toXcodeColorSets(tokens: DesignTokens): { name: string; role: st
   });
 }
 
+/** Semantic colors as `light-dark(light, dark)` so one declaration covers both themes. Names match toCss(). */
+export function toCssLightDark(tokens: DesignTokens): string {
+  const color = (value: Oklch) => formatColor(value, tokens.meta.colorFormat);
+  const lines = tokens.semantic.flatMap((item) => {
+    const light = roleColor(tokens, item.name);
+    const dark = roleColor(tokens, item.name, true);
+    if (!light || !dark) return [];
+    return [`  ${variable(tokens, `color-${item.name}`)}: light-dark(${color(light.value)}, ${color(dark.value)});`];
+  });
+  return `${header(tokens, (text) => `/* ${text} */`)}\n:root {\n  color-scheme: light dark;\n${lines.join("\n")}\n}\n`;
+}
+
 export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
   return [
     { id: "css", label: "CSS variables", filename: "tokens.css", language: "css", code: toCss(tokens) },
@@ -1286,6 +1339,13 @@ export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
       filename: "properties.css",
       language: "css",
       code: toCssProperties(tokens),
+    },
+    {
+      id: "css-light-dark",
+      label: "CSS light-dark()",
+      filename: "light-dark.css",
+      language: "css",
+      code: toCssLightDark(tokens),
     },
     { id: "scss", label: "SCSS", filename: "_tokens.scss", language: "scss", code: toScss(tokens) },
     {
@@ -1298,6 +1358,20 @@ export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
     { id: "less", label: "Less", filename: "tokens.less", language: "css", code: toLess(tokens) },
     { id: "stylus", label: "Stylus", filename: "tokens.styl", language: "css", code: toStylus(tokens) },
     { id: "android", label: "Android XML", filename: "colors.xml", language: "xml", code: toAndroidColors(tokens) },
+    {
+      id: "android-theme",
+      label: "Android Material 3 theme",
+      filename: "themes.xml",
+      language: "xml",
+      code: toAndroidTheme(tokens),
+    },
+    {
+      id: "android-theme-night",
+      label: "Android Material 3 theme (night)",
+      filename: "values-night/themes.xml",
+      language: "xml",
+      code: toAndroidTheme(tokens, true),
+    },
     { id: "tailwind-v4", label: "Tailwind v4", filename: "theme.css", language: "css", code: toTailwindV4(tokens) },
     {
       id: "tailwind-config",
