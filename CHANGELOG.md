@@ -58,6 +58,8 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Switch the interface language from the command palette: type "language" or a language name, in any supported language.
 - Unit tests for color names, ICO encoding and the favicon helpers; the favicon tests fixed an unescaped theme color in the generated `<meta>` tag.
 - Palette changes (a new palette, loading one from the library) are announced to screen readers.
+- A troubleshooting guide (`docs/troubleshooting.md`) for lost work, offline fonts, blocked downloads, folder autosave permissions, stale service workers and resetting.
+- Unit tests for the PNG and SVG credit helpers and the seeded random helpers. The credit tests fixed an exported SVG with a self-closing root getting the credit note after the element (invalid XML).
 
 #### Brand Studio
 
@@ -67,6 +69,8 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - A geometric logo mark generated from the brand name until an SVG is uploaded (uploads are sanitized).
 - Surprise me: a one-click random brand (palette, font pair, radius and shadow) that can be undone.
 - Import a brand from a W3C DTCG `tokens.json` (including the Export Engine's own): colors, fonts, radius and spacing go to their studios, with a summary and undo. The Brand JSON now includes the mission and values.
+- Import colors and fonts from pasted CSS: the most used colors (hex, rgb, hsl, oklch) and font families, with a preview, fonts outside the catalog listed but skipped, and undo.
+- Undo and redo for brand changes across every studio (`Cmd/Ctrl+Z`, `Cmd/Ctrl+Shift+Z` and command palette entries): snapshots after a pause in editing, up to 50 steps, ignored inside text fields.
 
 #### Brand DNA (beta)
 
@@ -120,6 +124,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Bandcamp header (975 x 180) and Product Hunt thumbnail (240 x 240) templates.
 - Twitch offline screen (1920 x 1080) and LinkedIn event cover (1776 x 444) templates.
 - Telegram channel cover (central 60 percent safe area), Substack publication banner and Spotify playlist cover templates.
+- DEV post cover (1000 x 420) and Hashnode blog cover (1600 x 840) templates.
 
 #### Brand Guidelines
 
@@ -205,10 +210,11 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - Export an icon as a Qwik component.
 - Export an icon as a Lit web component.
 - Export an icon as an Astro component.
+- Export an icon as a React Native SVG component (reusing the SVG Playground converter).
 
 #### Background Studio
 
-- Thirty procedural generators: waves, organic blobs (Paper.js smoothing), mesh gradients, aurora, noise textures, dot, grid and isometric patterns, concentric rings, checkerboard, low-poly mosaic, bokeh, confetti, chevron, honeycomb hexagons, sunburst, topographic contour lines, rotated stripes, plus signs, a starfield, Voronoi cells (computed in plain TypeScript, edge to edge), crosshatch, a circuit board with non-overlapping traces, halftone dots (linear, radial or seeded), triangles, squiggles, concentric squares, argyle, zigzag and a spirograph.
+- Thirty-one procedural generators: waves, organic blobs (Paper.js smoothing), mesh gradients, aurora, noise textures, dot, grid and isometric patterns, concentric rings, checkerboard, low-poly mosaic, bokeh, confetti, chevron, honeycomb hexagons, sunburst, topographic contour lines, rotated stripes, plus signs, a starfield, Voronoi cells (computed in plain TypeScript, edge to edge), crosshatch, a circuit board with non-overlapping traces, halftone dots (linear, radial or seeded), triangles, squiggles, concentric squares, argyle, zigzag, a spirograph and Truchet tiles.
 - Deterministic seeds with randomize (`Space`), color controls with a "use palette" shortcut, density, scale, rotation and canvas presets.
 - Exports: SVG, PNG (1× and 2×) and CSS backgrounds (native gradients where possible, inline SVG otherwise).
 - The dots, checks, chevron and hexagons patterns now follow the seed, so a new seed shifts them.
@@ -240,6 +246,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - An SVG to SolidJS component converter.
 - An SVG to Qwik component converter.
 - An SVG to Lit component converter.
+- An SVG to Astro component converter.
 
 #### Accessibility Lab
 
@@ -275,6 +282,7 @@ Released 2026-09-23. The first public release: a complete, local-first design an
 - A shadcn/ui theme (OKLCH, light and dark) and Figma Variables JSON for the variables REST API.
 - A Style Dictionary build (tokens plus config, checked against the real tool) and a React Native theme with light and dark colors.
 - Xcode asset catalog color sets (light and dark appearances) and typed CSS custom property registrations with `@property`.
+- A CSS `light-dark()` theme and a Material 3 `themes.xml` (with `values-night`) for Android that shares its role mapping with the Compose export.
 
 ### Performance
 
