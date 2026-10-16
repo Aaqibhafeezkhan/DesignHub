@@ -224,9 +224,13 @@ Background generators live in `lib/background/generators/` and are pure function
 
 ## Translating the interface
 
-UI text lives in typed message catalogs in `lib/i18n/messages/`. English (`en.ts`) is the source of truth; every other locale is a partial copy, and any key it leaves out shows in English. URLs never change with the language: the server renders English, and the browser switches to the viewer's choice (saved in `localStorage` as `designhub:locale`) or, when there is none, the first browser language with a translation.
+DesignHub stores UI translations in `lib/i18n/messages/`. English (`en.ts`) is the source of truth; other locales may be incomplete, and missing keys fall back to English. Supported locales currently include English, Spanish (`es`), French (`fr`) and Hindi (`hi`).
 
-The interface is available in English, Spanish (`es`), French (`fr`) and Hindi (`hi`). So far the app shell (navigation, header, command palette, theme and language controls), the home page, the Brand Studio, Brand Projects (including the compare and history dialogs) and the Color Studio are translated. The Hindi and French translations were not reviewed by native speakers, so wording fixes are very welcome. Generated assets (exports, templates, the brand book, CSS and token names) stay in English.
+To improve an existing translation or add a new language, follow the [Translation Guide](docs/translating.md). It explains how to edit catalogs, preserve keys and placeholders, register a locale, check fonts and text overflow, and test your changes.
+
+The language switcher lets users choose a locale. The choice is saved in `localStorage` as `designhub:locale`; otherwise, the browser's first language with a translation is used. URLs do not change with the selected language.
+
+Translation changes should preserve the existing message keys and placeholders. Run `pnpm test` and `pnpm check:dashes` before submitting your contribution.
 
 ### Using messages in a component
 
