@@ -56,7 +56,9 @@ export type SocialPlatform =
   | "Bandcamp"
   | "Telegram"
   | "Substack"
-  | "Spotify";
+  | "Spotify"
+  | "DEV"
+  | "Hashnode";
 
 export type SocialTemplate = {
   id: string;

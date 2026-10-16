@@ -41,6 +41,8 @@ test.each([
   ["telegram-cover", 1280, 720],
   ["substack-banner", 1100, 220],
   ["spotify-playlist-cover", 640, 640],
+  ["devto-cover", 1000, 420],
+  ["hashnode-cover", 1600, 840],
 ])("%s is registered at %ix%i and included in the full pack", (id, width, height) => {
   const template = getSocialTemplate(id);
   expect(template).toMatchObject({ width, height });

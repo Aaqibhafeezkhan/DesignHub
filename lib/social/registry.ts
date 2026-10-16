@@ -25,6 +25,8 @@ import { productHuntThumbnail } from "@/lib/social/templates/product-hunt-thumbn
 import { telegramCover } from "@/lib/social/templates/telegram";
 import { substackBanner } from "@/lib/social/templates/substack";
 import { spotifyPlaylistCover } from "@/lib/social/templates/spotify";
+import { devtoCover } from "@/lib/social/templates/devto";
+import { hashnodeCover } from "@/lib/social/templates/hashnode";
 import type { SocialPlatform, SocialTemplate } from "@/lib/social/types";
 
 /** Templates register here as they are implemented. */
@@ -59,6 +61,8 @@ export const socialTemplates: SocialTemplate[] = [
   telegramCover,
   substackBanner,
   spotifyPlaylistCover,
+  devtoCover,
+  hashnodeCover,
 ];
 
 export const socialPlatforms: SocialPlatform[] = [
@@ -85,6 +89,8 @@ export const socialPlatforms: SocialPlatform[] = [
   "Telegram",
   "Substack",
   "Spotify",
+  "DEV",
+  "Hashnode",
 ];
 
 /** Ids from earlier versions, so saved selections keep working. */
