@@ -222,6 +222,10 @@ Background generators live in `lib/background/generators/` and are pure function
 3. Add a controls component in `components/effects/` and register it in `components/effects/controls-map.tsx`.
 4. Every effect automatically gets CSS, Tailwind classes, `@utility`, SCSS and React output, so keep declarations framework-neutral and respect `prefers-reduced-motion` for anything animated.
 
+## Adding a Brand Guidelines page
+
+A Brand Guidelines page is one function that returns an SVG, registered in `lib/guidelines/registry.ts`. The [Guidelines page guide](docs/guidelines-pages.md) explains how a page is built, how numbering, PDF bookmarks and the website export work, walks through the Spacing & Layout page, and lists the tests to update.
+
 ## Translating the interface
 
 DesignHub stores UI translations in `lib/i18n/messages/`. English (`en.ts`) is the source of truth; other locales may be incomplete, and missing keys fall back to English. Supported locales currently include English, Spanish (`es`), French (`fr`) and Hindi (`hi`).
