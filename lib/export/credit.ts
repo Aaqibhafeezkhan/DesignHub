@@ -63,5 +63,8 @@ export function withPngCredit(png: Uint8Array): Uint8Array {
 export function withSvgCredit(svg: string): string {
   if (svg.includes(siteConfig.github)) return svg;
   const note = `<!-- ${CREDIT_TEXT} --><metadata>${CREDIT_TEXT}</metadata>`;
-  return svg.replace(/<svg\b[^>]*>/, (open) => `${open}${note}`);
+  // A self-closing root (<svg ... />) has to be opened first, or the note would land after the root.
+  return svg.replace(/<svg\b[^>]*>/, (open) =>
+    open.endsWith("/>") ? `${open.slice(0, -2).trimEnd()}>${note}</svg>` : `${open}${note}`,
+  );
 }
