@@ -5,6 +5,7 @@ import { BrandIdentityFields } from "@/components/brand/fields/brand-identity-fi
 import { BrandLogoField } from "@/components/brand/fields/brand-logo-field";
 import { BrandScaleFields } from "@/components/brand/fields/brand-scale-fields";
 import { BrandTypeFields } from "@/components/brand/fields/brand-type-fields";
+import { ImportCssButton } from "@/components/brand/import-css-button";
 import { ImportTokensButton } from "@/components/brand/import-tokens-button";
 import { useI18n } from "@/components/layout/locale-provider";
 import { ShareLinkButton } from "@/components/brand/share-link-button";
@@ -18,6 +19,7 @@ export function BrandSettingsPanel() {
       <div className="grid grid-cols-2 gap-2">
         <SurpriseButton />
         <ImportTokensButton />
+        <ImportCssButton />
         <ShareLinkButton />
       </div>
       <Panel title={t("brand.panel.identity")}>
