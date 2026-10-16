@@ -28,7 +28,8 @@ export type BackgroundKind =
   | "squares"
   | "argyle"
   | "zigzag"
-  | "spirograph";
+  | "spirograph"
+  | "truchet";
 
 /** Halftone gradient shape: forced linear or radial, or picked by the seed. */
 export type HalftoneGradientChoice = "seeded" | "linear" | "radial";

@@ -4,6 +4,7 @@ import { backgroundCss } from "@/lib/background/export";
 import { circuitTraces, type GridNode } from "@/lib/background/generators/circuit";
 import { halftoneGradient, halftoneStrength } from "@/lib/background/generators/halftone";
 import { hypotrochoid, maxSpirographPoints } from "@/lib/background/generators/spirograph";
+import { truchetPaths } from "@/lib/background/generators/truchet";
 import { triangleSlot } from "@/lib/background/generators/triangles";
 import { voronoiCells, type Point } from "@/lib/background/generators/voronoi";
 import { createRandom } from "@/lib/background/random";
@@ -38,6 +39,7 @@ describe.each([
   "argyle",
   "zigzag",
   "spirograph",
+  "truchet",
 ] as const)("%s", (kind) => {
   test("the same seed renders the same output", () => {
     for (const patch of [{ seed: 7 }, { seed: 7, rotation: 30, density: 100, scale: 2 }]) {
@@ -333,4 +335,35 @@ test("a hypotrochoid is a closed curve inside its radius", () => {
     .map((pair) => pair.split(" ").map(Number) as [number, number]);
   expect(points.length).toBeGreaterThan(100);
   points.forEach(([x, y]) => expect(Math.hypot(x - 100, y - 100)).toBeLessThanOrEqual(50.2));
+});
+
+describe("truchet", () => {
+  test("keeps one path per color and stays small at every density", () => {
+    for (const density of [0, 50, 100]) {
+      for (const scale of [0.5, 1]) {
+        const svg = renderBackgroundSvg(settings("truchet", { density, scale }));
+        expect(nodeCount(svg)).toBeLessThan(30);
+        expect(svg.length).toBeLessThan(80_000);
+        expect((svg.match(/<path /g) ?? []).length).toBeLessThanOrEqual(3);
+      }
+    }
+  });
+
+  test("density sets the tile size", () => {
+    const tileWidth = (svg: string) => Number(/<pattern[^>]* width="([\d.]+)"/.exec(svg)?.[1]);
+    const sparse = tileWidth(renderBackgroundSvg(settings("truchet", { density: 0 })));
+    const dense = tileWidth(renderBackgroundSvg(settings("truchet", { density: 100 })));
+    expect(sparse).toBeGreaterThan(dense);
+  });
+
+  test("every tile draws two arcs between edge midpoints", () => {
+    const [path] = truchetPaths(createRandom(3), 4, 40, 1);
+    const arcs = path!.match(/M[\d. -]+A/g) ?? [];
+    expect(arcs).toHaveLength(32);
+    for (const arc of arcs) {
+      const [x, y] = arc.slice(1, -1).trim().split(" ").map(Number) as [number, number];
+      // Every arc starts at the midpoint of a tile edge.
+      expect([x % 40, y % 40].sort()).toEqual([0, 20]);
+    }
+  });
 });
