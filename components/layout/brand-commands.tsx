@@ -1,12 +1,13 @@
 "use client";
 
-import { FileArchive, FileText, FolderOpen, Plus } from "lucide-react";
+import { FileArchive, FileText, FolderOpen, Plus, Redo2, Undo2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { useI18n } from "@/components/layout/locale-provider";
 import { CommandGroup, CommandItem } from "@/components/ui/command";
+import { useBrandHistory } from "@/hooks/use-brand-history";
 import { useGuidelineBase } from "@/hooks/use-guideline-context";
 import { useVariantContext } from "@/hooks/use-variant-context";
 import { downloadBlob } from "@/lib/download";
@@ -33,6 +34,7 @@ export function BrandCommands({ onDone }: { onDone: () => void }) {
   const excluded = useGuidelinesStore((state) => state.excluded);
   const variantCtx = useVariantContext();
   const clearSpace = useLogoStore((state) => state.clearSpace);
+  const { canUndo, canRedo, undo, redo } = useBrandHistory();
   const [projects, setProjects] = useState<BrandProject[]>([]);
 
   // Re-read on every open, so projects created in this session show up.
@@ -66,6 +68,28 @@ export function BrandCommands({ onDone }: { onDone: () => void }) {
 
   return (
     <CommandGroup heading={t("command.group.brand")}>
+      <CommandItem
+        value="undo brand change"
+        disabled={!canUndo}
+        onSelect={() => {
+          onDone();
+          undo();
+        }}
+      >
+        <Undo2 />
+        {t("command.undo")}
+      </CommandItem>
+      <CommandItem
+        value="redo brand change"
+        disabled={!canRedo}
+        onSelect={() => {
+          onDone();
+          redo();
+        }}
+      >
+        <Redo2 />
+        {t("command.redo")}
+      </CommandItem>
       <CommandItem
         value="new brand project create"
         onSelect={() => {

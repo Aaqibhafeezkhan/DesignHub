@@ -11,6 +11,8 @@ export const shortcuts: ShortcutDefinition[] = [
   { keys: ["/"], description: "Open command palette", scope: "Global" },
   { keys: ["?"], description: "Show keyboard shortcuts", scope: "Global" },
   { keys: ["⌥", "T"], description: "Toggle dark / light theme", scope: "Global" },
+  { keys: ["⌘", "Z"], description: "Undo brand change", scope: "Global" },
+  { keys: ["⌘", "⇧", "Z"], description: "Redo brand change", scope: "Global" },
   { keys: ["G", "H"], description: "Go home", scope: "Global" },
   // "g then letter" navigation, read from the studio list so every studio is listed.
   ...studios.map((studio): ShortcutDefinition => ({

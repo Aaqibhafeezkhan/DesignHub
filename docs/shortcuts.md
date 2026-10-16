@@ -7,33 +7,36 @@ A few rules apply everywhere:
 - `⌘` is `Ctrl` on Windows and Linux, and `⌥` is `Alt`.
 - Shortcuts don't fire while you type in a text field, except `⌘K`, which always opens the command palette.
 - `Space` keeps its normal job on a focused button, link or toggle, so it only runs the shortcut when nothing interactive has focus.
+- `⌘` `Z` and `⌘` `⇧` `Z` step back and forward through your last 50 brand edits in every studio (fonts, colors, radius, shadow, copy and more). They are ignored inside text fields and code editors, and the Color Studio's `Z` still undoes only the palette.
 - `G` shortcuts are sequences: press `G`, let go, then press the second key within a second.
 - Studio shortcuts only work on that studio's page.
 
 ## Global
 
-| Keys    | Action                    |
-| ------- | ------------------------- |
-| `⌘` `K` | Open command palette      |
-| `/`     | Open command palette      |
-| `?`     | Show keyboard shortcuts   |
-| `⌥` `T` | Toggle dark / light theme |
-| `G` `H` | Go home                   |
-| `G` `R` | Go to Brand Studio        |
-| `G` `D` | Go to Brand DNA           |
-| `G` `L` | Go to Logo Studio         |
-| `G` `M` | Go to Mockup Studio       |
-| `G` `O` | Go to Social Media Studio |
-| `G` `U` | Go to Brand Guidelines    |
-| `G` `P` | Go to Brand Projects      |
-| `G` `T` | Go to Typography Studio   |
-| `G` `C` | Go to Color Studio        |
-| `G` `I` | Go to Icon Studio         |
-| `G` `B` | Go to Background Studio   |
-| `G` `F` | Go to Effects Lab         |
-| `G` `S` | Go to SVG Playground      |
-| `G` `A` | Go to Accessibility Lab   |
-| `G` `E` | Go to Export Engine       |
+| Keys        | Action                    |
+| ----------- | ------------------------- |
+| `⌘` `K`     | Open command palette      |
+| `/`         | Open command palette      |
+| `?`         | Show keyboard shortcuts   |
+| `⌥` `T`     | Toggle dark / light theme |
+| `⌘` `Z`     | Undo brand change         |
+| `⌘` `⇧` `Z` | Redo brand change         |
+| `G` `H`     | Go home                   |
+| `G` `R`     | Go to Brand Studio        |
+| `G` `D`     | Go to Brand DNA           |
+| `G` `L`     | Go to Logo Studio         |
+| `G` `M`     | Go to Mockup Studio       |
+| `G` `O`     | Go to Social Media Studio |
+| `G` `U`     | Go to Brand Guidelines    |
+| `G` `P`     | Go to Brand Projects      |
+| `G` `T`     | Go to Typography Studio   |
+| `G` `C`     | Go to Color Studio        |
+| `G` `I`     | Go to Icon Studio         |
+| `G` `B`     | Go to Background Studio   |
+| `G` `F`     | Go to Effects Lab         |
+| `G` `S`     | Go to SVG Playground      |
+| `G` `A`     | Go to Accessibility Lab   |
+| `G` `E`     | Go to Export Engine       |
 
 ## Typography Studio
 
