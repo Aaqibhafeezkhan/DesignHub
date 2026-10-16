@@ -50,7 +50,7 @@ export const hi = {
   "studio.svg.title": "SVG प्लेग्राउंड",
   "studio.svg.short": "SVG प्लेग्राउंड",
   "studio.svg.description":
-    "SVG जाँचें, संपादित करें और ऑप्टिमाइज़ करें। JSX, React, React Native, Vue, Svelte, Angular, Solid, Qwik, Lit या स्प्राइट शीट में बदलें।",
+    "SVG जाँचें, संपादित करें और ऑप्टिमाइज़ करें। JSX, React, React Native, Vue, Svelte, Angular, Solid, Qwik, Lit, Astro या स्प्राइट शीट में बदलें।",
   "studio.accessibility.title": "एक्सेसिबिलिटी लैब",
   "studio.accessibility.short": "एक्सेसिबिलिटी",
   "studio.accessibility.description":

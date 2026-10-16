@@ -7,6 +7,7 @@ import { ExportPanel } from "@/components/export/export-panel";
 import { useOptimizedSvg } from "@/hooks/use-optimized-svg";
 import { useOptimizedTree } from "@/hooks/use-optimized-tree";
 import { angularComponent, kebabCase } from "@/lib/svg/angular";
+import { astroComponent } from "@/lib/svg/astro";
 import { componentNameFromFile, reactComponent, toJsx, withCurrentColor } from "@/lib/svg/jsx";
 import { svgBackgroundCss } from "@/lib/svg/data-uri";
 import { litComponent } from "@/lib/svg/lit";
@@ -104,6 +105,13 @@ export function SvgOutput({ root }: { root: SvgNode | null }) {
         filename: `${kebabCase(componentNameFromFile(name))}.ts`,
         language: "ts",
         code: litComponent(codeTree, name),
+      },
+      {
+        id: "astro",
+        label: "Astro",
+        filename: `${componentNameFromFile(name)}.astro`,
+        language: "astro",
+        code: astroComponent(codeTree),
       },
       {
         id: "css",
