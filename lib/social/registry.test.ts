@@ -43,6 +43,7 @@ test.each([
   ["spotify-playlist-cover", 640, 640],
   ["devto-cover", 1000, 420],
   ["hashnode-cover", 1600, 840],
+  ["x-post-image", 1600, 900],
   ["pinterest-board-cover", 600, 600],
 ])("%s is registered at %ix%i and included in the full pack", (id, width, height) => {
   const template = getSocialTemplate(id);

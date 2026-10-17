@@ -5,6 +5,7 @@ import { ogTemplates } from "@/lib/social/templates/open-graph";
 import { pinterestBoardCover, pinterestPin } from "@/lib/social/templates/pinterest";
 import { productHuntGallery, youtubeThumbnail } from "@/lib/social/templates/product-hunt";
 import { xBanner } from "@/lib/social/templates/x-banner";
+import { xPostImage } from "@/lib/social/templates/x-post";
 import { blueskyBanner } from "@/lib/social/templates/bluesky";
 import { facebookCover } from "@/lib/social/templates/facebook";
 import { linkedinCompanyCover } from "@/lib/social/templates/linkedin-company";
@@ -34,6 +35,7 @@ export const socialTemplates: SocialTemplate[] = [
   ...githubBannerStyles,
   linkedinCover,
   xBanner,
+  xPostImage,
   instagramSquare,
   instagramPortrait,
   instagramStory,
