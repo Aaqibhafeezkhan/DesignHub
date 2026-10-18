@@ -5,14 +5,7 @@ import type { BackgroundDefinition } from "@/types/background";
 type MemphisShape = "circle" | "triangle" | "squiggle" | "zigzag";
 const shapes: MemphisShape[] = ["circle", "triangle", "squiggle", "zigzag"];
 
-function shapeMarkup(
-  shape: MemphisShape,
-  x: number,
-  y: number,
-  size: number,
-  angle: number,
-  color: string,
-): string {
+function shapeMarkup(shape: MemphisShape, x: number, y: number, size: number, angle: number, color: string): string {
   const transform = `translate(${r1(x)} ${r1(y)}) rotate(${angle})`;
   if (shape === "circle") {
     return `<circle transform="${transform}" r="${r1(size * 0.28)}" fill="${color}"/>`;
@@ -63,9 +56,7 @@ export const memphis: BackgroundDefinition = {
       }
     }
 
-    const body = shapes
-      .map((shape) => `<g data-shape="${shape}">${groups[shape].join("")}</g>`)
-      .join("");
+    const body = shapes.map((shape) => `<g data-shape="${shape}">${groups[shape].join("")}</g>`).join("");
     return wrapSvg(settings, body);
   },
 };
