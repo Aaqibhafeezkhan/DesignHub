@@ -44,7 +44,7 @@ export function EffectsWorkspace() {
           ) : null}
         </>
       }
-      preview={<EffectPreview effect={effect} />}
+      preview={<EffectPreview effect={effect} kind={kind} />}
       output={<EffectOutput kind={kind} effect={effect} />}
     />
   );

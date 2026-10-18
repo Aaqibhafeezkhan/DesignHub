@@ -58,6 +58,7 @@ export const effectDefaults: EffectSettingsMap = {
     shadowY: 4,
     shadowColor: "#f472b6",
   },
+  highlighter: { color: "#fde047", thickness: 56, offset: 2, textColor: "#18181b" },
   "focus-ring": {
     color: "#4f46e5",
     inner: "#ffffff",
