@@ -1370,8 +1370,20 @@ export function toNuxtUiColorsCss(tokens: DesignTokens): string {
 
 export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
   return [
-    { id: "nuxt-ui", label: "Nuxt UI v3", filename: "app.config.ts", language: "ts", code: toNuxtUiConfig(tokens) },
-    { id: "nuxt-ui-colors", label: "Nuxt UI v3 color variables", filename: "nuxt-ui-colors.css", language: "css", code: toNuxtUiColorsCss(tokens) },
+    {
+      id: "nuxt-ui",
+      label: "Nuxt UI v3",
+      filename: "app.config.ts",
+      language: "ts",
+      code: toNuxtUiConfig(tokens),
+    },
+    {
+      id: "nuxt-ui-colors",
+      label: "Nuxt UI v3 color variables",
+      filename: "nuxt-ui-colors.css",
+      language: "css",
+      code: toNuxtUiColorsCss(tokens),
+    },
     { id: "css", label: "CSS variables", filename: "tokens.css", language: "css", code: toCss(tokens) },
     {
       id: "css-properties",
