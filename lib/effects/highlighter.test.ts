@@ -16,7 +16,7 @@ describe("highlighter text", () => {
   test("generates a skewed marker band and clones it across wrapped lines", () => {
     const effect = generate({ color: "#fde047", thickness: 56, offset: 2 });
     expect(value(effect, "background-image")).toBe(
-      "linear-gradient(-2deg, transparent 0%, #fde047 0%, #fde047 100%, transparent 100%)",
+      "linear-gradient(-2deg, transparent 8%, #fde047 8%, #fde047 92%, transparent 92%)",
     );
     expect(value(effect, "background-position")).toBe("0 calc(50% + 2px)");
     expect(value(effect, "box-decoration-break")).toBe("clone");

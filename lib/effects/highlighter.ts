@@ -12,7 +12,10 @@ export const highlighter = defineEffect({
     return {
       declarations: [
         { property: "color", value: s.textColor },
-        { property: "background-image", value: `linear-gradient(-2deg, transparent ${edge}%, ${s.color} ${edge}%, ${s.color} ${farEdge}%, transparent ${farEdge}%)` },
+        {
+          property: "background-image",
+          value: `linear-gradient(-2deg, transparent ${edge}%, ${s.color} ${edge}%, ${s.color} ${farEdge}%, transparent ${farEdge}%)`,
+        },
         { property: "background-position", value: `0 calc(50% + ${px(s.offset)})` },
         { property: "background-size", value: `100% ${s.thickness}%` },
         { property: "background-repeat", value: "no-repeat" },
@@ -21,7 +24,8 @@ export const highlighter = defineEffect({
         { property: "padding", value: "0 0.08em" },
       ],
       plainBackdrop: true,
-      extra: (selector) => `@media (forced-colors: active) {\n  ${selector} {\n    background-image: none;\n    color: CanvasText;\n    box-decoration-break: slice;\n    -webkit-box-decoration-break: slice;\n  }\n}`,
+      extra: (selector) =>
+        `@media (forced-colors: active) {\n  ${selector} {\n    background-image: none;\n    color: CanvasText;\n    box-decoration-break: slice;\n    -webkit-box-decoration-break: slice;\n  }\n}`,
     };
   },
 });

@@ -3,8 +3,8 @@
 import { Check, X } from "lucide-react";
 
 import { ColorField } from "@/components/effects/fields";
-import { SliderField } from "@/components/ui/field";
 import { Badge } from "@/components/ui/badge";
+import { SliderField } from "@/components/ui/field";
 import { contrastRatio, parseColor } from "@/lib/color/color";
 import { useEffectSettings, useEffectsStore } from "@/store/effects-store";
 
@@ -22,8 +22,24 @@ export function HighlighterControls() {
   return (
     <>
       <ColorField label="Highlight color" value={s.color} onChange={(color) => set({ color })} />
-      <SliderField label="Thickness" value={s.thickness} min={15} max={90} step={1} onChange={(thickness) => set({ thickness })} format={(value) => `${value}%`} />
-      <SliderField label="Vertical offset" value={s.offset} min={-8} max={8} step={1} onChange={(offset) => set({ offset })} format={pxFormat} />
+      <SliderField
+        label="Thickness"
+        value={s.thickness}
+        min={15}
+        max={90}
+        step={1}
+        onChange={(thickness) => set({ thickness })}
+        format={(value) => `${value}%`}
+      />
+      <SliderField
+        label="Vertical offset"
+        value={s.offset}
+        min={-8}
+        max={8}
+        step={1}
+        onChange={(offset) => set({ offset })}
+        format={pxFormat}
+      />
       <ColorField label="Text color" value={s.textColor} onChange={(textColor) => set({ textColor })} />
       <div className="flex flex-col gap-2 rounded-lg border p-3" role="status" aria-live="polite">
         <div className="flex items-center justify-between gap-2">
@@ -33,7 +49,9 @@ export function HighlighterControls() {
             {pass ? "Pass" : "Fail"}
           </Badge>
         </div>
-        <p className="text-xs text-muted-foreground">Text against the highlight: {ratioLabel}. At least 4.5:1 is required.</p>
+        <p className="text-xs text-muted-foreground">
+          Text against the highlight: {ratioLabel}. At least 4.5:1 is required.
+        </p>
       </div>
     </>
   );
