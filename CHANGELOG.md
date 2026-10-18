@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Compare original and optimized SVGs in the SVG Playground with an aligned, clipped preview and a keyboard- and touch-operable divider.
 - HTML export in Icon Studio: an inline SVG with `role="img"` and an `aria-label` from the icon name, plus a decorative variant with `aria-hidden="true"`.
 - Preact component converter in the SVG Playground.
 - X post image template (1600 x 900) in the Social Media Studio.

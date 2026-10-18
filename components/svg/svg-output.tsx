@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import { SwitchField } from "@/components/effects/fields";
 import { ExportPanel } from "@/components/export/export-panel";
-import { useOptimizedSvg } from "@/hooks/use-optimized-svg";
+import type { OptimizeResult } from "@/lib/svg/optimize";
 import { useOptimizedTree } from "@/hooks/use-optimized-tree";
 import { angularComponent, kebabCase } from "@/lib/svg/angular";
 import { astroComponent } from "@/lib/svg/astro";
@@ -23,12 +23,11 @@ import { useSvgStore } from "@/store/svg-store";
 import type { ExportFormat } from "@/types/export";
 import type { SvgNode } from "@/types/svg";
 
-export function SvgOutput({ root }: { root: SvgNode | null }) {
+export function SvgOutput({ root, optimized }: { root: SvgNode | null; optimized: OptimizeResult | null }) {
   const name = useSvgStore((state) => state.name);
   const currentColor = useSvgStore((state) => state.currentColor);
   const sprite = useSvgStore((state) => state.sprite);
   const setCurrentColor = useSvgStore((state) => state.setCurrentColor);
-  const optimized = useOptimizedSvg();
   const tree = useOptimizedTree();
   const base = name.replace(/\.svg$/i, "");
 

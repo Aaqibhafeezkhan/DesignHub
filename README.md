@@ -199,6 +199,7 @@ A typical design session bounces between a font site, a palette generator, a con
 - **Fill & stroke editor** for the selected element or every shape at once
 - **Optimization engine** (built on svgson): metadata and editor-data removal, id cleanup, group collapsing, precision control, shortest absolute/relative path data, color shortening, style-to-attribute conversion - scripts and event handlers are always stripped
 - **Minify** or **pretty print**, with byte savings
+- **Compare optimized SVG**: a draggable before/after divider in the preview, with arrow keys, Shift for larger steps and Home/End for the edges. Both images share zoom and alignment; comparison is available while the source has a valid optimized result.
 - Converters: **SVG → JSX, SVG → React component (TypeScript), SVG → React Native** (react-native-svg) and **SVG → Vue**, **SVG → Svelte**, **SVG → Angular** and **SVG → SolidJS**, **SVG → Qwik**, **SVG → Lit** and **SVG → Astro** components, plus a **CSS data URI** that is shorter than base64
 - **Sprite generator**: combine many SVGs into one `<symbol>` sprite with namespaced ids and usage snippets
 - **Download optimized SVG**

@@ -3,6 +3,7 @@
 import { Maximize, Minus, Plus } from "lucide-react";
 import { memo, useMemo, useState, type KeyboardEvent } from "react";
 
+import { SvgComparison } from "@/components/canvas/svg-comparison";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useElementWidth } from "@/hooks/use-element-width";
@@ -21,6 +22,8 @@ const backdrops: Record<Backdrop, string> = {
 
 type SvgPreviewCanvasProps = {
   svg: string;
+  /** When present, compare this result against svg using the same zoom and dimensions. */
+  comparisonSvg?: string;
   label: string;
   /** Minimum height of the viewport. */
   minHeight?: number;
@@ -34,6 +37,7 @@ type SvgPreviewCanvasProps = {
  */
 export const SvgPreviewCanvas = memo(function SvgPreviewCanvas({
   svg,
+  comparisonSvg,
   label,
   minHeight = 320,
   defaultBackdrop = "checker",
@@ -109,7 +113,7 @@ export const SvgPreviewCanvas = memo(function SvgPreviewCanvas({
       <div
         ref={ref}
         tabIndex={0}
-        role="img"
+        role={comparisonSvg ? "region" : "img"}
         aria-label={`${label}. Use + and - to zoom, 0 to fit, 1 for 100%.`}
         onKeyDown={onKeyDown}
         className={cn(
@@ -121,14 +125,23 @@ export const SvgPreviewCanvas = memo(function SvgPreviewCanvas({
         <div className="flex min-h-full min-w-full items-center justify-center" style={{ padding }}>
           {/* Wait for the viewport to be measured so "fit" doesn't paint at full size first (layout shift). */}
           {viewportWidth || zoom !== null ? (
-            // eslint-disable-next-line @next/next/no-img-element -- SVG data URL
-            <img
-              src={src}
-              alt=""
-              draggable={false}
-              className="block max-w-none shadow-sm"
-              style={{ width: size.width * scale, height: size.height * scale }}
-            />
+            comparisonSvg ? (
+              <SvgComparison
+                original={svg}
+                optimized={comparisonSvg}
+                width={size.width * scale}
+                height={size.height * scale}
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element -- SVG data URL
+              <img
+                src={src}
+                alt=""
+                draggable={false}
+                className="block max-w-none shadow-sm"
+                style={{ width: size.width * scale, height: size.height * scale }}
+              />
+            )
           ) : null}
         </div>
       </div>
