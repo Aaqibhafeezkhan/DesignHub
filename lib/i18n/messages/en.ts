@@ -50,6 +50,13 @@ export const en = {
   "studio.effects.short": "Effects Lab",
   "studio.effects.description":
     "Glass, neumorphism, layered and inner shadows, glows, gradient borders and grain - as CSS and Tailwind.",
+  "svg.compare.toggle": "Compare optimized SVG",
+  "svg.compare.original": "Original SVG",
+  "svg.compare.optimized": "Optimized SVG",
+  "svg.compare.divider": "Original and optimized SVG divider",
+  "svg.compare.value": "{original}% original, {optimized}% optimized",
+  "svg.compare.instructions":
+    "Drag to compare. Use arrow keys to move, Shift for larger steps, Home and End for either edge.",
   "studio.svg.title": "SVG Playground",
   "studio.svg.short": "SVG Playground",
   "studio.svg.description":

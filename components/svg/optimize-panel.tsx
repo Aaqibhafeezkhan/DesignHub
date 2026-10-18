@@ -6,9 +6,8 @@ import { SwitchField } from "@/components/effects/fields";
 import { Button } from "@/components/ui/button";
 import { SliderField } from "@/components/ui/field";
 import { Panel } from "@/components/ui/panel";
-import { useOptimizedSvg } from "@/hooks/use-optimized-svg";
 import { downloadText } from "@/lib/download";
-import type { SvgOptimizeOptions } from "@/lib/svg/optimize";
+import type { OptimizeResult, SvgOptimizeOptions } from "@/lib/svg/optimize";
 import { formatBytes } from "@/lib/svg-size";
 import { useSvgStore } from "@/store/svg-store";
 
@@ -29,11 +28,10 @@ const toggles: { key: BooleanOption; label: string }[] = [
   { key: "pretty", label: "Pretty print output" },
 ];
 
-export function OptimizePanel() {
+export function OptimizePanel({ result }: { result: OptimizeResult | null }) {
   const options = useSvgStore((state) => state.options);
   const setOptions = useSvgStore((state) => state.setOptions);
   const name = useSvgStore((state) => state.name);
-  const result = useOptimizedSvg();
 
   return (
     <Panel title="Optimize" description="Scripts and event handlers are always removed.">

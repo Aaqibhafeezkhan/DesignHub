@@ -8,9 +8,10 @@ import { SvgDocumentPanel } from "@/components/svg/svg-document-panel";
 import { ViewBoxEditor } from "@/components/svg/viewbox-editor";
 import { Panel } from "@/components/ui/panel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { OptimizeResult } from "@/lib/svg/optimize";
 import type { SvgNode } from "@/types/svg";
 
-export function SvgControls({ root }: { root: SvgNode | null }) {
+export function SvgControls({ root, optimized }: { root: SvgNode | null; optimized: OptimizeResult | null }) {
   return (
     <Tabs defaultValue="document" className="gap-4">
       <TabsList aria-label="SVG tools" className="w-full">
@@ -39,7 +40,7 @@ export function SvgControls({ root }: { root: SvgNode | null }) {
           </Panel>
         ) : null}
       </TabsContent>
-      <TabsContent value="optimize">{root ? <OptimizePanel /> : null}</TabsContent>
+      <TabsContent value="optimize">{root ? <OptimizePanel result={optimized} /> : null}</TabsContent>
       <TabsContent value="sprite">
         <SpritePanel />
       </TabsContent>
