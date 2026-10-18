@@ -116,7 +116,9 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
     ]),
   );
   expect(formats.find((format) => format.id === "shadcn")?.filename).toBe("globals.css");
-  expect(formats.find((format) => format.id === "figma-variables")?.filename).toBe("figma-variables.json");
+  expect(formats.find((format) => format.id === "figma-variables")?.filename).toBe(
+    "figma-variables.json",
+  );
   // Chakra shares theme.ts with React and Vue, which the ZIP puts in a folder per format.
   expect(formats.find((format) => format.id === "chakra")?.filename).toBe("theme.ts");
 });
@@ -828,8 +830,8 @@ describe("Nuxt UI v3", () => {
     expect(css).toContain("--ui-color-secondary-50: #f5f3ff;");
     expect(css).toContain("--ui-color-neutral-950: #020617;");
     expect(css).toContain("--ui-color-primary-500: #6366f1;");
-    expect(tokenFormats(nuxtTokens()).find((format) => format.id === "nuxt-ui-colors")?.filename).toBe(
-      "nuxt-ui-colors.css",
-    );
+    expect(
+      tokenFormats(nuxtTokens()).find((format) => format.id === "nuxt-ui-colors")?.filename,
+    ).toBe("nuxt-ui-colors.css");
   });
 });
