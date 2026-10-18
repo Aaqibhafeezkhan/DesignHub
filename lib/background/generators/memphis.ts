@@ -59,16 +59,7 @@ export const memphis: BackgroundDefinition = {
         const angle = Math.round(random() * 360);
         const shape = pick(random, shapes);
         const color = pick(random, colors);
-        groups[shape].push(
-          shapeMarkup(
-            shape,
-            centerX + jitterX,
-            centerY + jitterY,
-            size,
-            angle,
-            color,
-          ),
-        );
+        groups[shape].push(shapeMarkup(shape, centerX + jitterX, centerY + jitterY, size, angle, color));
       }
     }
 
