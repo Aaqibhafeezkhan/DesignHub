@@ -106,19 +106,10 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
     ]),
   );
   expect(formats.map((format) => format.id)).toEqual(
-    expect.arrayContaining([
-      "chakra",
-      "bootstrap",
-      "shadcn",
-      "figma-variables",
-      "nuxt-ui",
-      "nuxt-ui-colors",
-    ]),
+    expect.arrayContaining(["chakra", "bootstrap", "shadcn", "figma-variables", "nuxt-ui", "nuxt-ui-colors"]),
   );
   expect(formats.find((format) => format.id === "shadcn")?.filename).toBe("globals.css");
-  expect(formats.find((format) => format.id === "figma-variables")?.filename).toBe(
-    "figma-variables.json",
-  );
+  expect(formats.find((format) => format.id === "figma-variables")?.filename).toBe("figma-variables.json");
   // Chakra shares theme.ts with React and Vue, which the ZIP puts in a folder per format.
   expect(formats.find((format) => format.id === "chakra")?.filename).toBe("theme.ts");
 });
@@ -818,9 +809,7 @@ describe("Nuxt UI v3", () => {
     expect(config).toContain('"primary": "indigo"');
     expect(config).toContain('"secondary": "violet"');
     expect(config).toContain('"neutral": "slate"');
-    expect(tokenFormats(nuxtTokens()).find((format) => format.id === "nuxt-ui")?.filename).toBe(
-      "app.config.ts",
-    );
+    expect(tokenFormats(nuxtTokens()).find((format) => format.id === "nuxt-ui")?.filename).toBe("app.config.ts");
   });
 
   test("exports shade variables from the role palettes, including 50 and 950", () => {
@@ -830,8 +819,8 @@ describe("Nuxt UI v3", () => {
     expect(css).toContain("--ui-color-secondary-50: #f5f3ff;");
     expect(css).toContain("--ui-color-neutral-950: #020617;");
     expect(css).toContain("--ui-color-primary-500: #6366f1;");
-    expect(
-      tokenFormats(nuxtTokens()).find((format) => format.id === "nuxt-ui-colors")?.filename,
-    ).toBe("nuxt-ui-colors.css");
+    expect(tokenFormats(nuxtTokens()).find((format) => format.id === "nuxt-ui-colors")?.filename).toBe(
+      "nuxt-ui-colors.css",
+    );
   });
 });
