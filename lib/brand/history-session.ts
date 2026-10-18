@@ -102,6 +102,13 @@ export function startBrandHistory(): () => void {
   return stop;
 }
 
+/** Establishes the just-opened project's baseline before its first edit can be recorded. */
+export function resetBrandHistory(): void {
+  if (!history) return;
+  rebase = true;
+  flush();
+}
+
 function step(move: (current: History<BrandSnapshot>) => History<BrandSnapshot>): boolean {
   if (!history) return false;
   // An edit still waiting for its pause counts as a step, so undo takes it back first.
@@ -111,7 +118,7 @@ function step(move: (current: History<BrandSnapshot>) => History<BrandSnapshot>)
   if (next === current) return false;
   applying = true;
   try {
-    applySnapshot(next.present);
+    applySnapshot(next.present, { preserveColorHistory: true });
   } finally {
     applying = false;
   }
