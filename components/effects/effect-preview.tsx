@@ -5,7 +5,7 @@ import { EffectBackdrop } from "@/components/effects/effect-backdrop";
 import { parseColor } from "@/lib/color/color";
 import { effectStylesheet } from "@/lib/effects/css";
 import { useEffectsStore } from "@/store/effects-store";
-import type { EffectBackdrop as Backdrop, EffectCss } from "@/types/effects";
+import type { EffectBackdrop as Backdrop, EffectCss, EffectKind } from "@/types/effects";
 
 function isDark(hex: string): boolean {
   const color = parseColor(hex);
@@ -23,7 +23,7 @@ const backdrops: { value: Backdrop; label: string }[] = [
   { value: "dark", label: "Dark" },
 ];
 
-export function EffectPreview({ effect }: { effect: EffectCss | null }) {
+export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind: EffectKind }) {
   const chosen = useEffectsStore((state) => state.backdrop);
   const setBackdrop = useEffectsStore((state) => state.setBackdrop);
   const surface = effect?.surface;
@@ -33,6 +33,7 @@ export function EffectPreview({ effect }: { effect: EffectCss | null }) {
   const dark = surface ? isDark(surface) : backdrop !== "light";
   const cardFill = effect?.fill ?? (effect?.needsFill ? (dark ? "#18181b" : "#ffffff") : undefined);
   const cardDark = effect?.fill ? isDark(effect.fill) : dark;
+  const selector = kind === "highlighter" ? `${PREVIEW_SELECTOR} .dh-effect-highlight` : PREVIEW_SELECTOR;
 
   return (
     <>
@@ -53,15 +54,25 @@ export function EffectPreview({ effect }: { effect: EffectCss | null }) {
         </ToggleGroup>
       </div>
       {/* The stylesheet is generated from numeric controls and color pickers, never from free text. */}
-      {effect ? <style>{effectStylesheet(effect, PREVIEW_SELECTOR)}</style> : null}
+      {effect ? <style>{effectStylesheet(effect, selector)}</style> : null}
       <EffectBackdrop backdrop={backdrop} surface={surface}>
         <article
           style={cardFill ? { backgroundColor: cardFill } : undefined}
           className={`dh-effect-preview flex w-full max-w-sm flex-col gap-3 p-8 ${cardDark ? "text-white" : "text-slate-800"}`}
         >
           <p className="text-xs font-semibold tracking-[0.16em] uppercase opacity-80">Effects Lab</p>
-          <h3 className="font-display text-2xl font-semibold">Depth without the fuss.</h3>
-          <p className="text-sm opacity-80">Tweak the controls; copy production-ready CSS or Tailwind utilities.</p>
+          {kind === "highlighter" ? (
+            <p className="text-lg leading-relaxed">
+              <span className="dh-effect-highlight">
+                A marker-style highlight that follows text across multiple lines, with readable contrast.
+              </span>
+            </p>
+          ) : (
+            <>
+              <h3 className="font-display text-2xl font-semibold">Depth without the fuss.</h3>
+              <p className="text-sm opacity-80">Tweak the controls; copy production-ready CSS or Tailwind utilities.</p>
+            </>
+          )}
         </article>
       </EffectBackdrop>
     </>

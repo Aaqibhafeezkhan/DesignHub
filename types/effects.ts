@@ -12,7 +12,8 @@ export type EffectKind =
   | "gradient-text"
   | "skeleton"
   | "text-outline"
-  | "focus-ring";
+  | "focus-ring"
+  | "highlighter";
 
 export type GlassSettings = {
   blur: number;
@@ -163,6 +164,18 @@ export type TextOutlineSettings = {
   shadowColor: string;
 };
 
+/** Marker-style highlight behind selectable, wrapping text. */
+export type HighlighterSettings = {
+  /** Highlight marker color. */
+  color: string;
+  /** Height of the marker band as a percentage of the text line. */
+  thickness: number;
+  /** Vertical shift of the marker band in pixels. */
+  offset: number;
+  /** Foreground text color, checked against the highlight for WCAG AA. */
+  textColor: string;
+};
+
 /** A two-tone :focus-visible ring (outline plus an inner gap ring) checked against a page and a component. */
 export type FocusRingSettings = {
   /** Outer ring (the outline) color. This is the color the contrast check measures. */
@@ -192,6 +205,7 @@ export type EffectSettingsMap = {
   skeleton: SkeletonSettings;
   "text-outline": TextOutlineSettings;
   "focus-ring": FocusRingSettings;
+  highlighter: HighlighterSettings;
 };
 
 /** State from other studios an effect may build on. Effects read it here instead of copying it into their settings. */
