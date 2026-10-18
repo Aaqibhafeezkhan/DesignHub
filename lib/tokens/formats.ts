@@ -1330,8 +1330,48 @@ export function toCssLightDark(tokens: DesignTokens): string {
   return `${header(tokens, (text) => `/* ${text} */`)}\n:root {\n  color-scheme: light dark;\n${lines.join("\n")}\n}\n`;
 }
 
+/** Nuxt UI v3 app.config.ts maps semantic brand roles to their source palette names. */
+export function toNuxtUiConfig(tokens: DesignTokens): string {
+  const role = (names: string[], fallback: string) => {
+    const item = tokens.semantic.find((entry) => names.includes(entry.name));
+    return item?.ref ?? tokens.colors.find((color) => color.name === fallback)?.name ?? fallback;
+  };
+  const config = {
+    ui: {
+      colors: {
+        primary: role(["primary"], "primary"),
+        secondary: role(["secondary", "accent"], "secondary"),
+        neutral: role(["neutral", "foreground"], "neutral"),
+      },
+    },
+  };
+  return `${header(tokens, (text) => `// ${text}`)}\nexport default defineAppConfig(${JSON.stringify(config, null, 2)});\n`;
+}
+
+/** Nuxt UI v3 CSS palette variables for each semantic brand role. */
+export function toNuxtUiColorsCss(tokens: DesignTokens): string {
+  const roles = [
+    { output: "primary", names: ["primary"], fallback: "primary" },
+    { output: "secondary", names: ["secondary", "accent"], fallback: "secondary" },
+    { output: "neutral", names: ["neutral", "foreground"], fallback: "neutral" },
+  ];
+  const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+  const lines = roles.flatMap(({ output, names, fallback }) => {
+    const semantic = tokens.semantic.find((item) => names.includes(item.name));
+    const palette = tokens.colors.find((item) => item.name === (semantic?.ref ?? fallback));
+    if (!palette) return [];
+    return steps.map((step) => {
+      const shade = palette.shades.find((item) => item.step === step);
+      return `  --ui-color-${output}-${step}: ${toHex(shade?.value ?? palette.value)};`;
+    });
+  });
+  return `${header(tokens, (text) => `/* ${text} */`)}\n:root {\n${lines.join("\n")}\n}\n`;
+}
+
 export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
   return [
+    { id: "nuxt-ui", label: "Nuxt UI v3", filename: "app.config.ts", language: "ts", code: toNuxtUiConfig(tokens) },
+    { id: "nuxt-ui-colors", label: "Nuxt UI v3 color variables", filename: "nuxt-ui-colors.css", language: "css", code: toNuxtUiColorsCss(tokens) },
     { id: "css", label: "CSS variables", filename: "tokens.css", language: "css", code: toCss(tokens) },
     {
       id: "css-properties",
