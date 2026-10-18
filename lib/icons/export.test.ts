@@ -90,6 +90,29 @@ describe("icon exports", () => {
     expect(solid?.code).toContain("<use href='#p'/>");
   });
 
+  test("Preact component spreads props onto the svg and keeps SVG attributes", () => {
+    const preact = iconExports("tabler:brand-github", icon, defaultIconStyle).find((format) => format.id === "preact");
+    expect(preact?.label).toBe("Preact");
+    expect(preact?.filename).toBe("BrandGithubIcon.tsx");
+    expect(preact?.language).toBe("tsx");
+    expect(preact?.code).toContain('import type { JSX } from "preact";');
+    expect(preact?.code).toContain('export function BrandGithubIcon(props: JSX.IntrinsicElements["svg"]) {');
+    expect(preact?.code).toMatch(/<svg [^>]*width="1em" height="1em"[^>]*\{\.\.\.props\}>/);
+    expect(preact?.code).toContain('stroke-width="2"');
+    expect(preact?.code).not.toMatch(/className|strokeWidth/);
+    expect(preact?.code.trimEnd().endsWith("}")).toBe(true);
+  });
+
+  test("Preact component escapes braces and rewrites xlink:href", () => {
+    const styled = { ...icon, body: "<style>.a{fill:red}</style><path class='a' d='M0 0h24'/><use xlink:href='#p'/>" };
+    const preact = iconExports("tabler:brand-github", styled, defaultIconStyle).find(
+      (format) => format.id === "preact",
+    );
+    expect(preact?.code).toContain(".a&#123;fill:red&#125;");
+    expect(preact?.code).toContain("<use href='#p'/>");
+    expect(preact?.code).not.toContain("xlink:");
+  });
+
   test("Qwik component uses component$ and spreads props onto the svg", () => {
     const qwik = iconExports("tabler:brand-github", icon, defaultIconStyle).find((format) => format.id === "qwik");
     expect(qwik?.label).toBe("Qwik");
