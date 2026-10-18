@@ -1,3 +1,4 @@
+import { resetBrandHistory } from "@/lib/brand/history-session";
 import {
   applySnapshot,
   captureSnapshot,
@@ -88,7 +89,10 @@ export async function openProject(id: string): Promise<void> {
   if (activeId && activeId !== id) await saveActiveProject();
   // Switch first, so any pending autosave lands in the project being opened.
   setActive(id);
-  if (activeId !== id) applySnapshot(target.snapshot);
+  if (activeId !== id) {
+    applySnapshot(target.snapshot);
+    resetBrandHistory();
+  }
   await updateProject(id, { lastOpenedAt: Date.now() });
 }
 

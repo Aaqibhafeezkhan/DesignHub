@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Announce generated and loaded Color Studio palettes to screen readers, including locked swatches kept during generation.
 
+### Fixed
+
+- Keep Color Studio undo and redo usable after global undo or redo, and reset both histories immediately when opening another project.
+
 ## v1.0.0
 
 Released 2026-09-23. The first public release: a complete, local-first design and brand identity toolkit with seventeen studios.

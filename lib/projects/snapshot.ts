@@ -95,17 +95,40 @@ export function defaultSnapshot(name?: string): BrandSnapshot {
   return snapshot;
 }
 
-/** Loads a snapshot into the live stores. Missing fields keep their defaults. */
-export function applySnapshot(snapshot: BrandSnapshot): void {
+/** Moves the local palette cursor when a global restore revisits one of its states. */
+function restoredColorHistory(swatches: BrandSnapshot["colors"]["swatches"]) {
+  const { past, future, swatches: current } = useColorStore.getState();
+  const value = JSON.stringify(swatches);
+  const matches = (palette: typeof swatches) => JSON.stringify(palette) === value;
+  if (matches(current)) return { past, future };
+  const previous = past.findLastIndex(matches);
+  if (previous !== -1) {
+    return {
+      past: past.slice(0, previous),
+      future: [...past.slice(previous + 1), current, ...future],
+    };
+  }
+  const next = future.findIndex(matches);
+  if (next !== -1) {
+    return {
+      past: [...past, current, ...future.slice(0, next)],
+      future: future.slice(next + 1),
+    };
+  }
+  // Direct color edits can be global steps without being local palette steps.
+  return { past, future };
+}
+
+/** Loads a snapshot. Project/version restores reset palette history; global history retains it. */
+export function applySnapshot(snapshot: BrandSnapshot, options: { preserveColorHistory?: boolean } = {}): void {
   const base = defaultSnapshot();
   const data = structuredClone(snapshot);
+  const colors = { ...base.colors, ...data.colors };
   useBrandStore.setState({ profile: { ...base.brand.profile, ...data.brand.profile } });
   useColorStore.setState({
-    ...base.colors,
-    ...data.colors,
+    ...colors,
     selectedId: null,
-    past: [],
-    future: [],
+    ...(options.preserveColorHistory ? restoredColorHistory(colors.swatches) : { past: [], future: [] }),
   });
   useTypographyStore.setState({ ...base.typography, ...data.typography });
   useTokensStore.setState({ settings: { ...base.tokens.settings, ...data.tokens.settings } });
