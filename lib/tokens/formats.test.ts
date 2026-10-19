@@ -7,6 +7,7 @@ import {
   toAndroidTheme,
   toBootstrapVariables,
   toChakraTheme,
+  toMantineTheme,
   toCss,
   toCssLightDark,
   toCssProperties,
@@ -106,7 +107,15 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
     ]),
   );
   expect(formats.map((format) => format.id)).toEqual(
-    expect.arrayContaining(["chakra", "bootstrap", "shadcn", "figma-variables", "nuxt-ui", "nuxt-ui-colors"]),
+    expect.arrayContaining([
+      "chakra",
+      "mantine",
+      "bootstrap",
+      "shadcn",
+      "figma-variables",
+      "nuxt-ui",
+      "nuxt-ui-colors",
+    ]),
   );
   expect(formats.find((format) => format.id === "shadcn")?.filename).toBe("globals.css");
   expect(formats.find((format) => format.id === "figma-variables")?.filename).toBe("figma-variables.json");
@@ -252,6 +261,60 @@ describe("Chakra UI", () => {
     expect(chakra).toContain('"acme-primary": {');
     expect(chakra).toContain('value: { base: "{colors.acme-indigo}", _dark: "{colors.acme-indigo.300}" },');
     expect(chakra).toContain('"acme-background": { value: { base: "#ffffff", _dark: "{colors.acme-slate}" } },');
+  });
+});
+
+describe("Mantine", () => {
+  const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+  const hexes = [
+    "#eef2ff",
+    "#e0e7ff",
+    "#c7d2fe",
+    "#a5b4fc",
+    "#818cf8",
+    "#6366f1",
+    "#4f46e5",
+    "#4338ca",
+    "#3730a3",
+    "#312e81",
+    "#1e1b4b",
+  ];
+  const shaded: DesignTokens = {
+    ...tokens(),
+    colors: [
+      {
+        name: "indigo",
+        value: fromHex("#6366f1"),
+        shades: steps.map((step, i) => ({ step, value: fromHex(hexes[i]) })),
+      },
+    ],
+  };
+
+  test("maps one color's 50 to 900 shades onto Mantine's ten slots and sets the radius scale", () => {
+    const mantine = toMantineTheme(shaded);
+    expect(mantine).toContain('import { createTheme } from "@mantine/core";');
+    expect(mantine).toContain(
+      `indigo: [\n${hexes
+        .slice(0, 10)
+        .map((hex) => `      "${hex}",`)
+        .join("\n")}\n    ],`,
+    );
+    expect(mantine).not.toContain("#1e1b4b");
+    expect(mantine).toContain('primaryColor: "indigo",');
+    expect(mantine).toContain('radius: { lg: "0.75rem" },');
+    expect(mantine).toContain('spacing: { 4: "1rem", "0.5": "0.125rem" },');
+    expect(mantine).toContain('shadows: { md: "0 1px 2px rgb(0 0 0 / 0.1)" },');
+  });
+
+  test("fills missing shades from the base color so every tuple has ten hex entries", () => {
+    const mantine = toMantineTheme({
+      ...tokens("acme"),
+      meta: { ...tokens().meta, prefix: "acme", colorFormat: "oklch" },
+    });
+    const tuple = mantine.match(/"acme-indigo": \[([^\]]*)\]/)?.[1].match(/"#[0-9a-f]{6}"/g);
+    expect(tuple).toHaveLength(10);
+    expect(mantine).toContain('primaryColor: "acme-indigo",');
+    expect(mantine).not.toContain("oklch(");
   });
 });
 

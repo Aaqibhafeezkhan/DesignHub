@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Zigzag background generator with seeded palette-colored rows and independent density and amplitude controls.
 - Pinterest board cover template (600 x 600) in the Social Media Studio.
 - Export an icon as a Preact component.
+- Mantine v7 theme export (`theme.ts`): `createTheme` with each palette color as a ten-shade tuple, plus primary color, fonts, headings, radius, spacing and shadows.
 
 ### Changed
 
