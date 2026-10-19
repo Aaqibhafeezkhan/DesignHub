@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Etsy shop banner template (3360 x 840) in the Social Media Studio, with a covered shop-icon zone and safe-area-aware content.
+
 - Compare original and optimized SVGs in the SVG Playground with an aligned, clipped preview and a keyboard- and touch-operable divider.
 - HTML export in Icon Studio: an inline SVG with `role="img"` and an `aria-label` from the icon name, plus a decorative variant with `aria-hidden="true"`.
 - Preact component converter in the SVG Playground.

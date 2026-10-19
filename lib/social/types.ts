@@ -58,7 +58,8 @@ export type SocialPlatform =
   | "Substack"
   | "Spotify"
   | "DEV"
-  | "Hashnode";
+  | "Hashnode"
+  | "Etsy";
 
 export type SocialTemplate = {
   id: string;
