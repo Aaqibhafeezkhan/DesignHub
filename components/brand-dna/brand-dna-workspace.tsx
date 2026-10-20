@@ -4,6 +4,7 @@ import { Check, ImageUp, Loader2, RotateCcw, Sparkles, TriangleAlert, X } from "
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import { AiKeyPanel } from "@/components/brand-dna/ai-key-panel";
 import { DnaResultEditor } from "@/components/brand-dna/dna-result-editor";
 import { StudioLayout } from "@/components/layout/studio-layout";
 import { Badge } from "@/components/ui/badge";
@@ -163,7 +164,11 @@ export function BrandDnaWorkspace() {
         <>
           <Panel
             title="Source images"
-            description={`A logo, product shot or up to ${MAX_DNA_IMAGES} moodboard images, combined by area. They never leave your device.`}
+            description={`A logo, product shot or up to ${MAX_DNA_IMAGES} moodboard images, combined by area. ${
+              provider.local
+                ? "They never leave your device."
+                : "With the AI provider, only a small downscaled copy is sent, after you approve it."
+            }`}
           >
             <button
               type="button"
@@ -278,6 +283,9 @@ export function BrandDnaWorkspace() {
                 </button>
               ))}
             </div>
+            {provider.id === "anthropic" ? (
+              <AiKeyPanel images={images} onChange={() => images.length > 0 && void analyze(images)} />
+            ) : null}
           </Panel>
         </>
       }
