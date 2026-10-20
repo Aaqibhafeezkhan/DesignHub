@@ -439,6 +439,17 @@ export const hi = {
   "colors.matrix.caption": "पंक्तियाँ टेक्स्ट के रंग हैं, कॉलम बैकग्राउंड हैं।",
   "colors.matrix.corner": "टेक्स्ट ↓ / बैकग्राउंड →",
   "colors.matrix.cell": "{background} पर {text}: {ratio} {rating}",
+  "colors.matrix.mode": "कंट्रास्ट विधि",
+  "colors.matrix.wcag": "WCAG 2",
+  "colors.matrix.apca": "APCA",
+  "colors.matrix.apcaCaption":
+    "मान चिह्न सहित APCA Lc हैं: हल्की पृष्ठभूमि पर गहरे टेक्स्ट के लिए धनात्मक और गहरी पर हल्के के लिए ऋणात्मक।",
+  "colors.matrix.apcaCell": "{background} पर {text}: Lc {ratio}, {rating}",
+  "colors.matrix.level.body": "मुख्य टेक्स्ट",
+  "colors.matrix.level.content": "सामग्री टेक्स्ट",
+  "colors.matrix.level.headline": "शीर्षक",
+  "colors.matrix.level.nonText": "गैर-टेक्स्ट",
+  "colors.matrix.level.fail": "विफल",
   "colors.vision.title": "कलर ब्लाइंडनेस प्रीव्यू",
   "colors.vision.description":
     "Machado 2009 मॉडल से सिमुलेट किया गया। अर्थ बताने के लिए कभी सिर्फ़ रंग पर निर्भर न रहें।",

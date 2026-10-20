@@ -442,6 +442,17 @@ export const es = {
   "colors.matrix.caption": "Las filas son colores de texto y las columnas, fondos.",
   "colors.matrix.corner": "Texto ↓ / Fondo →",
   "colors.matrix.cell": "{text} sobre {background}: {ratio} {rating}",
+  "colors.matrix.mode": "Método de contraste",
+  "colors.matrix.wcag": "WCAG 2",
+  "colors.matrix.apca": "APCA",
+  "colors.matrix.apcaCaption":
+    "Los valores son Lc de APCA con signo: positivo para texto oscuro sobre fondo claro y negativo para claro sobre oscuro.",
+  "colors.matrix.apcaCell": "{text} sobre {background}: Lc {ratio}, {rating}",
+  "colors.matrix.level.body": "Texto de cuerpo",
+  "colors.matrix.level.content": "Texto de contenido",
+  "colors.matrix.level.headline": "Titulares",
+  "colors.matrix.level.nonText": "Sin texto",
+  "colors.matrix.level.fail": "No cumple",
   "colors.vision.title": "Vista para daltonismo",
   "colors.vision.description":
     "Simulado con el modelo de Machado de 2009. Nunca dependas solo del color para transmitir un significado.",

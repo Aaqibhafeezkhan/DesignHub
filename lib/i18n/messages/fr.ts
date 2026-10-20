@@ -446,6 +446,17 @@ export const fr = {
   "colors.matrix.caption": "Les lignes sont des couleurs de texte et les colonnes, des arrière-plans.",
   "colors.matrix.corner": "Texte ↓ / Arrière-plan →",
   "colors.matrix.cell": "{text} sur {background} : {ratio} {rating}",
+  "colors.matrix.mode": "Méthode de contraste",
+  "colors.matrix.wcag": "WCAG 2",
+  "colors.matrix.apca": "APCA",
+  "colors.matrix.apcaCaption":
+    "Les valeurs sont des Lc APCA signés : positifs pour un texte sombre sur fond clair, négatifs pour un texte clair sur fond sombre.",
+  "colors.matrix.apcaCell": "{text} sur {background} : Lc {ratio}, {rating}",
+  "colors.matrix.level.body": "Texte courant",
+  "colors.matrix.level.content": "Texte de contenu",
+  "colors.matrix.level.headline": "Titres",
+  "colors.matrix.level.nonText": "Hors texte",
+  "colors.matrix.level.fail": "Échec",
   "colors.vision.title": "Aperçu du daltonisme",
   "colors.vision.description":
     "Simulé avec le modèle de Machado (2009). Ne comptez jamais uniquement sur la couleur pour transmettre un sens.",

@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - WinUI / WPF export (`Theme.xaml`): a `ResourceDictionary` with `Color` and `SolidColorBrush` resources for the palette and Light and Dark `ThemeDictionaries` for the semantic roles.
 - Scrollbar effect in the Effects Lab: thumb, hover and track colors, width and radius as `scrollbar-color` and `scrollbar-width` with a `::-webkit-scrollbar` fallback, a scrolling preview and a 3:1 thumb contrast badge.
 - Flow field background generator: seeded noise-driven curves, one path per palette color, with bounded path counts and sizes.
+- APCA view of the Color Studio contrast matrix: a WCAG 2 / APCA switch (kept for the session) showing signed Lc values with a text label and meter for the Bronze level each pair reaches.
 
 ### Changed
 
