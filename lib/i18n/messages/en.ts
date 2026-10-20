@@ -535,6 +535,19 @@ export const en = {
   "share.import.failed": "Could not import that brand.",
   "share.import.broken": "That share link doesn't work.",
   "share.import.nothingChanged": "Nothing was changed.",
+  "launch.title.one": "Import {name}?",
+  "launch.title.other": "Import {count} projects?",
+  "launch.description":
+    "This file was opened from your device. The projects are added next to your own, and nothing you have is replaced.",
+  "launch.file": "File: {file}",
+  "launch.submit": "Import",
+  "launch.done.one": "Imported {name}",
+  "launch.done.other": "Imported {count} projects",
+  "launch.doneDescription": "Added as new projects. The project you have open is unchanged.",
+  "launch.failed": "Could not import that file.",
+  "launch.unsupported": "{file} isn't a DesignHub project file. Choose a .designhub.json file.",
+  "launch.tooLarge": "{file} is too large to import.",
+  "launch.invalid": "That file could not be read as a project.",
 
   // Errors thrown by lib/projects (as LocalizedError), shown in toasts
   "error.share.damaged": "This share link is damaged or incomplete. Ask for a new one.",

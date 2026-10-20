@@ -2,8 +2,12 @@ import type { MetadataRoute } from "next";
 
 import { siteConfig } from "@/lib/site";
 
+/**
+ * Next types `share_target.params.files` as `File | File[]`, but the web app manifest spec wants
+ * `{ name, accept }` descriptors there, so the manifest is built as plain data and cast once.
+ */
 export default function manifest(): MetadataRoute.Manifest {
-  return {
+  const manifest = {
     name: siteConfig.name,
     short_name: siteConfig.name,
     description: siteConfig.description,
@@ -17,5 +21,15 @@ export default function manifest(): MetadataRoute.Manifest {
       { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
       { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
+    // A double click on a .designhub.json file opens the installed app, which asks before importing.
+    file_handlers: [{ action: "/projects", accept: { "application/json": [".designhub.json"] } }],
+    // A file shared from another app is answered by the service worker (no server), then opens the import prompt.
+    share_target: {
+      action: "/share-target",
+      method: "POST",
+      enctype: "multipart/form-data",
+      params: { files: [{ name: "project", accept: ["application/json", ".designhub.json"] }] },
+    },
   };
+  return manifest as unknown as MetadataRoute.Manifest;
 }

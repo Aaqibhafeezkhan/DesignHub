@@ -13,3 +13,9 @@ export const LazyShareLinkImport = dynamic(
   () => import("@/components/projects/share-link-import").then((m) => m.ShareLinkImport),
   { ssr: false },
 );
+
+/** Opens project files the installed app is launched with, so it loads after hydration too. */
+export const LazyFileLaunchImport = dynamic(
+  () => import("@/components/projects/file-launch-import").then((m) => m.FileLaunchImport),
+  { ssr: false },
+);
