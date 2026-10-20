@@ -3,6 +3,7 @@ import { describe, expect, test } from "vitest";
 import { backgroundCss } from "@/lib/background/export";
 import { circuitTraces, type GridNode } from "@/lib/background/generators/circuit";
 import { halftoneGradient, halftoneStrength } from "@/lib/background/generators/halftone";
+import { flowAngle, maxFlowPaths, maxFlowPathPoints, valueNoise } from "@/lib/background/generators/flow-field";
 import { hypotrochoid, maxSpirographPoints } from "@/lib/background/generators/spirograph";
 import { truchetPaths } from "@/lib/background/generators/truchet";
 import { triangleSlot } from "@/lib/background/generators/triangles";
@@ -40,6 +41,7 @@ describe.each([
   "zigzag",
   "spirograph",
   "truchet",
+  "flow-field",
 ] as const)("%s", (kind) => {
   test("the same seed renders the same output", () => {
     for (const patch of [{ seed: 7 }, { seed: 7, rotation: 30, density: 100, scale: 2 }]) {
@@ -365,5 +367,36 @@ describe("truchet", () => {
       // Every arc starts at the midpoint of a tile edge.
       expect([x % 40, y % 40].sort()).toEqual([0, 20]);
     }
+  });
+});
+
+describe("flow field", () => {
+  test("value noise is seeded and stays in 0-1", () => {
+    expect(valueNoise(3, 1.25, 8.5)).toBe(valueNoise(3, 1.25, 8.5));
+    expect(valueNoise(3, 1.25, 8.5)).not.toBe(valueNoise(4, 1.25, 8.5));
+    for (let i = 0; i < 200; i += 1) {
+      const n = valueNoise(9, i * 0.37, i * 0.91);
+      expect(n).toBeGreaterThanOrEqual(0);
+      expect(n).toBeLessThanOrEqual(1);
+    }
+    expect(Math.abs(flowAngle(5, 3, 4, 0.01) - flowAngle(5, 3.01, 4, 0.01))).toBeLessThan(0.5);
+  });
+
+  test("draws one path per palette color and bounds the curve count", () => {
+    const svg = renderBackgroundSvg(settings("flow-field", { density: 100 }));
+    expect((svg.match(/<path /g) ?? []).length).toBe(3);
+    const d = [...svg.matchAll(/<path d="([^"]+)"/g)].flatMap((match) => match[1]!.split("M").slice(1));
+    expect(d.length).toBeLessThanOrEqual(maxFlowPaths);
+    d.forEach((curve) => expect(curve.split("L").length).toBeLessThanOrEqual(maxFlowPathPoints));
+  });
+
+  test("stays under about 200 kB at the largest density", () => {
+    const svg = renderBackgroundSvg(settings("flow-field", { density: 100, width: 3840, height: 2160, scale: 0.25 }));
+    expect(svg.length).toBeLessThan(200_000);
+  });
+
+  test("density adds curves", () => {
+    const paths = (density: number) => renderBackgroundSvg(settings("flow-field", { density })).split("M").length;
+    expect(paths(100)).toBeGreaterThan(paths(0));
   });
 });
