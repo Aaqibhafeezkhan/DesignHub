@@ -48,6 +48,7 @@ function usageNotes(ctx: VariantContext, clearSpace: number): string {
     "",
     "Files: every variant as SVG (vector, preferred), PNG (4x) and PDF, plus a favicon/ folder built from the app icon.",
     "The avatar comes as PNG at 400 x 400 and 1024 x 1024, ready to upload as a profile picture.",
+    "The seal comes as PNG at 512 x 512 and 1024 x 1024, for stamps and stickers.",
     "",
     "Usage",
     `- Clear space: keep at least ${Math.round(clearSpace * 100)}% of the logo height free on every side.`,

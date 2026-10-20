@@ -5,7 +5,7 @@ import { monochromeSvg } from "@/lib/logo/recolor";
 import type { BrandTokens } from "@/types/brand";
 
 export type LogoVariantId =
-  "color" | "monochrome" | "inverted" | "horizontal" | "stacked" | "wordmark" | "app-icon" | "avatar";
+  "color" | "monochrome" | "inverted" | "horizontal" | "stacked" | "wordmark" | "app-icon" | "avatar" | "seal";
 
 export type VariantContext = {
   logo: string;
@@ -91,6 +91,35 @@ function onPrimary(ctx: VariantContext): string {
 function markOnly(svg: string, ctx: VariantContext): string {
   const width = MARK * logoAspect(svg);
   return doc(width, MARK, nestLogo(svg, { x: 0, y: 0, width, height: MARK }), ctx);
+}
+
+const SEAL_SIZE = 512;
+const SEAL_RING = 240;
+const SEAL_INNER = 142;
+const SEAL_BASELINE = 158;
+const SEAL_TEXT_MAX = 56;
+const SEAL_TEXT_MIN = 18;
+/** Names longer than this are cut with an ellipsis, so the ring text stays legible. */
+export const SEAL_MAX_NAME = 48;
+/** The share of the text circle the lettering may fill, so its two ends never touch. */
+const SEAL_FILL = 0.92;
+const SEAL_SEPARATOR = " \u2022 ";
+
+/**
+ * The text that goes around the seal and its font size. Short names repeat, joined by bullets, to
+ * fill the ring; long names shrink (and past `SEAL_MAX_NAME` characters are cut) so the lettering
+ * never wraps onto itself.
+ */
+export function sealLettering(name: string, measure: (text: string, size: number) => number) {
+  const clean = name.trim().toUpperCase() || "BRAND";
+  const label = clean.length > SEAL_MAX_NAME ? `${clean.slice(0, SEAL_MAX_NAME - 1)}\u2026` : clean;
+  const available = 2 * Math.PI * SEAL_BASELINE * SEAL_FILL;
+  const unit = measure(label + SEAL_SEPARATOR, SEAL_TEXT_MAX);
+  const copies = Math.max(1, Math.min(8, Math.round(available / unit)));
+  const text = Array.from({ length: copies }, () => label).join(SEAL_SEPARATOR) + (copies > 1 ? SEAL_SEPARATOR : "");
+  const width = measure(text, SEAL_TEXT_MAX);
+  const size = Math.max(SEAL_TEXT_MIN, Math.min(SEAL_TEXT_MAX, (SEAL_TEXT_MAX * available) / width));
+  return { text, size: Math.round(size * 10) / 10, copies };
 }
 
 export const logoVariants: LogoVariant[] = [
@@ -202,6 +231,36 @@ export const logoVariants: LogoVariant[] = [
           nestLogo(monochromeSvg(ctx.logo, onPrimary(ctx)), {
             x: (size - width) / 2,
             y: (size - height) / 2,
+            width,
+            height,
+          }),
+        ctx,
+      );
+    },
+  },
+  {
+    id: "seal",
+    label: "Seal",
+    description: "Mark inside a ring with the name set around it, for stamps and stickers.",
+    background: (ctx) => ctx.light,
+    pngSizes: [512, 1024],
+    render: (ctx) => {
+      const c = SEAL_SIZE / 2;
+      const { text, size } = sealLettering(ctx.name, ctx.measure);
+      const { width, height } = avatarMarkSize(logoAspect(ctx.logo), SEAL_INNER * 2 - 12);
+      // Two half circles so the path closes cleanly. It starts at 6 o'clock and runs clockwise (up
+      // the left side), so 50% is the top: the lettering is centered there and can use the whole ring.
+      const ring = `M${c} ${c + SEAL_BASELINE}A${SEAL_BASELINE} ${SEAL_BASELINE} 0 1 1 ${c} ${c - SEAL_BASELINE}A${SEAL_BASELINE} ${SEAL_BASELINE} 0 1 1 ${c} ${c + SEAL_BASELINE}`;
+      return doc(
+        SEAL_SIZE,
+        SEAL_SIZE,
+        `<defs><path id="seal-ring" d="${ring}"/></defs>` +
+          `<circle cx="${c}" cy="${c}" r="${SEAL_RING}" fill="none" stroke="${ctx.primary}" stroke-width="8"/>` +
+          `<circle cx="${c}" cy="${c}" r="${SEAL_INNER}" fill="none" stroke="${ctx.primary}" stroke-width="4"/>` +
+          `<text font-family="'${ctx.fontFamily}', ui-sans-serif, system-ui, sans-serif" font-weight="${ctx.fontWeight}" font-size="${size}" fill="${ctx.primary}" text-anchor="middle"><textPath href="#seal-ring" startOffset="50%">${escapeXml(text)}</textPath></text>` +
+          nestLogo(monochromeSvg(ctx.logo, ctx.primary), {
+            x: (SEAL_SIZE - width) / 2,
+            y: (SEAL_SIZE - height) / 2,
             width,
             height,
           }),

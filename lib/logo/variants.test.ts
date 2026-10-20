@@ -1,10 +1,14 @@
-import { expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
+
+import { xmlError } from "@/lib/test/xml";
 
 import {
   AVATAR_CLEAR_SPACE,
   avatarMarkSize,
   logoVariants,
   renderVariant,
+  SEAL_MAX_NAME,
+  sealLettering,
   type VariantContext,
 } from "@/lib/logo/variants";
 
@@ -47,4 +51,53 @@ test("the avatar is a 512 px circle on the primary color with the mark centred",
 
 test("the avatar exports at 400 and 1024 px in the logo pack", () => {
   expect(logoVariants.find((variant) => variant.id === "avatar")?.pngSizes).toEqual([400, 1024]);
+});
+
+const mark = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="red"/></svg>`;
+const measure = (text: string, size: number) => text.length * size * 0.6;
+
+describe("seal", () => {
+  const sealCtx = (name: string): VariantContext => ({ ...ctx(mark), name });
+
+  test("is in the variants grid and exports at 512 and 1024 px", () => {
+    expect(logoVariants.find((variant) => variant.id === "seal")?.pngSizes).toEqual([512, 1024]);
+  });
+
+  test("is well-formed SVG with a ring path, two rings and the recolored mark", () => {
+    const svg = renderVariant("seal", sealCtx("Acme"));
+    expect(xmlError(svg)).toBeNull();
+    expect(svg).toContain('<path id="seal-ring"');
+    expect(svg).toContain('<textPath href="#seal-ring" startOffset="50%">');
+    expect((svg.match(/<circle /g) ?? []).length).toBe(2);
+    expect(svg).not.toContain("red");
+  });
+
+  test("escapes the name in the path text", () => {
+    const svg = renderVariant("seal", sealCtx("A & <B>"));
+    expect(xmlError(svg)).toBeNull();
+    expect(svg).toContain("A &amp; &lt;B&gt;");
+    expect(svg).not.toContain("<B>");
+  });
+
+  test("a 3 character name repeats around the ring at full size", () => {
+    const { text, size, copies } = sealLettering("abc", measure);
+    expect(copies).toBeGreaterThan(1);
+    expect(text.startsWith("ABC • ABC")).toBe(true);
+    expect(size).toBeGreaterThan(40);
+  });
+
+  test("a 40 character name shrinks and stays within the ring", () => {
+    const name = "The International Society of Brand Seals";
+    expect(name).toHaveLength(40);
+    const { text, size, copies } = sealLettering(name, measure);
+    expect(copies).toBe(1);
+    expect(size).toBeLessThan(56);
+    expect(measure(text, size)).toBeLessThanOrEqual(2 * Math.PI * 158);
+  });
+
+  test("an overlong name is cut with an ellipsis", () => {
+    const { text } = sealLettering("x".repeat(120), measure);
+    expect(text).toHaveLength(SEAL_MAX_NAME);
+    expect(text.endsWith("…")).toBe(true);
+  });
 });
