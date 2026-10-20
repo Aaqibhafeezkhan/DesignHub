@@ -1,6 +1,6 @@
 # Adding a Brand DNA provider
 
-Brand DNA providers turn an uploaded image into editable brand suggestions. The app has an on-device provider and a mock provider for developing the UI. Both implement the same interface, so a new provider can be registered without changing the editor.
+Brand DNA providers turn an uploaded image into editable brand suggestions. The app has an on-device provider, a mock provider for developing the UI and a bring-your-own-key AI provider. Both implement the same interface, so a new provider can be registered without changing the editor.
 
 ## Provider contract
 
@@ -82,8 +82,17 @@ export const grayscaleProvider: BrandDnaProvider = {
 
 The existing `localProvider` shows on-device palette extraction. `mockAiProvider` returns sample data for the UI. `lib/brand-dna/apply.ts` maps an accepted result into the existing brand stores.
 
+## The AI provider (your key)
+
+`lib/brand-dna/providers/anthropic.ts` is the reference for a provider that calls a vision API with a key the person brings. It uses the **Anthropic Messages API** (model `claude-opus-5-5`, structured JSON output, low effort) through `@anthropic-ai/sdk`, loaded only when the provider runs.
+
+- **Key storage:** `lib/brand-dna/ai-key.ts` keeps the key in its own IndexedDB record (`designhub:brand-dna-key`), outside every studio store, so it can never end up in a project snapshot, export, share link or version. `components/brand-dna/ai-key-panel.tsx` saves it, removes it with one click and resets the review.
+- **What is sent:** only the downscaled RGBA copy `loadDnaImage` already prepares (at most 160 px, re-encoded as PNG) and fixed instructions. File names are not sent. The panel shows these exact images and the instructions, and nothing is sent until the person agrees.
+- **Failures:** a missing key, no review, a rejected key, rate limiting, a network error, a refusal, a cut-off or malformed answer all return the on-device result with a first note saying what happened. A cancelled request still throws `AbortError`.
+- **Tests:** `createAiProvider` takes its key loader, client and encoder as dependencies, so `anthropic.test.ts` covers request building, answer parsing and error handling with no network.
+
 ## Privacy and configuration
 
 - Keep on-device processing as the default.
-- Do not commit API keys or put secrets in browser code. If a provider needs credentials or a server-side service, agree on that architecture before adding it.
+- Do not commit API keys or put secrets in browser code. A provider that needs credentials should take a key the person pastes (stored like the AI provider's key, only in IndexedDB), show what is sent first and fall back to on-device results on failure. Anything that needs a server-side service needs an agreed architecture first.
 - If the change introduces an environment variable, document it in `.env.example`.

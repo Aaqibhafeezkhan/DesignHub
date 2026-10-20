@@ -42,7 +42,7 @@ A typical design session bounces between a font site, a palette generator, a con
 | --------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Brand Studio**      | Name, logo, colors with roles, type, radius, spacing, shadow      | Brand JSON · design tokens · DTCG import                                                                                                                                                                                                         |
 | **Brand DNA** (beta)  | Palette, mood, type and personality from up to five images        | Applies to the brand                                                                                                                                                                                                                             |
-| **Logo Studio**       | SVG editor, construction grid, clear space, eight variants        | SVG · animated SVG · PNG · PDF · logo pack ZIP                                                                                                                                                                                                   |
+| **Logo Studio**       | SVG editor, construction grid, clear space, nine variants         | SVG · animated SVG · PNG · PDF · logo pack ZIP                                                                                                                                                                                                   |
 | **Mockup Studio**     | Stationery, merch, signage, laptop, tablet and mobile mockups     | PNG · WebP (up to 4×) · PDF                                                                                                                                                                                                                      |
 | **Social Media**      | GitHub, LinkedIn, X, YouTube, DEV, Hashnode, Telegram, OG…        | PNG (1× / 2×) · OG meta tags · social ZIP                                                                                                                                                                                                        |
 | **Brand Guidelines**  | A 21-page brand book generated from the brand                     | PDF · PNG per page · static website                                                                                                                                                                                                              |
@@ -50,8 +50,8 @@ A typical design session bounces between a font site, a palette generator, a con
 | **Typography Studio** | Google Fonts, variable axes, pairing, fluid type scale, OpenType  | CSS · Tailwind · SCSS · React · JSON tokens                                                                                                                                                                                                      |
 | **Color Studio**      | Palettes, harmonies, OKLCH, shades 50–950, gradients, WCAG        | CSS variables · Tailwind · JSON tokens · SVG gradient · GIMP · ASE · Sketch · Procreate · Krita · PNG                                                                                                                                            |
 | **Icon Studio**       | 200,000+ Iconify icons, restyling, favicons                       | SVG · React · Vue · Svelte · Angular · Solid · Qwik · Lit · Astro · React Native · CSS · PNG · ICO · favicon ZIP                                                                                                                                 |
-| **Background Studio** | 31 generators: waves, mesh, aurora, voronoi, truchet, zigzag…     | SVG · PNG (1× / 2×) · CSS background                                                                                                                                                                                                             |
-| **Effects Lab**       | Glass, neumorphism, shadows, gradient text, skeleton, grain       | CSS · Tailwind classes · Tailwind `@utility` · SCSS · React                                                                                                                                                                                      |
+| **Background Studio** | 33 generators: waves, mesh, aurora, voronoi, flow field…          | SVG · PNG (1× / 2×) · CSS background                                                                                                                                                                                                             |
+| **Effects Lab**       | Glass, neumorphism, shadows, scrollbar, gradient text, grain      | CSS · Tailwind classes · Tailwind `@utility` · SCSS · React                                                                                                                                                                                      |
 | **SVG Playground**    | Inspect, edit, optimize, convert, build sprites                   | Optimized SVG · JSX · React · React Native · Vue · Svelte · Angular · Solid · CSS data URI · sprite                                                                                                                                              |
 | **Accessibility Lab** | WCAG contrast, color vision, readability, dyslexia, touch targets | JSON and Markdown audit report                                                                                                                                                                                                                   |
 | **Export Engine**     | One token model from every studio, plus brand assets              | CSS · SCSS · Sass map · Less · Stylus · Tailwind · JS · YAML · UnoCSS · Panda · Chakra · shadcn · Bootstrap · Style Dictionary · @property · light-dark() · Xcode · Android · React · Vue · Flutter · SwiftUI · Compose · Android · JSON · Figma |
@@ -69,14 +69,14 @@ A typical design session bounces between a font site, a palette generator, a con
 ### Brand DNA (beta)
 
 - Upload, drop or paste a logo, product shot or moodboard (up to five images, combined by area); get a weighted palette, a mood, a type pairing, a radius and personality words. A flat background (like the white behind a logo) is left out automatically
-- Provider architecture: an **on-device** provider (free, private, instant) and an **AI (mock)** provider that returns sample data, both behind one `BrandDnaProvider` interface in `lib/brand-dna`. See the [provider guide](docs/brand-dna-providers.md) to add another implementation.
+- Provider architecture: an **on-device** provider (free, private, instant) an **AI (mock)** provider that returns sample data and an **AI (your key)** provider that asks a vision model (the Anthropic Messages API) to describe the images, all behind one `BrandDnaProvider` interface in `lib/brand-dna`. The AI provider is opt-in: you paste your own key, it stays only in your browser's IndexedDB and is removed with one click, the exact downscaled images and instructions are shown before the first request, and any failure falls back to the on-device result. See the [provider guide](docs/brand-dna-providers.md) to add another implementation.
 - Staged loading states, editable results with each color's contrast on white and black, and one-click **Apply to brand** with undo
 
 ### Logo Studio
 
 - SVG logo editor: recolor every color, monochrome and inverted modes
 - **Construction grid, clear space and safe area** guides
-- Responsive variants: full color, monochrome, inverted, horizontal and stacked lockups, wordmark, app icon and a circular avatar for profile pictures, with a minimum-size strip and background tests
+- Responsive variants: full color, monochrome, inverted, horizontal and stacked lockups, wordmark, app icon and a circular avatar for profile pictures, a circular seal with the name set around the mark, with a minimum-size strip and background tests
 - Each variant as SVG, PNG, WebP or PDF
 - **Logo pack**: every variant as SVG, PNG and PDF in one ZIP with usage notes, plus avatar PNGs at 400 and 1024 px
 - **Animated SVG**: the logo draws itself in (plays once or loops, and respects reduced motion), for splash screens and READMEs
@@ -85,7 +85,7 @@ A typical design session bounces between a font site, a palette generator, a con
 
 - Print: **business card, letterhead, envelope, stickers, poster, merch (T-shirt and tote), a coffee cup, a shopping bag, a phone lock screen, an ID badge on a lanyard and a billboard**
 - Devices: a **tablet** in landscape (dashboard) and portrait (mobile layout)
-- Screens: **landing page on a laptop, analytics dashboard on a desktop, three-screen mobile app and an email signature**, which also copies as an HTML signature for Gmail, Outlook or Apple Mail
+- Screens: **landing page on a laptop, analytics dashboard on a desktop, three-screen mobile app, app store screenshots and an email signature**, which also copies as an HTML signature for Gmail, Outlook or Apple Mail
 - Drawn as SVG from the live brand, in light or dark, with your fonts embedded so exports match the preview
 - High-resolution **PNG and WebP (1-4×) and PDF**
 
@@ -139,7 +139,7 @@ A typical design session bounces between a font site, a palette generator, a con
 - sRGB and Display P3 gamut indicators
 - Shade generator (**50–950**) computed in OKLCH, with hue shift
 - Gradient builder: **linear, radial and conic**, draggable stops, OKLCH / OKLab / sRGB interpolation
-- **WCAG** contrast checker with AA / AAA results, one-click fixes and a full palette contrast matrix
+- **WCAG** contrast checker with AA / AAA results, one-click fixes and a full palette contrast matrix that switches between WCAG 2 ratios and APCA Lc values
 - Color blindness preview (protanopia, deuteranopia, tritanopia, achromatopsia)
 - Exports: **CSS variables, Tailwind, JSON tokens, SVG gradient**, a **Markdown palette table** (`.md`), a **GIMP / Inkscape palette** (`.gpl`), an **Adobe Swatch Exchange** file (`.ase`), a **Sketch palette**, **Procreate swatches**, a **Krita palette** and a **PNG swatch strip**
 - Markdown tables include color names, HEX, OKLCH and the selected notation, with optional **50–950** shade rows. Preview, copy or download them from the Export tab.
@@ -156,7 +156,7 @@ A typical design session bounces between a font site, a palette generator, a con
 ### Export Engine
 
 - One shared design-token model built live from every studio
-- Generates **CSS variables, SCSS, a Sass map, Less, Stylus, Tailwind v4 `@theme`, Tailwind v3 config, a JavaScript module, UnoCSS, Panda CSS and Chakra UI v3 themes, a shadcn/ui theme, Figma Variables JSON, a Style Dictionary build, a React Native theme, Bootstrap 5 Sass variables, typed CSS `@property` registrations, a CSS `light-dark()` theme, a Material 3 `themes.xml` for Android, Xcode asset catalog color sets, React theme, styled-components / Emotion theme, Vue theme, Flutter `ThemeData`, SwiftUI, Jetpack Compose, Android `colors.xml`, JSON and YAML tokens** (W3C DTCG format) and **Tokens Studio for Figma** JSON
+- Generates **CSS variables, SCSS, a Sass map, Less, Stylus, Tailwind v4 `@theme`, Tailwind v3 config, a JavaScript module, UnoCSS, Panda CSS and Chakra UI v3 themes, a shadcn/ui theme, Figma Variables JSON, a Style Dictionary build, a React Native theme, Bootstrap 5 Sass variables, typed CSS `@property` registrations, a CSS `light-dark()` theme, a Material 3 `themes.xml` for Android, a WinUI / WPF `Theme.xaml`, Xcode asset catalog color sets, React theme, styled-components / Emotion theme, Vue theme, Flutter `ThemeData`, SwiftUI, Jetpack Compose, Android `colors.xml`, JSON and YAML tokens** (W3C DTCG format) and **Tokens Studio for Figma** JSON
 - Semantic roles (primary, accent, foreground, background) inferred from your palette
 - 8px spacing scale and 12px radius scale, both configurable
 - Live preview UI kit, one-click copy, **Download JSON**, all formats as `.zip`, preview PNG and a PDF style guide
@@ -166,7 +166,7 @@ A typical design session bounces between a font site, a palette generator, a con
 
 ### Background Studio
 
-- Thirty-one procedural generators: **waves, blobs, mesh gradients, aurora, noise texture, dots, grid, isometric, rings, concentric squares, argyle, checks, plus signs, crosshatch, triangles, squiggle, low poly, voronoi cells, circuit board, halftone, bokeh, starfield, confetti, chevron, zigzag, spirograph, truchet tiles, hexagons, sunburst, topographic contours and stripes**
+- Thirty-three procedural generators: **waves, blobs, mesh gradients, aurora, noise texture, dots, grid, isometric, rings, concentric squares, argyle, checks, plus signs, crosshatch, triangles, squiggle, low poly, voronoi cells, circuit board, halftone, bokeh, starfield, confetti, chevron, zigzag, spirograph, truchet tiles, memphis shapes, flow field, hexagons, sunburst, topographic contours and stripes**
 - Seeded and deterministic - every seed reproduces exactly; **Randomize** (or `Space`) rolls a new one
 - Shared controls for colors (or one click to use your Color Studio palette), density, scale, rotation and canvas size (desktop, Full HD, Open Graph, square, story)
 - Blobs are smoothed with **Paper.js** (loaded on demand); noise uses SVG `feTurbulence`
@@ -182,6 +182,7 @@ A typical design session bounces between a font site, a palette generator, a con
 - **Long shadow** - the flat-design shadow at any angle, for boxes or text, with an optional fade
 - **Gradient text** - text filled with the Color Studio gradient, with an optional animated shift and a solid fallback
 - **Skeleton** - the loading placeholder shimmer in the brand's neutrals, static under reduced motion
+- **Scrollbar** - thumb, hover and track colors, width and radius as `scrollbar-color` and `scrollbar-width` with a `::-webkit-scrollbar` fallback and a 3:1 contrast check
 - **Focus ring** - a double `:focus-visible` ring with a built-in WCAG contrast check and a one-click fix
 - **Text outline** - outlined text with an optional offset shadow copy and a solid fallback
 - **Glow generator** - color, radius and intensity with optional text glow
@@ -241,7 +242,7 @@ A typical design session bounces between a font site, a palette generator, a con
 
 ## Quick start
 
-Requirements: **Node.js 22+** and **pnpm 11** (the version is pinned in `package.json`; run `corepack enable` to get it automatically). No API keys are needed.
+Requirements: **Node.js 22+** and **pnpm 11** (the version is pinned in `package.json`; run `corepack enable` to get it automatically). No API keys are needed (the optional Brand DNA AI provider uses a key you paste in the app).
 
 ```bash
 git clone https://github.com/yakew7/DesignHub.git
@@ -252,9 +253,22 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+### Command line
+
+The `designhub` CLI (`packages/cli`) builds any Export Engine format from an exported `.designhub.json` project, for CI and scripts, with no browser and no runtime dependencies:
+
+```bash
+pnpm --filter designhub build   # bundles packages/cli/dist/designhub.mjs
+node packages/cli/dist/designhub.mjs build brand.designhub.json --format css,tailwind-v4 --out tokens/
+```
+
+It imports the same generators the app uses, so the files match what the Export Engine downloads, and the output is deterministic. Run it with `--help` to list every format. See [packages/cli/README.md](packages/cli/README.md); once published it runs as `npx designhub build ...`.
+
 ### PWA and offline development
 
 Production builds register a service worker that precaches the prerendered routes and Next.js static assets. Google Fonts and Iconify responses are cached at runtime, so a studio that has been visited online can be reopened while offline.
+
+Installed in Chromium, the app also registers as a handler for `.designhub.json` files (double click one to open the import prompt) and as a share target for project files. Both are handled on the device, validate and sanitize the file like a normal import, and ask before adding anything.
 
 The service worker is generated after `next build` from the current Next.js build ID. Its caches are versioned by that build ID, and old DesignHub caches are removed when a new worker activates.
 
@@ -364,7 +378,7 @@ DesignHub/
 ├── hooks/                  # Reusable React hooks (hotkeys, catalog, icon data, tokens…)
 ├── lib/
 │   ├── brand/              # Brand tokens, surfaces, generated logo mark, font embedding, Brand JSON
-│   ├── brand-dna/          # Provider interface, on-device and mock providers, palette extraction
+│   ├── brand-dna/          # Provider interface, on-device, mock and AI (your key) providers, palette extraction
 │   ├── logo/               # Recolor, guides, variants, logo pack
 │   ├── mockups/            # SVG drawing kit and mockup templates
 │   ├── social/             # Social templates, safe areas, social pack
@@ -381,6 +395,7 @@ DesignHub/
 │   ├── tokens/             # Shared design-token model and format generators
 │   ├── db.ts               # Dexie database + Zustand storage adapter
 │   └── zip.ts              # Tiny dependency-free ZIP writer
+├── packages/cli/           # The designhub command line (pnpm workspace package)
 ├── store/                  # Zustand stores (persisted to IndexedDB)
 ├── types/                  # Shared TypeScript types
 ├── scripts/                # Maintenance scripts (font catalog generator)
@@ -395,6 +410,7 @@ Read [docs/architecture.md](docs/architecture.md) for how the pieces fit togethe
 DesignHub has no accounts and no backend. Your work (brands, projects, palettes, settings) is stored in your browser's IndexedDB and never leaves your device. The app makes network requests to:
 
 - `fonts.googleapis.com` / `fonts.gstatic.com` - to preview Google Fonts and embed brand fonts in exports
+- `api.anthropic.com` - only if you choose the **AI (your key)** Brand DNA provider, paste your own key and approve what is sent: a small downscaled copy of your images and fixed instructions, never your project
 - `api.iconify.design` (with `api.simplesvg.com` and `api.unisvg.com` as fallbacks) - to search and download icons
 - [Vercel Web Analytics](https://vercel.com/docs/analytics/privacy-policy) - on the hosted site only, to count page views
 
@@ -402,14 +418,14 @@ Vercel Web Analytics is cookie-free and anonymous. It records which pages are vi
 
 Exported PNGs, PDFs and generated SVGs carry a small "Made with DesignHub" note in their file metadata (not on the artwork), and the README inside each ZIP credits the project. Your own uploaded logos are never modified.
 
-Uploaded logos and Brand DNA images are processed in the browser and never uploaded. See [docs/storage.md](docs/storage.md) for everything DesignHub keeps in your browser and how to back it up or reset it. None of these services needs an API key.
+Uploaded logos and Brand DNA images are processed in the browser and never uploaded (the opt-in AI provider above is the one exception, and it sends only what you reviewed). See [docs/storage.md](docs/storage.md) for everything DesignHub keeps in your browser and how to back it up or reset it. None of these services needs an API key from us; the AI provider uses a key you bring yourself.
 
 ## Roadmap
 
 - **V1** - Typography, Colors, Icons, Export ✅
 - **V2** - Background Studio, Effects Lab, Accessibility Lab, SVG Playground ✅
 - **V3** - Brand Studio, Logo Studio, Mockups, Social Media, Brand Guidelines, Brand Projects, Brand DNA ✅
-- **Next** - Plugin marketplace, desktop app, AI Brand DNA, team collaboration
+- **Next** - Plugin marketplace, desktop app, team collaboration
 
 See [ROADMAP.md](ROADMAP.md) for details.
 

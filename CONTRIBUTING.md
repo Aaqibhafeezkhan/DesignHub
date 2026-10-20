@@ -25,7 +25,7 @@ pnpm install
 pnpm dev
 ```
 
-The app runs at [http://localhost:3000](http://localhost:3000). There is no backend and no API key. The only environment variable, `NEXT_PUBLIC_SITE_URL`, is optional; see `.env.example`.
+The app runs at [http://localhost:3000](http://localhost:3000). There is no backend and no API key (the optional Brand DNA AI provider uses a key each person pastes in the app, and tests never need one). The only environment variable, `NEXT_PUBLIC_SITE_URL`, is optional; see `.env.example`.
 
 ### pnpm commands
 
@@ -36,7 +36,7 @@ The app runs at [http://localhost:3000](http://localhost:3000). There is no back
 | `pnpm start`         | Serve the production build locally                                  |
 | `pnpm lint`          | ESLint (Next.js + TypeScript rules)                                 |
 | `pnpm typecheck`     | `tsc --noEmit` in strict mode                                       |
-| `pnpm test`          | Unit tests with Vitest (`lib/**/*.test.ts`)                         |
+| `pnpm test`          | Unit tests with Vitest (`lib/**` and `packages/*/src/**`)           |
 | `pnpm test:e2e`      | Playwright smoke tests against the production build (see below)     |
 | `pnpm format`        | Format all files with Prettier                                      |
 | `pnpm format:check`  | Verify formatting without writing                                   |
@@ -184,11 +184,16 @@ docs: explain DTCG token output
 
 Write comments only when they add information the code can't express - the _why_, a non-obvious constraint, or a reference. Don't narrate what the code already says.
 
+## The command line (`packages/cli`)
+
+`packages/cli` is a pnpm workspace package (named `designhub`; the app itself is `designhub-app`). It reads an exported `.designhub.json` file and writes Export Engine formats to a folder, importing `lib/tokens` and `lib/projects` from the app instead of copying them, so a new export format shows up in the CLI with no CLI change. Build it with `pnpm --filter designhub build` (output in `packages/cli/dist`, gitignored); its tests live in `packages/cli/src` and run with `pnpm test`, and CI builds it and runs `--help`. Keep it free of runtime dependencies and its output deterministic.
+
 ## Adding a new export format
 
 1. Write a pure generator in `lib/tokens/formats.ts` that takes `DesignTokens` and returns a string.
 2. Register it in `tokenFormats()` with an `id`, `label`, `filename` and `language`.
-3. Verify the output is valid by pasting it into a real project.
+3. Add a test in `lib/tokens/formats.test.ts` (use `lib/test/xml.ts` for XML formats). The CLI and the all-formats ZIP pick the format up automatically.
+4. Verify the output is valid by pasting it into a real project.
 
 ## Adding data (palettes, icons, fonts, presets)
 

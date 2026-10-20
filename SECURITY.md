@@ -1,10 +1,12 @@
 # Security Policy
 
-DesignHub runs entirely in the browser. It has no backend, no accounts and no database of user data. User work is stored locally in the browser's IndexedDB. The app talks only to Google Fonts (`fonts.googleapis.com`, `fonts.gstatic.com`), the Iconify API (`api.iconify.design`, with `api.simplesvg.com` and `api.unisvg.com` as fallbacks) and, on the Vercel-hosted site only, Vercel Web Analytics (anonymous, cookie-free page-view counts). No API keys or secrets are used.
+DesignHub runs entirely in the browser. It has no backend, no accounts and no database of user data. User work is stored locally in the browser's IndexedDB. The app talks only to Google Fonts (`fonts.googleapis.com`, `fonts.gstatic.com`), the Iconify API (`api.iconify.design`, with `api.simplesvg.com` and `api.unisvg.com` as fallbacks) and, on the Vercel-hosted site only, Vercel Web Analytics (anonymous, cookie-free page-view counts). No API keys or secrets of ours are used. One opt-in feature talks to a fourth party: if you choose the Brand DNA **AI (your key)** provider and paste your own key, a downscaled copy of the images you approved is sent to `api.anthropic.com`. The key is stored only in your browser's IndexedDB under its own record, is never written to exports, project files, share links or version history, and is removed with one click.
 
 Even so, we take security seriously. Relevant issues include cross-site scripting through uploaded SVG logos, imported project JSON, fonts, icons or pasted color values; unsafe handling of downloaded files; and supply-chain problems in our dependencies.
 
-Uploaded SVG is sanitized (scripts, `foreignObject`, event handlers and `javascript:` URLs removed) and only ever rendered through `<img>`, never injected into the page. Imported project files are validated and their logos sanitized again.
+Uploaded SVG is sanitized (scripts, `foreignObject`, event handlers and `javascript:` URLs removed) and only ever rendered through `<img>`, never injected into the page. Imported project files are validated and their logos sanitized again. That includes files opened through the installed app's file handler and share target: they are read on the device (the service worker keeps a shared file in a local cache, never uploads it), size-limited, validated and sanitized exactly like a normal import, and nothing is added without confirmation.
+
+Reports about the AI provider's key handling (for example the key reaching storage, logs, exports or any host other than the provider) are in scope.
 
 ## Supported versions
 

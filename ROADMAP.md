@@ -120,7 +120,8 @@ Have an idea, or want to help build something here? Open an issue or discussion 
 
 ### AI Brand DNA
 
-- A model-backed Brand DNA provider behind the existing interface, opt-in and bring-your-own-key
+- ✅ A model-backed Brand DNA provider behind the existing interface, opt-in and bring-your-own-key (the Anthropic Messages API)
+- Support more vision providers behind the same key panel
 
 ### Team Collaboration
 

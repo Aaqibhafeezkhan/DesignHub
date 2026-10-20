@@ -4,17 +4,19 @@ DesignHub has no accounts and no server. Everything you make is saved in your ow
 
 ## Where it lives
 
-| Place         | Name                                        | What's in it                                                                                                                           |
-| ------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| IndexedDB     | `designhub` database, `kv` table            | The settings of every studio (one row per store, listed below).                                                                        |
-| IndexedDB     | `designhub` database, `icons` table         | Icons you have opened, cached so Icon Studio keeps working offline.                                                                    |
-| IndexedDB     | `designhub` database, `projects` table      | Your brand projects: one full snapshot of the brand per project.                                                                       |
-| IndexedDB     | `designhub` database, `versions` table      | Version history: up to 20 earlier snapshots per project, deleted with the project.                                                     |
-| IndexedDB     | `designhub` database, `handles` table       | The folder you chose for autosave (a directory handle, never its contents). Chromium browsers only.                                    |
-| localStorage  | `theme`                                     | Your light or dark theme choice (written by `next-themes`).                                                                            |
-| localStorage  | `designhub:locale`                          | The interface language you picked (`en` or `es`). Without it, DesignHub follows your browser language.                                 |
-| localStorage  | `designhub:panes:<studio>`                  | How wide you dragged each studio pane. Double-click a divider to reset it.                                                             |
-| Cache Storage | `designhub-static-*`, `designhub-runtime-*` | On the hosted site only: the offline app shell and cached Google Fonts and Iconify responses, so DesignHub opens without a connection. |
+| Place         | Name                                                            | What's in it                                                                                                                                                                        |
+| ------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IndexedDB     | `designhub` database, `kv` table                                | The settings of every studio (one row per store, listed below).                                                                                                                     |
+| IndexedDB     | `designhub` database, `icons` table                             | Icons you have opened, cached so Icon Studio keeps working offline.                                                                                                                 |
+| IndexedDB     | `designhub` database, `projects` table                          | Your brand projects: one full snapshot of the brand per project.                                                                                                                    |
+| IndexedDB     | `designhub` database, `versions` table                          | Version history: up to 20 earlier snapshots per project, deleted with the project.                                                                                                  |
+| IndexedDB     | `designhub` database, `kv` table, key `designhub:brand-dna-key` | The API key you pasted for the Brand DNA AI provider, and whether you reviewed what it sends. Never in a project, export, share link or version history. Removed by **Remove key**. |
+| Cache Storage | `designhub-share`                                               | Only for a moment: a project file shared to the installed app, kept on the device until the import prompt reads and deletes it.                                                     |
+| IndexedDB     | `designhub` database, `handles` table                           | The folder you chose for autosave (a directory handle, never its contents). Chromium browsers only.                                                                                 |
+| localStorage  | `theme`                                                         | Your light or dark theme choice (written by `next-themes`).                                                                                                                         |
+| localStorage  | `designhub:locale`                                              | The interface language you picked (`en` or `es`). Without it, DesignHub follows your browser language.                                                                              |
+| localStorage  | `designhub:panes:<studio>`                                      | How wide you dragged each studio pane. Double-click a divider to reset it.                                                                                                          |
+| Cache Storage | `designhub-static-*`, `designhub-runtime-*`                     | On the hosted site only: the offline app shell and cached Google Fonts and Iconify responses, so DesignHub opens without a connection.                                              |
 
 The database and its tables are defined in [`lib/db.ts`](../lib/db.ts). Every read and write goes through `safeDb`, so blocked or broken storage never breaks a studio.
 
@@ -42,6 +44,12 @@ Each row in the `kv` table is one Zustand store, saved under the key shown here.
 | `designhub:a11y`        | Accessibility Lab colors, text settings and targets                              | No                              |
 
 Uploaded images for Brand DNA are never saved. They stay in memory until you leave the page.
+
+## Opening and sharing project files (installed app)
+
+In Chromium, once DesignHub is installed, double clicking a `.designhub.json` file opens the app (a `file_handlers` entry in the web app manifest), and sharing a project file from another app sends it to DesignHub (a `share_target`). Nothing is uploaded: the launch queue hands the page the file directly, and a shared file is answered by the service worker, which keeps it in the `designhub-share` cache and redirects to Brand Projects with `?shared=1`. The page reads and deletes it, validates and sanitizes it like **Import**, shows an import prompt, and on **Import** adds the projects as new ones. An invalid, oversized (over 25 MB) or non-JSON file shows a message and changes nothing, and the open project is never replaced. Browsers without file handlers (Firefox, Safari) see no change.
+
+Manual test plan: build and start the app, install it from Chrome, export a project, double click the `.designhub.json` file, and check the prompt names the project; cancel and confirm nothing was added; repeat with a renamed text file and with a broken JSON file.
 
 ## Version history
 
