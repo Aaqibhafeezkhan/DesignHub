@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Globe, ImageDown, Loader2 } from "lucide-react";
+import { FileText, FileCode2, Globe, ImageDown, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -16,6 +16,7 @@ type Props = { ctx: GuidelineContext; pages: GuidelinePage[]; page: GuidelinePag
 export function GuidelineExportPanel({ ctx, pages, page, svg }: Props) {
   const [busy, setBusy] = useState(false);
   const [siteBusy, setSiteBusy] = useState(false);
+  const [markdownBusy, setMarkdownBusy] = useState(false);
   const [progress, setProgress] = useState<number | null>(null);
 
   async function downloadBook() {
@@ -50,6 +51,25 @@ export function GuidelineExportPanel({ ctx, pages, page, svg }: Props) {
       toast.error("Export failed in this browser.");
     } finally {
       setSiteBusy(false);
+    }
+  }
+
+  async function downloadMarkdown() {
+    setMarkdownBusy(true);
+    try {
+      const { buildBrandMarkdown } = await import("@/lib/guidelines/markdown");
+      const zip = buildBrandMarkdown(ctx, pages);
+      downloadBlob(
+        new Blob([zip.slice().buffer], { type: "application/zip" }),
+        `${slugify(ctx.brand.name)}-brand-markdown.zip`,
+      );
+      toast.success("Markdown ready", {
+        description: "Unzip it and open brand-guidelines.md. The images use relative paths.",
+      });
+    } catch {
+      toast.error("Export failed in this browser.");
+    } finally {
+      setMarkdownBusy(false);
     }
   }
 
@@ -94,6 +114,9 @@ export function GuidelineExportPanel({ ctx, pages, page, svg }: Props) {
       ) : null}
       <Button variant="outline" onClick={downloadSite} disabled={siteBusy || pages.length === 0}>
         {siteBusy ? <Loader2 className="animate-spin" /> : <Globe />} Download website
+      </Button>
+      <Button variant="outline" onClick={downloadMarkdown} disabled={markdownBusy || pages.length === 0}>
+        {markdownBusy ? <Loader2 className="animate-spin" /> : <FileCode2 />} Download Markdown
       </Button>
       <Button variant="outline" onClick={downloadPage} disabled={!svg || busy}>
         {busy ? <Loader2 className="animate-spin" /> : <ImageDown />} This page (PNG)

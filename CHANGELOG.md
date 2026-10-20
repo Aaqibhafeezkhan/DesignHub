@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Seal logo variant: the mark inside a ring with the brand name set on a circular path, repeated for short names and shrunk for long ones, exported as SVG, PNG (512 and 1024) and PDF in the logo pack.
 - App store screenshots mockup (1800 x 1320): three phones on a brand gradient, each with a caption above it taken from the headline, call to action and title fields.
 - Layout preview in the Typography pairing studio: judge a pair in a blog article, a pricing card or a landing hero, sized from the live type scale and colored from the brand, with translated labels (en, es, fr, hi).
+- Download Markdown in Brand Guidelines: one `brand-guidelines.md` in the PDF's page order and numbering, with the page text, relative links to the SVG page art and logo files, and palette and logo tables, zipped with those files.
 
 ### Changed
 
