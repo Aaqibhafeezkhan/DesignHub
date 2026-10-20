@@ -33,7 +33,12 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
   const dark = surface ? isDark(surface) : backdrop !== "light";
   const cardFill = effect?.fill ?? (effect?.needsFill ? (dark ? "#18181b" : "#ffffff") : undefined);
   const cardDark = effect?.fill ? isDark(effect.fill) : dark;
-  const selector = kind === "highlighter" ? `${PREVIEW_SELECTOR} .dh-effect-highlight` : PREVIEW_SELECTOR;
+  const selector =
+    kind === "highlighter"
+      ? `${PREVIEW_SELECTOR} .dh-effect-highlight`
+      : kind === "scrollbar"
+        ? `${PREVIEW_SELECTOR} .dh-effect-scroll`
+        : PREVIEW_SELECTOR;
 
   return (
     <>
@@ -67,6 +72,19 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
                 A marker-style highlight that follows text across multiple lines, with readable contrast.
               </span>
             </p>
+          ) : kind === "scrollbar" ? (
+            <div
+              className="dh-effect-scroll h-48 overflow-auto pr-2 text-sm"
+              role="region"
+              aria-label="Scrollable sample"
+              tabIndex={0}
+            >
+              {Array.from({ length: 12 }, (_, index) => (
+                <p key={index} className="mb-3 opacity-80">
+                  Scroll this box to see the thumb and track. Line {index + 1} of 12.
+                </p>
+              ))}
+            </div>
           ) : (
             <>
               <h3 className="font-display text-2xl font-semibold">Depth without the fuss.</h3>

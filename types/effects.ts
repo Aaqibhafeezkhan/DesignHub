@@ -13,7 +13,8 @@ export type EffectKind =
   | "skeleton"
   | "text-outline"
   | "focus-ring"
-  | "highlighter";
+  | "highlighter"
+  | "scrollbar";
 
 export type GlassSettings = {
   blur: number;
@@ -192,6 +193,20 @@ export type FocusRingSettings = {
   component: string;
 };
 
+/** Thumb, track and size of a scrollable box's scrollbar. */
+export type ScrollbarSettings = {
+  /** Thumb color. */
+  thumb: string;
+  /** Thumb color while hovered (WebKit and Blink fallback only). */
+  thumbHover: string;
+  /** Track color. The thumb must reach 3:1 against it. */
+  track: string;
+  /** Scrollbar width in px. At 10px or less the standard `scrollbar-width` is `thin`. */
+  width: number;
+  /** Thumb corner radius in px (WebKit fallback only). */
+  radius: number;
+};
+
 export type EffectSettingsMap = {
   glass: GlassSettings;
   neumorphism: NeumorphismSettings;
@@ -206,6 +221,7 @@ export type EffectSettingsMap = {
   "text-outline": TextOutlineSettings;
   "focus-ring": FocusRingSettings;
   highlighter: HighlighterSettings;
+  scrollbar: ScrollbarSettings;
 };
 
 /** State from other studios an effect may build on. Effects read it here instead of copying it into their settings. */
