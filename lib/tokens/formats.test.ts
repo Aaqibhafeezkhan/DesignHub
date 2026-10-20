@@ -27,6 +27,7 @@ import {
   toYaml,
   yamlString,
 } from "@/lib/tokens/formats";
+import { toWinUiTheme } from "@/lib/tokens/native";
 import { xmlError } from "@/lib/test/xml";
 import type { DesignTokens } from "@/types/tokens";
 
@@ -827,6 +828,66 @@ describe("Android Material 3 theme", () => {
   test("both files are separate ExportFormat entries", () => {
     const files = tokenFormats(themed()).filter((format) => format.id.startsWith("android-theme"));
     expect(files.map((format) => format.filename)).toEqual(["themes.xml", "values-night/themes.xml"]);
+  });
+});
+
+describe("WinUI / WPF", () => {
+  const themed = (): DesignTokens => ({
+    ...tokens(),
+    colors: [
+      {
+        name: "indigo",
+        value: fromHex("#6366f1"),
+        shades: [
+          { step: 250, value: fromHex("#cdd9f3") },
+          { step: 300, value: fromHex("#a5b4fc") },
+        ],
+      },
+    ],
+    semantic: [
+      { name: "primary", ref: "indigo", value: fromHex("#6366f1") },
+      { name: "background", ref: "white", value: fromHex("#ffffff") },
+      { name: "foreground", ref: "black", value: fromHex("#0f172a") },
+    ],
+  });
+  const dictionary = (xaml: string, theme: string) =>
+    xaml.match(new RegExp(`<ResourceDictionary x:Key="${theme}">([\\s\\S]*?)</ResourceDictionary>`))?.[1] ?? "";
+
+  test("writes the palette as Color and SolidColorBrush pairs in ARGB hex", () => {
+    const xaml = toWinUiTheme(themed());
+    expect(xaml).toContain('<Color x:Key="AcmeLabsIndigoColor">#FF6366F1</Color>');
+    expect(xaml).toContain('<SolidColorBrush x:Key="AcmeLabsIndigo_250Brush" Color="#FFCDD9F3" />');
+  });
+
+  test("puts a role in both the Light and Dark theme dictionaries, lifted to shade 300 in dark", () => {
+    const xaml = toWinUiTheme(themed());
+    expect(dictionary(xaml, "Light")).toContain('<Color x:Key="AcmeLabsPrimaryRoleColor">#FF6366F1</Color>');
+    expect(dictionary(xaml, "Dark")).toContain('<Color x:Key="AcmeLabsPrimaryRoleColor">#FFA5B4FC</Color>');
+    expect(dictionary(xaml, "Dark")).toContain('<Color x:Key="AcmeLabsBackgroundRoleColor">#FF0F172A</Color>');
+  });
+
+  test("never repeats an x:Key and is well-formed XML", () => {
+    const xaml = toWinUiTheme({
+      ...themed(),
+      meta: { ...themed().meta, name: "A -- B & <C>" },
+      colors: [
+        ...themed().colors,
+        { name: "indigo-2", value: fromHex("#0f172a"), shades: [{ step: 50, value: fromHex("#f1f6ff") }] },
+      ],
+    });
+    expect(xmlError(xaml)).toBeNull();
+    const keysIn = (text: string) => [...text.matchAll(/x:Key="(\w+)"/g)].map((match) => match[1]);
+    const root = xaml.replace(
+      /<ResourceDictionary\.ThemeDictionaries>[\s\S]*<\/ResourceDictionary\.ThemeDictionaries>/,
+      "",
+    );
+    for (const scope of [root, dictionary(xaml, "Light"), dictionary(xaml, "Dark")]) {
+      expect(new Set(keysIn(scope)).size).toBe(keysIn(scope).length);
+    }
+  });
+
+  test("is registered in the Export Engine", () => {
+    expect(tokenFormats(themed()).find((format) => format.id === "winui")?.filename).toBe("Theme.xaml");
   });
 });
 

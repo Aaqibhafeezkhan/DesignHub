@@ -11,6 +11,7 @@ import {
   toFlutterTheme,
   toSwiftUITheme,
   toTokensStudio,
+  toWinUiTheme,
   type RoleColor,
 } from "@/lib/tokens/native";
 import { googleFontsCssUrl } from "@/lib/typography/google-fonts";
@@ -1520,6 +1521,7 @@ export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
     },
     { id: "swiftui", label: "SwiftUI", filename: "Theme.swift", language: "swift", code: toSwiftUITheme(tokens) },
     { id: "compose", label: "Jetpack Compose", filename: "Theme.kt", language: "kotlin", code: toComposeTheme(tokens) },
+    { id: "winui", label: "WinUI / WPF", filename: "Theme.xaml", language: "xml", code: toWinUiTheme(tokens) },
     { id: "json", label: "JSON tokens", filename: "tokens.json", language: "json", code: toJsonTokens(tokens) },
     { id: "yaml", label: "YAML", filename: "tokens.yaml", language: "yaml", code: toYaml(tokens) },
     {
