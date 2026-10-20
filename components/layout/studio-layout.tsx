@@ -4,6 +4,7 @@ import { useCallback, useLayoutEffect, type ReactNode } from "react";
 import { useGroupRef, type Layout, type LayoutChangedMeta } from "react-resizable-panels";
 
 import { ResizableGroup, ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
+import { STUDIO_OUTPUT_ID, STUDIO_PREVIEW_ID } from "@/lib/studio-panes";
 import { paneRestoreScript, paneRestoreStyleId, readPaneLayout, writePaneLayout } from "@/lib/pane-layout";
 import { cn } from "@/lib/utils";
 
@@ -85,7 +86,12 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
         </ResizablePanel>
         <ResizableHandle aria-label="Resize controls panel" onDoubleClick={saveAfterReset} />
         <ResizablePanel id={panelIds[1]} defaultSize={output ? "46%" : "76%"} minSize="320px" className={panelClass}>
-          <section aria-label="Preview" className="flex min-h-0 flex-1 flex-col gap-4">
+          <section
+            id={STUDIO_PREVIEW_ID}
+            tabIndex={-1}
+            aria-label="Preview"
+            className="flex min-h-0 flex-1 flex-col gap-4 outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+          >
             {preview}
           </section>
         </ResizablePanel>
@@ -93,7 +99,12 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
           <>
             <ResizableHandle aria-label="Resize code panel" onDoubleClick={saveAfterReset} />
             <ResizablePanel id={panelIds[2]} defaultSize="30%" minSize="260px" className={panelClass}>
-              <section aria-label="Code and exports" className="flex flex-col gap-4">
+              <section
+                id={STUDIO_OUTPUT_ID}
+                tabIndex={-1}
+                aria-label="Code and exports"
+                className="flex flex-col gap-4 outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+              >
                 {output}
               </section>
             </ResizablePanel>

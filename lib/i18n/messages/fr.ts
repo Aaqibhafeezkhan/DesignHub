@@ -78,6 +78,8 @@ export const fr = {
   "nav.sheetTitle": "Navigation",
   "nav.sheetDescription": "Accédez à un studio DesignHub.",
   "nav.skip": "Aller au contenu",
+  "nav.skipPreview": "Aller à l'aperçu",
+  "nav.skipOutput": "Aller au code et aux exports",
   "search.button": "Rechercher…",
   "search.open": "Ouvrir la recherche",
   "theme.toggle": "Changer de thème",

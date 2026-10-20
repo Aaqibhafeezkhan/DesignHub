@@ -77,6 +77,8 @@ export const es = {
   "nav.sheetTitle": "Navegación",
   "nav.sheetDescription": "Ve a un estudio de DesignHub.",
   "nav.skip": "Saltar al contenido",
+  "nav.skipPreview": "Saltar a la vista previa",
+  "nav.skipOutput": "Saltar al código y las exportaciones",
   "search.button": "Buscar…",
   "search.open": "Abrir búsqueda",
   "theme.toggle": "Cambiar tema",

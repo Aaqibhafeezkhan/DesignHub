@@ -76,6 +76,8 @@ export const hi = {
   "nav.sheetTitle": "नेविगेशन",
   "nav.sheetDescription": "किसी DesignHub स्टूडियो पर जाएँ।",
   "nav.skip": "सामग्री पर जाएँ",
+  "nav.skipPreview": "पूर्वावलोकन पर जाएँ",
+  "nav.skipOutput": "कोड और एक्सपोर्ट पर जाएँ",
   "search.button": "खोजें…",
   "search.open": "खोज खोलें",
   "theme.toggle": "थीम बदलें",
