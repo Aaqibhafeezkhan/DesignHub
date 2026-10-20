@@ -1,6 +1,11 @@
 "use client";
 
-import { fontStack } from "@/lib/typography/css";
+import { useState } from "react";
+
+import { useI18n } from "@/components/layout/locale-provider";
+import { PairLayoutPreview } from "@/components/typography/pair-layouts";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { isPairLayout, pairLayouts, type PairLayout } from "@/lib/typography/pair-layouts";
 import type { FontFamily } from "@/types/typography";
 
 type PairPreviewProps = {
@@ -10,37 +15,37 @@ type PairPreviewProps = {
   bodyName: string;
 };
 
-/** Editorial article layout that shows how two fonts work together. */
+/** The pair in a blog article, a pricing card or a landing hero, with the fonts and colors of the brand. */
 export function PairPreview({ heading, body, headingName, bodyName }: PairPreviewProps) {
-  const headingStyle = { fontFamily: fontStack(headingName, heading?.category) };
-  const bodyStyle = { fontFamily: fontStack(bodyName, body?.category) };
+  const { t } = useI18n();
+  const [layout, setLayout] = useState<PairLayout>("article");
 
   return (
-    <article className="flex flex-col gap-6 rounded-lg border bg-card p-6 md:p-10">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand" style={bodyStyle}>
-        Field notes · Issue 04
-      </p>
-      <h2 className="max-w-3xl text-4xl leading-[1.05] font-semibold tracking-tight md:text-6xl" style={headingStyle}>
-        Good typography is invisible until it isn’t.
-      </h2>
-      <div className="grid gap-6 md:grid-cols-2" style={bodyStyle}>
-        <p className="text-lg leading-relaxed text-foreground">
-          Type sets the tone before a single word is read. A confident headline paired with a patient, readable text
-          face gives every page a clear voice and a comfortable rhythm.
-        </p>
-        <p className="text-base leading-relaxed text-muted-foreground">
-          Contrast is the secret. Pair a serif with a sans, a wide face with a narrow one, or a display font with a
-          quiet workhorse. Keep the x-heights close and the moods complementary.
+    <div className="flex min-w-0 flex-col gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <ToggleGroup
+          type="single"
+          value={layout}
+          onValueChange={(value) => value && isPairLayout(value) && setLayout(value)}
+          aria-label={t("typography.pair.layout")}
+        >
+          {pairLayouts.map((item) => (
+            <ToggleGroupItem key={item} value={item}>
+              {t(`typography.pair.layout.${item}` as const)}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+        <p className="text-xs text-muted-foreground">
+          {t("typography.pair.fonts", { heading: headingName, body: bodyName })}
         </p>
       </div>
-      <footer className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t pt-4 text-xs text-muted-foreground">
-        <span>
-          Heading <strong className="font-medium text-foreground">{headingName}</strong>
-        </span>
-        <span>
-          Body <strong className="font-medium text-foreground">{bodyName}</strong>
-        </span>
-      </footer>
-    </article>
+      <PairLayoutPreview
+        layout={layout}
+        headingName={headingName}
+        bodyName={bodyName}
+        headingCategory={heading?.category}
+        bodyCategory={body?.category}
+      />
+    </div>
   );
 }
