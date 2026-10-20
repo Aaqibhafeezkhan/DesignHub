@@ -4,6 +4,7 @@ import { ArrowLeftRight, Bookmark, Lock, Shuffle, Unlock } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { FontPicker } from "@/components/typography/font-picker";
 import { PairCard } from "@/components/typography/pair-card";
 import { PairPreview } from "@/components/typography/pair-preview";
@@ -18,7 +19,25 @@ import { useLibraryStore } from "@/store/library-store";
 import { useTypographyStore } from "@/store/typography-store";
 import type { FontFamily } from "@/types/typography";
 
+type Side = "heading" | "body";
+
+const SIDE_MESSAGES = {
+  heading: {
+    label: "typography.pair.side.heading",
+    picker: "typography.pair.picker.heading",
+    lock: "typography.pair.lock.heading",
+    unlock: "typography.pair.unlock.heading",
+  },
+  body: {
+    label: "typography.pair.side.body",
+    picker: "typography.pair.picker.body",
+    lock: "typography.pair.lock.body",
+    unlock: "typography.pair.unlock.body",
+  },
+} as const satisfies Record<Side, { label: string; picker: string; lock: string; unlock: string }>;
+
 export function PairingStudio({ fonts }: { fonts: FontFamily[] }) {
+  const { t } = useI18n();
   const headingFont = useTypographyStore((state) => state.headingFont);
   const bodyFont = useTypographyStore((state) => state.bodyFont);
   const setPair = useTypographyStore((state) => state.setPair);
@@ -45,20 +64,22 @@ export function PairingStudio({ fonts }: { fonts: FontFamily[] }) {
 
   function save() {
     toggleSavedPair({ heading: headingFont, body: bodyFont });
-    toast.success(isSaved ? "Pair removed" : "Pair saved", { description: `${headingFont} + ${bodyFont}` });
+    toast.success(isSaved ? t("typography.pair.toast.removed") : t("typography.pair.toast.saved"), {
+      description: t("typography.pair.names", { heading: headingFont, body: bodyFont }),
+    });
   }
 
   return (
     <div className="flex flex-col gap-8">
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <PairPreview heading={heading} body={body} headingName={headingFont} bodyName={bodyFont} />
-        <Panel title="Pair">
+        <Panel title={t("typography.pair.panel")}>
           {(["heading", "body"] as const).map((side) => (
             <div key={side} className="flex flex-col gap-2">
-              <Label>{side === "heading" ? "Heading" : "Body"}</Label>
+              <Label>{t(SIDE_MESSAGES[side].label)}</Label>
               <div className="flex gap-1">
                 <FontPicker
-                  label={side === "heading" ? "Heading font" : "Body font"}
+                  label={t(SIDE_MESSAGES[side].picker)}
                   value={side === "heading" ? headingFont : bodyFont}
                   fonts={fonts}
                   onChange={(family) => setPair({ [side]: family })}
@@ -68,7 +89,7 @@ export function PairingStudio({ fonts }: { fonts: FontFamily[] }) {
                   variant="ghost"
                   size="icon"
                   aria-pressed={locks[side]}
-                  aria-label={`${locks[side] ? "Unlock" : "Lock"} ${side} font`}
+                  aria-label={t(locks[side] ? SIDE_MESSAGES[side].unlock : SIDE_MESSAGES[side].lock)}
                   onClick={() => setLocks((current) => ({ ...current, [side]: !current[side] }))}
                 >
                   {locks[side] ? <Lock className="text-brand" /> : <Unlock />}
@@ -78,19 +99,20 @@ export function PairingStudio({ fonts }: { fonts: FontFamily[] }) {
           ))}
           <div className="grid grid-cols-2 gap-2">
             <Button variant="outline" onClick={() => setPair({ heading: bodyFont, body: headingFont })}>
-              <ArrowLeftRight /> Swap
+              <ArrowLeftRight /> {t("typography.pair.swap")}
             </Button>
             <Button variant="outline" onClick={save} aria-pressed={isSaved}>
-              <Bookmark className={isSaved ? "fill-current text-brand" : undefined} /> {isSaved ? "Saved" : "Save"}
+              <Bookmark className={isSaved ? "fill-current text-brand" : undefined} />{" "}
+              {isSaved ? t("typography.pair.saved") : t("typography.pair.save")}
             </Button>
           </div>
           <Button onClick={shuffle} disabled={fonts.length === 0}>
-            <Shuffle /> Random pair{" "}
+            <Shuffle /> {t("typography.pair.random")}{" "}
             <Kbd className="ml-auto border-transparent bg-primary-foreground/15 text-primary-foreground">Space</Kbd>
           </Button>
           {suggestions.length ? (
             <div className="flex flex-col gap-2 border-t pt-4">
-              <Label>Body fonts that pair with {headingFont}</Label>
+              <Label>{t("typography.pair.suggestions", { font: headingFont })}</Label>
               <div className="flex flex-wrap gap-1.5">
                 {suggestions.map((font) => (
                   <button
@@ -111,7 +133,7 @@ export function PairingStudio({ fonts }: { fonts: FontFamily[] }) {
 
       {savedPairs.length ? (
         <PairGallery
-          title="Saved pairs"
+          title={t("typography.pair.saved.title")}
           pairs={savedPairs}
           catalog={catalog}
           current={{ heading: headingFont, body: bodyFont }}
@@ -119,7 +141,7 @@ export function PairingStudio({ fonts }: { fonts: FontFamily[] }) {
         />
       ) : null}
       <PairGallery
-        title="Curated pairs"
+        title={t("typography.pair.curated.title")}
         pairs={curatedPairs}
         catalog={catalog}
         current={{ heading: headingFont, body: bodyFont }}

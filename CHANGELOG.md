@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Announce generated and loaded Color Studio palettes to screen readers, including locked swatches kept during generation.
+- Translate the rest of the Typography pairing studio in every language (en, es, fr, hi): the Pair panel, the Heading and Body labels and pickers, the lock and unlock buttons, Swap, Save, Random pair, the pairing suggestion heading, the saved and curated galleries, the pair card labels and the save toast.
 
 ### Fixed
 
