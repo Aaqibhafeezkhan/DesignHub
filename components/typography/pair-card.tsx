@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { useInView } from "@/hooks/use-in-view";
 import { fontStack } from "@/lib/typography/css";
 import { googleFontsCssUrl, injectStylesheet } from "@/lib/typography/google-fonts";
@@ -20,6 +21,7 @@ const SAMPLE_HEADING = "Design systems";
 const SAMPLE_BODY = "Clear hierarchy and calm rhythm.";
 
 export function PairCard({ pair, catalog, active, onSelect }: PairCardProps) {
+  const { t } = useI18n();
   const { ref, inView } = useInView<HTMLButtonElement>();
   const heading = catalog.get(pair.heading);
   const body = catalog.get(pair.body);
@@ -36,7 +38,7 @@ export function PairCard({ pair, catalog, active, onSelect }: PairCardProps) {
       type="button"
       onClick={() => onSelect(pair)}
       aria-pressed={active}
-      aria-label={`Use ${pair.heading} with ${pair.body}`}
+      aria-label={t("typography.pair.use", { heading: pair.heading, body: pair.body })}
       className={cn(
         "flex w-full flex-col gap-2 rounded-lg border bg-card p-4 text-left transition-[border-color,background-color] duration-150 hover:border-border-strong hover:bg-surface-raised",
         active && "border-brand/60",
