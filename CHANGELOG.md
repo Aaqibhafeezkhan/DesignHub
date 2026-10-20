@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - APCA view of the Color Studio contrast matrix: a WCAG 2 / APCA switch (kept for the session) showing signed Lc values with a text label and meter for the Bronze level each pair reaches.
 - Skip links to the preview and to the code and exports pane in every studio, translated (en, es, fr, hi) and moving focus into the pane.
 - Seal logo variant: the mark inside a ring with the brand name set on a circular path, repeated for short names and shrunk for long ones, exported as SVG, PNG (512 and 1024) and PDF in the logo pack.
+- App store screenshots mockup (1800 x 1320): three phones on a brand gradient, each with a caption above it taken from the headline, call to action and title fields.
 
 ### Changed
 

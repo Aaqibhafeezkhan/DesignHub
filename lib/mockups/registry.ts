@@ -11,6 +11,7 @@ import { laptopLanding } from "@/lib/mockups/templates/laptop-landing";
 import { lockScreenMockup } from "@/lib/mockups/templates/lock-screen";
 import { merch } from "@/lib/mockups/templates/merch";
 import { mobileApp } from "@/lib/mockups/templates/mobile-app";
+import { appStoreScreenshots } from "@/lib/mockups/templates/app-store";
 import { poster } from "@/lib/mockups/templates/poster";
 import { shoppingBag } from "@/lib/mockups/templates/shopping-bag";
 import { sticker } from "@/lib/mockups/templates/sticker";
@@ -32,6 +33,7 @@ export const mockupTemplates: MockupTemplate[] = [
   laptopLanding,
   desktopDashboard,
   mobileApp,
+  appStoreScreenshots,
   lockScreenMockup,
   tabletScreens,
   browserTab,

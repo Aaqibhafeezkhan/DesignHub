@@ -4,6 +4,7 @@ import { brandSurface } from "@/lib/brand/theme";
 import { buildBrandTokens } from "@/lib/brand/tokens";
 import { measureText } from "@/lib/logo/measure";
 import { getTemplate, mockupTemplates } from "@/lib/mockups/registry";
+import { storeCaptions, captionLines } from "@/lib/mockups/templates/app-store";
 import { landingNav } from "@/lib/mockups/templates/laptop-landing";
 import type { MockupContext } from "@/lib/mockups/types";
 import { defaultSnapshot } from "@/lib/projects/snapshot";
@@ -216,6 +217,48 @@ test("the lock screen draws the app icon variant in both notifications", () => {
   const svg = getTemplate("lock-screen")!.render(mockupContext("dark"));
   const icons = svg.match(/<svg[^>]* width="40" height="40" viewBox="0 0 512 512"/g) ?? [];
   expect(icons).toHaveLength(2);
+});
+
+describe("app store screenshots", () => {
+  const long = "Plan every launch from one calm place with your whole team and never miss a deadline again, ever";
+
+  test("draws three phones, each with a caption above it", () => {
+    const ctx = mockupContext("light");
+    const svg = getTemplate("app-store")!.render(ctx);
+    expect(svg.match(/<clipPath id="phone-/g)).toHaveLength(3);
+    for (const caption of storeCaptions(ctx)) expect(svg).toContain(caption.slice(0, 8));
+  });
+
+  test("captions come from the copy fields and fall back to the brand", () => {
+    const ctx = mockupContext("light", "Acme");
+    expect(storeCaptions({ ...ctx, content: { ...ctx.content, headline: "", cta: "", role: "" } })).toEqual([
+      "Welcome to Acme",
+      "Get started",
+      "Made for you",
+    ]);
+    expect(storeCaptions({ ...ctx, content: { ...ctx.content, headline: "Ship faster" } })[0]).toBe("Ship faster");
+  });
+
+  test("a long caption wraps to at most three lines that fit the column", () => {
+    for (const mode of modes) {
+      const ctx = mockupContext(mode);
+      const lines = captionLines(ctx, long);
+      expect(lines.length).toBeLessThanOrEqual(3);
+      for (const line of lines) {
+        expect(ctx.measure(line, ctx.brand.typography.heading, ctx.brand.typography.headingWeight, 40)).toBeLessThan(
+          488 + 1,
+        );
+      }
+    }
+    expect(captionLines(mockupContext("light"), "x".repeat(200))).toHaveLength(1);
+  });
+
+  test("renders the brand colors in both themes", () => {
+    for (const mode of modes) {
+      const ctx = mockupContext(mode);
+      expect(getTemplate("app-store")!.render(ctx)).toContain(`stop-color="${ctx.surface.primary}"`);
+    }
+  });
 });
 
 describe("landing page nav", () => {

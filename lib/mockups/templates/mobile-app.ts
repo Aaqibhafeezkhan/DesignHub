@@ -19,7 +19,7 @@ function button(ctx: MockupContext, x: number, y: number, width: number, label: 
     ${text(x + width / 2, y + 35, label, { size: 19, fill: primary ? onPrimaryLarge(ctx) : surface.text, font: "bb", anchor: "middle" })}`;
 }
 
-function onboarding(ctx: MockupContext): string {
+export function onboarding(ctx: MockupContext): string {
   const { surface, content, brand } = ctx;
   const onPrimary = onPrimaryLarge(ctx);
   const headline = wrap(ctx, content.headline, W - 64, 34, "h", 3);
@@ -39,7 +39,7 @@ function onboarding(ctx: MockupContext): string {
     ${text(W / 2, H - 46, "I already have an account", { size: 15, fill: surface.muted, anchor: "middle" })}`;
 }
 
-function home(ctx: MockupContext): string {
+export function home(ctx: MockupContext): string {
   const { surface, content, brand } = ctx;
   const r = Math.min(brand.radius, 24);
   const first = content.person.split(" ")[0] ?? content.person;
@@ -79,7 +79,7 @@ function home(ctx: MockupContext): string {
     <defs><linearGradient id="home-card" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${surface.primary}"/><stop offset="1" stop-color="${surface.secondary}"/></linearGradient></defs>`;
 }
 
-function profile(ctx: MockupContext): string {
+export function profile(ctx: MockupContext): string {
   const { surface, content, brand } = ctx;
   const r = Math.min(brand.radius, 20);
   const initials = content.person
