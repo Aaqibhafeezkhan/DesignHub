@@ -22,6 +22,7 @@ const eslintConfig = [
       ".lighthouseci/**",
       "test-results/**",
       "playwright-report/**",
+      "packages/cli/dist/**",
     ],
   },
 ];

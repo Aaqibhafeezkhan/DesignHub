@@ -7,3 +7,4 @@ public/sw.js
 .lighthouseci
 test-results
 playwright-report
+packages/cli/dist

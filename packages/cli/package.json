@@ -1,0 +1,22 @@
+{
+  "name": "designhub",
+  "version": "1.0.0",
+  "description": "Build DesignHub design tokens from a project file, without opening the browser.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "designhub": "dist/designhub.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^8.3.1"
+  }
+}

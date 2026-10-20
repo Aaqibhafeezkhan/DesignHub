@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - App store screenshots mockup (1800 x 1320): three phones on a brand gradient, each with a caption above it taken from the headline, call to action and title fields.
 - Layout preview in the Typography pairing studio: judge a pair in a blog article, a pricing card or a landing hero, sized from the live type scale and colored from the brand, with translated labels (en, es, fr, hi).
 - Download Markdown in Brand Guidelines: one `brand-guidelines.md` in the PDF's page order and numbering, with the page text, relative links to the SVG page art and logo files, and palette and logo tables, zipped with those files.
+- `designhub` command line (`packages/cli`): `designhub build brand.designhub.json --format css,tailwind-v4 --out tokens/` writes any Export Engine format from an exported project file, deterministically, with no runtime dependencies. The workspace now has a `packages/` folder and the app package is named `designhub-app`.
 
 ### Changed
 

@@ -42,3 +42,6 @@ pnpm-debug.log*
 # Playwright output (pnpm test:e2e)
 /test-results/
 /playwright-report/
+
+# built CLI
+/packages/cli/dist
