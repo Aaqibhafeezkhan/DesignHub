@@ -16,7 +16,8 @@ export type EffectKind =
   | "highlighter"
   | "scrollbar"
   | "selection"
-  | "scroll-shadow";
+  | "scroll-shadow"
+  | "button-press";
 
 export type GlassSettings = {
   blur: number;
@@ -231,6 +232,23 @@ export type ScrollShadowSettings = {
   surface: string;
 };
 
+/** How the button's hover lift and press move, from a soft ease to a springy overshoot. */
+export type ButtonPressEasing = "ease-out" | "ease-in-out" | "spring" | "linear";
+
+/** A button that lifts on hover and sinks when pressed, with a transform and a shadow change. */
+export type ButtonPressSettings = {
+  /** Button color. The label is black or white, whichever reads better. */
+  fill: string;
+  /** How far the button rises on hover, in px. */
+  lift: number;
+  /** How far the button sinks while pressed, in px. */
+  press: number;
+  /** Transition time in ms. */
+  duration: number;
+  easing: ButtonPressEasing;
+  radius: number;
+};
+
 export type EffectSettingsMap = {
   glass: GlassSettings;
   neumorphism: NeumorphismSettings;
@@ -248,6 +266,7 @@ export type EffectSettingsMap = {
   scrollbar: ScrollbarSettings;
   selection: SelectionSettings;
   "scroll-shadow": ScrollShadowSettings;
+  "button-press": ButtonPressSettings;
 };
 
 /** State from other studios an effect may build on. Effects read it here instead of copying it into their settings. */

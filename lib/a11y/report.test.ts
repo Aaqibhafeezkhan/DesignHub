@@ -14,10 +14,12 @@ import {
   reportToMarkdown,
   type A11yReportInput,
 } from "@/lib/a11y/report";
+import { motionSection } from "@/lib/a11y/motion";
 import { textSpacingSection } from "@/lib/a11y/text-spacing";
 import { targetsSection } from "@/lib/a11y/targets";
 import { paletteVisionSection, visionSection } from "@/lib/a11y/vision";
 import { defaultGradient } from "@/lib/color/gradient";
+import { effectDefaults } from "@/lib/effects/defaults";
 
 const input: A11yReportInput = {
   colors: { text: "#111111", background: "#ffffff", accent: "#8ab4f8", onAccent: "#ffffff" },
@@ -48,6 +50,7 @@ const report = buildReport(input, {
   paletteVision: paletteVisionSection(input.palette),
   readability: { charactersPerLine: 70, readingEase: 64, gradeLevel: 8, checks: [] },
   textSpacing: textSpacingSection(input.typography),
+  motion: motionSection(effectDefaults),
   touchTargets: targetsSection(input.targets, input.targetGap),
 });
 
@@ -163,6 +166,7 @@ describe("reportToMarkdown", () => {
       "## Palette under color vision",
       "## Readability",
       "## WCAG 1.4.12 Text Spacing (AA)",
+      "## Reduced motion (prefers-reduced-motion)",
       "## Touch targets",
     ]);
     expect(markdown).toContain("2026-01-01T00:00:00.000Z");
@@ -242,5 +246,39 @@ describe("text spacing in the report", () => {
 
   test("the JSON report carries the section", () => {
     expect(report.sections.textSpacing.checks.map((item) => item.pass)).toEqual([true, false, false]);
+  });
+});
+
+describe("motion in the report", () => {
+  test("Markdown and HTML list each moving effect with its reduced-motion result", () => {
+    const markdown = reportToMarkdown(report);
+    expect(markdown).toContain("## Reduced motion (prefers-reduced-motion)");
+    expect(markdown).toContain("| Effect | What moves | Reduced-motion rule | Result |");
+    expect(markdown).toContain("| Skeleton | Animation | Yes | ✅ Pass |");
+    expect(markdown).toContain("| Button press | Transform transition | Yes | ✅ Pass |");
+    const html = reportToHtml(report);
+    expect(html).toContain('<h2 id="motion">Reduced motion (prefers-reduced-motion)</h2>');
+    expect(html).toContain('<th scope="row">Skeleton</th>');
+    expect(html).toContain("Effects that move and their reduced-motion rule");
+  });
+
+  test("a moving effect without a reduced-motion rule fails in both reports", () => {
+    const failing = {
+      ...report.sections.motion,
+      pass: false,
+      checks: [{ check: "Spinner", motion: "Animation", reducedMotionRule: false, pass: false }],
+    };
+    const changed = buildReport(input, { ...report.sections, motion: failing });
+    expect(reportToMarkdown(changed)).toContain("| Spinner | Animation | No | ❌ Fail |");
+    expect(reportToHtml(changed)).toContain('<span class="badge fail">Fail</span>');
+  });
+
+  test("says so when nothing moves", () => {
+    const none = buildReport(input, {
+      ...report.sections,
+      motion: { ...report.sections.motion, pass: true, checks: [] },
+    });
+    expect(reportToMarkdown(none)).toContain("no effect moves with the current Effects Lab settings");
+    expect(reportToHtml(none)).toContain("No effect moves with the current Effects Lab settings.");
   });
 });

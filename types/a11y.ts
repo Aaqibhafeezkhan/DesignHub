@@ -25,4 +25,4 @@ export type TouchTarget = {
 
 export type VisionMode = "none" | "protanopia" | "deuteranopia" | "tritanopia" | "grayscale" | "low-vision";
 
-export type A11yTab = "contrast" | "vision" | "readability" | "targets";
+export type A11yTab = "contrast" | "vision" | "readability" | "targets" | "motion";

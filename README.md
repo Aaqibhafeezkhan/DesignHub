@@ -183,6 +183,7 @@ A typical design session bounces between a font site, a palette generator, a con
 - **Gradient text** - text filled with the Color Studio gradient, with an optional animated shift and a solid fallback
 - **Skeleton** - the loading placeholder shimmer in the brand's neutrals, static under reduced motion
 - **Selection** - `::selection` colors with a 4.5:1 contrast check
+- **Button press** - a hover lift and a pressed state with a transform and shadow change, with lift, press depth, duration and easing controls and a reduced-motion fallback that removes the transform
 - **Scroll shadow** - edge shadows that appear only while there is more to scroll, in pure CSS
 - **Scrollbar** - thumb, hover and track colors, width and radius as `scrollbar-color` and `scrollbar-width` with a `::-webkit-scrollbar` fallback and a 3:1 contrast check
 - **Focus ring** - a double `:focus-visible` ring with a built-in WCAG contrast check and a one-click fix

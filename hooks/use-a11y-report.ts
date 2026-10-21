@@ -4,15 +4,18 @@ import { useMemo } from "react";
 
 import { useBrandTokens } from "@/hooks/use-brand";
 import { useFocusRing } from "@/hooks/use-focus-ring";
+import { useEffectContext } from "@/hooks/use-effect-context";
 import { useGradientContrast } from "@/hooks/use-gradient-contrast";
 import { useReadability } from "@/hooks/use-readability";
 import { contrastSection, focusIndicatorCheck, focusSection } from "@/lib/a11y/contrast";
 import { gradientSection } from "@/lib/a11y/gradient-contrast";
+import { motionSection } from "@/lib/a11y/motion";
 import { buildReport, type A11yReport } from "@/lib/a11y/report";
 import { textSpacingSection } from "@/lib/a11y/text-spacing";
 import { targetsSection } from "@/lib/a11y/targets";
 import { paletteVisionSection, visionSection } from "@/lib/a11y/vision";
 import { useA11yStore } from "@/store/a11y-store";
+import { useEffectsStore } from "@/store/effects-store";
 
 /** The full accessibility audit for the current Accessibility Lab settings. */
 export function useA11yReport(): A11yReport {
@@ -25,6 +28,8 @@ export function useA11yReport(): A11yReport {
   const gradientText = useGradientContrast();
   const brandColors = useBrandTokens().colors.all;
   const palette = useMemo(() => brandColors.map(({ name, hex }) => ({ name, hex })), [brandColors]);
+  const effectSettings = useEffectsStore((state) => state.settings);
+  const effectContext = useEffectContext();
 
   return useMemo(
     () =>
@@ -43,9 +48,10 @@ export function useA11yReport(): A11yReport {
             checks: readability.checks.map(({ label, value, verdict }) => ({ check: label, value, verdict })),
           },
           textSpacing: textSpacingSection(typography),
+          motion: motionSection(effectSettings, effectContext),
           touchTargets: targetsSection(targets, targetGap),
         },
       ),
-    [colors, ring, gradientText, typography, targets, targetGap, readability, palette],
+    [colors, ring, gradientText, typography, targets, targetGap, readability, palette, effectSettings, effectContext],
   );
 }

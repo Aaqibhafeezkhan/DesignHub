@@ -10,6 +10,7 @@ import { VisionPreview } from "@/components/accessibility/vision-preview";
 import { ContrastResults } from "@/components/accessibility/contrast-results";
 import { FocusIndicatorResults } from "@/components/accessibility/focus-indicator-results";
 import { GradientContrastResults } from "@/components/accessibility/gradient-contrast-results";
+import { MotionResults } from "@/components/accessibility/motion-results";
 import { ReadabilityPanel } from "@/components/accessibility/readability-panel";
 import { TargetsPanel } from "@/components/accessibility/targets-panel";
 import { TargetsPreview } from "@/components/accessibility/targets-preview";
@@ -29,6 +30,7 @@ const tabs: { value: A11yTab; label: string }[] = [
   { value: "vision", label: "Vision" },
   { value: "readability", label: "Reading" },
   { value: "targets", label: "Targets" },
+  { value: "motion", label: "Motion" },
 ];
 
 export function A11yWorkspace() {
@@ -45,9 +47,9 @@ export function A11yWorkspace() {
       id="accessibility"
       controls={
         <Tabs value={tab} onValueChange={(value) => setTab(value as A11yTab)} className="gap-4">
-          <TabsList aria-label="Accessibility tools" className="w-full">
+          <TabsList aria-label="Accessibility tools" className="h-auto w-full flex-wrap">
             {tabs.map((item) => (
-              <TabsTrigger key={item.value} value={item.value} className="px-1.5 text-xs">
+              <TabsTrigger key={item.value} value={item.value} className="h-auto min-w-fit px-1.5 py-1.5 text-xs">
                 {item.label}
               </TabsTrigger>
             ))}
@@ -69,6 +71,9 @@ export function A11yWorkspace() {
           </TabsContent>
           <TabsContent value="targets" className="flex flex-col gap-4">
             <TargetsPanel />
+          </TabsContent>
+          <TabsContent value="motion" className="flex flex-col gap-4">
+            <MotionResults section={report.sections.motion} />
           </TabsContent>
         </Tabs>
       }
