@@ -4,6 +4,7 @@ import { backgroundCss } from "@/lib/background/export";
 import { circuitTraces, type GridNode } from "@/lib/background/generators/circuit";
 import { halftoneGradient, halftoneStrength } from "@/lib/background/generators/halftone";
 import { flowAngle, maxFlowPaths, maxFlowPathPoints, valueNoise } from "@/lib/background/generators/flow-field";
+import { maxPackedCircles, packCircles } from "@/lib/background/generators/circle-packing";
 import { plaidBands } from "@/lib/background/generators/plaid";
 import { hypotrochoid, maxSpirographPoints } from "@/lib/background/generators/spirograph";
 import { truchetPaths } from "@/lib/background/generators/truchet";
@@ -44,6 +45,7 @@ describe.each([
   "truchet",
   "flow-field",
   "plaid",
+  "circle-packing",
 ] as const)("%s", (kind) => {
   test("the same seed renders the same output", () => {
     for (const patch of [{ seed: 7 }, { seed: 7, rotation: 30, density: 100, scale: 2 }]) {
@@ -428,5 +430,33 @@ describe("plaid", () => {
     const size = (density: number) =>
       Number(renderBackgroundSvg(settings("plaid", { density })).match(/<pattern\b[^>]*width="([\d.]+)"/)?.[1]);
     expect(size(0)).toBeGreaterThan(size(100));
+  });
+});
+
+describe("circle packing", () => {
+  test("no two circles overlap, and the count and attempts are capped", () => {
+    const circles = packCircles(createRandom(3), 1920, 1080, { count: 10_000, maxRadius: 100, minRadius: 3, gap: 2 });
+    expect(circles.length).toBeGreaterThan(50);
+    expect(circles.length).toBeLessThanOrEqual(maxPackedCircles);
+    for (let i = 0; i < circles.length; i += 1) {
+      for (let j = i + 1; j < circles.length; j += 1) {
+        const a = circles[i]!;
+        const b = circles[j]!;
+        expect(Math.hypot(a.x - b.x, a.y - b.y)).toBeGreaterThanOrEqual(a.r + b.r);
+      }
+    }
+  });
+
+  test("renders circles in the palette and stays under about 200 kB at the largest density", () => {
+    const svg = renderBackgroundSvg(settings("circle-packing", { density: 100, width: 3840, height: 2160 }));
+    expect(svg).toContain("<circle");
+    expect(svg).toMatch(/fill="#(6366f1|ec4899|f59e0b)"/);
+    expect(svg.length).toBeLessThan(200_000);
+  });
+
+  test("density adds circles", () => {
+    const count = (density: number) =>
+      (renderBackgroundSvg(settings("circle-packing", { density })).match(/<circle/g) ?? []).length;
+    expect(count(100)).toBeGreaterThan(count(0));
   });
 });

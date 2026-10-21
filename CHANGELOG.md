@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Selection effect in the Effects Lab: `::selection` background and text colors with a forced-colors rule, a matching caret color, Tailwind `selection:` guidance and a 4.5:1 contrast badge.
 - Scroll shadow effect in the Effects Lab: edge shadows that show only while there is more to scroll, in pure CSS with `background-attachment: local`, with color, strength, height and box background controls.
 - Plaid background generator: translucent crossing bands in palette colors that repeat seamlessly, seeded, with density setting the repeat size.
+- Circle packing background generator: non-overlapping circles of varied size in palette colors, seeded, with capped circle and attempt counts.
 
 ### Changed
 
