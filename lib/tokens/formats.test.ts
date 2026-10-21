@@ -5,6 +5,7 @@ import {
   tokenFormats,
   toAndroidColors,
   toAndroidTheme,
+  toAntTheme,
   toBootstrapVariables,
   toChakraTheme,
   toMantineTheme,
@@ -27,7 +28,7 @@ import {
   toYaml,
   yamlString,
 } from "@/lib/tokens/formats";
-import { toWinUiTheme } from "@/lib/tokens/native";
+import { roleColor, toWinUiTheme } from "@/lib/tokens/native";
 import { xmlError } from "@/lib/test/xml";
 import type { DesignTokens } from "@/types/tokens";
 
@@ -105,12 +106,14 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "_bootstrap-variables.scss",
       "app.config.ts",
       "nuxt-ui-colors.css",
+      "antd-theme.ts",
     ]),
   );
   expect(formats.map((format) => format.id)).toEqual(
     expect.arrayContaining([
       "chakra",
       "mantine",
+      "antd",
       "bootstrap",
       "shadcn",
       "figma-variables",
@@ -316,6 +319,42 @@ describe("Mantine", () => {
     expect(tuple).toHaveLength(10);
     expect(mantine).toContain('primaryColor: "acme-indigo",');
     expect(mantine).not.toContain("oklch(");
+  });
+});
+
+describe("Ant Design", () => {
+  /** The `token` block of one config, so light and dark assertions can't see each other. */
+  const tokenOf = (code: string, name: "lightTheme" | "darkTheme") => {
+    const start = code.indexOf(`export const ${name}: ThemeConfig = {`);
+    return code.slice(start, code.indexOf("};", start));
+  };
+
+  test("maps the semantic roles onto the seed tokens", () => {
+    const antd = toAntTheme(withRoles);
+    expect(antd).toContain('import { theme as antdTheme, type ThemeConfig } from "antd";');
+    const light = tokenOf(antd, "lightTheme");
+    expect(light).toContain(`colorPrimary: "${toHex(roleColor(withRoles, "primary", false)!.value)}",`);
+    expect(light).toContain(`colorBgBase: "${toHex(roleColor(withRoles, "background", false)!.value)}",`);
+    expect(light).toContain(`colorTextBase: "${toHex(roleColor(withRoles, "foreground", false)!.value)}",`);
+    expect(antd).not.toContain("oklch(");
+  });
+
+  test("the dark config asks Ant Design for the dark algorithm and reads roleColor in dark mode", () => {
+    const antd = toAntTheme(withRoles);
+    const dark = tokenOf(antd, "darkTheme");
+    expect(dark).toContain("algorithm: antdTheme.darkAlgorithm,");
+    expect(dark).toContain(`colorPrimary: "${toHex(roleColor(withRoles, "primary", true)!.value)}",`);
+    expect(dark).toContain(`colorBgBase: "${toHex(roleColor(withRoles, "background", true)!.value)}",`);
+    expect(tokenOf(antd, "lightTheme")).not.toContain("algorithm:");
+  });
+
+  test("keeps the radius and the body font, and still emits a valid config without them", () => {
+    const typedConfig = toAntTheme(typed());
+    expect(typedConfig).toContain("borderRadius: 12,");
+    expect(typedConfig).toContain('fontFamily: "\\"Lora\\", ui-serif, Georgia, serif",');
+    const bare = toAntTheme({ ...tokens(), colors: [], semantic: [], radius: [], typography: null });
+    expect(bare).toContain("export const lightTheme: ThemeConfig = { token: {} };");
+    expect(bare).toContain("algorithm: antdTheme.darkAlgorithm,");
   });
 });
 
