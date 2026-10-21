@@ -186,7 +186,7 @@ Write comments only when they add information the code can't express - the _why_
 
 ## The command line (`packages/cli`)
 
-`packages/cli` is a pnpm workspace package (named `designhub`; the app itself is `designhub-app`). It reads an exported `.designhub.json` file and writes Export Engine formats to a folder, importing `lib/tokens` and `lib/projects` from the app instead of copying them, so a new export format shows up in the CLI with no CLI change. Build it with `pnpm --filter designhub build` (output in `packages/cli/dist`, gitignored); its tests live in `packages/cli/src` and run with `pnpm test`, and CI builds it and runs `--help`. Keep it free of runtime dependencies and its output deterministic.
+`packages/cli` is a pnpm workspace package (named `designhub`; the app itself is `designhub-app`). It reads an exported `.designhub.json` file and writes Export Engine formats to a folder, importing `lib/tokens` and `lib/projects` from the app instead of copying them, so a new export format shows up in the CLI with no CLI change. Build it with `pnpm --filter designhub build` (output in `packages/cli/dist`, gitignored); its tests live in `packages/cli/src` and run with `pnpm test`, and CI builds it and runs `--help`. Keep it free of runtime dependencies and its output deterministic. [docs/cli.md](docs/cli.md) documents it for users, with CI recipes; update it when a flag or an exit code changes.
 
 ## Adding a new export format
 
