@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 
 import { BrandLogo } from "@/components/brand/brand-logo";
+import { FaviconTabs } from "@/components/logo/favicon-tabs";
 import { useVariantContext } from "@/hooks/use-variant-context";
 import { invertedLockup, logoVariants, renderVariant } from "@/lib/logo/variants";
 import { cn } from "@/lib/utils";
@@ -70,6 +71,8 @@ export function LogoVariants() {
           the mark alone.
         </p>
       </section>
+
+      <FaviconTabs ctx={ctx} />
 
       <section aria-label="Backgrounds" className="flex flex-col gap-2">
         <h3 className="text-sm font-medium">On different backgrounds</h3>

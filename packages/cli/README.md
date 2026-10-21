@@ -7,6 +7,7 @@ npx designhub build brand.designhub.json --format css,tailwind-v4 --out tokens/
 ```
 
 - `designhub build <file> [--format <ids>] [--out <folder>]` writes the chosen formats (all of them by default) to the folder (`tokens/` by default).
+- `designhub build <file> --watch` (or `-w`) builds once, then rebuilds every time the project file changes. See [docs/cli.md](../../docs/cli.md#watch-mode).
 - `designhub build -` reads the project from standard input, for pipelines: `cat brand.designhub.json | npx designhub build - --format css`.
 - `designhub --help` lists every format id.
 - The output is deterministic: the file headers use the project file's export time (or `--generated-at`), so the same file always builds the same files.

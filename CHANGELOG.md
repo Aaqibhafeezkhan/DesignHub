@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Favicon preview in the Logo Studio's Variants view: the app icon at 16 and 32 px in a light and a dark browser tab, drawn from the same SVG the favicon package exports and updating live with the brand.
+- Rhombus background generator ("tumbling blocks"): a seamless tessellation of diamonds shaded in three tones per cube, with the seed picking each cube's palette color and density setting the cube size.
+- `--watch` (`-w`) for `designhub build`: rebuilds whenever the project file changes, debounced, one line per rebuild, keeps running after an invalid file and exits 0 on Ctrl+C.
 - Notion page cover template (1500 x 600) in the Social Media Studio, with the page icon and title zone kept clear.
 - Medium publication banner template (1500 x 500) in the Social Media Studio, with the logo, name, a tagline shortened to two lines and the links.
 - Social template guide (`docs/social-templates.md`): platform sizes, safe and covered areas, the shared helpers, registration and tests, built around the Notion cover.

@@ -150,3 +150,123 @@ describe("designhub build", () => {
     expect(output.out).toMatch(/^\d+\.\d+\.\d+\n$/);
   });
 });
+
+describe("designhub build --watch", () => {
+  /** An injected watcher: the test calls `change()` where the file system would. */
+  function fakeWatch() {
+    let onChange: () => void = () => undefined;
+    const state = { closed: false, watched: "" };
+    const watch: NonNullable<Io["watch"]> = (file, listener) => {
+      state.watched = file;
+      onChange = listener;
+      return { close: () => (state.closed = true) };
+    };
+    return { watch, state, change: () => onChange() };
+  }
+
+  const waitFor = async (condition: () => boolean) => {
+    for (let i = 0; i < 1000 && !condition(); i += 1) await new Promise((resolve) => setTimeout(resolve, 5));
+    expect(condition()).toBe(true);
+  };
+  const wrote = () => output.out.match(/^Wrote /gm)?.length ?? 0;
+
+  test("builds once, rebuilds on change and exits 0 when interrupted", async () => {
+    const watcher = fakeWatch();
+    const interrupt = new AbortController();
+    const done = run(["build", "brand.designhub.json", "--format", "css", "-o", "out", "--watch"], {
+      ...io,
+      watch: watcher.watch,
+      signal: interrupt.signal,
+      debounceMs: 10,
+    });
+    await waitFor(() => output.out.includes("Watching brand.designhub.json"));
+    expect(wrote()).toBe(1);
+    expect(watcher.state.watched).toBe(join(dir, "brand.designhub.json"));
+
+    await writeFile(join(dir, "brand.designhub.json"), projectToJson(project("Globex")));
+    watcher.change();
+    await waitFor(() => wrote() === 2);
+    const formats = await listFormats();
+    const css = formats.find((format) => format.id === "css")!.filename;
+    expect(await readFile(join(dir, "out", css), "utf8")).toContain("Globex");
+
+    interrupt.abort();
+    expect(await done).toBe(0);
+    expect(watcher.state.closed).toBe(true);
+  });
+
+  test("a burst of saves rebuilds once", async () => {
+    const watcher = fakeWatch();
+    const interrupt = new AbortController();
+    const done = run(["build", "brand.designhub.json", "--format", "css", "-o", "out", "-w"], {
+      ...io,
+      watch: watcher.watch,
+      signal: interrupt.signal,
+      debounceMs: 30,
+    });
+    await waitFor(() => wrote() === 1);
+    for (let i = 0; i < 5; i += 1) watcher.change();
+    await waitFor(() => wrote() === 2);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    expect(wrote()).toBe(2);
+    interrupt.abort();
+    expect(await done).toBe(0);
+  });
+
+  test("an invalid file prints the error and the watcher keeps running", async () => {
+    const watcher = fakeWatch();
+    const interrupt = new AbortController();
+    const done = run(["build", "brand.designhub.json", "--format", "css", "-o", "out", "--watch"], {
+      ...io,
+      watch: watcher.watch,
+      signal: interrupt.signal,
+      debounceMs: 10,
+    });
+    await waitFor(() => wrote() === 1);
+
+    await writeFile(join(dir, "brand.designhub.json"), "{ nope");
+    watcher.change();
+    await waitFor(() => output.err.includes("valid JSON"));
+    expect(output.err).toContain("designhub: ");
+    expect(watcher.state.closed).toBe(false);
+
+    await writeFile(join(dir, "brand.designhub.json"), projectToJson(project("Initech")));
+    watcher.change();
+    await waitFor(() => wrote() === 2);
+
+    interrupt.abort();
+    expect(await done).toBe(0);
+  });
+
+  test("a file that is already invalid on start is reported and still watched", async () => {
+    await writeFile(join(dir, "bad.designhub.json"), "{ nope");
+    const watcher = fakeWatch();
+    const interrupt = new AbortController();
+    const done = run(["build", "bad.designhub.json", "--watch"], {
+      ...io,
+      watch: watcher.watch,
+      signal: interrupt.signal,
+    });
+    await waitFor(() => output.out.includes("Watching bad.designhub.json"));
+    expect(output.err).toContain("valid JSON");
+    interrupt.abort();
+    expect(await done).toBe(0);
+  });
+
+  test("--watch needs a file, a watcher and a file that exists", async () => {
+    const watcher = fakeWatch();
+    expect(await run(["build", "-", "--watch"], { ...io, watch: watcher.watch, stdin: async () => "{}" })).toBe(2);
+    expect(output.err).toContain("--watch needs a project file");
+    output.err = "";
+    expect(await run(["build", "brand.designhub.json", "--watch"], io)).toBe(2);
+    expect(output.err).toContain("--watch isn't available");
+    output.err = "";
+    expect(await run(["build", "missing.json", "--watch"], { ...io, watch: watcher.watch })).toBe(1);
+    expect(output.err).toContain('Can\'t read "missing.json"');
+  });
+
+  test("--help documents --watch", async () => {
+    expect(await run(["--help"], io)).toBe(0);
+    expect(output.out).toContain("-w, --watch");
+  });
+});

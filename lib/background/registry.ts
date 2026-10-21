@@ -33,6 +33,7 @@ import { memphis } from "@/lib/background/generators/memphis";
 import { flowField } from "@/lib/background/generators/flow-field";
 import { circlePacking } from "@/lib/background/generators/circle-packing";
 import { plaid } from "@/lib/background/generators/plaid";
+import { rhombus } from "@/lib/background/generators/rhombus";
 import { wrapSvg } from "@/lib/background/svg";
 import type { BackgroundDefinition, BackgroundKind, BackgroundSettings } from "@/types/background";
 
@@ -73,6 +74,7 @@ export const backgroundGenerators: BackgroundDefinition[] = [
   flowField,
   plaid,
   circlePacking,
+  rhombus,
 ];
 
 export function getGenerator(kind: BackgroundKind): BackgroundDefinition | undefined {
