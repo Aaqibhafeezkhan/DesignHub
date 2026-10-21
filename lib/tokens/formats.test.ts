@@ -24,6 +24,7 @@ import {
   toStyledTheme,
   toStylus,
   toUnoConfig,
+  toVuetifyTheme,
   toXcodeColorSets,
   toYaml,
   yamlString,
@@ -106,6 +107,7 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "_bootstrap-variables.scss",
       "app.config.ts",
       "nuxt-ui-colors.css",
+      "vuetify.ts",
     ]),
   );
   expect(formats.map((format) => format.id)).toEqual(
@@ -113,6 +115,7 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "chakra",
       "mantine",
       "mui",
+      "vuetify",
       "bootstrap",
       "shadcn",
       "figma-variables",
@@ -368,6 +371,51 @@ describe("Material UI", () => {
     expect(bare).not.toContain("colorSchemes");
     expect(bare).not.toContain("typography");
     expect(bare).not.toContain("shape");
+  });
+});
+
+describe("Vuetify", () => {
+  /** The color block of one theme set, so light and dark assertions can't see each other. */
+  const setOf = (code: string, theme: "light" | "dark") => {
+    const start = code.indexOf(`const ${theme}: ThemeDefinition`);
+    return code.slice(start, code.indexOf("};", start));
+  };
+
+  test("builds a createVuetify theme with a light and a dark set from the semantic roles", () => {
+    const vuetify = toVuetifyTheme(withRoles);
+    expect(vuetify).toContain('import { createVuetify, type ThemeDefinition } from "vuetify";');
+    expect(vuetify).toContain('defaultTheme: "light",');
+    expect(vuetify).toContain("themes: { light, dark },");
+    const light = setOf(vuetify, "light");
+    expect(light).toContain("dark: false,");
+    expect(light).toContain('background: "#ffffff",');
+    expect(light).toContain('primary: "#6366f1",');
+    expect(light).toContain('secondary: "#6366f1",');
+    // Indigo 500 takes black label text more legibly than white, so the slot follows the contrast.
+    expect(light).toContain('"on-primary": "#000000",');
+    expect(vuetify).not.toContain("oklch(");
+  });
+
+  test("the dark set matches roleColor in both modes and lifts surface off the page", () => {
+    const vuetify = toVuetifyTheme(withRoles);
+    const light = setOf(vuetify, "light");
+    const dark = setOf(vuetify, "dark");
+    expect(dark).toContain("dark: true,");
+    expect(dark).toContain(`primary: "${toHex(roleColor(withRoles, "primary", true)!.value)}",`);
+    expect(dark).toContain(`background: "${toHex(roleColor(withRoles, "background", true)!.value)}",`);
+    expect(dark).not.toContain('background: "#ffffff",');
+    const value = (block: string, slot: string) => block.match(new RegExp(`${slot}: "(#[0-9a-f]{6})"`))?.[1];
+    expect(value(light, "surface")).toBe(value(light, "background"));
+    expect(value(dark, "surface")).toBeDefined();
+    expect(value(dark, "surface")).not.toBe(value(dark, "background"));
+  });
+
+  test("prefixes palette colors and leaves the slots Vuetify reads unprefixed", () => {
+    const vuetify = toVuetifyTheme({ ...withRoles, meta: { ...withRoles.meta, prefix: "acme" } });
+    expect(vuetify).toContain('"acme-indigo": "#6366f1",');
+    expect(vuetify).toContain('"acme-slate": "#0f172a",');
+    expect(vuetify).not.toContain('"acme-primary"');
+    expect(vuetify).toContain('primary: "#6366f1",');
   });
 });
 
