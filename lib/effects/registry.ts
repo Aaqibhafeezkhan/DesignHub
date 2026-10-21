@@ -1,6 +1,7 @@
 import { border } from "@/lib/effects/border";
 import { buttonPress } from "@/lib/effects/button-press";
 import { defaultEffectContext, type AnyEffectDefinition, type EffectDefinition } from "@/lib/effects/define";
+import { duotone } from "@/lib/effects/duotone";
 import { focusRing } from "@/lib/effects/focus-ring";
 import { glass } from "@/lib/effects/glass";
 import { highlighter } from "@/lib/effects/highlighter";
@@ -39,6 +40,7 @@ export const effectDefinitions: AnyEffectDefinition[] = [
   scrollShadow,
   buttonPress,
   linkUnderline,
+  duotone,
 ];
 
 export function generateEffect<K extends EffectKind>(

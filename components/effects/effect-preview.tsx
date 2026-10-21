@@ -1,7 +1,7 @@
 "use client";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { EffectBackdrop } from "@/components/effects/effect-backdrop";
+import { EFFECT_PHOTO_DATA_URL, EffectBackdrop } from "@/components/effects/effect-backdrop";
 import { parseColor } from "@/lib/color/color";
 import { effectStylesheet } from "@/lib/effects/css";
 import { useEffectsStore } from "@/store/effects-store";
@@ -42,7 +42,9 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
           ? `${PREVIEW_SELECTOR} .dh-effect-button`
           : kind === "link-underline"
             ? `${PREVIEW_SELECTOR} .dh-effect-link`
-            : PREVIEW_SELECTOR;
+            : kind === "duotone"
+              ? `${PREVIEW_SELECTOR} .dh-effect-duotone`
+              : PREVIEW_SELECTOR;
 
   return (
     <>
@@ -112,6 +114,31 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
                 and the underline grows.
               </p>
             </>
+          ) : kind === "duotone" ? (
+            <div className="grid w-full grid-cols-2 gap-3">
+              <figure className="flex flex-col gap-2">
+                <div
+                  className="aspect-[4/3] w-full rounded-md bg-cover bg-center"
+                  style={{ backgroundImage: `url("${EFFECT_PHOTO_DATA_URL}")` }}
+                  role="img"
+                  aria-label="Original photo"
+                />
+                <figcaption className="text-center text-xs font-medium uppercase tracking-wide opacity-80">
+                  Before
+                </figcaption>
+              </figure>
+              <figure className="flex flex-col gap-2">
+                <div
+                  className="dh-effect-duotone aspect-[4/3] w-full rounded-md bg-cover bg-center"
+                  style={{ backgroundImage: `url("${EFFECT_PHOTO_DATA_URL}")` }}
+                  role="img"
+                  aria-label="Duotone photo"
+                />
+                <figcaption className="text-center text-xs font-medium uppercase tracking-wide opacity-80">
+                  After
+                </figcaption>
+              </figure>
+            </div>
           ) : (
             <>
               <h3 className="font-display text-2xl font-semibold">Depth without the fuss.</h3>

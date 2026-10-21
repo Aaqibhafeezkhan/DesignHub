@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 
 import { BorderControls } from "@/components/effects/border-controls";
 import { ButtonPressControls } from "@/components/effects/button-press-controls";
+import { DuotoneControls } from "@/components/effects/duotone-controls";
 import { FocusRingControls } from "@/components/effects/focus-ring-controls";
 import { GlassControls } from "@/components/effects/glass-controls";
 import { HighlighterControls } from "@/components/effects/highlighter-controls";
@@ -40,4 +41,5 @@ export const effectControls: Partial<Record<EffectKind, ComponentType>> = {
   "scroll-shadow": ScrollShadowControls,
   "button-press": ButtonPressControls,
   "link-underline": LinkUnderlineControls,
+  duotone: DuotoneControls,
 };
