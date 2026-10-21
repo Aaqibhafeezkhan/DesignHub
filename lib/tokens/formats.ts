@@ -1650,6 +1650,171 @@ export function toNuxtUiColorsCss(tokens: DesignTokens): string {
   return `${header(tokens, (text) => `/* ${text} */`)}\n:root {\n${lines.join("\n")}\n}\n`;
 }
 
+/** A role's color in light or dark mode as hex. */
+function roleHex(tokens: DesignTokens, name: string, dark: boolean): string | undefined {
+  const entry = roleColor(tokens, name, dark);
+  return entry ? toHex(entry.value) : undefined;
+}
+
+/**
+ * GTK 4 / libadwaita (gtk.css): `@define-color` entries for the accent, window and view colors.
+ * The light block is the default and the dark block sits in a `prefers-color-scheme: dark`
+ * media query (GTK 4.20 and newer). On older GTK, move the dark block into gtk-dark.css.
+ */
+export function toGtkCss(tokens: DesignTokens): string {
+  const block = (dark: boolean) => {
+    const background = roleColor(tokens, "background", dark)?.value ?? (dark ? oklch(0.145, 0, 0) : oklch(1, 0, 0));
+    const foreground = roleColor(tokens, "foreground", dark)?.value ?? (dark ? oklch(0.985, 0, 0) : oklch(0.145, 0, 0));
+    const accent = roleColor(tokens, "primary", dark)?.value ?? foreground;
+    const card = roleColor(tokens, "card", dark)?.value ?? background;
+    const entries: [string, Oklch][] = [
+      ["accent_bg_color", accent],
+      ["accent_fg_color", readableTextColor(accent)],
+      ["accent_color", accent],
+      ["window_bg_color", background],
+      ["window_fg_color", foreground],
+      ["view_bg_color", card],
+      ["view_fg_color", foreground],
+    ];
+    return entries.map(([name, value]) => `@define-color ${name} ${toHex(value)};`);
+  };
+  const dark = block(true)
+    .map((line) => `  ${line}`)
+    .join("\n");
+  return `${header(tokens, (text) => `/* ${text} */`)}
+/* GTK 4 and libadwaita named colors. Save as ~/.config/gtk-4.0/gtk.css. */
+
+${block(false).join("\n")}
+
+@media (prefers-color-scheme: dark) {
+${dark}
+}
+`;
+}
+
+/** Tamagui token keys: camelCase identifiers, so `indigo` shade 500 becomes `indigo500`. */
+const tamaguiKey = (value: string) => camel(value.replace(/\./g, "_"));
+
+/**
+ * Tamagui (tamagui.config.ts): `createTokens` for color, space, size and radius, plus `light`
+ * and `dark` themes from the semantic roles. Merge them into your `createTamagui` call.
+ */
+export function toTamaguiConfig(tokens: DesignTokens): string {
+  const prefix = tokens.meta.prefix ? camel(tokens.meta.prefix) : "";
+  const key = (name: string) => (prefix ? `${prefix}${upperFirst(tamaguiKey(name))}` : tamaguiKey(name));
+  const colors: Record<string, string> = {};
+  tokens.colors.forEach((token) => {
+    colors[key(token.name)] = toHex(token.value);
+    token.shades.forEach((shade) => {
+      colors[key(`${token.name}-${shade.step}`)] = toHex(shade.value);
+    });
+  });
+  const space = Object.fromEntries(tokens.spacing.map((step) => [key(step.name), step.px]));
+  const radius = Object.fromEntries(tokens.radius.map((step) => [key(step.name), Math.min(step.px, 9999)]));
+  const theme = (dark: boolean) =>
+    Object.fromEntries(
+      tokens.semantic.flatMap((role) => {
+        const hex = roleHex(tokens, role.name, dark);
+        return hex ? [[tamaguiKey(role.name), hex]] : [];
+      }),
+    );
+  return `${header(tokens, (text) => `// ${text}`)}
+import { createTokens } from "tamagui";
+
+export const tokens = createTokens(${tsLiteral({
+    color: colors,
+    space,
+    size: space,
+    radius,
+    zIndex: { 0: 0, 1: 100, 2: 200, 3: 300, 4: 400, 5: 500 },
+  })});
+
+export const light = ${tsLiteral(theme(false))};
+
+export const dark = ${tsLiteral(theme(true))};
+
+// Use them in your config: createTamagui({ ...config, tokens, themes: { light, dark } })
+`;
+}
+
+/** Positions on the 50 to 950 shade ramp (0 is 50, 10 is 950) for Radix's steps 1 to 7, light and dark. */
+const RADIX_LIGHT = [0, 0.5, 1, 1.5, 2, 3, 3.5];
+const RADIX_DARK = [10, 9.5, 9, 8.5, 8, 7, 6.5];
+/** Steps 11 and 12 (text), light and dark. */
+const RADIX_TEXT_LIGHT = [7, 9];
+const RADIX_TEXT_DARK = [3, 1];
+
+function lerpColor(from: Oklch, to: Oklch, amount: number): Oklch {
+  return oklch(
+    from.l + (to.l - from.l) * amount,
+    from.c + (to.c - from.c) * amount,
+    from.h + (to.h - from.h) * amount,
+    from.alpha,
+  );
+}
+
+/** Radix's 12 steps for one palette color: steps 1 to 7, 11 and 12 from the ramp, step 9 the color itself. */
+function radixScale(token: DesignTokens["colors"][number], dark: boolean): Oklch[] {
+  const shades =
+    token.shades.length >= 11
+      ? token.shades
+      : generateShades(token.value).map((shade) => ({ step: shade.step, value: shade.color }));
+  const ramp = [...shades].sort((a, b) => a.step - b.step);
+  const at = (position: number) => {
+    const low = Math.floor(position);
+    const high = Math.min(ramp.length - 1, Math.ceil(position));
+    return lerpColor(ramp[low].value, ramp[high].value, position - low);
+  };
+  const base = token.value;
+  const anchor = ramp.reduce(
+    (best, shade, index) => (Math.abs(shade.value.l - base.l) < Math.abs(ramp[best].value.l - base.l) ? index : best),
+    0,
+  );
+  const neighbor = ramp[Math.min(ramp.length - 1, Math.max(0, anchor + (dark ? -1 : 1)))].value;
+  const [text11, text12] = (dark ? RADIX_TEXT_DARK : RADIX_TEXT_LIGHT).map(at);
+  const steps = (dark ? RADIX_DARK : RADIX_LIGHT).map(at);
+  return [...steps, lerpColor(steps[6], base, 0.5), base, lerpColor(base, neighbor, 0.5), text11, text12];
+}
+
+/**
+ * Radix Themes (radix-theme.css): overrides the `--accent-*` and `--gray-*` scales and
+ * `--radius-factor`. Each 12 step scale takes steps 1 to 7, 11 and 12 from the 50 to 950 shades
+ * (blended between two shades for the in-between steps), step 9 is the color itself, step 8 sits
+ * halfway between step 7 and step 9, and step 10 halfway to the neighbouring shade. Load it after
+ * the Radix Themes stylesheet.
+ */
+export function toRadixThemeCss(tokens: DesignTokens): string {
+  const primary = tokens.semantic.find((role) => role.name === "primary")?.ref;
+  const neutral = tokens.semantic.find((role) => ["neutral", "foreground"].includes(role.name))?.ref;
+  const accentToken = tokens.colors.find((token) => token.name === primary) ?? tokens.colors[0];
+  const grayToken = tokens.colors.find((token) => token.name === neutral) ?? accentToken;
+  const md = tokens.radius.find((step) => step.name === "md");
+  // Radix's medium radius is 6px at a factor of 1.
+  const factor = md ? Math.round((md.px / 6) * 100) / 100 : undefined;
+  const scale = (name: string, token: DesignTokens["colors"][number] | undefined, dark: boolean) =>
+    token ? radixScale(token, dark).map((value, index) => `  --${name}-${index + 1}: ${toHex(value)};`) : [];
+  const block = (selector: string, dark: boolean) => {
+    const accent = accentToken ? radixScale(accentToken, dark) : [];
+    const solid = accent[8];
+    const extras = solid
+      ? [
+          `  --accent-contrast: ${toHex(readableTextColor(solid))};`,
+          `  --accent-indicator: ${toHex(solid)};`,
+          `  --accent-track: ${toHex(solid)};`,
+        ]
+      : [];
+    const lines = [...scale("accent", accentToken, dark), ...extras, ...scale("gray", grayToken, dark)];
+    return `${selector} {\n${lines.join("\n")}\n}`;
+  };
+  return `${header(tokens, (text) => `/* ${text} */`)}
+/* Radix Themes overrides. Import after "@radix-ui/themes/styles.css". */
+
+${block(".light, .light-theme", false)}
+
+${block(".dark, .dark-theme", true)}
+${factor === undefined ? "" : `\n.radix-themes {\n  --radius-factor: ${factor};\n}\n`}`;
+}
+
 export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
   return [
     {
@@ -1665,6 +1830,21 @@ export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
       filename: "nuxt-ui-colors.css",
       language: "css",
       code: toNuxtUiColorsCss(tokens),
+    },
+    { id: "gtk", label: "GTK 4 CSS", filename: "gtk.css", language: "css", code: toGtkCss(tokens) },
+    {
+      id: "tamagui",
+      label: "Tamagui",
+      filename: "tamagui.config.ts",
+      language: "ts",
+      code: toTamaguiConfig(tokens),
+    },
+    {
+      id: "radix-themes",
+      label: "Radix Themes",
+      filename: "radix-theme.css",
+      language: "css",
+      code: toRadixThemeCss(tokens),
     },
     { id: "css", label: "CSS variables", filename: "tokens.css", language: "css", code: toCss(tokens) },
     {
