@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## v1.0.0
+
+Released 2026-10-21. The first public release: a complete, local-first design and brand identity toolkit with seventeen studios.
+
+### Added since the first build
+
 - Concentric arcs background generator: nested open rings from one seeded center, with the seed choosing the center, the start angle and the sweep, and density setting how many arcs fit.
 - Link underline effect in the Effects Lab: thickness, offset and color as `text-decoration-*` properties, a hover state that grows the underline with a `background-size` transition, a 4.5:1 contrast badge against the page, a link in the preview, and a `prefers-reduced-motion` rule that removes the transition.
 - Wave lines background generator: parallel sine curves shifted in phase, in palette colors, with the seed choosing amplitude and phase.
@@ -66,18 +76,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Guide to adding a mockup template (`docs/mockup-templates.md`), with a worked example whose code is tested.
 - CLI and CI guide (`docs/cli.md`): running the CLI, its guarantees and exit codes, and GitHub Actions recipes for building tokens, drift checks, auto-commits and monorepos.
 
-### Changed
+### Changed since the first build
 
 - Announce generated and loaded Color Studio palettes to screen readers, including locked swatches kept during generation.
 - Translate the rest of the Typography pairing studio in every language (en, es, fr, hi): the Pair panel, the Heading and Body labels and pickers, the lock and unlock buttons, Swap, Save, Random pair, the pairing suggestion heading, the saved and curated galleries, the pair card labels and the save toast.
 
-### Fixed
+### Fixed since the first build
 
 - Keep Color Studio undo and redo usable after global undo or redo, and reset both histories immediately when opening another project.
-
-## v1.0.0
-
-Released 2026-09-23. The first public release: a complete, local-first design and brand identity toolkit with seventeen studios.
 
 ### Added
 
