@@ -18,6 +18,11 @@ describe("parseArgs", () => {
     expect([...args.flags].sort()).toEqual(["help", "version"]);
   });
 
+  test("--watch and -w are the same flag", () => {
+    expect(parseArgs(["build", "brand.json", "--watch"]).flags.has("watch")).toBe(true);
+    expect(parseArgs(["build", "brand.json", "-w"]).flags.has("watch")).toBe(true);
+  });
+
   test("everything after -- is positional", () => {
     expect(parseArgs(["build", "--", "--odd-name.json"]).positionals).toEqual(["build", "--odd-name.json"]);
   });

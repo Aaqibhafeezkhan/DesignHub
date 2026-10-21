@@ -4,10 +4,10 @@ import { wrapSvg } from "@/lib/background/svg";
 import { oklch, parseColor, toHex } from "@/lib/color/color";
 import type { BackgroundDefinition } from "@/types/background";
 
-type Faces = { top: string; left: string; right: string };
+export type Faces = { top: string; left: string; right: string };
 
 /** Top face catches the light, the right face falls into shadow. */
-function shade(hex: string): Faces {
+export function shade(hex: string): Faces {
   const color = parseColor(hex) ?? oklch(0.6, 0.1, 270);
   return {
     top: toHex(oklch(Math.min(0.97, color.l + 0.12), color.c * 0.9, color.h)),
