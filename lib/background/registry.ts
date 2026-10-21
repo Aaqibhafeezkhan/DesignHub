@@ -28,6 +28,7 @@ import { triangles } from "@/lib/background/generators/triangles";
 import { topographic } from "@/lib/background/generators/topographic";
 import { voronoi } from "@/lib/background/generators/voronoi";
 import { waves } from "@/lib/background/generators/waves";
+import { waveLines } from "@/lib/background/generators/wave-lines";
 import { zigzag } from "@/lib/background/generators/zigzag";
 import { truchet } from "@/lib/background/generators/truchet";
 import { memphis } from "@/lib/background/generators/memphis";
@@ -41,6 +42,7 @@ import type { BackgroundDefinition, BackgroundKind, BackgroundSettings } from "@
 /** Generators register themselves here as they are implemented. */
 export const backgroundGenerators: BackgroundDefinition[] = [
   waves,
+  waveLines,
   blobs,
   mesh,
   aurora,

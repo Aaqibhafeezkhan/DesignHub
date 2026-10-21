@@ -9,11 +9,13 @@ import { plaidBands } from "@/lib/background/generators/plaid";
 import { concentricArcLayout, maxConcentricArcs } from "@/lib/background/generators/arcs";
 import { rhombusTile, type RhombusFace } from "@/lib/background/generators/rhombus";
 import { hypotrochoid, maxSpirographPoints } from "@/lib/background/generators/spirograph";
+import { maxWaveLinePoints, maxWaveLines } from "@/lib/background/generators/wave-lines";
 import { truchetPaths } from "@/lib/background/generators/truchet";
 import { triangleSlot } from "@/lib/background/generators/triangles";
 import { voronoiCells, type Point } from "@/lib/background/generators/voronoi";
 import { createRandom, r1 } from "@/lib/background/random";
 import { renderBackgroundSvg } from "@/lib/background/registry";
+import { xmlError } from "@/lib/test/xml";
 import type { BackgroundKind, BackgroundSettings } from "@/types/background";
 
 const settings = (kind: BackgroundKind, patch: Partial<BackgroundSettings> = {}): BackgroundSettings => ({
@@ -49,6 +51,7 @@ describe.each([
   "plaid",
   "circle-packing",
   "rhombus",
+  "wave-lines",
   "arcs",
 ] as const)("%s", (kind) => {
   test("the same seed renders the same output", () => {
@@ -524,6 +527,52 @@ describe("rhombus", () => {
     expect(renderBackgroundSvg(settings("rhombus"))).toContain("<pattern");
     expect(renderBackgroundSvg(settings("rhombus", { rotation: 30 }))).toContain("rotate(30");
     expect(backgroundCss(settings("rhombus"))).toContain("data:image/svg+xml");
+  });
+});
+
+describe("wave lines", () => {
+  test("draws parallel palette strokes, with the seed choosing amplitude and phase", () => {
+    const svg = renderBackgroundSvg(settings("wave-lines"));
+    const paths = svg.match(/<path /g) ?? [];
+    expect(paths.length).toBeGreaterThanOrEqual(6);
+    expect(paths.length).toBeLessThanOrEqual(maxWaveLines);
+    expect(svg).toContain('stroke="#6366f1"');
+    expect(svg).toContain('stroke="#ec4899"');
+    expect(svg).toContain('stroke="#f59e0b"');
+    expect(svg).toContain('fill="none"');
+    expect(xmlError(svg)).toBeNull();
+    expect(xmlError(renderBackgroundSvg(settings("wave-lines", { rotation: 30 })))).toBeNull();
+    for (const curve of svg.match(/<path d="([^"]+)"/g) ?? []) {
+      expect(curve.split("C").length - 1).toBeLessThanOrEqual(maxWaveLinePoints - 1);
+    }
+    expect(renderBackgroundSvg(settings("wave-lines", { seed: 3 }))).not.toBe(
+      renderBackgroundSvg(settings("wave-lines", { seed: 9 })),
+    );
+  });
+
+  test("density adds lines and scale changes the wave size", () => {
+    const count = (density: number) =>
+      (renderBackgroundSvg(settings("wave-lines", { density })).match(/<path /g) ?? []).length;
+    expect(count(100)).toBe(maxWaveLines);
+    expect(count(100)).toBeGreaterThan(count(0));
+    const pathData = (scale: number) =>
+      renderBackgroundSvg(settings("wave-lines", { density: 0, scale })).match(/<path d="([^"]+)"/)?.[1];
+    expect(pathData(0.25)).not.toBe(pathData(1));
+  });
+
+  test("falls back to one stroke when the palette is empty", () => {
+    const svg = renderBackgroundSvg(settings("wave-lines", { colors: [] }));
+    expect(svg).toContain('stroke="#ffffff"');
+    expect(svg).not.toContain('stroke="#6366f1"');
+  });
+
+  test("exports CSS from the SVG and stays under about 200 kB at the largest density", () => {
+    const css = backgroundCss(settings("wave-lines"));
+    expect(css).toContain("background-image:");
+    expect(css).toContain("data:image/svg+xml");
+    const svg = renderBackgroundSvg(settings("wave-lines", { density: 100, scale: 4, width: 3840, height: 2160 }));
+    expect(svg.length).toBeLessThan(200_000);
+    expect((svg.match(/<path /g) ?? []).length).toBeLessThanOrEqual(maxWaveLines);
   });
 });
 

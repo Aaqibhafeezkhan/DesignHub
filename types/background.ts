@@ -1,5 +1,6 @@
 export type BackgroundKind =
   | "waves"
+  | "wave-lines"
   | "blobs"
   | "mesh"
   | "aurora"
