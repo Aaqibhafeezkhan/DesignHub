@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Plaid background generator: translucent crossing bands in palette colors that repeat seamlessly, seeded, with density setting the repeat size.
 - Circle packing background generator: non-overlapping circles of varied size in palette colors, seeded, with capped circle and attempt counts.
 - Gumroad profile cover template (1280 x 420) in the Social Media Studio, with the avatar's covered zone kept clear.
+- Ko-fi page banner template (1920 x 480) in the Social Media Studio, with a support button from the call to action field.
 
 ### Changed
 

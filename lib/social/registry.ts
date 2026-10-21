@@ -20,6 +20,7 @@ import { tumblrHeader } from "@/lib/social/templates/tumblr";
 import { dribbbleShot } from "@/lib/social/templates/dribbble";
 import { behanceCover } from "@/lib/social/templates/behance";
 import { gumroadCover } from "@/lib/social/templates/gumroad";
+import { kofiBanner } from "@/lib/social/templates/kofi";
 import { patreonCover } from "@/lib/social/templates/patreon";
 import { kickBanner } from "@/lib/social/templates/kick";
 import { bandcampHeader } from "@/lib/social/templates/bandcamp";
@@ -70,6 +71,7 @@ export const socialTemplates: SocialTemplate[] = [
   hashnodeCover,
   etsyShopBanner,
   gumroadCover,
+  kofiBanner,
 ];
 
 export const socialPlatforms: SocialPlatform[] = [
@@ -100,6 +102,7 @@ export const socialPlatforms: SocialPlatform[] = [
   "Hashnode",
   "Etsy",
   "Gumroad",
+  "Ko-fi",
 ];
 
 /** Ids from earlier versions, so saved selections keep working. */
