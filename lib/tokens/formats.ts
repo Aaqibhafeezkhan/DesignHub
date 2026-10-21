@@ -661,18 +661,6 @@ export function toMaterialTheme(tokens: DesignTokens): string {
 
   /** The first of these roles the tokens actually define, in light or dark mode. */
   const pick = (names: string[], dark: boolean): RoleColor | undefined => {
- * Vuetify 3 (vuetify.ts): a `createVuetify` theme with a light and a dark color set built from the
- * semantic roles, the palette as extra theme colors, and the palette's own shades reachable through
- * Vuetify's lighten and darken helpers. Colors are always hex because those helpers, and Vuetify's
- * own color classes, can't read oklch(). Border radius and the font stack are Vuetify sass
- * variables rather than theme entries, so this file does not carry them; pass them through
- * `styles/settings.scss` if the project overrides them.
- */
-export function toVuetifyTheme(tokens: DesignTokens): string {
-  const prefix = tokens.meta.prefix ? `${tokens.meta.prefix}-` : "";
-
-  /** The first of these roles the tokens actually define, in light or dark mode. */
-  const role = (names: string[], dark: boolean): RoleColor | undefined => {
     for (const name of names) {
       const entry = roleColor(tokens, name, dark);
       if (entry) return entry;
@@ -738,6 +726,29 @@ import { createTheme } from "@mui/material/styles";
 export const theme = createTheme(${tsLiteral(theme)});
 
 export default theme;
+`;
+}
+
+/**
+ * Vuetify 3 (vuetify.ts): a `createVuetify` theme with a light and a dark color set built from the
+ * semantic roles, the palette as extra theme colors, and the palette's own shades reachable through
+ * Vuetify's lighten and darken helpers. Colors are always hex because those helpers, and Vuetify's
+ * own color classes, can't read oklch(). Border radius and the font stack are Vuetify sass
+ * variables rather than theme entries, so this file does not carry them; pass them through
+ * `styles/settings.scss` if the project overrides them.
+ */
+export function toVuetifyTheme(tokens: DesignTokens): string {
+  const prefix = tokens.meta.prefix ? `${tokens.meta.prefix}-` : "";
+
+  /** The first of these roles the tokens actually define, in light or dark mode. */
+  const role = (names: string[], dark: boolean): RoleColor | undefined => {
+    for (const name of names) {
+      const entry = roleColor(tokens, name, dark);
+      if (entry) return entry;
+    }
+    return undefined;
+  };
+
   /** One step darker than a role's own value: its next palette shade, or the lightness pushed down. */
   const darken = (entry: RoleColor): string => {
     const palette = tokens.colors.find((token) => token.name === entry.color);
@@ -1706,6 +1717,7 @@ export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
     { id: "panda", label: "Panda CSS", filename: "panda.preset.ts", language: "ts", code: toPandaPreset(tokens) },
     { id: "chakra", label: "Chakra UI", filename: "theme.ts", language: "ts", code: toChakraTheme(tokens) },
     { id: "mantine", label: "Mantine", filename: "theme.ts", language: "ts", code: toMantineTheme(tokens) },
+    { id: "mui", label: "Material UI", filename: "theme.ts", language: "ts", code: toMaterialTheme(tokens) },
     { id: "vuetify", label: "Vuetify", filename: "vuetify.ts", language: "ts", code: toVuetifyTheme(tokens) },
     {
       id: "antd",

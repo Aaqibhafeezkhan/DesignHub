@@ -359,6 +359,9 @@ describe("Ant Design", () => {
     const bare = toAntTheme({ ...tokens(), colors: [], semantic: [], radius: [], typography: null });
     expect(bare).toContain("export const lightTheme: ThemeConfig = { token: {} };");
     expect(bare).toContain("algorithm: antdTheme.darkAlgorithm,");
+  });
+});
+
 describe("Material UI", () => {
   /** The `palette` block of one color scheme, so light and dark assertions can't see each other. */
   const scheme = (code: string, name: "light" | "dark") => {
