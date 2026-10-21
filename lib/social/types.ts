@@ -61,7 +61,9 @@ export type SocialPlatform =
   | "Hashnode"
   | "Etsy"
   | "Gumroad"
-  | "Ko-fi";
+  | "Ko-fi"
+  | "Notion"
+  | "Medium";
 
 export type SocialTemplate = {
   id: string;
