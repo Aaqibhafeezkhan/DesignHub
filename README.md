@@ -92,7 +92,7 @@ A typical design session bounces between a font site, a palette generator, a con
 ### Social Media Studio
 
 - **GitHub repository banner in 15 styles**: Minimal, Editorial, Aurora, Grid, Terminal, Glass, Gradient, Split, Bento, Spotlight, Classic, Launch, Showcase, Features and Badges
-- **LinkedIn** profile and company page covers, **X** header, **Bluesky** banner, **Facebook** page cover, **Discord** server banner, **Twitch** channel banner, **Mastodon** header, **Reddit** community banner, **Tumblr** header, **Dribbble** shot, **Behance** project cover, **Patreon** cover, **Kick** channel banner, **Twitch** offline screen, **LinkedIn** event cover, **Bandcamp** header, **Etsy** shop banner, **Gumroad** profile cover, **Ko-fi** page banner, **Product Hunt** thumbnail, **Instagram** square post, portrait post and story, **Pinterest** pin, **Open Graph** (article, product, minimal), **Product Hunt** gallery and **YouTube** channel banner and thumbnail
+- **LinkedIn** profile and company page covers, **X** header, **Bluesky** banner, **Facebook** page cover, **Discord** server banner, **Twitch** channel banner, **Mastodon** header, **Reddit** community banner, **Tumblr** header, **Dribbble** shot, **Behance** project cover, **Patreon** cover, **Kick** channel banner, **Twitch** offline screen, **LinkedIn** event cover, **Bandcamp** header, **Etsy** shop banner, **Gumroad** profile cover, **Ko-fi** page banner, **Notion** page cover, **Medium** publication banner, **Product Hunt** thumbnail, **Instagram** square post, portrait post and story, **Pinterest** pin, **Open Graph** (article, product, minimal), **Product Hunt** gallery and **YouTube** channel banner and thumbnail
 - Exact platform sizes, a safe-area overlay and the zones covered by avatars and timestamps
 - One content panel drives every template: project name, description, website, GitHub username, logo, primary and secondary colors, background style, border radius and padding (empty fields follow the brand)
 - Export PNG, @1x or @2x, WebP, SVG, copy the image to the clipboard, Open Graph meta tags, and **a ZIP of the assets you pick** (all of them by default)
@@ -156,7 +156,7 @@ A typical design session bounces between a font site, a palette generator, a con
 ### Export Engine
 
 - One shared design-token model built live from every studio
-- Generates **CSS variables, SCSS, a Sass map, Less, Stylus, Tailwind v4 `@theme`, Tailwind v3 config, a JavaScript module, UnoCSS, Panda CSS and Chakra UI v3 themes, a shadcn/ui theme, Figma Variables JSON, a Style Dictionary build, a React Native theme, Bootstrap 5 Sass variables, typed CSS `@property` registrations, a CSS `light-dark()` theme, a Material 3 `themes.xml` for Android, a WinUI / WPF `Theme.xaml`, a .NET MAUI `Colors.xaml`, Mantine, Material UI, Vuetify and Ant Design themes, Xcode asset catalog color sets, React theme, styled-components / Emotion theme, Vue theme, Flutter `ThemeData`, SwiftUI, Jetpack Compose, Android `colors.xml`, JSON and YAML tokens** (W3C DTCG format) and **Tokens Studio for Figma** JSON
+- Generates **CSS variables, SCSS, a Sass map, Less, Stylus, Tailwind v4 `@theme`, Tailwind v3 config, a JavaScript module, UnoCSS, Panda CSS and Chakra UI v3 themes, a shadcn/ui theme, Figma Variables JSON, a Style Dictionary build, a React Native theme, Bootstrap 5 Sass variables, typed CSS `@property` registrations, a CSS `light-dark()` theme, a Material 3 `themes.xml` for Android, a WinUI / WPF `Theme.xaml`, a .NET MAUI `Colors.xaml`, Mantine, Material UI, Vuetify, Ant Design, Tamagui and Radix Themes themes, a GTK 4 `gtk.css`, Xcode asset catalog color sets, React theme, styled-components / Emotion theme, Vue theme, Flutter `ThemeData`, SwiftUI, Jetpack Compose, Android `colors.xml`, JSON and YAML tokens** (W3C DTCG format) and **Tokens Studio for Figma** JSON
 - Semantic roles (primary, accent, foreground, background) inferred from your palette
 - 8px spacing scale and 12px radius scale, both configurable
 - Live preview UI kit, one-click copy, **Download JSON**, all formats as `.zip`, preview PNG and a PDF style guide
@@ -166,7 +166,7 @@ A typical design session bounces between a font site, a palette generator, a con
 
 ### Background Studio
 
-- Thirty-five procedural generators: **waves, blobs, mesh gradients, aurora, noise texture, dots, grid, isometric, rings, concentric squares, argyle, checks, plus signs, crosshatch, triangles, squiggle, low poly, voronoi cells, circuit board, halftone, bokeh, starfield, confetti, chevron, zigzag, spirograph, truchet tiles, memphis shapes, flow field, plaid, circle packing, hexagons, sunburst, topographic contours and stripes**
+- Thirty-six procedural generators: **waves, blobs, mesh gradients, aurora, noise texture, dots, grid, isometric, rings, concentric squares, argyle, checks, plus signs, crosshatch, triangles, squiggle, low poly, voronoi cells, circuit board, halftone, bokeh, starfield, confetti, chevron, zigzag, spirograph, truchet tiles, memphis shapes, flow field, plaid, circle packing, rhombus tessellation, hexagons, sunburst, topographic contours and stripes**
 - Seeded and deterministic - every seed reproduces exactly; **Randomize** (or `Space`) rolls a new one
 - Shared controls for colors (or one click to use your Color Studio palette), density, scale, rotation and canvas size (desktop, Full HD, Open Graph, square, story)
 - Blobs are smoothed with **Paper.js** (loaded on demand); noise uses SVG `feTurbulence`
@@ -407,7 +407,7 @@ DesignHub/
 └── docs/                   # Architecture notes and screenshots
 ```
 
-Read [docs/architecture.md](docs/architecture.md) for how the pieces fit together and [docs/design-tokens.md](docs/design-tokens.md) for the token format. [docs/glossary.md](docs/glossary.md) defines the terms DesignHub uses. To add a mockup, follow [docs/mockup-templates.md](docs/mockup-templates.md); for a brand book page, [docs/guidelines-pages.md](docs/guidelines-pages.md).
+Read [docs/architecture.md](docs/architecture.md) for how the pieces fit together and [docs/design-tokens.md](docs/design-tokens.md) for the token format. [docs/glossary.md](docs/glossary.md) defines the terms DesignHub uses. To add a mockup, follow [docs/mockup-templates.md](docs/mockup-templates.md); for a social template, [docs/social-templates.md](docs/social-templates.md); for a brand book page, [docs/guidelines-pages.md](docs/guidelines-pages.md).
 
 ## Privacy
 

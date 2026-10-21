@@ -48,6 +48,8 @@ test.each([
   ["etsy-shop-banner", 3360, 840],
   ["gumroad-cover", 1280, 420],
   ["kofi-banner", 1920, 480],
+  ["notion-cover", 1500, 600],
+  ["medium-banner", 1500, 500],
 ])("%s is registered at %ix%i and included in the full pack", (id, width, height) => {
   const template = getSocialTemplate(id);
   expect(template).toMatchObject({ width, height });

@@ -30,13 +30,28 @@ node packages/cli/dist/designhub.mjs build brand.designhub.json --out tokens/
 - **Deterministic.** The headers that carry a time use the project file's export time, so the same file always builds the same bytes. Pass `--generated-at <iso>` to set it yourself. This is what makes the drift check below safe.
 - **Nothing outside the folder.** Files are only written inside `--out`.
 
+## Watch mode
+
+If you export from the app into a folder your dev server reads, let the CLI rebuild for you:
+
+```bash
+npx designhub build brand.designhub.json --format css,tailwind-v4 --out tokens/ --watch
+```
+
+It builds once, prints `Watching brand.designhub.json. Press Ctrl+C to stop.`, then rebuilds each time the file changes and prints one line per rebuild (`Wrote 2 files to tokens/`). `-w` is the short form.
+
+- **Rapid saves build once.** Changes are debounced by 100 ms, so an editor that writes a file twice doesn't build twice.
+- **An invalid file doesn't stop it.** The error goes to stderr (`designhub: That file isn't valid JSON.`) and the watcher waits for the next change. This also applies if the file is already invalid when you start.
+- **Ctrl+C exits with code 0.** It is the normal way to stop watching.
+- **It needs a real file.** `--watch` with `-` (standard input) is a usage error (code `2`), and a file that doesn't exist fails with code `1` because there is nothing to watch.
+
 ## Exit codes
 
-| Code | Meaning                                                                                           |
-| ---- | ------------------------------------------------------------------------------------------------- |
-| `0`  | Success, or `--help` and `--version`.                                                             |
-| `1`  | The file can't be read, isn't a valid project, there is nothing on stdin, or a format is unknown. |
-| `2`  | Bad usage: no command, an unknown command, a missing file argument or an option without a value.  |
+| Code | Meaning                                                                                                                 |
+| ---- | ----------------------------------------------------------------------------------------------------------------------- |
+| `0`  | Success, or `--help` and `--version`.                                                                                   |
+| `1`  | The file can't be read, isn't a valid project, there is nothing on stdin, or a format is unknown.                       |
+| `2`  | Bad usage: no command, an unknown command, a missing file argument or an option without a value, or `--watch` with `-`. |
 
 CI treats any non-zero code as a failed step, so a bad project file or a typo in `--format` fails the build with a one-line message on stderr.
 

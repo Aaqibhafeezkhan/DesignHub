@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { contrastRatio, fromHex, parseColor, toHex } from "@/lib/color/color";
+import { generateShades } from "@/lib/color/shades";
 import {
   tokenFormats,
   toAndroidColors,
@@ -14,15 +15,18 @@ import {
   toCssLightDark,
   toCssProperties,
   toFigmaVariables,
+  toGtkCss,
   toShadcnTheme,
   type FigmaVariablesRequest,
   toJsModule,
   toNuxtUiConfig,
   toNuxtUiColorsCss,
   toPandaPreset,
+  toRadixThemeCss,
   toSassMap,
   toScss,
   toStyledTheme,
+  toTamaguiConfig,
   toStylus,
   toUnoConfig,
   toVuetifyTheme,
@@ -1126,5 +1130,130 @@ describe("Nuxt UI v3", () => {
     expect(tokenFormats(nuxtTokens()).find((format) => format.id === "nuxt-ui-colors")?.filename).toBe(
       "nuxt-ui-colors.css",
     );
+  });
+});
+
+describe("GTK, Tamagui and Radix Themes exports", () => {
+  const brandTokens = (prefix = ""): DesignTokens => {
+    const color = (name: string, hex: string) => {
+      const value = fromHex(hex);
+      return { name, value, shades: generateShades(value).map((shade) => ({ step: shade.step, value: shade.color })) };
+    };
+    return {
+      meta: { name: "Acme Labs", prefix, generatedAt: "2026-01-01", colorFormat: "hex" },
+      colors: [color("indigo", "#6366f1"), color("slate", "#64748b")],
+      semantic: [
+        { name: "primary", ref: "indigo", value: fromHex("#6366f1") },
+        { name: "background", ref: "slate", value: fromHex("#ffffff") },
+        { name: "foreground", ref: "slate", value: fromHex("#0f172a") },
+      ],
+      gradient: null,
+      typography: null,
+      effects: [],
+      spacing: [
+        { name: "0.5", px: 2 },
+        { name: "4", px: 16 },
+      ],
+      radius: [
+        { name: "md", px: 9 },
+        { name: "full", px: 9999 },
+      ],
+    };
+  };
+
+  test("registers all three formats for the Export Engine and the ZIP", () => {
+    const formats = tokenFormats(brandTokens());
+    expect(formats.find((format) => format.id === "gtk")?.filename).toBe("gtk.css");
+    expect(formats.find((format) => format.id === "tamagui")?.filename).toBe("tamagui.config.ts");
+    expect(formats.find((format) => format.id === "radix-themes")?.filename).toBe("radix-theme.css");
+  });
+
+  describe("GTK 4 CSS", () => {
+    test("writes accent_bg_color in light and dark", () => {
+      const css = toGtkCss(brandTokens());
+      const [light, dark] = css.split("@media (prefers-color-scheme: dark)");
+      expect(light).toContain("@define-color accent_bg_color #6366f1;");
+      expect(dark).toContain("@define-color accent_bg_color #b1bdff;");
+    });
+
+    test("every @define-color is well-formed", () => {
+      const css = toGtkCss(brandTokens());
+      const lines = css.split("\n").filter((line) => line.includes("@define-color"));
+      expect(lines).toHaveLength(14);
+      lines.forEach((line) => expect(line).toMatch(/^\s*@define-color [a-z_]+ #[0-9a-f]{6};$/));
+      ["accent_bg_color", "window_bg_color", "view_bg_color", "window_fg_color"].forEach((name) =>
+        expect(css).toContain(`@define-color ${name} `),
+      );
+    });
+  });
+
+  describe("Tamagui", () => {
+    test("exports color, space, size and radius tokens with valid keys", () => {
+      const config = toTamaguiConfig(brandTokens());
+      expect(config).toContain('import { createTokens } from "tamagui";');
+      expect(config).toContain('indigo500: "#757bff"');
+      expect(config).toContain("space: {");
+      expect(config).toContain('"0_5": 2');
+      expect(config).toContain("4: 16");
+      expect(config).toContain("size: {");
+      expect(config).toContain("full: 9999");
+    });
+
+    test("light and dark themes carry the semantic roles", () => {
+      const config = toTamaguiConfig(brandTokens());
+      expect(config).toContain('export const light = { primary: "#6366f1", background: "#ffffff"');
+      expect(config).toContain('export const dark = { primary: "#b1bdff", background: "#0f172a"');
+    });
+
+    test("prefixes token keys with the token prefix", () => {
+      const config = toTamaguiConfig(brandTokens("acme"));
+      expect(config).toContain("acmeIndigo500:");
+      expect(config).toContain("acme4: 16");
+    });
+  });
+
+  describe("Radix Themes", () => {
+    const blocks = (css: string) => {
+      const [light, dark] = [".light, .light-theme {", ".dark, .dark-theme {"].map((selector) => {
+        const start = css.indexOf(selector);
+        return css.slice(start, css.indexOf("}", start));
+      });
+      return { light, dark };
+    };
+
+    test("has a light and a dark block", () => {
+      const css = toRadixThemeCss(brandTokens());
+      expect(css).toContain(".light, .light-theme {");
+      expect(css).toContain(".dark, .dark-theme {");
+    });
+
+    test("the accent and gray scales have 12 steps in each block", () => {
+      const { light, dark } = blocks(toRadixThemeCss(brandTokens()));
+      [light, dark].forEach((block) => {
+        ["accent", "gray"].forEach((scale) => {
+          const steps = [...block.matchAll(new RegExp(`--${scale}-([0-9]+): #[0-9a-f]{6};`, "g"))].map((m) => m[1]);
+          expect(steps).toEqual(Array.from({ length: 12 }, (_, index) => String(index + 1)));
+        });
+      });
+    });
+
+    test("step 9 is the primary color and the steps run from background to text", () => {
+      const css = toRadixThemeCss(brandTokens());
+      const { light, dark } = blocks(css);
+      expect(light).toContain("--accent-9: #6366f1;");
+      expect(dark).toContain("--accent-9: #6366f1;");
+      const lightness = (block: string, step: number) => {
+        const hex = new RegExp(`--accent-${step}: (#[0-9a-f]{6});`).exec(block)?.[1] ?? "";
+        return parseColor(hex)?.l ?? NaN;
+      };
+      expect(lightness(light, 1)).toBeGreaterThan(lightness(light, 9));
+      expect(lightness(light, 12)).toBeLessThan(lightness(light, 9));
+      expect(lightness(dark, 1)).toBeLessThan(lightness(dark, 9));
+      expect(lightness(dark, 12)).toBeGreaterThan(lightness(dark, 9));
+    });
+
+    test("derives --radius-factor from the medium radius", () => {
+      expect(toRadixThemeCss(brandTokens())).toContain("--radius-factor: 1.5;");
+    });
   });
 });

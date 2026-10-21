@@ -12,6 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Motion brand book page: durations derived from one base value (150, 250 and 400 ms), the Enter, Exit and Move easing curves drawn as SVG paths against a straight line, do's and don'ts for animation and a reduced-motion note. It is in the PDF with a bookmark, the website export and the Markdown export, can be switched off, and the contents numbering follows it.
 - Motion check in the Accessibility Lab (a Motion tab, and a section in the JSON, Markdown and HTML reports): reads the CSS each Effects Lab effect exports and lists every effect that animates or runs a transform transition, with whether it has an `@media (prefers-reduced-motion` rule.
 - Button press effect in the Effects Lab: a hover lift and a pressed state as `:hover` and `:active` rules with a transform and shadow change, with lift, press depth, duration, easing, color and radius controls, a real button in the preview, and a `prefers-reduced-motion` rule that removes the transform and the transition.
+- Favicon preview in the Logo Studio's Variants view: the app icon at 16 and 32 px in a light and a dark browser tab, drawn from the same SVG the favicon package exports and updating live with the brand.
+- Rhombus background generator ("tumbling blocks"): a seamless tessellation of diamonds shaded in three tones per cube, with the seed picking each cube's palette color and density setting the cube size.
+- `--watch` (`-w`) for `designhub build`: rebuilds whenever the project file changes, debounced, one line per rebuild, keeps running after an invalid file and exits 0 on Ctrl+C.
+- Notion page cover template (1500 x 600) in the Social Media Studio, with the page icon and title zone kept clear.
+- Medium publication banner template (1500 x 500) in the Social Media Studio, with the logo, name, a tagline shortened to two lines and the links.
+- Social template guide (`docs/social-templates.md`): platform sizes, safe and covered areas, the shared helpers, registration and tests, built around the Notion cover.
+- GTK 4 CSS export (`gtk.css`): libadwaita `@define-color` entries for the accent, window and view colors, with a light block and a dark one inside a `prefers-color-scheme: dark` media query.
+- Tamagui export (`tamagui.config.ts`): `createTokens` for color, space, size and radius with camelCase keys (prefixed when a token prefix is set), plus `light` and `dark` themes from the semantic roles.
+- Radix Themes export (`radix-theme.css`): 12 step `--accent-*` and `--gray-*` scales in `.light, .light-theme` and `.dark, .dark-theme` blocks built from the 50 to 950 shades, and `--radius-factor` from the medium radius.
 - Etsy shop banner template (3360 x 840) in the Social Media Studio, with a covered shop-icon zone and safe-area-aware content.
 
 - Compare original and optimized SVGs in the SVG Playground with an aligned, clipped preview and a keyboard- and touch-operable divider.

@@ -10,6 +10,7 @@ const VALUE_OPTIONS = new Set(["format", "out", "generated-at"]);
 const SHORT = new Map([
   ["f", "format"],
   ["o", "out"],
+  ["w", "watch"],
   ["h", "help"],
   ["v", "version"],
 ]);

@@ -2,7 +2,8 @@ import { CREDIT_TEXT } from "@/lib/export/credit";
 import { imagesToPdf } from "@/lib/export/pdf";
 import { rasterize } from "@/lib/export/raster";
 import { faviconEntries, type FaviconOptions } from "@/lib/icons/favicon";
-import { logoVariants, renderVariant, type LogoVariantId, type VariantContext } from "@/lib/logo/variants";
+import { faviconSvg } from "@/lib/logo/favicon-preview";
+import { logoVariants, type LogoVariantId, type VariantContext } from "@/lib/logo/variants";
 import { svgDimensions } from "@/lib/svg-size";
 import { createZip, type ZipEntry } from "@/lib/zip";
 
@@ -22,7 +23,7 @@ export function faviconOptions(ctx: VariantContext): FaviconOptions {
 
 /** Favicon files built from the brand's app icon variant. */
 export async function faviconFiles(ctx: VariantContext, folder = ""): Promise<ZipEntry[]> {
-  const svg = renderVariant("app-icon", ctx);
+  const svg = faviconSvg(ctx);
   const entries = await faviconEntries(() => svg, svg, faviconOptions(ctx));
   return entries.map((entry) => ({ ...entry, name: `${folder}${entry.name}` }));
 }

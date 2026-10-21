@@ -6,6 +6,7 @@ import { halftoneGradient, halftoneStrength } from "@/lib/background/generators/
 import { flowAngle, maxFlowPaths, maxFlowPathPoints, valueNoise } from "@/lib/background/generators/flow-field";
 import { maxPackedCircles, packCircles } from "@/lib/background/generators/circle-packing";
 import { plaidBands } from "@/lib/background/generators/plaid";
+import { rhombusTile, type RhombusFace } from "@/lib/background/generators/rhombus";
 import { hypotrochoid, maxSpirographPoints } from "@/lib/background/generators/spirograph";
 import { truchetPaths } from "@/lib/background/generators/truchet";
 import { triangleSlot } from "@/lib/background/generators/triangles";
@@ -46,6 +47,7 @@ describe.each([
   "flow-field",
   "plaid",
   "circle-packing",
+  "rhombus",
 ] as const)("%s", (kind) => {
   test("the same seed renders the same output", () => {
     for (const patch of [{ seed: 7 }, { seed: 7, rotation: 30, density: 100, scale: 2 }]) {
@@ -458,5 +460,67 @@ describe("circle packing", () => {
     const count = (density: number) =>
       (renderBackgroundSvg(settings("circle-packing", { density })).match(/<circle/g) ?? []).length;
     expect(count(100)).toBeGreaterThan(count(0));
+  });
+});
+
+describe("rhombus", () => {
+  const bounds = (face: RhombusFace) => {
+    const xs = face.points.map(([x]) => x);
+    const ys = face.points.map(([, y]) => y);
+    return { left: Math.min(...xs), right: Math.max(...xs), top: Math.min(...ys), bottom: Math.max(...ys) };
+  };
+  // Coordinates are rounded to 0.1 px, so a shifted face matches within a rounding step.
+  const sameFace = (a: RhombusFace, b: RhombusFace, dx: number, dy: number) =>
+    a.fill === b.fill &&
+    a.points.every(
+      ([x, y], i) => Math.abs(x + dx - b.points[i]![0]) <= 0.15 && Math.abs(y + dy - b.points[i]![1]) <= 0.15,
+    );
+
+  test("the tile repeats seamlessly: every face that crosses an edge is also drawn on the other side", () => {
+    for (const radius of [10, 17.3, 40]) {
+      const tile = rhombusTile(radius, ["#6366f1", "#ec4899", "#f59e0b"], 42);
+      for (const face of tile.faces) {
+        for (const dx of [-tile.width, 0, tile.width]) {
+          for (const dy of [-tile.height, 0, tile.height]) {
+            const { left, right, top, bottom } = bounds(face);
+            const touchesTile =
+              right + dx > 0.2 && left + dx < tile.width - 0.2 && bottom + dy > 0.2 && top + dy < tile.height - 0.2;
+            if (touchesTile) {
+              const drawn = tile.faces.some((other) => sameFace(face, other, dx, dy));
+              expect(drawn, `${radius}: face at ${face.points[0]} shifted by ${dx},${dy}`).toBe(true);
+            }
+          }
+        }
+      }
+    }
+  });
+
+  test("every cube has three tones, the lightest on top and the darkest on the right", () => {
+    const tile = rhombusTile(20, ["#6366f1"], 1);
+    expect(new Set(tile.faces.map((face) => face.fill)).size).toBe(3);
+    for (let i = 0; i < tile.faces.length; i += 3) {
+      const [top, left, right] = tile.faces.slice(i, i + 3).map((face) => face.fill);
+      expect(new Set([top, left, right]).size).toBe(3);
+    }
+  });
+
+  test("the seed picks which palette colors land on the cubes", () => {
+    const colors = ["#6366f1", "#ec4899", "#f59e0b"];
+    const fills = (seed: number) => rhombusTile(20, colors, seed).faces.map((face) => face.fill);
+    expect(fills(1)).toEqual(fills(1));
+    expect(fills(1)).not.toEqual(fills(2));
+  });
+
+  test("density sets the cube size", () => {
+    const small = renderBackgroundSvg(settings("rhombus", { density: 100 }));
+    const large = renderBackgroundSvg(settings("rhombus", { density: 0 }));
+    const tileWidth = (svg: string) => Number(svg.match(/<pattern\b[^>]*width="([\d.]+)"/)?.[1]);
+    expect(tileWidth(large)).toBeGreaterThan(tileWidth(small) * 2);
+  });
+
+  test("draws through a <pattern> and exports SVG, rotated SVG and CSS", () => {
+    expect(renderBackgroundSvg(settings("rhombus"))).toContain("<pattern");
+    expect(renderBackgroundSvg(settings("rhombus", { rotation: 30 }))).toContain("rotate(30");
+    expect(backgroundCss(settings("rhombus"))).toContain("data:image/svg+xml");
   });
 });

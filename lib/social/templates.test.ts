@@ -330,3 +330,20 @@ describe("landing page nav", () => {
     }
   });
 });
+
+describe.each(["notion-cover", "medium-banner"])("%s with very short and very long names", (id) => {
+  const template = socialTemplates.find((item) => item.id === id)!;
+
+  test.each([
+    ["3 character", "Axe"],
+    ["60 character", "Northwind Analytics Cooperative for Sustainable Data Systems"],
+  ])("a %s name stays inside the safe area", (_label, name) => {
+    for (const mode of modes) {
+      const ctx = socialContext(mode, name);
+      for (const box of textBoxes(ctx, template.render(ctx))) {
+        expect(box.start, box.value).toBeGreaterThanOrEqual(template.safe.x - 0.5);
+        expect(box.end, box.value).toBeLessThanOrEqual(template.safe.x + template.safe.width + 0.5);
+      }
+    }
+  });
+});
