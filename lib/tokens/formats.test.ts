@@ -8,6 +8,7 @@ import {
   toBootstrapVariables,
   toChakraTheme,
   toMantineTheme,
+  toMaterialTheme,
   toCss,
   toCssLightDark,
   toCssProperties,
@@ -113,6 +114,7 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
     expect.arrayContaining([
       "chakra",
       "mantine",
+      "mui",
       "vuetify",
       "bootstrap",
       "shadcn",
@@ -319,6 +321,56 @@ describe("Mantine", () => {
     expect(tuple).toHaveLength(10);
     expect(mantine).toContain('primaryColor: "acme-indigo",');
     expect(mantine).not.toContain("oklch(");
+  });
+});
+
+describe("Material UI", () => {
+  /** The `palette` block of one color scheme, so light and dark assertions can't see each other. */
+  const scheme = (code: string, name: "light" | "dark") => {
+    const start = code.indexOf(`${name}: {`);
+    return code.slice(start, code.indexOf("},\n  },", start));
+  };
+
+  test("builds a createTheme with a light and a dark color scheme from the semantic roles", () => {
+    const mui = toMaterialTheme(withRoles);
+    expect(mui).toContain('import { createTheme } from "@mui/material/styles";');
+    expect(mui).toContain("colorSchemes: {");
+    const light = scheme(mui, "light");
+    expect(light).toContain('main: "#6366f1",');
+    // The lighter and darker stops come from the palette's own shades, not from a fixed percentage.
+    expect(light).toContain('light: "#a5b4fc",');
+    expect(light).toContain('default: "#ffffff",');
+    expect(light).toContain('text: { primary: "#0f172a" }');
+    // Indigo 500 takes black label text more legibly than white, so contrastText follows the contrast.
+    expect(light).toContain('contrastText: "#000000",');
+    expect(mui).not.toContain("oklch(");
+  });
+
+  test("the dark scheme reads roleColor in dark mode and lifts paper off the page", () => {
+    const mui = toMaterialTheme(withRoles);
+    const dark = scheme(mui, "dark");
+    expect(dark).toContain(`main: "${toHex(roleColor(withRoles, "primary", true)!.value)}",`);
+    expect(dark).not.toContain('main: "#6366f1",');
+    const value = (block: string, key: string) => block.match(new RegExp(`${key}: "(#[0-9a-f]{6})"`))?.[1];
+    expect(value(dark, "paper")).toBeDefined();
+    expect(value(dark, "paper")).not.toBe(value(dark, "default"));
+  });
+
+  test("puts the heading font on the headings and the body font everywhere else", () => {
+    const mui = toMaterialTheme(typed());
+    expect(mui).toContain('fontFamily: "\\"Lora\\", ui-serif, Georgia, serif",');
+    expect(mui).toContain('fontFamily: "\\"Inter\\", ui-sans-serif, system-ui, sans-serif",');
+    expect(mui).toContain("fontWeight: 700,");
+    expect(mui).toContain("body1: { fontWeight: 400 },");
+    expect(mui).toContain("shape: { borderRadius: 12 },");
+  });
+
+  test("still returns a valid createTheme call without typography, radius or a palette", () => {
+    const bare = toMaterialTheme({ ...tokens(), colors: [], semantic: [], radius: [] });
+    expect(bare).toContain("createTheme({});");
+    expect(bare).not.toContain("colorSchemes");
+    expect(bare).not.toContain("typography");
+    expect(bare).not.toContain("shape");
   });
 });
 
