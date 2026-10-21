@@ -94,10 +94,32 @@ describe("designhub build", () => {
     expect((await stat(join(dir, "all", "react", "theme.ts"))).isFile()).toBe(true);
   });
 
+  test("`-` reads the project from standard input", async () => {
+    const text = projectToJson(project());
+    const piped: Io = { ...io, stdin: async () => text };
+    expect(await run(["build", "-", "--format", "css", "-o", "piped"], piped)).toBe(0);
+    const formats = await listFormats();
+    const css = formats.find((format) => format.id === "css")!.filename;
+    expect(await readFile(join(dir, "piped", css), "utf8")).toContain("--");
+    expect(output.out).toContain("Wrote 1 file to piped/");
+  });
+
+  test("`-` with nothing piped in, or with an invalid project, exits 1 with a message", async () => {
+    expect(await run(["build", "-"], io)).toBe(1);
+    expect(output.err).toContain("Nothing was piped in");
+    output.err = "";
+    expect(await run(["build", "-"], { ...io, stdin: async () => "   \n" })).toBe(1);
+    expect(output.err).toContain("Nothing was piped in");
+    output.err = "";
+    expect(await run(["build", "-"], { ...io, stdin: async () => "{ nope" })).toBe(1);
+    expect(output.err).toContain("valid JSON");
+  });
+
   test("--help lists the formats and exits 0", async () => {
     expect(await run(["--help"], io)).toBe(0);
     for (const format of await listFormats()) expect(output.out).toContain(format.id);
     expect(output.out).toContain("designhub build");
+    expect(output.out).toContain("designhub build -");
   });
 
   test("a missing file, an invalid file and an unknown format exit non-zero with a clear message", async () => {

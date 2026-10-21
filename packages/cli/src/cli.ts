@@ -7,7 +7,13 @@ import { buildTokenFiles, CliError, listFormats } from "./build";
 export const VERSION = "1.0.0";
 
 /** Where the CLI writes, so tests can capture it. */
-export type Io = { out: (text: string) => void; err: (text: string) => void; cwd: string };
+export type Io = {
+  out: (text: string) => void;
+  err: (text: string) => void;
+  cwd: string;
+  /** Reads all of standard input, for `designhub build -`. Missing when there is no piped input. */
+  stdin?: () => Promise<string>;
+};
 
 export async function helpText(): Promise<string> {
   const formats = await listFormats();
@@ -15,7 +21,7 @@ export async function helpText(): Promise<string> {
   return `designhub ${VERSION}: build design tokens from a DesignHub project file.
 
 Usage
-  designhub build <project.designhub.json> [--format <ids>] [--out <folder>]
+  designhub build <project.designhub.json | -> [--format <ids>] [--out <folder>]
 
 Options
   -f, --format <ids>   Comma separated formats to build (default: all of them)
@@ -27,8 +33,9 @@ Options
 Formats
 ${formats.map((format) => `  ${format.id.padEnd(width)}  ${format.label} (${format.filename})`).join("\n")}
 
-Example
+Examples
   npx designhub build brand.designhub.json --format css,tailwind-v4 --out tokens/
+  cat brand.designhub.json | npx designhub build - --format css
 `;
 }
 
@@ -55,10 +62,16 @@ export async function run(argv: string[], io: Io): Promise<number> {
     }
 
     let text: string;
-    try {
-      text = await readFile(resolve(io.cwd, file), "utf8");
-    } catch {
-      throw new CliError(`Can't read "${file}".`);
+    if (file === "-") {
+      // "-" means standard input, so the CLI can sit in a pipeline.
+      text = io.stdin ? await io.stdin() : "";
+      if (!text.trim()) throw new CliError("Nothing was piped in. Run: cat brand.designhub.json | designhub build -");
+    } else {
+      try {
+        text = await readFile(resolve(io.cwd, file), "utf8");
+      } catch {
+        throw new CliError(`Can't read "${file}".`);
+      }
     }
     const formats = args.options
       .get("format")
