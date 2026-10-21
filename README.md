@@ -262,7 +262,7 @@ pnpm --filter designhub build   # bundles packages/cli/dist/designhub.mjs
 node packages/cli/dist/designhub.mjs build brand.designhub.json --format css,tailwind-v4 --out tokens/
 ```
 
-It imports the same generators the app uses, so the files match what the Export Engine downloads, and the output is deterministic. Run it with `--help` to list every format. See [packages/cli/README.md](packages/cli/README.md); once published it runs as `npx designhub build ...`.
+It imports the same generators the app uses, so the files match what the Export Engine downloads, and the output is deterministic. Run it with `--help` to list every format. See [packages/cli/README.md](packages/cli/README.md) and the [CLI and CI guide](docs/cli.md) for copyable GitHub Actions recipes; once published it runs as `npx designhub build ...`.
 
 ### PWA and offline development
 
