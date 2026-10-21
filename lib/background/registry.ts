@@ -1,3 +1,4 @@
+import { arcs } from "@/lib/background/generators/arcs";
 import { argyle } from "@/lib/background/generators/argyle";
 import { bokeh } from "@/lib/background/generators/bokeh";
 import { checks } from "@/lib/background/generators/checks";
@@ -77,6 +78,7 @@ export const backgroundGenerators: BackgroundDefinition[] = [
   plaid,
   circlePacking,
   rhombus,
+  arcs,
 ];
 
 export function getGenerator(kind: BackgroundKind): BackgroundDefinition | undefined {

@@ -6,13 +6,14 @@ import { halftoneGradient, halftoneStrength } from "@/lib/background/generators/
 import { flowAngle, maxFlowPaths, maxFlowPathPoints, valueNoise } from "@/lib/background/generators/flow-field";
 import { maxPackedCircles, packCircles } from "@/lib/background/generators/circle-packing";
 import { plaidBands } from "@/lib/background/generators/plaid";
+import { concentricArcLayout, maxConcentricArcs } from "@/lib/background/generators/arcs";
 import { rhombusTile, type RhombusFace } from "@/lib/background/generators/rhombus";
 import { hypotrochoid, maxSpirographPoints } from "@/lib/background/generators/spirograph";
 import { maxWaveLinePoints, maxWaveLines } from "@/lib/background/generators/wave-lines";
 import { truchetPaths } from "@/lib/background/generators/truchet";
 import { triangleSlot } from "@/lib/background/generators/triangles";
 import { voronoiCells, type Point } from "@/lib/background/generators/voronoi";
-import { createRandom } from "@/lib/background/random";
+import { createRandom, r1 } from "@/lib/background/random";
 import { renderBackgroundSvg } from "@/lib/background/registry";
 import { xmlError } from "@/lib/test/xml";
 import type { BackgroundKind, BackgroundSettings } from "@/types/background";
@@ -51,6 +52,7 @@ describe.each([
   "circle-packing",
   "rhombus",
   "wave-lines",
+  "arcs",
 ] as const)("%s", (kind) => {
   test("the same seed renders the same output", () => {
     for (const patch of [{ seed: 7 }, { seed: 7, rotation: 30, density: 100, scale: 2 }]) {
@@ -571,5 +573,68 @@ describe("wave lines", () => {
     const svg = renderBackgroundSvg(settings("wave-lines", { density: 100, scale: 4, width: 3840, height: 2160 }));
     expect(svg.length).toBeLessThan(200_000);
     expect((svg.match(/<path /g) ?? []).length).toBeLessThanOrEqual(maxWaveLines);
+  });
+});
+
+describe("arcs", () => {
+  test("draws partial rings that share one center and stop short of a full turn", () => {
+    const layout = concentricArcLayout(settings("arcs"));
+    expect(layout.sweep).toBeGreaterThan(Math.PI * 0.5);
+    expect(layout.sweep).toBeLessThan(Math.PI * 2);
+    expect(layout.arcs.length).toBeGreaterThan(3);
+    expect(layout.arcs.length).toBeLessThanOrEqual(maxConcentricArcs);
+    layout.arcs.slice(1).forEach((arc, index) => {
+      expect(arc.radius).toBeGreaterThan(layout.arcs[index]!.radius);
+    });
+
+    const svg = renderBackgroundSvg(settings("arcs"));
+    expect(svg).not.toContain("<circle");
+    expect(svg.match(/<path /g)?.length).toBe(layout.arcs.length);
+    const large = layout.sweep > Math.PI ? 1 : 0;
+    for (const arc of layout.arcs) {
+      expect(svg).toContain(`A${arc.radius} ${arc.radius} 0 ${large} 1`);
+      const end = layout.start + layout.sweep;
+      const x0 = r1(layout.cx + Math.cos(layout.start) * arc.radius);
+      const y0 = r1(layout.cy + Math.sin(layout.start) * arc.radius);
+      const x1 = r1(layout.cx + Math.cos(end) * arc.radius);
+      const y1 = r1(layout.cy + Math.sin(end) * arc.radius);
+      expect(svg).toContain(`M${x0} ${y0}A${arc.radius} ${arc.radius}`);
+      expect(x0 !== x1 || y0 !== y1).toBe(true);
+    }
+  });
+
+  test("cycles the palette, and uses a neutral gray when no colors are set", () => {
+    const layout = concentricArcLayout(settings("arcs"));
+    expect(new Set(layout.arcs.map((arc) => arc.color))).toEqual(new Set(["#6366f1", "#ec4899", "#f59e0b"]));
+    layout.arcs.slice(1).forEach((arc, index) => {
+      expect(arc.color).not.toBe(layout.arcs[index]!.color);
+    });
+    const plain = concentricArcLayout(settings("arcs", { colors: [] }));
+    expect(new Set(plain.arcs.map((arc) => arc.color))).toEqual(new Set(["#888888"]));
+  });
+
+  test("density adds arcs and scale enlarges the spacing", () => {
+    const count = (density: number) => concentricArcLayout(settings("arcs", { density })).arcs.length;
+    expect(count(100)).toBeGreaterThan(count(0));
+    const radius = (scale: number) => concentricArcLayout(settings("arcs", { scale })).arcs[0]!.radius;
+    expect(radius(2)).toBeGreaterThan(radius(1));
+  });
+
+  test("the seed moves the center and the opening", () => {
+    const first = concentricArcLayout(settings("arcs", { seed: 1 }));
+    const second = concentricArcLayout(settings("arcs", { seed: 2 }));
+    expect([first.cx, first.cy, first.start, first.sweep]).not.toEqual([
+      second.cx,
+      second.cy,
+      second.start,
+      second.sweep,
+    ]);
+  });
+
+  test("exports rotated SVG and a CSS data URI", () => {
+    expect(renderBackgroundSvg(settings("arcs", { rotation: 30 }))).toContain("rotate(30");
+    expect(backgroundCss(settings("arcs"))).toContain("data:image/svg+xml");
+    const huge = renderBackgroundSvg(settings("arcs", { width: 3840, height: 2160, density: 100 }));
+    expect((huge.match(/<path /g) ?? []).length).toBeLessThanOrEqual(maxConcentricArcs);
   });
 });
