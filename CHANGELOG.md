@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Zigzag background generator with seeded palette-colored rows and independent density and amplitude controls.
 - Pinterest board cover template (600 x 600) in the Social Media Studio.
 - Export an icon as a Preact component.
+- Material UI v6 theme export (`theme.ts`): `createTheme` with light and dark color schemes from the semantic roles, a light / main / dark ramp taken from each palette color's own shades, the heading and body fonts from the type scale, and `shape.borderRadius` from the radius scale.
 - Mantine v7 theme export (`theme.ts`): `createTheme` with each palette color as a ten-shade tuple, plus primary color, fonts, headings, radius, spacing and shadows.
 - WinUI / WPF export (`Theme.xaml`): a `ResourceDictionary` with `Color` and `SolidColorBrush` resources for the palette and Light and Dark `ThemeDictionaries` for the semantic roles.
 - Scrollbar effect in the Effects Lab: thumb, hover and track colors, width and radius as `scrollbar-color` and `scrollbar-width` with a `::-webkit-scrollbar` fallback, a scrolling preview and a 3:1 thumb contrast badge.
