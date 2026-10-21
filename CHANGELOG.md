@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - App shortcuts in the web app manifest: the installed app's icon menu opens Colors, Typography, Brand Projects and the Export Engine.
 - `designhub build -` reads the project file from standard input, so the CLI can sit in a pipeline.
 - Text spacing tester in the Accessibility Lab (WCAG 1.4.12): a switch applies line height 1.5, paragraph spacing 2x, letter spacing 0.12em and word spacing 0.16em to the preview and says whether any text is clipped, and the JSON, Markdown and HTML reports list each value against the minimum.
+- Guide to adding a mockup template (`docs/mockup-templates.md`), with a worked example whose code is tested.
 
 ### Changed
 

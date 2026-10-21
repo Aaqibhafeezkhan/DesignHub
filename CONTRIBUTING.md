@@ -267,6 +267,8 @@ Translation changes should preserve the existing message keys and placeholders. 
 
 ## Mockup and social template guidelines
 
+For a full walkthrough of a mockup template, see [docs/mockup-templates.md](docs/mockup-templates.md).
+
 Mockups (`lib/mockups/templates/`), social assets (`lib/social/templates/`) and guideline pages (`lib/guidelines/pages/`) are pure functions from a drawing context to an SVG string.
 
 1. Take every color, font, radius and logo from the context (`ctx.brand`, `ctx.surface`). Never hard-code brand values; neutral device colors (bezels, stands) are fine.
