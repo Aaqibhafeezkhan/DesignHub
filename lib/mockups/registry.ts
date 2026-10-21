@@ -14,6 +14,7 @@ import { mobileApp } from "@/lib/mockups/templates/mobile-app";
 import { appStoreScreenshots } from "@/lib/mockups/templates/app-store";
 import { poster } from "@/lib/mockups/templates/poster";
 import { shoppingBag } from "@/lib/mockups/templates/shopping-bag";
+import { smartwatch } from "@/lib/mockups/templates/smartwatch";
 import { sticker } from "@/lib/mockups/templates/sticker";
 import { tabletScreens } from "@/lib/mockups/templates/tablet";
 import type { MockupTemplate } from "@/lib/mockups/types";
@@ -34,6 +35,7 @@ export const mockupTemplates: MockupTemplate[] = [
   desktopDashboard,
   mobileApp,
   appStoreScreenshots,
+  smartwatch,
   lockScreenMockup,
   tabletScreens,
   browserTab,

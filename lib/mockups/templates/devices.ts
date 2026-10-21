@@ -86,3 +86,28 @@ export function phone(x: number, y: number, content: string, scale = 1): string 
     <rect x="${w / 2 - 62}" y="${bezel + 12}" width="124" height="36" rx="18" fill="#000"/>
   </g>`;
 }
+
+/** Watch screen size in points. */
+export const WATCH_W = 208;
+export const WATCH_H = 248;
+
+/**
+ * Smartwatch: a rounded-square case with a crown and side button, and a strap above and below. The
+ * display is `WATCH_W` × `WATCH_H`; `tone` is the strap color.
+ */
+export function watch(x: number, y: number, content: string, strap = "#2a2b31"): string {
+  const bezel = 18;
+  const w = WATCH_W + bezel * 2;
+  const h = WATCH_H + bezel * 2;
+  const id = `watch-${x}-${y}`;
+  return `<g transform="translate(${x} ${y})">
+    <rect x="${w / 2 - 62}" y="-150" width="124" height="190" rx="30" fill="${strap}"/>
+    <rect x="${w / 2 - 62}" y="${h - 40}" width="124" height="190" rx="30" fill="${strap}"/>
+    <rect x="${w - 4}" y="64" width="14" height="46" rx="6" fill="#3a3b41"/>
+    <rect x="${w - 4}" y="132" width="10" height="30" rx="5" fill="#3a3b41"/>
+    <rect width="${w}" height="${h}" rx="64" fill="#1d1e22" filter="url(#soft)"/>
+    <rect x="1.5" y="1.5" width="${w - 3}" height="${h - 3}" rx="62.5" fill="none" stroke="#45464d" stroke-width="3"/>
+    <clipPath id="${id}"><rect x="${bezel}" y="${bezel}" width="${WATCH_W}" height="${WATCH_H}" rx="46"/></clipPath>
+    <g clip-path="url(#${id})">${screen(bezel, bezel, WATCH_W, WATCH_H, content)}</g>
+  </g>`;
+}

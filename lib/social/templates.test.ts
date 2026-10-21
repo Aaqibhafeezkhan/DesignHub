@@ -4,6 +4,7 @@ import { brandSurface } from "@/lib/brand/theme";
 import { buildBrandTokens } from "@/lib/brand/tokens";
 import { measureText } from "@/lib/logo/measure";
 import { getTemplate, mockupTemplates } from "@/lib/mockups/registry";
+import { watchFace, watchNotification } from "@/lib/mockups/templates/smartwatch";
 import { storeCaptions, captionLines } from "@/lib/mockups/templates/app-store";
 import { landingNav } from "@/lib/mockups/templates/laptop-landing";
 import type { MockupContext } from "@/lib/mockups/types";
@@ -257,6 +258,35 @@ describe("app store screenshots", () => {
     for (const mode of modes) {
       const ctx = mockupContext(mode);
       expect(getTemplate("app-store")!.render(ctx)).toContain(`stop-color="${ctx.surface.primary}"`);
+    }
+  });
+});
+
+describe("smartwatch", () => {
+  test("draws two watches, the face and a notification, with the brand mark in each", () => {
+    const svg = getTemplate("smartwatch")!.render(mockupContext("dark"));
+    expect(svg.match(/<clipPath id="watch-/g)).toHaveLength(2);
+    expect(svg).toContain("9:41");
+    expect(svg).toContain(`stop-color`);
+  });
+
+  test("a long brand name, message and button label are shortened to the watch display", () => {
+    for (const mode of modes) {
+      const ctx = mockupContext(mode, "Northwind Analytics Cooperative for Sustainable Data Systems");
+      const long = {
+        ...ctx,
+        content: { ...ctx.content, headline: "word ".repeat(60), cta: "Open the whole dashboard right now" },
+      };
+      const { typography } = long.brand;
+      for (const svg of [watchFace(long), watchNotification(long)]) {
+        const texts = [...svg.matchAll(/<text class="(h|b|bb)"[^>]*font-size="(\d+)"[^>]*>([^<]*)<\/text>/g)];
+        expect(texts.length).toBeGreaterThan(2);
+        for (const [, font, size, value] of texts) {
+          const family = font === "h" ? typography.heading : typography.body;
+          const weight = font === "h" ? typography.headingWeight : font === "bb" ? 600 : 400;
+          expect(long.measure(value!, family, weight, Number(size)), value).toBeLessThanOrEqual(208);
+        }
+      }
     }
   });
 });
