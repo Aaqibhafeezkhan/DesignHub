@@ -10,6 +10,7 @@ import {
   toComposeTheme,
   toFlutterTheme,
   toMauiColors,
+  toQtQuickTheme,
   toSwiftUITheme,
   toTokensStudio,
   toWinUiTheme,
@@ -1937,6 +1938,7 @@ export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
     { id: "compose", label: "Jetpack Compose", filename: "Theme.kt", language: "kotlin", code: toComposeTheme(tokens) },
     { id: "maui", label: ".NET MAUI", filename: "Colors.xaml", language: "xml", code: toMauiColors(tokens) },
     { id: "winui", label: "WinUI / WPF", filename: "Theme.xaml", language: "xml", code: toWinUiTheme(tokens) },
+    { id: "qml", label: "Qt Quick", filename: "Theme.qml", language: "qml", code: toQtQuickTheme(tokens) },
     { id: "json", label: "JSON tokens", filename: "tokens.json", language: "json", code: toJsonTokens(tokens) },
     { id: "yaml", label: "YAML", filename: "tokens.yaml", language: "yaml", code: toYaml(tokens) },
     {

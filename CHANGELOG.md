@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Qt Quick export (`Theme.qml`): a singleton `QtObject` with the palette and the light and dark semantic roles as `readonly property color` entries in `#AARRGGBB` order, plus spacing and radius numbers.
 - Buy Me a Coffee page cover template (1200 x 400) in the Social Media Studio, with a covered avatar zone and the call to action drawn as a support button.
 
 ### Changed

@@ -14,6 +14,7 @@ export type ExportLanguage =
   | "text"
   | "vue"
   | "yaml"
+  | "qml"
   | "svelte"
   | "astro";
 
