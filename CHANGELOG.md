@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ko-fi page banner template (1920 x 480) in the Social Media Studio, with a support button from the call to action field.
 - Smartwatch mockup: a watch face with the brand mark, time and activity ring, and a notification from the app, with long names and messages shortened to the display.
 - Social share logo variant (1200 x 630): the lockup centered inside the crop-safe area, scaled down for long names, exported as SVG, PNG (1200 and 2400) and PDF in the logo pack.
+- Data Visualization brand book page: six categorical series colors checked against color blindness (OKLab distance under protanopia, deuteranopia and tritanopia), a sequential and a diverging ramp from the brand, and a sample chart.
 
 ### Changed
 

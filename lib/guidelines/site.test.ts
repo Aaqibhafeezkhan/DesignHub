@@ -122,7 +122,7 @@ describe("color usage page", () => {
     expect(usage?.number).toBe((palette?.number ?? 0) + 1);
     expect(introductionPage.render(ctx, 2)).toContain(">Color Usage</text>");
     const skipped = guidelineContext("Acme Labs", ["color-usage"]).ctx.contents;
-    expect(skipped.find((entry) => entry.id === "typography")?.number).toBe(usage?.number);
+    expect(skipped.find((entry) => entry.id === "data-visualization")?.number).toBe(usage?.number);
   });
 
   test("splits 60 / 30 / 10 across the roles and hands a missing role to the neutrals", () => {

@@ -7,6 +7,7 @@ import {
 } from "@/lib/guidelines/pages/foundations";
 import { coBrandingPage } from "@/lib/guidelines/pages/co-branding";
 import { colorUsagePage } from "@/lib/guidelines/pages/color-usage";
+import { dataVisualizationPage } from "@/lib/guidelines/pages/data-visualization";
 import { imageryPage, socialMediaPage } from "@/lib/guidelines/pages/imagery";
 import { coverPage, introductionPage, voicePage } from "@/lib/guidelines/pages/intro";
 import { missionPage } from "@/lib/guidelines/pages/mission";
@@ -28,6 +29,7 @@ export const guidelinePages: GuidelinePage[] = [
   coBrandingPage,
   colorPalettePage,
   colorUsagePage,
+  dataVisualizationPage,
   typographyPage,
   typographyUsagePage,
   iconographyPage,
