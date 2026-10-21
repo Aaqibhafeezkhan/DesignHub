@@ -17,7 +17,8 @@ export type EffectKind =
   | "scrollbar"
   | "selection"
   | "scroll-shadow"
-  | "button-press";
+  | "button-press"
+  | "link-underline";
 
 export type GlassSettings = {
   blur: number;
@@ -249,6 +250,18 @@ export type ButtonPressSettings = {
   radius: number;
 };
 
+/** A link underline: thickness, offset and color, which grows across the text on hover. */
+export type LinkUnderlineSettings = {
+  /** Underline and link color. Must reach 4.5:1 against the page. */
+  color: string;
+  /** Underline thickness in px. */
+  thickness: number;
+  /** Gap between the text and the underline, in px. */
+  offset: number;
+  /** Page color behind the link, for the contrast check and the preview. */
+  page: string;
+};
+
 export type EffectSettingsMap = {
   glass: GlassSettings;
   neumorphism: NeumorphismSettings;
@@ -267,6 +280,7 @@ export type EffectSettingsMap = {
   selection: SelectionSettings;
   "scroll-shadow": ScrollShadowSettings;
   "button-press": ButtonPressSettings;
+  "link-underline": LinkUnderlineSettings;
 };
 
 /** State from other studios an effect may build on. Effects read it here instead of copying it into their settings. */
