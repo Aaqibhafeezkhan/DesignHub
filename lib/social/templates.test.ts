@@ -347,3 +347,30 @@ describe.each(["notion-cover", "medium-banner"])("%s with very short and very lo
     }
   });
 });
+
+describe("Buy Me a Coffee cover", () => {
+  const template = socialTemplates.find((item) => item.id === "buy-me-a-coffee-cover")!;
+
+  test.each([
+    ["long words", "Plan every launch from one calm place with your whole team and never miss a deadline again, ever"],
+    ["one long word", "supercalifragilisticexpialidocious".repeat(5)],
+  ])("a %s headline stays inside the safe area", (_label, headline) => {
+    for (const mode of modes) {
+      const base = socialContext(mode, "Northwind Analytics Cooperative for Sustainable Data Systems");
+      const ctx: SocialContext = {
+        ...base,
+        content: { ...base.content, headline, cta: "Support the team with a coffee" },
+      };
+      for (const box of textBoxes(ctx, template.render(ctx))) {
+        expect(box.start, box.value).toBeGreaterThanOrEqual(template.safe.x - 0.5);
+        expect(box.end, box.value).toBeLessThanOrEqual(template.safe.x + template.safe.width + 0.5);
+      }
+    }
+  });
+
+  test("draws the call to action as the support button", () => {
+    const base = socialContext("light");
+    const ctx = { ...base, content: { ...base.content, cta: "Treat me to a coffee" } };
+    expect(template.render(ctx)).toContain("Treat me to a coffee");
+  });
+});

@@ -21,6 +21,7 @@ import { dribbbleShot } from "@/lib/social/templates/dribbble";
 import { behanceCover } from "@/lib/social/templates/behance";
 import { gumroadCover } from "@/lib/social/templates/gumroad";
 import { kofiBanner } from "@/lib/social/templates/kofi";
+import { buyMeACoffeeCover } from "@/lib/social/templates/buy-me-a-coffee";
 import { patreonCover } from "@/lib/social/templates/patreon";
 import { kickBanner } from "@/lib/social/templates/kick";
 import { bandcampHeader } from "@/lib/social/templates/bandcamp";
@@ -74,6 +75,7 @@ export const socialTemplates: SocialTemplate[] = [
   etsyShopBanner,
   gumroadCover,
   kofiBanner,
+  buyMeACoffeeCover,
   notionCover,
   mediumBanner,
 ];
@@ -107,6 +109,7 @@ export const socialPlatforms: SocialPlatform[] = [
   "Etsy",
   "Gumroad",
   "Ko-fi",
+  "Buy Me a Coffee",
   "Notion",
   "Medium",
 ];

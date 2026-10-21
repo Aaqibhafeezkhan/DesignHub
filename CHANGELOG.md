@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Buy Me a Coffee page cover template (1200 x 400) in the Social Media Studio, with a covered avatar zone and the call to action drawn as a support button.
+
 ### Changed
 
 ### Fixed
