@@ -9,6 +9,7 @@ import {
   toBootstrapVariables,
   toChakraTheme,
   toMantineTheme,
+  toMaterialTheme,
   toCss,
   toCssLightDark,
   toCssProperties,
@@ -24,6 +25,7 @@ import {
   toStyledTheme,
   toStylus,
   toUnoConfig,
+  toVuetifyTheme,
   toXcodeColorSets,
   toYaml,
   yamlString,
@@ -106,7 +108,7 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "_bootstrap-variables.scss",
       "app.config.ts",
       "nuxt-ui-colors.css",
-      "antd-theme.ts",
+      "vuetify.ts",
     ]),
   );
   expect(formats.map((format) => format.id)).toEqual(
@@ -114,6 +116,8 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "chakra",
       "mantine",
       "antd",
+      "mui",
+      "vuetify",
       "bootstrap",
       "shadcn",
       "figma-variables",
@@ -355,6 +359,98 @@ describe("Ant Design", () => {
     const bare = toAntTheme({ ...tokens(), colors: [], semantic: [], radius: [], typography: null });
     expect(bare).toContain("export const lightTheme: ThemeConfig = { token: {} };");
     expect(bare).toContain("algorithm: antdTheme.darkAlgorithm,");
+describe("Material UI", () => {
+  /** The `palette` block of one color scheme, so light and dark assertions can't see each other. */
+  const scheme = (code: string, name: "light" | "dark") => {
+    const start = code.indexOf(`${name}: {`);
+    return code.slice(start, code.indexOf("},\n  },", start));
+  };
+
+  test("builds a createTheme with a light and a dark color scheme from the semantic roles", () => {
+    const mui = toMaterialTheme(withRoles);
+    expect(mui).toContain('import { createTheme } from "@mui/material/styles";');
+    expect(mui).toContain("colorSchemes: {");
+    const light = scheme(mui, "light");
+    expect(light).toContain('main: "#6366f1",');
+    // The lighter and darker stops come from the palette's own shades, not from a fixed percentage.
+    expect(light).toContain('light: "#a5b4fc",');
+    expect(light).toContain('default: "#ffffff",');
+    expect(light).toContain('text: { primary: "#0f172a" }');
+    // Indigo 500 takes black label text more legibly than white, so contrastText follows the contrast.
+    expect(light).toContain('contrastText: "#000000",');
+    expect(mui).not.toContain("oklch(");
+  });
+
+  test("the dark scheme reads roleColor in dark mode and lifts paper off the page", () => {
+    const mui = toMaterialTheme(withRoles);
+    const dark = scheme(mui, "dark");
+    expect(dark).toContain(`main: "${toHex(roleColor(withRoles, "primary", true)!.value)}",`);
+    expect(dark).not.toContain('main: "#6366f1",');
+    const value = (block: string, key: string) => block.match(new RegExp(`${key}: "(#[0-9a-f]{6})"`))?.[1];
+    expect(value(dark, "paper")).toBeDefined();
+    expect(value(dark, "paper")).not.toBe(value(dark, "default"));
+  });
+
+  test("puts the heading font on the headings and the body font everywhere else", () => {
+    const mui = toMaterialTheme(typed());
+    expect(mui).toContain('fontFamily: "\\"Lora\\", ui-serif, Georgia, serif",');
+    expect(mui).toContain('fontFamily: "\\"Inter\\", ui-sans-serif, system-ui, sans-serif",');
+    expect(mui).toContain("fontWeight: 700,");
+    expect(mui).toContain("body1: { fontWeight: 400 },");
+    expect(mui).toContain("shape: { borderRadius: 12 },");
+  });
+
+  test("still returns a valid createTheme call without typography, radius or a palette", () => {
+    const bare = toMaterialTheme({ ...tokens(), colors: [], semantic: [], radius: [] });
+    expect(bare).toContain("createTheme({});");
+    expect(bare).not.toContain("colorSchemes");
+    expect(bare).not.toContain("typography");
+    expect(bare).not.toContain("shape");
+  });
+});
+
+describe("Vuetify", () => {
+  /** The color block of one theme set, so light and dark assertions can't see each other. */
+  const setOf = (code: string, theme: "light" | "dark") => {
+    const start = code.indexOf(`const ${theme}: ThemeDefinition`);
+    return code.slice(start, code.indexOf("};", start));
+  };
+
+  test("builds a createVuetify theme with a light and a dark set from the semantic roles", () => {
+    const vuetify = toVuetifyTheme(withRoles);
+    expect(vuetify).toContain('import { createVuetify, type ThemeDefinition } from "vuetify";');
+    expect(vuetify).toContain('defaultTheme: "light",');
+    expect(vuetify).toContain("themes: { light, dark },");
+    const light = setOf(vuetify, "light");
+    expect(light).toContain("dark: false,");
+    expect(light).toContain('background: "#ffffff",');
+    expect(light).toContain('primary: "#6366f1",');
+    expect(light).toContain('secondary: "#6366f1",');
+    // Indigo 500 takes black label text more legibly than white, so the slot follows the contrast.
+    expect(light).toContain('"on-primary": "#000000",');
+    expect(vuetify).not.toContain("oklch(");
+  });
+
+  test("the dark set matches roleColor in both modes and lifts surface off the page", () => {
+    const vuetify = toVuetifyTheme(withRoles);
+    const light = setOf(vuetify, "light");
+    const dark = setOf(vuetify, "dark");
+    expect(dark).toContain("dark: true,");
+    expect(dark).toContain(`primary: "${toHex(roleColor(withRoles, "primary", true)!.value)}",`);
+    expect(dark).toContain(`background: "${toHex(roleColor(withRoles, "background", true)!.value)}",`);
+    expect(dark).not.toContain('background: "#ffffff",');
+    const value = (block: string, slot: string) => block.match(new RegExp(`${slot}: "(#[0-9a-f]{6})"`))?.[1];
+    expect(value(light, "surface")).toBe(value(light, "background"));
+    expect(value(dark, "surface")).toBeDefined();
+    expect(value(dark, "surface")).not.toBe(value(dark, "background"));
+  });
+
+  test("prefixes palette colors and leaves the slots Vuetify reads unprefixed", () => {
+    const vuetify = toVuetifyTheme({ ...withRoles, meta: { ...withRoles.meta, prefix: "acme" } });
+    expect(vuetify).toContain('"acme-indigo": "#6366f1",');
+    expect(vuetify).toContain('"acme-slate": "#0f172a",');
+    expect(vuetify).not.toContain('"acme-primary"');
+    expect(vuetify).toContain('primary: "#6366f1",');
   });
 });
 

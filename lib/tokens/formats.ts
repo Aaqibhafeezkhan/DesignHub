@@ -1,4 +1,4 @@
-import { contrastRatio, formatColor, oklch, toHex, toRgb } from "@/lib/color/color";
+import { contrastRatio, formatColor, oklch, readableTextColor, toHex, toRgb } from "@/lib/color/color";
 import { colorTokens } from "@/lib/color/export";
 import { gradientCss, gradientCssFallback } from "@/lib/color/gradient";
 import { generateShades } from "@/lib/color/shades";
@@ -632,6 +632,173 @@ export const lightTheme: ThemeConfig = ${config(false)};
 export const darkTheme: ThemeConfig = ${config(true)};
 
 export default lightTheme;
+`;
+}
+
+/**
+ * One stop of MUI's light / main / dark ramp next to a role's own value: the nearest palette shade
+ * in that direction, or the lightness nudged when the palette has no shade that way.
+ */
+function rampStop(tokens: DesignTokens, entry: RoleColor, direction: -1 | 1): string {
+  const palette = tokens.colors.find((token) => token.name === entry.color);
+  const nearest = (palette?.shades ?? [])
+    .filter((shade) => (direction === 1 ? shade.value.l > entry.value.l : shade.value.l < entry.value.l))
+    .sort((a, b) => Math.abs(a.value.l - entry.value.l) - Math.abs(b.value.l - entry.value.l));
+  const value = entry.value;
+  const fallback = oklch(Math.min(1, Math.max(0, value.l + direction * 0.12)), value.c, value.h, value.alpha);
+  return toHex(nearest[0]?.value ?? fallback);
+}
+
+/**
+ * Material UI v6 (theme.ts): a `createTheme` with a light and a dark color scheme built from the
+ * semantic roles, the palette's own shades as the light / main / dark ramp, the type scale's fonts
+ * and weights, and the radius scale's middle step as `shape.borderRadius`. Colors are always hex
+ * because MUI's palette functions (alpha, lighten, darken) can't read oklch(). Pass it to
+ * `<ThemeProvider theme={theme}>`.
+ */
+export function toMaterialTheme(tokens: DesignTokens): string {
+  const t = tokens.typography;
+
+  /** The first of these roles the tokens actually define, in light or dark mode. */
+  const pick = (names: string[], dark: boolean): RoleColor | undefined => {
+ * Vuetify 3 (vuetify.ts): a `createVuetify` theme with a light and a dark color set built from the
+ * semantic roles, the palette as extra theme colors, and the palette's own shades reachable through
+ * Vuetify's lighten and darken helpers. Colors are always hex because those helpers, and Vuetify's
+ * own color classes, can't read oklch(). Border radius and the font stack are Vuetify sass
+ * variables rather than theme entries, so this file does not carry them; pass them through
+ * `styles/settings.scss` if the project overrides them.
+ */
+export function toVuetifyTheme(tokens: DesignTokens): string {
+  const prefix = tokens.meta.prefix ? `${tokens.meta.prefix}-` : "";
+
+  /** The first of these roles the tokens actually define, in light or dark mode. */
+  const role = (names: string[], dark: boolean): RoleColor | undefined => {
+    for (const name of names) {
+      const entry = roleColor(tokens, name, dark);
+      if (entry) return entry;
+    }
+    return undefined;
+  };
+
+  const brand = (entry: RoleColor): { [key: string]: Literal } => ({
+    light: rampStop(tokens, entry, 1),
+    main: toHex(entry.value),
+    dark: rampStop(tokens, entry, -1),
+    contrastText: toHex(readableTextColor(entry.value)),
+  });
+
+  const palette = (dark: boolean): { [key: string]: Literal } => {
+    const primary = pick(["primary"], dark);
+    const secondary = pick(["secondary", "accent"], dark) ?? primary;
+    const background = pick(["background"], dark);
+    const foreground = pick(["foreground"], dark);
+    /** Cards and menus stack on `paper`, which sits one step above the page in dark mode. */
+    const paper =
+      dark && background
+        ? oklch(Math.min(1, background.value.l + 0.06), background.value.c, background.value.h, background.value.alpha)
+        : background?.value;
+    return {
+      ...(primary ? { primary: brand(primary) } : {}),
+      ...(secondary ? { secondary: brand(secondary) } : {}),
+      ...(background && paper ? { background: { default: toHex(background.value), paper: toHex(paper) } } : {}),
+      ...(foreground ? { text: { primary: toHex(foreground.value) } } : {}),
+    };
+  };
+
+  const light = palette(false);
+  const dark = palette(true);
+  const radius = tokens.radius.find((step) => step.name === "md") ?? tokens.radius.find((step) => step.name === "lg");
+  const typography: { [key: string]: Literal } = {};
+  if (t) {
+    typography.fontFamily = fontStack(t.body.family, t.body.category);
+    const heading = {
+      fontFamily: fontStack(t.heading.family, t.heading.category),
+      fontWeight: t.rhythm.headingWeight,
+    };
+    for (const variant of ["h1", "h2", "h3", "h4", "h5", "h6"]) typography[variant] = heading;
+    for (const variant of ["body1", "body2", "subtitle1", "subtitle2"]) {
+      typography[variant] = { fontWeight: t.rhythm.bodyWeight };
+    }
+  }
+  const theme: { [key: string]: Literal } = {
+    ...(Object.keys(light).length || Object.keys(dark).length
+      ? {
+          colorSchemes: {
+            ...(Object.keys(light).length ? { light: { palette: light } } : {}),
+            ...(Object.keys(dark).length ? { dark: { palette: dark } } : {}),
+          },
+        }
+      : {}),
+    ...(Object.keys(typography).length ? { typography } : {}),
+    ...(radius ? { shape: { borderRadius: radius.px } } : {}),
+  };
+  return `${header(tokens, (text) => `// ${text}`)}
+import { createTheme } from "@mui/material/styles";
+
+export const theme = createTheme(${tsLiteral(theme)});
+
+export default theme;
+  /** One step darker than a role's own value: its next palette shade, or the lightness pushed down. */
+  const darken = (entry: RoleColor): string => {
+    const palette = tokens.colors.find((token) => token.name === entry.color);
+    const deeper = palette?.shades
+      .filter((shade) => shade.value.l < entry.value.l)
+      .sort((a, b) => b.value.l - a.value.l)[0];
+    const value = entry.value;
+    return toHex(deeper?.value ?? oklch(Math.max(0, value.l - 0.08), value.c, value.h, value.alpha));
+  };
+
+  const colors = (dark: boolean): Record<string, string> => {
+    const primary = role(["primary"], dark);
+    const secondary = role(["secondary", "accent"], dark) ?? primary;
+    const background = role(["background"], dark);
+    const palette = Object.fromEntries(tokens.colors.map((token) => [`${prefix}${token.name}`, toHex(token.value)]));
+    const slots: Record<string, string> = {};
+    if (background) {
+      slots.background = toHex(background.value);
+      // Vuetify stacks cards and sheets on `surface`, which sits one step above the page in dark
+      // mode so an elevated surface still reads as raised, and is the page itself in light mode.
+      const lift = dark
+        ? oklch(Math.min(1, background.value.l + 0.06), background.value.c, background.value.h, background.value.alpha)
+        : background.value;
+      slots.surface = toHex(lift);
+    }
+    if (primary) {
+      slots.primary = toHex(primary.value);
+      slots["primary-darken-1"] = darken(primary);
+      slots["on-primary"] = toHex(readableTextColor(primary.value));
+    }
+    if (secondary) {
+      slots.secondary = toHex(secondary.value);
+      slots["secondary-darken-1"] = darken(secondary);
+      slots["on-secondary"] = toHex(readableTextColor(secondary.value));
+    }
+    // Slots win over a palette color that happens to share their name, since the slot is what
+    // Vuetify's components read; the prefix setting keeps the two apart in practice.
+    return { ...palette, ...slots };
+  };
+
+  return `${header(tokens, (text) => `// ${text}`)}
+import { createVuetify, type ThemeDefinition } from "vuetify";
+
+const light: ThemeDefinition = {
+  dark: false,
+  colors: ${tsLiteral(colors(false), "  ")},
+};
+
+const dark: ThemeDefinition = {
+  dark: true,
+  colors: ${tsLiteral(colors(true), "  ")},
+};
+
+export const vuetify = createVuetify({
+  theme: {
+    defaultTheme: "light",
+    themes: { light, dark },
+  },
+});
+
+export default vuetify;
 `;
 }
 
@@ -1539,6 +1706,7 @@ export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
     { id: "panda", label: "Panda CSS", filename: "panda.preset.ts", language: "ts", code: toPandaPreset(tokens) },
     { id: "chakra", label: "Chakra UI", filename: "theme.ts", language: "ts", code: toChakraTheme(tokens) },
     { id: "mantine", label: "Mantine", filename: "theme.ts", language: "ts", code: toMantineTheme(tokens) },
+    { id: "vuetify", label: "Vuetify", filename: "vuetify.ts", language: "ts", code: toVuetifyTheme(tokens) },
     {
       id: "antd",
       label: "Ant Design",
