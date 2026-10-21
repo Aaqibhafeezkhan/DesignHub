@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Zigzag background generator with seeded palette-colored rows and independent density and amplitude controls.
 - Pinterest board cover template (600 x 600) in the Social Media Studio.
 - Export an icon as a Preact component.
+- Ant Design 5 theme export (`antd-theme.ts`): a `ThemeConfig` with the seed tokens only (`colorPrimary`, `colorBgBase`, `colorTextBase`, `borderRadius`, `fontFamily`), as a light config and a dark one that asks Ant Design for `darkAlgorithm`.
 - Material UI v6 theme export (`theme.ts`): `createTheme` with light and dark color schemes from the semantic roles, a light / main / dark ramp taken from each palette color's own shades, the heading and body fonts from the type scale, and `shape.borderRadius` from the radius scale.
 - Mantine v7 theme export (`theme.ts`): `createTheme` with each palette color as a ten-shade tuple, plus primary color, fonts, headings, radius, spacing and shadows.
 - Vuetify 3 theme export (`vuetify.ts`): a `createVuetify` theme with a light and a dark color set built from the semantic roles, the palette as extra theme colors, and contrast-picked `on-primary` and `on-secondary` labels.
