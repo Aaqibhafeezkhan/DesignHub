@@ -30,7 +30,7 @@ import {
   toYaml,
   yamlString,
 } from "@/lib/tokens/formats";
-import { roleColor, toWinUiTheme } from "@/lib/tokens/native";
+import { roleColor, toMauiColors, toWinUiTheme } from "@/lib/tokens/native";
 import { xmlError } from "@/lib/test/xml";
 import type { DesignTokens } from "@/types/tokens";
 
@@ -1026,6 +1026,48 @@ describe("WinUI / WPF", () => {
 
   test("is registered in the Export Engine", () => {
     expect(tokenFormats(themed()).find((format) => format.id === "winui")?.filename).toBe("Theme.xaml");
+  });
+});
+
+describe(".NET MAUI", () => {
+  const maui = (): DesignTokens => ({
+    ...tokens(),
+    colors: [
+      {
+        name: "indigo",
+        value: fromHex("#6366f1"),
+        shades: [{ step: 300, value: fromHex("#a5b4fc") }],
+      },
+      { name: "indigo-2", value: fromHex("#0f172a"), shades: [{ step: 50, value: fromHex("#f1f6ff") }] },
+    ],
+    semantic: [
+      { name: "primary", ref: "indigo", value: fromHex("#6366f1") },
+      { name: "background", ref: "white", value: fromHex("#ffffff") },
+    ],
+  });
+
+  test("uses the MAUI namespace and writes ARGB colors with matching brushes", () => {
+    const xaml = toMauiColors(maui());
+    expect(xaml).toContain('xmlns="http://schemas.microsoft.com/dotnet/2021/maui"');
+    expect(xaml).toContain('<Color x:Key="AcmeLabsIndigoColor">#FF6366F1</Color>');
+    expect(xaml).toContain('<SolidColorBrush x:Key="AcmeLabsIndigo_300Brush" Color="#FFA5B4FC" />');
+  });
+
+  test("writes each role for light and dark, the dark one lifted to shade 300", () => {
+    const xaml = toMauiColors(maui());
+    expect(xaml).toContain('<Color x:Key="AcmeLabsPrimaryRoleColor">#FF6366F1</Color>');
+    expect(xaml).toContain('<Color x:Key="AcmeLabsPrimaryRoleDarkColor">#FFA5B4FC</Color>');
+  });
+
+  test("keys are unique and the XML is well-formed, even for an awkward brand name", () => {
+    const xaml = toMauiColors({ ...maui(), meta: { ...maui().meta, name: "A -- B & <C>" } });
+    expect(xmlError(xaml)).toBeNull();
+    const keys = [...xaml.matchAll(/x:Key="(\w+)"/g)].map((match) => match[1]);
+    expect(new Set(keys).size).toBe(keys.length);
+  });
+
+  test("is registered in the Export Engine", () => {
+    expect(tokenFormats(maui()).find((format) => format.id === "maui")?.filename).toBe("Colors.xaml");
   });
 });
 
