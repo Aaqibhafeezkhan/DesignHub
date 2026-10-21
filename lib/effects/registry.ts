@@ -10,6 +10,7 @@ import { inset } from "@/lib/effects/inset";
 import { longShadow } from "@/lib/effects/long-shadow";
 import { neumorphism } from "@/lib/effects/neumorphism";
 import { scrollbar } from "@/lib/effects/scrollbar";
+import { selection } from "@/lib/effects/selection";
 import { shadow } from "@/lib/effects/shadow";
 import { skeleton } from "@/lib/effects/skeleton";
 import { textOutline } from "@/lib/effects/text-outline";
@@ -31,6 +32,7 @@ export const effectDefinitions: AnyEffectDefinition[] = [
   focusRing,
   highlighter,
   scrollbar,
+  selection,
 ];
 
 export function generateEffect<K extends EffectKind>(

@@ -85,6 +85,11 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
                 </p>
               ))}
             </div>
+          ) : kind === "selection" ? (
+            <>
+              <h3 className="font-display text-2xl font-semibold">Select any of this text.</h3>
+              <p className="text-sm">Drag across a few words, or double click one, to see the selection color.</p>
+            </>
           ) : (
             <>
               <h3 className="font-display text-2xl font-semibold">Depth without the fuss.</h3>

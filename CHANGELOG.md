@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Open `.designhub.json` files from the installed app: a `file_handlers` manifest entry and a share target (answered by the service worker, so nothing is uploaded) lead to an import prompt, translated (en, es, fr, hi), that validates and sanitizes the file like a normal import and never replaces the open project. Browsers without a launch queue see no change.
 - Brand DNA AI provider with your own API key (Anthropic Messages API, `claude-opus-5-5`): the key lives only in IndexedDB and is removed with one click, the exact downscaled images and instructions are shown before the first request, and any failure (bad key, rate limit, network, odd answer) falls back to the on-device result with a note.
 - .NET MAUI export (`Colors.xaml`): a `ResourceDictionary` with `Color` and `SolidColorBrush` resources for the palette and each role in light and dark.
+- Selection effect in the Effects Lab: `::selection` background and text colors with a forced-colors rule, a matching caret color, Tailwind `selection:` guidance and a 4.5:1 contrast badge.
 
 ### Changed
 

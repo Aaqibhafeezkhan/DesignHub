@@ -11,6 +11,7 @@ import { InsetControls } from "@/components/effects/inset-controls";
 import { LongShadowControls } from "@/components/effects/long-shadow-controls";
 import { NeumorphismControls } from "@/components/effects/neumorphism-controls";
 import { ScrollbarControls } from "@/components/effects/scrollbar-controls";
+import { SelectionControls } from "@/components/effects/selection-controls";
 import { ShadowControls } from "@/components/effects/shadow-controls";
 import { SkeletonControls } from "@/components/effects/skeleton-controls";
 import { TextOutlineControls } from "@/components/effects/text-outline-controls";
@@ -32,4 +33,5 @@ export const effectControls: Partial<Record<EffectKind, ComponentType>> = {
   "focus-ring": FocusRingControls,
   highlighter: HighlighterControls,
   scrollbar: ScrollbarControls,
+  selection: SelectionControls,
 };

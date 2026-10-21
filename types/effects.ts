@@ -14,7 +14,8 @@ export type EffectKind =
   | "text-outline"
   | "focus-ring"
   | "highlighter"
-  | "scrollbar";
+  | "scrollbar"
+  | "selection";
 
 export type GlassSettings = {
   blur: number;
@@ -207,6 +208,16 @@ export type ScrollbarSettings = {
   radius: number;
 };
 
+/** The color of selected text, checked against the page it sits on. */
+export type SelectionSettings = {
+  /** Selection background. */
+  background: string;
+  /** Selected text color, which must reach 4.5:1 on the selection background. */
+  text: string;
+  /** The page color the sample text sits on, for the preview. */
+  page: string;
+};
+
 export type EffectSettingsMap = {
   glass: GlassSettings;
   neumorphism: NeumorphismSettings;
@@ -222,6 +233,7 @@ export type EffectSettingsMap = {
   "focus-ring": FocusRingSettings;
   highlighter: HighlighterSettings;
   scrollbar: ScrollbarSettings;
+  selection: SelectionSettings;
 };
 
 /** State from other studios an effect may build on. Effects read it here instead of copying it into their settings. */
