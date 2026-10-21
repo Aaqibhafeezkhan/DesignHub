@@ -47,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Paint.NET palette export (`.txt`, one `AARRGGBB` color per line) in the Color Studio download menu, capped at 96 colors with the same notes as the Procreate export.
 - App shortcuts in the web app manifest: the installed app's icon menu opens Colors, Typography, Brand Projects and the Export Engine.
 - `designhub build -` reads the project file from standard input, so the CLI can sit in a pipeline.
+- Text spacing tester in the Accessibility Lab (WCAG 1.4.12): a switch applies line height 1.5, paragraph spacing 2x, letter spacing 0.12em and word spacing 0.16em to the preview and says whether any text is clipped, and the JSON, Markdown and HTML reports list each value against the minimum.
 
 ### Changed
 

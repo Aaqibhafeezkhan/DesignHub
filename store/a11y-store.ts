@@ -25,6 +25,9 @@ type A11yState = {
   targetGap: number;
   /** Ephemeral: letter-scrambling reading simulation. */
   dyslexiaSimulation: boolean;
+  /** Ephemeral: preview with the WCAG 1.4.12 text spacing applied. */
+  textSpacingTest: boolean;
+  setTextSpacingTest: (value: boolean) => void;
   setDyslexiaSimulation: (value: boolean) => void;
   setTab: (tab: A11yTab) => void;
   setColors: (patch: Partial<A11yColors>) => void;
@@ -56,6 +59,8 @@ export const useA11yStore = create<A11yState>()(
       targets: defaultTargets,
       targetGap: 8,
       dyslexiaSimulation: false,
+      textSpacingTest: false,
+      setTextSpacingTest: (textSpacingTest) => set({ textSpacingTest }),
       setDyslexiaSimulation: (dyslexiaSimulation) => set({ dyslexiaSimulation }),
       setTab: (tab) => set({ tab }),
       setColors: (patch) => set((state) => ({ colors: { ...state.colors, ...patch } })),

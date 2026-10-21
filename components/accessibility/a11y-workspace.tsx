@@ -13,6 +13,7 @@ import { GradientContrastResults } from "@/components/accessibility/gradient-con
 import { ReadabilityPanel } from "@/components/accessibility/readability-panel";
 import { TargetsPanel } from "@/components/accessibility/targets-panel";
 import { TargetsPreview } from "@/components/accessibility/targets-preview";
+import { TextSpacingPanel } from "@/components/accessibility/text-spacing-panel";
 import { A11yTypePanel } from "@/components/accessibility/a11y-type-panel";
 import { A11yReportPanel } from "@/components/accessibility/a11y-report-panel";
 import { StudioLayout } from "@/components/layout/studio-layout";
@@ -64,6 +65,7 @@ export function A11yWorkspace() {
           <TabsContent value="readability" className="flex flex-col gap-4">
             <A11yTypePanel />
             <ReadabilityPanel />
+            <TextSpacingPanel />
           </TabsContent>
           <TabsContent value="targets" className="flex flex-col gap-4">
             <TargetsPanel />

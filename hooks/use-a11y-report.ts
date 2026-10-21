@@ -9,6 +9,7 @@ import { useReadability } from "@/hooks/use-readability";
 import { contrastSection, focusIndicatorCheck, focusSection } from "@/lib/a11y/contrast";
 import { gradientSection } from "@/lib/a11y/gradient-contrast";
 import { buildReport, type A11yReport } from "@/lib/a11y/report";
+import { textSpacingSection } from "@/lib/a11y/text-spacing";
 import { targetsSection } from "@/lib/a11y/targets";
 import { paletteVisionSection, visionSection } from "@/lib/a11y/vision";
 import { useA11yStore } from "@/store/a11y-store";
@@ -41,6 +42,7 @@ export function useA11yReport(): A11yReport {
             gradeLevel: readability.score.grade,
             checks: readability.checks.map(({ label, value, verdict }) => ({ check: label, value, verdict })),
           },
+          textSpacing: textSpacingSection(typography),
           touchTargets: targetsSection(targets, targetGap),
         },
       ),

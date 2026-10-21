@@ -1,6 +1,7 @@
 import type { contrastSection, focusSection } from "@/lib/a11y/contrast";
 import type { gradientSection } from "@/lib/a11y/gradient-contrast";
 import type { Verdict } from "@/lib/a11y/readability";
+import type { TextSpacingSection } from "@/lib/a11y/text-spacing";
 import type { targetsSection } from "@/lib/a11y/targets";
 import type { PaletteColor, PaletteVisionSection, visionSection } from "@/lib/a11y/vision";
 import type { A11yColors, A11yTypography, TouchTarget } from "@/types/a11y";
@@ -28,6 +29,7 @@ export type A11yReportSections = {
     gradeLevel: number;
     checks: { check: string; value: string; verdict: Verdict }[];
   };
+  textSpacing: TextSpacingSection;
   touchTargets: ReturnType<typeof targetsSection>;
 };
 
@@ -200,6 +202,12 @@ export function reportToMarkdown(report: A11yReport): string {
     table(
       ["Check", "Value", "Result"],
       sections.readability.checks.map((item) => [item.check, item.value, verdictMark[item.verdict]]),
+    ),
+    `## ${sections.textSpacing.criterion}`,
+    sections.textSpacing.note,
+    table(
+      ["Property", "Required", "Current", "Result"],
+      sections.textSpacing.checks.map((item) => [item.check, item.required, item.current, mark(item.pass)]),
     ),
     "## Touch targets",
     `Gap between targets: ${sections.touchTargets.gap}px.`,
@@ -441,6 +449,13 @@ ${htmlTable(
   "Readability checks",
   ["Check", "Value", "Result"],
   readability.checks.map((item) => [item.check, item.value, html(badge(item.verdict))]),
+)}`,
+    `<h2 id="text-spacing">${escapeHtml(sections.textSpacing.criterion)}</h2>
+<p>${escapeHtml(sections.textSpacing.note)}</p>
+${htmlTable(
+  "Text spacing against WCAG 1.4.12",
+  ["Property", "Required", "Current", "Result"],
+  sections.textSpacing.checks.map((item) => [item.check, item.required, item.current, html(passBadge(item.pass))]),
 )}`,
     `<h2 id="targets">Touch targets</h2>
 <p>Gap between targets: ${sections.touchTargets.gap}px.</p>

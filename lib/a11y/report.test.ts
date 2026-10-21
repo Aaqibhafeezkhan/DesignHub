@@ -14,6 +14,7 @@ import {
   reportToMarkdown,
   type A11yReportInput,
 } from "@/lib/a11y/report";
+import { textSpacingSection } from "@/lib/a11y/text-spacing";
 import { targetsSection } from "@/lib/a11y/targets";
 import { paletteVisionSection, visionSection } from "@/lib/a11y/vision";
 import { defaultGradient } from "@/lib/color/gradient";
@@ -46,6 +47,7 @@ const report = buildReport(input, {
   vision: visionSection(input.colors),
   paletteVision: paletteVisionSection(input.palette),
   readability: { charactersPerLine: 70, readingEase: 64, gradeLevel: 8, checks: [] },
+  textSpacing: textSpacingSection(input.typography),
   touchTargets: targetsSection(input.targets, input.targetGap),
 });
 
@@ -160,6 +162,7 @@ describe("reportToMarkdown", () => {
       "## Color vision",
       "## Palette under color vision",
       "## Readability",
+      "## WCAG 1.4.12 Text Spacing (AA)",
       "## Touch targets",
     ]);
     expect(markdown).toContain("2026-01-01T00:00:00.000Z");
@@ -223,5 +226,21 @@ describe("reportToHtml", () => {
     );
     expect(hostile).toContain("&lt;b onclick=1&gt;Icon&lt;/b&gt; &amp; co");
     expect(hostile).not.toContain("<b onclick");
+  });
+});
+
+describe("text spacing in the report", () => {
+  test("Markdown and HTML list each property against the WCAG 1.4.12 minimum", () => {
+    const markdown = reportToMarkdown(report);
+    expect(markdown).toContain("## WCAG 1.4.12 Text Spacing (AA)");
+    expect(markdown).toContain("| Letter spacing | 0.12em | 0em | ❌ Fail |");
+    expect(markdown).toContain("| Line height | 1.5 | 1.5 | ✅ Pass |");
+    const html = reportToHtml(report);
+    expect(html).toContain('<h2 id="text-spacing">WCAG 1.4.12 Text Spacing (AA)</h2>');
+    expect(html).toContain("Text spacing against WCAG 1.4.12");
+  });
+
+  test("the JSON report carries the section", () => {
+    expect(report.sections.textSpacing.checks.map((item) => item.pass)).toEqual([true, false, false]);
   });
 });

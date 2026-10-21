@@ -3,13 +3,17 @@
 import type { CSSProperties } from "react";
 
 import { ScrambledText } from "@/components/accessibility/scrambled-text";
+import { paragraphSpacingPx, withTextSpacing } from "@/lib/a11y/text-spacing";
 import { fontStack } from "@/lib/typography/css";
 import { useA11yStore } from "@/store/a11y-store";
 
 /** A small but realistic UI: the thing every check in the lab is measured against. */
 export function A11yPreview({ style, compact = false }: { style?: CSSProperties; compact?: boolean }) {
   const colors = useA11yStore((state) => state.colors);
-  const typography = useA11yStore((state) => state.typography);
+  const set = useA11yStore((state) => state.typography);
+  const spacingTest = useA11yStore((state) => state.textSpacingTest);
+  // The test applies the WCAG 1.4.12 values on top of the chosen typography, never below it.
+  const typography = spacingTest ? withTextSpacing(set) : set;
   const sample = useA11yStore((state) => state.sample);
   const scramble = useA11yStore((state) => state.dyslexiaSimulation);
 
@@ -21,10 +25,12 @@ export function A11yPreview({ style, compact = false }: { style?: CSSProperties;
     wordSpacing: `${typography.wordSpacing}em`,
     fontWeight: typography.weight,
     maxWidth: typography.measure,
+    ...(spacingTest ? { marginBottom: paragraphSpacingPx(typography.size) } : {}),
   };
 
   return (
     <div
+      data-a11y-preview
       className="flex flex-col gap-4 rounded-lg border"
       style={{ background: colors.background, color: colors.text, padding: compact ? 16 : 32, ...style }}
     >
