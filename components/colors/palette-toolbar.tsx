@@ -1,8 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useRef, useState } from "react";
-import { Bookmark, Download, Plus, Redo2, Shuffle, Undo2 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Bookmark, Download, Pipette, Plus, Redo2, Shuffle, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useI18n } from "@/components/layout/locale-provider";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useHotkey } from "@/hooks/use-hotkeys";
+import { fromEyeDropperResult } from "@/lib/color/eyedropper";
 import { randomColor } from "@/lib/color/generate";
 import { paletteNames } from "@/lib/color/names";
 import { createId } from "@/lib/id";
@@ -21,6 +22,10 @@ const loadImportDialog = () => import("@/components/colors/palette-import-dialog
 
 // The import dialog (a modal) loads the first time it's opened, not with the page.
 const PaletteImportDialog = dynamic(loadImportDialog, { ssr: false });
+
+type EyeDropperResult = { sRGBHex: string };
+type EyeDropperConstructor = new () => { open: () => Promise<EyeDropperResult> };
+type EyeDropperWindow = Window & { EyeDropper?: EyeDropperConstructor };
 
 export type PaletteAnnouncementKind = "generated" | "loaded";
 export type PaletteAnnouncer = (kind: PaletteAnnouncementKind, swatches: Swatch[]) => void;
@@ -68,7 +73,14 @@ export function PaletteToolbar({ nextColors, announce }: PaletteToolbarProps) {
   const savePalette = useLibraryStore((state) => state.savePalette);
   const [importOpen, setImportOpen] = useState(false);
   const [importMounted, setImportMounted] = useState(false);
+  const [eyeDropperAvailable, setEyeDropperAvailable] = useState(false);
   const importRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    setEyeDropperAvailable(
+      typeof window !== "undefined" && typeof (window as EyeDropperWindow).EyeDropper === "function",
+    );
+  }, []);
 
   const run = () => {
     generate(nextColors?.());
@@ -77,6 +89,18 @@ export function PaletteToolbar({ nextColors, announce }: PaletteToolbarProps) {
   useHotkey("space", run);
   useHotkey("z", undo);
   useHotkey("shift+z", redo);
+
+  async function pickColor() {
+    const EyeDropperApi = (window as EyeDropperWindow).EyeDropper;
+    if (!EyeDropperApi || swatches.length >= MAX_SWATCHES) return;
+
+    try {
+      const result = await new EyeDropperApi().open();
+      addSwatch(fromEyeDropperResult(result), selectedId ?? undefined);
+    } catch {
+      return;
+    }
+  }
 
   function save() {
     const colors = swatches.map((swatch) => swatch.color);
@@ -122,6 +146,11 @@ export function PaletteToolbar({ nextColors, announce }: PaletteToolbarProps) {
       >
         <Plus /> {t("colors.toolbar.add")}
       </Button>
+      {eyeDropperAvailable ? (
+        <Button variant="outline" onClick={pickColor} disabled={swatches.length >= MAX_SWATCHES}>
+          <Pipette /> Eyedropper
+        </Button>
+      ) : null}
       <Button
         ref={importRef}
         variant="outline"
