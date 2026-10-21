@@ -15,7 +15,8 @@ export type EffectKind =
   | "focus-ring"
   | "highlighter"
   | "scrollbar"
-  | "selection";
+  | "selection"
+  | "scroll-shadow";
 
 export type GlassSettings = {
   blur: number;
@@ -218,6 +219,18 @@ export type SelectionSettings = {
   page: string;
 };
 
+/** Edge shadows on a scrollable box that show only while there is more content. */
+export type ScrollShadowSettings = {
+  /** Shadow color. */
+  color: string;
+  /** Shadow strength, 0 to 1. */
+  opacity: number;
+  /** Shadow height in px. */
+  size: number;
+  /** The box's own background, which the covers must match to hide the shadows. */
+  surface: string;
+};
+
 export type EffectSettingsMap = {
   glass: GlassSettings;
   neumorphism: NeumorphismSettings;
@@ -234,6 +247,7 @@ export type EffectSettingsMap = {
   highlighter: HighlighterSettings;
   scrollbar: ScrollbarSettings;
   selection: SelectionSettings;
+  "scroll-shadow": ScrollShadowSettings;
 };
 
 /** State from other studios an effect may build on. Effects read it here instead of copying it into their settings. */

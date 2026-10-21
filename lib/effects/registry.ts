@@ -10,6 +10,7 @@ import { inset } from "@/lib/effects/inset";
 import { longShadow } from "@/lib/effects/long-shadow";
 import { neumorphism } from "@/lib/effects/neumorphism";
 import { scrollbar } from "@/lib/effects/scrollbar";
+import { scrollShadow } from "@/lib/effects/scroll-shadow";
 import { selection } from "@/lib/effects/selection";
 import { shadow } from "@/lib/effects/shadow";
 import { skeleton } from "@/lib/effects/skeleton";
@@ -33,6 +34,7 @@ export const effectDefinitions: AnyEffectDefinition[] = [
   highlighter,
   scrollbar,
   selection,
+  scrollShadow,
 ];
 
 export function generateEffect<K extends EffectKind>(

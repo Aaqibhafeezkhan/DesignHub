@@ -59,6 +59,7 @@ export const effectDefaults: EffectSettingsMap = {
     shadowColor: "#f472b6",
   },
   highlighter: { color: "#fde047", thickness: 56, offset: 2, textColor: "#18181b" },
+  "scroll-shadow": { color: "#0f172a", opacity: 0.35, size: 14, surface: "#ffffff" },
   selection: { background: "#4f46e5", text: "#ffffff", page: "#ffffff" },
   scrollbar: { thumb: "#6366f1", thumbHover: "#4338ca", track: "#e4e4e7", width: 10, radius: 6 },
   "focus-ring": {

@@ -36,7 +36,7 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
   const selector =
     kind === "highlighter"
       ? `${PREVIEW_SELECTOR} .dh-effect-highlight`
-      : kind === "scrollbar"
+      : kind === "scrollbar" || kind === "scroll-shadow"
         ? `${PREVIEW_SELECTOR} .dh-effect-scroll`
         : PREVIEW_SELECTOR;
 
@@ -72,9 +72,9 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
                 A marker-style highlight that follows text across multiple lines, with readable contrast.
               </span>
             </p>
-          ) : kind === "scrollbar" ? (
+          ) : kind === "scrollbar" || kind === "scroll-shadow" ? (
             <div
-              className="dh-effect-scroll h-48 overflow-auto pr-2 text-sm"
+              className="dh-effect-scroll h-48 overflow-auto px-3 py-1 text-sm"
               role="region"
               aria-label="Scrollable sample"
               tabIndex={0}
