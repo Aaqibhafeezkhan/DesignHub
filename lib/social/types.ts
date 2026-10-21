@@ -62,6 +62,7 @@ export type SocialPlatform =
   | "Etsy"
   | "Gumroad"
   | "Ko-fi"
+  | "Buy Me a Coffee"
   | "Notion"
   | "Medium";
 
