@@ -5,7 +5,16 @@ import { monochromeSvg } from "@/lib/logo/recolor";
 import type { BrandTokens } from "@/types/brand";
 
 export type LogoVariantId =
-  "color" | "monochrome" | "inverted" | "horizontal" | "stacked" | "wordmark" | "app-icon" | "avatar" | "seal";
+  | "color"
+  | "monochrome"
+  | "inverted"
+  | "horizontal"
+  | "stacked"
+  | "wordmark"
+  | "app-icon"
+  | "avatar"
+  | "seal"
+  | "social-share";
 
 export type VariantContext = {
   logo: string;
@@ -120,6 +129,27 @@ export function sealLettering(name: string, measure: (text: string, size: number
   const width = measure(text, SEAL_TEXT_MAX);
   const size = Math.max(SEAL_TEXT_MIN, Math.min(SEAL_TEXT_MAX, (SEAL_TEXT_MAX * available) / width));
   return { text, size: Math.round(size * 10) / 10, copies };
+}
+
+export const SHARE_WIDTH = 1200;
+export const SHARE_HEIGHT = 630;
+/** The lockup may fill this much of the width, inside the area most platforms crop to. */
+const SHARE_MAX = 0.7;
+
+/**
+ * Sizes for the share image's centered lockup: the natural size (mark 170 px tall, name 96 px)
+ * scaled down uniformly when it would pass `SHARE_MAX` of the width, so long names shrink instead of clipping.
+ */
+export function shareLockup(aspect: number, nameWidth: (size: number) => number) {
+  const natural = { size: 96, mark: 170, gap: 44 };
+  const naturalWidth = natural.mark * aspect + natural.gap + nameWidth(natural.size);
+  const scale = Math.min(1, (SHARE_WIDTH * SHARE_MAX) / naturalWidth);
+  const size = natural.size * scale;
+  const mark = natural.mark * scale;
+  const gap = natural.gap * scale;
+  const markWidth = mark * aspect;
+  const width = markWidth + gap + nameWidth(size);
+  return { size, mark, markWidth, gap, width, scale };
 }
 
 export const logoVariants: LogoVariant[] = [
@@ -264,6 +294,32 @@ export const logoVariants: LogoVariant[] = [
             width,
             height,
           }),
+        ctx,
+      );
+    },
+  },
+  {
+    id: "social-share",
+    label: "Social share",
+    description: "The lockup centered at 1200 x 630, for og:image and link previews.",
+    background: (ctx) => ctx.light,
+    pngSizes: [1200, 2400],
+    render: (ctx) => {
+      const lockup = shareLockup(logoAspect(ctx.logo), (size) => ctx.measure(ctx.name, size));
+      const x = (SHARE_WIDTH - lockup.width) / 2;
+      const y = (SHARE_HEIGHT - lockup.mark) / 2;
+      return doc(
+        SHARE_WIDTH,
+        SHARE_HEIGHT,
+        `<rect width="${SHARE_WIDTH}" height="${SHARE_HEIGHT}" fill="${ctx.light}"/>` +
+          nestLogo(ctx.logo, { x, y, width: lockup.markWidth, height: lockup.mark }) +
+          wordmark(
+            ctx,
+            x + lockup.markWidth + lockup.gap,
+            y + lockup.mark / 2 + lockup.size * 0.35,
+            lockup.size,
+            ctx.text,
+          ),
         ctx,
       );
     },
