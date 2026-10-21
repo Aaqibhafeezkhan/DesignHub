@@ -8,6 +8,7 @@ import { gradientText } from "@/lib/effects/gradient-text";
 import { glow } from "@/lib/effects/glow";
 import { grain } from "@/lib/effects/grain";
 import { inset } from "@/lib/effects/inset";
+import { linkUnderline } from "@/lib/effects/link-underline";
 import { longShadow } from "@/lib/effects/long-shadow";
 import { neumorphism } from "@/lib/effects/neumorphism";
 import { scrollbar } from "@/lib/effects/scrollbar";
@@ -37,6 +38,7 @@ export const effectDefinitions: AnyEffectDefinition[] = [
   selection,
   scrollShadow,
   buttonPress,
+  linkUnderline,
 ];
 
 export function generateEffect<K extends EffectKind>(

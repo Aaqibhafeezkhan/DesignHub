@@ -40,7 +40,9 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
         ? `${PREVIEW_SELECTOR} .dh-effect-scroll`
         : kind === "button-press"
           ? `${PREVIEW_SELECTOR} .dh-effect-button`
-          : PREVIEW_SELECTOR;
+          : kind === "link-underline"
+            ? `${PREVIEW_SELECTOR} .dh-effect-link`
+            : PREVIEW_SELECTOR;
 
   return (
     <>
@@ -99,6 +101,16 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
               <button type="button" className="dh-effect-button mt-2 w-fit cursor-pointer px-6 py-3 font-semibold">
                 Press me
               </button>
+            </>
+          ) : kind === "link-underline" ? (
+            <>
+              <h3 className="font-display text-2xl font-semibold">A link you can hover.</h3>
+              <p className="text-sm">
+                <a className="dh-effect-link" href="#link-underline">
+                  Hover this link
+                </a>{" "}
+                and the underline grows.
+              </p>
             </>
           ) : (
             <>

@@ -9,6 +9,7 @@ import { GlowControls } from "@/components/effects/glow-controls";
 import { GradientTextControls } from "@/components/effects/gradient-text-controls";
 import { GrainControls } from "@/components/effects/grain-controls";
 import { InsetControls } from "@/components/effects/inset-controls";
+import { LinkUnderlineControls } from "@/components/effects/link-underline-controls";
 import { LongShadowControls } from "@/components/effects/long-shadow-controls";
 import { NeumorphismControls } from "@/components/effects/neumorphism-controls";
 import { ScrollbarControls } from "@/components/effects/scrollbar-controls";
@@ -38,4 +39,5 @@ export const effectControls: Partial<Record<EffectKind, ComponentType>> = {
   selection: SelectionControls,
   "scroll-shadow": ScrollShadowControls,
   "button-press": ButtonPressControls,
+  "link-underline": LinkUnderlineControls,
 };
