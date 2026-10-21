@@ -31,6 +31,8 @@ import { spotifyPlaylistCover } from "@/lib/social/templates/spotify";
 import { devtoCover } from "@/lib/social/templates/devto";
 import { hashnodeCover } from "@/lib/social/templates/hashnode";
 import { etsyShopBanner } from "@/lib/social/templates/etsy";
+import { notionCover } from "@/lib/social/templates/notion";
+import { mediumBanner } from "@/lib/social/templates/medium";
 import type { SocialPlatform, SocialTemplate } from "@/lib/social/types";
 
 /** Templates register here as they are implemented. */
@@ -72,6 +74,8 @@ export const socialTemplates: SocialTemplate[] = [
   etsyShopBanner,
   gumroadCover,
   kofiBanner,
+  notionCover,
+  mediumBanner,
 ];
 
 export const socialPlatforms: SocialPlatform[] = [
@@ -103,6 +107,8 @@ export const socialPlatforms: SocialPlatform[] = [
   "Etsy",
   "Gumroad",
   "Ko-fi",
+  "Notion",
+  "Medium",
 ];
 
 /** Ids from earlier versions, so saved selections keep working. */
