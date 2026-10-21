@@ -40,6 +40,7 @@ test.each([
   ["linkedin-event", 1776, 444],
   ["telegram-cover", 1280, 720],
   ["substack-banner", 1100, 220],
+  ["ghost-cover", 2000, 1000],
   ["spotify-playlist-cover", 640, 640],
   ["devto-cover", 1000, 420],
   ["hashnode-cover", 1600, 840],
