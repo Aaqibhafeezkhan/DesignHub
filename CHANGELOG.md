@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Motion brand book page: durations derived from one base value (150, 250 and 400 ms), the Enter, Exit and Move easing curves drawn as SVG paths against a straight line, do's and don'ts for animation and a reduced-motion note. It is in the PDF with a bookmark, the website export and the Markdown export, can be switched off, and the contents numbering follows it.
+- Motion check in the Accessibility Lab (a Motion tab, and a section in the JSON, Markdown and HTML reports): reads the CSS each Effects Lab effect exports and lists every effect that animates or runs a transform transition, with whether it has an `@media (prefers-reduced-motion` rule.
+- Button press effect in the Effects Lab: a hover lift and a pressed state as `:hover` and `:active` rules with a transform and shadow change, with lift, press depth, duration, easing, color and radius controls, a real button in the preview, and a `prefers-reduced-motion` rule that removes the transform and the transition.
 - Etsy shop banner template (3360 x 840) in the Social Media Studio, with a covered shop-icon zone and safe-area-aware content.
 
 - Compare original and optimized SVGs in the SVG Playground with an aligned, clipped preview and a keyboard- and touch-operable divider.

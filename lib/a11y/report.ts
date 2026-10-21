@@ -1,5 +1,6 @@
 import type { contrastSection, focusSection } from "@/lib/a11y/contrast";
 import type { gradientSection } from "@/lib/a11y/gradient-contrast";
+import type { MotionSection } from "@/lib/a11y/motion";
 import type { Verdict } from "@/lib/a11y/readability";
 import type { TextSpacingSection } from "@/lib/a11y/text-spacing";
 import type { targetsSection } from "@/lib/a11y/targets";
@@ -30,6 +31,7 @@ export type A11yReportSections = {
     checks: { check: string; value: string; verdict: Verdict }[];
   };
   textSpacing: TextSpacingSection;
+  motion: MotionSection;
   touchTargets: ReturnType<typeof targetsSection>;
 };
 
@@ -123,6 +125,20 @@ export function gradientTable(gradient: A11yReportSections["gradientText"]): str
   );
 }
 
+/** One row per effect that moves, with whether its CSS has a reduced-motion rule. */
+export function motionTable(section: MotionSection): string {
+  return table(
+    ["Effect", "What moves", "Reduced-motion rule", "Result"],
+    section.checks.map((row) => [row.check, row.motion, row.reducedMotionRule ? "Yes" : "No", mark(row.pass)]),
+  );
+}
+
+function motionMarkdown(section: MotionSection): string {
+  if (!section.checks.length)
+    return `${section.note}\n\n${mark(true)}: no effect moves with the current Effects Lab settings.`;
+  return `${section.note}\n\n${motionTable(section)}`;
+}
+
 /** One row per palette pair that becomes too similar under a simulation, with its lightness fix. */
 export function paletteVisionTable(section: PaletteVisionSection): string {
   return table(
@@ -209,6 +225,8 @@ export function reportToMarkdown(report: A11yReport): string {
       ["Property", "Required", "Current", "Result"],
       sections.textSpacing.checks.map((item) => [item.check, item.required, item.current, mark(item.pass)]),
     ),
+    `## ${sections.motion.criterion}`,
+    motionMarkdown(sections.motion),
     "## Touch targets",
     `Gap between targets: ${sections.touchTargets.gap}px.`,
     table(
@@ -360,6 +378,27 @@ export function paletteVisionHtmlTable(section: PaletteVisionSection): string {
   );
 }
 
+export function motionHtmlTable(section: MotionSection): string {
+  return htmlTable(
+    "Effects that move and their reduced-motion rule",
+    ["Effect", "What moves", "Reduced-motion rule", "Result"],
+    section.checks.map((row) => [
+      row.check,
+      row.motion,
+      row.reducedMotionRule ? "Yes" : "No",
+      html(passBadge(row.pass)),
+    ]),
+  );
+}
+
+function motionHtml(section: MotionSection): string {
+  const note = `<p>${escapeHtml(section.note)}</p>`;
+  if (!section.checks.length) {
+    return `${note}\n<p>${passBadge(true)} No effect moves with the current Effects Lab settings.</p>`;
+  }
+  return `${note}\n${motionHtmlTable(section)}`;
+}
+
 function paletteVisionHtml(section: PaletteVisionSection): string {
   const checked = section.colors.map((color) => `${escapeHtml(color.name)} ${chip(color.hex)}`).join(", ");
   const intro = `<p>OKLab distance (&Delta;E OK) between each pair of palette colors after simulating each type of color vision. Pairs below ${section.threshold} are hard to tell apart in charts and status colors. Checked: ${checked || "no colors"}.</p>`;
@@ -457,6 +496,8 @@ ${htmlTable(
   ["Property", "Required", "Current", "Result"],
   sections.textSpacing.checks.map((item) => [item.check, item.required, item.current, html(passBadge(item.pass))]),
 )}`,
+    `<h2 id="motion">${escapeHtml(sections.motion.criterion)}</h2>
+${motionHtml(sections.motion)}`,
     `<h2 id="targets">Touch targets</h2>
 <p>Gap between targets: ${sections.touchTargets.gap}px.</p>
 ${htmlTable(

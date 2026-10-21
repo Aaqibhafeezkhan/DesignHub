@@ -1,4 +1,5 @@
 import { border } from "@/lib/effects/border";
+import { buttonPress } from "@/lib/effects/button-press";
 import { defaultEffectContext, type AnyEffectDefinition, type EffectDefinition } from "@/lib/effects/define";
 import { focusRing } from "@/lib/effects/focus-ring";
 import { glass } from "@/lib/effects/glass";
@@ -35,6 +36,7 @@ export const effectDefinitions: AnyEffectDefinition[] = [
   scrollbar,
   selection,
   scrollShadow,
+  buttonPress,
 ];
 
 export function generateEffect<K extends EffectKind>(

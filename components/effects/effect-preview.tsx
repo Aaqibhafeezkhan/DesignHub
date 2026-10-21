@@ -38,7 +38,9 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
       ? `${PREVIEW_SELECTOR} .dh-effect-highlight`
       : kind === "scrollbar" || kind === "scroll-shadow"
         ? `${PREVIEW_SELECTOR} .dh-effect-scroll`
-        : PREVIEW_SELECTOR;
+        : kind === "button-press"
+          ? `${PREVIEW_SELECTOR} .dh-effect-button`
+          : PREVIEW_SELECTOR;
 
   return (
     <>
@@ -89,6 +91,14 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
             <>
               <h3 className="font-display text-2xl font-semibold">Select any of this text.</h3>
               <p className="text-sm">Drag across a few words, or double click one, to see the selection color.</p>
+            </>
+          ) : kind === "button-press" ? (
+            <>
+              <h3 className="font-display text-2xl font-semibold">Hover it. Press it.</h3>
+              <p className="text-sm opacity-80">The button lifts on hover and sinks while pressed.</p>
+              <button type="button" className="dh-effect-button mt-2 w-fit cursor-pointer px-6 py-3 font-semibold">
+                Press me
+              </button>
             </>
           ) : (
             <>
