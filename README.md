@@ -166,7 +166,7 @@ A typical design session bounces between a font site, a palette generator, a con
 
 ### Background Studio
 
-- Thirty-six procedural generators: **waves, blobs, mesh gradients, aurora, noise texture, dots, grid, isometric, rings, concentric squares, argyle, checks, plus signs, crosshatch, triangles, squiggle, low poly, voronoi cells, circuit board, halftone, bokeh, starfield, confetti, chevron, zigzag, spirograph, truchet tiles, memphis shapes, flow field, plaid, circle packing, rhombus tessellation, hexagons, sunburst, topographic contours and stripes**
+- Thirty-seven procedural generators: **waves, wave lines, blobs, mesh gradients, aurora, noise texture, dots, grid, isometric, rings, concentric squares, argyle, checks, plus signs, crosshatch, triangles, squiggle, low poly, voronoi cells, circuit board, halftone, bokeh, starfield, confetti, chevron, zigzag, spirograph, truchet tiles, memphis shapes, flow field, plaid, circle packing, rhombus tessellation, hexagons, sunburst, topographic contours and stripes**
 - Seeded and deterministic - every seed reproduces exactly; **Randomize** (or `Space`) rolls a new one
 - Shared controls for colors (or one click to use your Color Studio palette), density, scale, rotation and canvas size (desktop, Full HD, Open Graph, square, story)
 - Blobs are smoothed with **Paper.js** (loaded on demand); noise uses SVG `feTurbulence`
