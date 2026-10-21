@@ -7,6 +7,8 @@ import {
   gimpPalette,
   kritaPalette,
   markdownPalette,
+  paintNetColorLimit,
+  paintNetPalette,
   namedPalette,
   paletteSvg,
   procreateSwatches,
@@ -375,5 +377,42 @@ describe("Krita palette", () => {
     expect(amber).toContain('<ColorSetEntry name="amber-50" id="#fff7e6"');
     expect(amber).toContain('<Position row="0" column="1"/>');
     expect(xml.match(/<ColorSetEntry /g)).toHaveLength(4);
+  });
+});
+
+describe("Paint.NET palette", () => {
+  test("writes comment lines, then one uppercase AARRGGBB color per line", () => {
+    const { text, shadesDropped, colorsDropped } = paintNetPalette(palette, false, "Acme Labs");
+    expect(text).toBe("; paint.net Palette File\n; Name: Acme Labs\n; Colors: 2\nFF6366F1\nFFF59E0B\n");
+    expect(shadesDropped).toBe(false);
+    expect(colorsDropped).toBe(0);
+  });
+
+  test("includes shades after each color when they fit", () => {
+    const lines = paintNetPalette(palette, true)
+      .text.split("\n")
+      .filter((line) => !line.startsWith(";") && line);
+    expect(lines).toEqual(["FF6366F1", "FF0A0B0C", "FFF59E0B", "FFFFF7E6"]);
+  });
+
+  test("keeps alpha first and collapses line breaks in the name", () => {
+    const translucent: NamedColor[] = [{ name: "glass", color: { ...fromHex("#102030"), alpha: 0.5 }, shades: [] }];
+    expect(paintNetPalette(translucent, false, "A\nB").text).toContain("; Name: A B\n");
+    expect(paintNetPalette(translucent, false).text).toContain("\n80102030\n");
+  });
+
+  test("caps the palette at 96 colors, dropping shades first and then colors", () => {
+    const shaded = (count: number): NamedColor[] =>
+      Array.from({ length: count }, (_, i) => ({
+        name: `c${i}`,
+        color: fromHex("#336699"),
+        shades: Array.from({ length: 11 }, (_, step) => ({ step: 50 + step, color: fromHex("#99aabb") })),
+      }));
+    const dropShades = paintNetPalette(shaded(10), true);
+    expect(dropShades.shadesDropped).toBe(true);
+    expect(dropShades.text.match(/^[0-9A-F]{8}$/gm)).toHaveLength(10);
+    const tooMany = paintNetPalette(shaded(100), false);
+    expect(tooMany.text.match(/^[0-9A-F]{8}$/gm)).toHaveLength(paintNetColorLimit);
+    expect(tooMany.colorsDropped).toBe(4);
   });
 });

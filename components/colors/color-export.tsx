@@ -17,6 +17,8 @@ import {
   kritaPalette,
   namedPalette,
   paletteSvg,
+  paintNetColorLimit,
+  paintNetPalette,
   procreateSwatches,
   procreateSwatchLimit,
   sketchPalette,
@@ -124,6 +126,22 @@ export function ColorExport() {
     });
   }
 
+  /** Paint.NET palette; shades go in only when the palette fits in its 96 slots. */
+  function downloadPaintNet() {
+    if (swatches.length === 0) return;
+    const result = paintNetPalette(palette(), includeShades, brandName.trim() || undefined);
+    downloadBlob(new Blob([result.text], { type: "text/plain" }), filename("txt"));
+    const notes = [
+      result.shadesDropped ? t("colors.export.shadesDropped") : "",
+      result.colorsDropped > 0 ? plural("colors.export.colorsDropped", result.colorsDropped) : "",
+    ].filter(Boolean);
+    toast.success(t("colors.export.paintnetReady"), {
+      description: notes.length
+        ? [t("colors.export.paintnetLimit", { limit: paintNetColorLimit }), ...notes].join(" ")
+        : undefined,
+    });
+  }
+
   /** The palette for Krita; with shades, each color and its shades form a group. */
   function downloadKrita() {
     if (swatches.length === 0) return;
@@ -137,6 +155,7 @@ export function ColorExport() {
     { label: t("colors.export.ase"), hint: ".ase", icon: SwatchBook, run: downloadAse },
     { label: t("colors.export.sketch"), hint: ".sketchpalette", icon: Palette, run: downloadSketch },
     { label: t("colors.export.procreate"), hint: ".swatches", icon: Brush, run: downloadProcreate },
+    { label: t("colors.export.paintnet"), hint: ".txt", icon: Palette, run: downloadPaintNet },
     { label: t("colors.export.krita"), hint: ".kpl", icon: Paintbrush, run: downloadKrita },
   ];
 

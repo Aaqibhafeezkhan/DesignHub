@@ -295,6 +295,40 @@ export function procreateSwatches(
   };
 }
 
+/** Paint.NET palettes hold at most 96 colors. */
+export const paintNetColorLimit = 96;
+
+export type PaintNetPalette = { text: string; shadesDropped: boolean; colorsDropped: number };
+
+/**
+ * Paint.NET palette (.txt): `;` comment lines, then one `AARRGGBB` hex color per line (alpha first,
+ * uppercase). Shades go in when the whole palette fits in 96 colors; otherwise the file falls back
+ * to the base colors (and the first 96 of those), which the result reports.
+ */
+export function paintNetPalette(
+  palette: NamedColor[],
+  includeShades: boolean,
+  name = "DesignHub palette",
+): PaintNetPalette {
+  const withShades = paletteEntries(palette, includeShades);
+  const fits = withShades.length <= paintNetColorLimit;
+  const entries = fits ? withShades : paletteEntries(palette, false);
+  const kept = entries.slice(0, paintNetColorLimit);
+  const title = name.replace(/\s+/g, " ").trim() || "DesignHub palette";
+  const lines = kept.map(({ color }) => {
+    const { r, g, b, alpha } = toRgb(color);
+    return [Math.round(alpha * 255), r, g, b]
+      .map((channel) => channel.toString(16).padStart(2, "0"))
+      .join("")
+      .toUpperCase();
+  });
+  return {
+    text: `; paint.net Palette File\n; Name: ${title}\n; Colors: ${kept.length}\n${lines.join("\n")}\n`,
+    shadesDropped: includeShades && !fits,
+    colorsDropped: Math.max(0, entries.length - paintNetColorLimit),
+  };
+}
+
 /** Krita's built-in sRGB profile, which it falls back to when a named profile is missing. */
 const kritaSrgbProfile = "sRGB-elle-V2-srgbtrc.icc";
 
