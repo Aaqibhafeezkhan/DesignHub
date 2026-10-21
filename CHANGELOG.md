@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Scroll shadow effect in the Effects Lab: edge shadows that show only while there is more to scroll, in pure CSS with `background-attachment: local`, with color, strength, height and box background controls.
 - Plaid background generator: translucent crossing bands in palette colors that repeat seamlessly, seeded, with density setting the repeat size.
 - Circle packing background generator: non-overlapping circles of varied size in palette colors, seeded, with capped circle and attempt counts.
+- Gumroad profile cover template (1280 x 420) in the Social Media Studio, with the avatar's covered zone kept clear.
 
 ### Changed
 
