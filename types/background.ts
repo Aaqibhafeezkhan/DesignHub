@@ -31,7 +31,8 @@ export type BackgroundKind =
   | "spirograph"
   | "truchet"
   | "memphis"
-  | "flow-field";
+  | "flow-field"
+  | "plaid";
 
 /** Halftone gradient shape: forced linear or radial, or picked by the seed. */
 export type HalftoneGradientChoice = "seeded" | "linear" | "radial";

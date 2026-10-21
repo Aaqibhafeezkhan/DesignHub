@@ -31,6 +31,7 @@ import { zigzag } from "@/lib/background/generators/zigzag";
 import { truchet } from "@/lib/background/generators/truchet";
 import { memphis } from "@/lib/background/generators/memphis";
 import { flowField } from "@/lib/background/generators/flow-field";
+import { plaid } from "@/lib/background/generators/plaid";
 import { wrapSvg } from "@/lib/background/svg";
 import type { BackgroundDefinition, BackgroundKind, BackgroundSettings } from "@/types/background";
 
@@ -69,6 +70,7 @@ export const backgroundGenerators: BackgroundDefinition[] = [
   truchet,
   memphis,
   flowField,
+  plaid,
 ];
 
 export function getGenerator(kind: BackgroundKind): BackgroundDefinition | undefined {

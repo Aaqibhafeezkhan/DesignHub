@@ -4,6 +4,7 @@ import { backgroundCss } from "@/lib/background/export";
 import { circuitTraces, type GridNode } from "@/lib/background/generators/circuit";
 import { halftoneGradient, halftoneStrength } from "@/lib/background/generators/halftone";
 import { flowAngle, maxFlowPaths, maxFlowPathPoints, valueNoise } from "@/lib/background/generators/flow-field";
+import { plaidBands } from "@/lib/background/generators/plaid";
 import { hypotrochoid, maxSpirographPoints } from "@/lib/background/generators/spirograph";
 import { truchetPaths } from "@/lib/background/generators/truchet";
 import { triangleSlot } from "@/lib/background/generators/triangles";
@@ -42,6 +43,7 @@ describe.each([
   "spirograph",
   "truchet",
   "flow-field",
+  "plaid",
 ] as const)("%s", (kind) => {
   test("the same seed renders the same output", () => {
     for (const patch of [{ seed: 7 }, { seed: 7, rotation: 30, density: 100, scale: 2 }]) {
@@ -398,5 +400,33 @@ describe("flow field", () => {
   test("density adds curves", () => {
     const paths = (density: number) => renderBackgroundSvg(settings("flow-field", { density })).split("M").length;
     expect(paths(100)).toBeGreaterThan(paths(0));
+  });
+});
+
+describe("plaid", () => {
+  test("bands stay inside the tile so the pattern repeats without a seam", () => {
+    const svg = renderBackgroundSvg(settings("plaid", { density: 100, scale: 2 }));
+    const tile = svg.match(/<pattern\b[^>]*width="([\d.]+)" height="([\d.]+)"/);
+    expect(tile?.[1]).toBe(tile?.[2]);
+    const period = Number(tile?.[1]);
+    for (const [, x, y, w, h] of svg.matchAll(
+      /<rect x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)" fill="#/g,
+    )) {
+      expect(Number(x) + Number(w)).toBeLessThanOrEqual(period + 0.11);
+      expect(Number(y) + Number(h)).toBeLessThanOrEqual(period + 0.11);
+    }
+  });
+
+  test("draws crossing bands of both directions in palette colors, with a CSS export", () => {
+    const svg = renderBackgroundSvg(settings("plaid"));
+    expect((svg.match(/fill-opacity="\.45"/g) ?? []).length).toBe(6);
+    expect(plaidBands(createRandom(1), 100, ["#fff"])).toHaveLength(3);
+    expect(backgroundCss(settings("plaid"))).toContain("data:image/svg+xml");
+  });
+
+  test("density sets the repeat size", () => {
+    const size = (density: number) =>
+      Number(renderBackgroundSvg(settings("plaid", { density })).match(/<pattern\b[^>]*width="([\d.]+)"/)?.[1]);
+    expect(size(0)).toBeGreaterThan(size(100));
   });
 });
