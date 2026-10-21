@@ -47,8 +47,8 @@ export function LinkUnderlineControls() {
           </Badge>
         </div>
         <p className="text-xs text-muted-foreground">
-          Color against the page: {(Math.floor(ratio * 100) / 100).toFixed(2)}:1. At least{" "}
-          {LINK_UNDERLINE_MIN_CONTRAST}:1 is required.
+          Color against the page: {(Math.floor(ratio * 100) / 100).toFixed(2)}:1. At least {LINK_UNDERLINE_MIN_CONTRAST}
+          :1 is required.
         </p>
       </div>
       <p className="text-xs text-muted-foreground">
