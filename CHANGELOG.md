@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Installed-app troubleshooting in the [troubleshooting guide](docs/troubleshooting.md#the-installed-app): missing install button, `.designhub.json` not opening, share target missing, stale service worker after an update, and resetting the offline cache, with Chrome, Edge and Safari steps where they differ.
+- VS Code color theme export (`brand-color-theme.json`): workbench `colors` for the editor, sidebar and status bar, plus `tokenColors` for comments, strings, keywords, functions and numbers from the semantic roles, with `type` set to `light` or `dark` from the background and every syntax color at least 4.5:1 against it.
 - Windows Terminal export (`scheme.json`): a `schemes` entry with `background`, `foreground`, `cursorColor` and the sixteen ANSI colors, taking hues from the palette when present and from the primary's hue ring otherwise, with foreground on background at least 4.5:1.
 - Monogram logo variant: the first one or two letters of the brand name in the heading font, centered in a circle, for avatars when there is no mark, exported as SVG, PNG (400 and 1024) and PDF in the logo pack.
 - GIMP palette (`.gpl`) import in Color Studio: paste a DesignHub, Inkscape or Krita palette into the existing import dialog to restore the same colors and names.

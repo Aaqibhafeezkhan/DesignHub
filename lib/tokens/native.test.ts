@@ -8,6 +8,7 @@ import {
   toQtQuickTheme,
   toSwiftUITheme,
   toTokensStudio,
+  toVsCodeTheme,
   toWindowsTerminalScheme,
 } from "@/lib/tokens/native";
 import type { DesignTokens } from "@/types/tokens";
@@ -133,6 +134,40 @@ describe("native formats", () => {
       expect(scheme[key]).toMatch(/^#[0-9a-f]{6}$/i);
     }
     expect(contrastRatio(fromHex(scheme.foreground!), fromHex(scheme.background!))).toBeGreaterThanOrEqual(4.5);
+  });
+
+  test("VS Code theme maps semantic roles into workbench colors and readable tokenColors", () => {
+    const themed: DesignTokens = {
+      ...tokens,
+      colors: [
+        { name: "indigo", value: fromHex("#6366f1"), shades: [shade(300, "#a5b4fc")] },
+        { name: "amber", value: fromHex("#f59e0b"), shades: [] },
+        { name: "slate", value: fromHex("#0f172a"), shades: [] },
+      ],
+      semantic: [
+        { name: "primary", ref: "indigo", value: fromHex("#6366f1") },
+        { name: "accent", ref: "amber", value: fromHex("#f59e0b") },
+        { name: "foreground", ref: "slate", value: fromHex("#0f172a") },
+        { name: "background", ref: "white", value: fromHex("#ffffff") },
+      ],
+    };
+    const theme = JSON.parse(toVsCodeTheme(themed)) as {
+      type: string;
+      colors: Record<string, string>;
+      tokenColors: { scope: string[]; settings: { foreground: string } }[];
+    };
+    expect(theme.type).toBe("light");
+    expect(theme.colors["editor.background"]).toBe("#ffffff");
+    expect(theme.colors["statusBar.background"]).toBe("#6366f1");
+    expect(theme.tokenColors.some((rule) => rule.scope.some((scope) => scope.includes("comment")))).toBe(true);
+    expect(theme.tokenColors.some((rule) => rule.scope.some((scope) => scope.includes("string")))).toBe(true);
+    expect(theme.tokenColors.some((rule) => rule.scope.some((scope) => scope.includes("keyword")))).toBe(true);
+    expect(theme.tokenColors.some((rule) => rule.scope.some((scope) => scope.includes("function")))).toBe(true);
+    expect(theme.tokenColors.some((rule) => rule.scope.some((scope) => /numeric|number/.test(scope)))).toBe(true);
+    const background = fromHex(theme.colors["editor.background"]!);
+    theme.tokenColors.forEach((rule) => {
+      expect(contrastRatio(fromHex(rule.settings.foreground), background)).toBeGreaterThanOrEqual(4.5);
+    });
   });
 
   test("Tokens Studio resolves semantic aliases into the palette", () => {

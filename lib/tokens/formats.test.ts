@@ -40,6 +40,7 @@ import {
   toGodotTheme,
   toMauiColors,
   toQtQuickTheme,
+  toVsCodeTheme,
   toWindowsTerminalScheme,
   toWinUiTheme,
 } from "@/lib/tokens/native";
@@ -124,6 +125,7 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "Theme.qml",
       "theme.tres",
       "theme.uss",
+      "brand-color-theme.json",
     ]),
   );
   expect(formats.map((format) => format.id)).toEqual(
@@ -141,6 +143,7 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "qml",
       "godot",
       "uss",
+      "vscode",
     ]),
   );
   expect(formats.find((format) => format.id === "shadcn")?.filename).toBe("globals.css");
@@ -1221,6 +1224,100 @@ describe("Windows Terminal", () => {
       foreground: string;
     };
     expect(contrastRatio(fromHex(scheme.foreground), fromHex(scheme.background))).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
+describe("VS Code", () => {
+  const themed = (): DesignTokens => ({
+    ...tokens(),
+    colors: [
+      {
+        name: "indigo",
+        value: fromHex("#6366f1"),
+        shades: [
+          { step: 200, value: fromHex("#c7d2fe") },
+          { step: 300, value: fromHex("#a5b4fc") },
+        ],
+      },
+      { name: "amber", value: fromHex("#f59e0b"), shades: [{ step: 300, value: fromHex("#fcd34d") }] },
+      { name: "slate", value: fromHex("#0f172a"), shades: [] },
+    ],
+    semantic: [
+      { name: "primary", ref: "indigo", value: fromHex("#6366f1") },
+      { name: "accent", ref: "amber", value: fromHex("#f59e0b") },
+      { name: "foreground", ref: "slate", value: fromHex("#0f172a") },
+      { name: "background", ref: "white", value: fromHex("#ffffff") },
+    ],
+  });
+
+  test("is registered in the Export Engine", () => {
+    const format = tokenFormats(tokens()).find((item) => item.id === "vscode");
+    expect(format?.filename).toBe("brand-color-theme.json");
+    expect(format?.language).toBe("json");
+  });
+
+  test("sets type from the background and covers editor, sidebar and status bar", () => {
+    const theme = JSON.parse(toVsCodeTheme(themed())) as {
+      name: string;
+      type: string;
+      colors: Record<string, string>;
+      tokenColors: { scope: string[]; settings: { foreground: string } }[];
+    };
+    expect(theme.name).toBe("Acme Labs");
+    expect(theme.type).toBe("light");
+    expect(theme.colors["editor.background"]).toBe("#ffffff");
+    expect(theme.colors["editor.foreground"]).toBe("#0f172a");
+    expect(theme.colors["sideBar.background"]).toMatch(/^#[0-9a-f]{6}$/i);
+    expect(theme.colors["sideBar.foreground"]).toMatch(/^#[0-9a-f]{6}$/i);
+    expect(theme.colors["statusBar.background"]).toBe("#6366f1");
+    expect(theme.colors["statusBar.foreground"]).toMatch(/^#[0-9a-f]{6}$/i);
+  });
+
+  test("tokenColors covers comments, strings, keywords, functions and numbers", () => {
+    const theme = JSON.parse(toVsCodeTheme(themed())) as {
+      tokenColors: { scope: string[]; settings: { foreground: string } }[];
+    };
+    const joined = theme.tokenColors.map((rule) => rule.scope.join(" ")).join(" | ");
+    expect(joined).toMatch(/comment/);
+    expect(joined).toMatch(/string/);
+    expect(joined).toMatch(/keyword/);
+    expect(joined).toMatch(/function/);
+    expect(joined).toMatch(/numeric|number/);
+  });
+
+  test("each token color meets 4.5:1 against the editor background", () => {
+    const theme = JSON.parse(toVsCodeTheme(themed())) as {
+      colors: Record<string, string>;
+      tokenColors: { settings: { foreground: string } }[];
+    };
+    const background = fromHex(theme.colors["editor.background"]!);
+    expect(theme.tokenColors.length).toBeGreaterThanOrEqual(5);
+    theme.tokenColors.forEach((rule) => {
+      const foreground = fromHex(rule.settings.foreground);
+      expect(contrastRatio(foreground, background)).toBeGreaterThanOrEqual(4.5);
+    });
+  });
+
+  test("chooses type dark when the background is dark", () => {
+    const darkBg: DesignTokens = {
+      ...themed(),
+      semantic: [
+        { name: "primary", ref: "indigo", value: fromHex("#6366f1") },
+        { name: "accent", ref: "amber", value: fromHex("#f59e0b") },
+        { name: "foreground", ref: "white", value: fromHex("#f8fafc") },
+        { name: "background", ref: "slate", value: fromHex("#0f172a") },
+      ],
+    };
+    const theme = JSON.parse(toVsCodeTheme(darkBg)) as {
+      type: string;
+      colors: Record<string, string>;
+      tokenColors: { settings: { foreground: string } }[];
+    };
+    expect(theme.type).toBe("dark");
+    const background = fromHex(theme.colors["editor.background"]!);
+    theme.tokenColors.forEach((rule) => {
+      expect(contrastRatio(fromHex(rule.settings.foreground), background)).toBeGreaterThanOrEqual(4.5);
+    });
   });
 });
 
