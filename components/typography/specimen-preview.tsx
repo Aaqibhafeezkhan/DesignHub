@@ -7,11 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useFontMeta } from "@/hooks/use-font-catalog";
 import { useGoogleFont } from "@/hooks/use-google-font";
-import { nearestWeight } from "@/lib/typography/compare";
+import { familyWeightRows, nearestWeight } from "@/lib/typography/compare";
 import { fontStack, fontVariationSettings, openTypeFeatureSettings } from "@/lib/typography/css";
 import { matchSample, needsExtendedGlyphs, specimenSamples } from "@/lib/typography/samples";
 import { cn } from "@/lib/utils";
 import { useTypographyStore } from "@/store/typography-store";
+
+const FALLBACK_STRIP_TEXT = "The quick brown fox jumps over the lazy dog";
 
 type PaneProps = {
   family: string;
@@ -74,6 +76,63 @@ function SpecimenPane({ family, label, textId, useAxes, actions }: PaneProps) {
         style={style}
         className="max-h-[40dvh] w-full flex-1 resize-none overflow-y-auto bg-transparent break-words outline-none scrollbar-thin [field-sizing:content]"
       />
+    </div>
+  );
+}
+
+/** One line per available weight (or named instance) using the specimen sample text. */
+function WeightComparisonStrip({ family }: { family: string }) {
+  const specimen = useTypographyStore((state) => state.specimen);
+  const openType = useTypographyStore((state) => state.openType);
+  const updateSpecimen = useTypographyStore((state) => state.updateSpecimen);
+  const meta = useFontMeta(family);
+  useGoogleFont(meta);
+
+  const rows = familyWeightRows(meta);
+  const text = specimen.text.split("\n").find((line) => line.trim()) ?? FALLBACK_STRIP_TEXT;
+  const stack = fontStack(family, meta?.category);
+
+  return (
+    <div role="group" aria-label={`${family} weight comparison`} className="flex flex-col gap-1 border-t pt-4">
+      <p className="text-xs font-medium text-muted-foreground">Weight comparison</p>
+      <div className="-mx-1 flex flex-col">
+        {rows.map(({ weight, name }) => {
+          const selected = weight === specimen.weight;
+          return (
+            <button
+              key={weight}
+              type="button"
+              aria-pressed={selected}
+              aria-label={`${name} (${weight})`}
+              onClick={() => updateSpecimen({ weight })}
+              className={cn(
+                "grid h-10 grid-cols-[3.25rem_minmax(0,1fr)] items-center gap-3 rounded-md px-1 text-left transition-colors duration-150 outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
+                selected && "bg-accent",
+              )}
+            >
+              <span
+                className={cn(
+                  "font-mono text-[11px] tabular-nums text-muted-foreground",
+                  selected && "text-foreground",
+                )}
+              >
+                {weight}
+              </span>
+              <span
+                className="block overflow-hidden text-[22px] leading-8 text-ellipsis whitespace-nowrap"
+                style={{
+                  fontFamily: stack,
+                  fontWeight: weight,
+                  fontStyle: specimen.italic ? "italic" : "normal",
+                  fontFeatureSettings: openTypeFeatureSettings(openType),
+                }}
+              >
+                {text}
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -169,6 +228,7 @@ export function SpecimenPreview({ className }: { className?: string }) {
           Characters a font doesn&apos;t include fall back to another font, so check the shapes before you choose it.
         </p>
       )}
+      <WeightComparisonStrip family={activeFont} />
     </div>
   );
 }

@@ -122,7 +122,7 @@ A typical design session bounces between a font site, a palette generator, a con
 - A keyboard-friendly font list: arrow keys, Page Up / Down, Home / End, `Enter` to pick and `S` to favorite
 - Favorites and recent fonts
 - Variable font playground: a slider for every axis (`wght`, `wdth`, `opsz`, `SOFT`, `WONK`, …) plus axis animation
-- Weight and italic controls, letter spacing and line height, and a weight waterfall that shows every weight the font has
+- Weight and italic controls, letter spacing and line height, a weight comparison strip in the specimen view (static faces and variable named instances), and a weight waterfall that shows every weight the font has
 - Font pairing engine: 42 curated pairs, rule-based suggestions, random pairing with locks, saved pairs
 - Fluid type scale generator (separate mobile and desktop ratios) and a standalone `clamp()` generator
 - Responsive preview at any viewport width
