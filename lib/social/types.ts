@@ -56,6 +56,7 @@ export type SocialPlatform =
   | "Bandcamp"
   | "Telegram"
   | "Substack"
+  | "Ghost"
   | "Spotify"
   | "DEV"
   | "Hashnode"

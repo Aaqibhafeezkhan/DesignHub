@@ -374,3 +374,45 @@ describe("Buy Me a Coffee cover", () => {
     expect(template.render(ctx)).toContain("Treat me to a coffee");
   });
 });
+
+describe("Ghost publication cover", () => {
+  const template = socialTemplates.find((item) => item.id === "ghost-cover")!;
+
+  test.each([
+    ["3 character", "Axe"],
+    ["60 character", "Northwind Analytics Cooperative for Sustainable Data Systems"],
+  ])("a %s name stays inside the safe area", (_label, name) => {
+    for (const mode of modes) {
+      const ctx = socialContext(mode, name);
+      for (const box of textBoxes(ctx, template.render(ctx))) {
+        expect(box.start, box.value).toBeGreaterThanOrEqual(template.safe.x - 0.5);
+        expect(box.end, box.value).toBeLessThanOrEqual(template.safe.x + template.safe.width + 0.5);
+      }
+    }
+  });
+
+  test.each([
+    ["long words", "Plan every launch from one calm place with your whole team and never miss a deadline again, ever"],
+    ["one long word", "supercalifragilisticexpialidocious".repeat(5)],
+  ])("a %s description stays inside the safe area", (_label, headline) => {
+    for (const mode of modes) {
+      const base = socialContext(mode);
+      const ctx: SocialContext = { ...base, content: { ...base.content, headline } };
+      for (const box of textBoxes(ctx, template.render(ctx))) {
+        expect(box.start, box.value).toBeGreaterThanOrEqual(template.safe.x - 0.5);
+        expect(box.end, box.value).toBeLessThanOrEqual(template.safe.x + template.safe.width + 0.5);
+      }
+    }
+  });
+
+  test("draws the publication name and description", () => {
+    const base = socialContext("dark");
+    const ctx: SocialContext = {
+      ...base,
+      content: { ...base.content, name: "The Slow Draft", headline: "Notes on building calm software" },
+    };
+    const svg = template.render(ctx);
+    expect(svg).toContain("The Slow Draft");
+    expect(svg).toContain("Notes on building calm software");
+  });
+});

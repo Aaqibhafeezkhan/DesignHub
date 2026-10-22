@@ -28,6 +28,7 @@ import { bandcampHeader } from "@/lib/social/templates/bandcamp";
 import { productHuntThumbnail } from "@/lib/social/templates/product-hunt-thumbnail";
 import { telegramCover } from "@/lib/social/templates/telegram";
 import { substackBanner } from "@/lib/social/templates/substack";
+import { ghostCover } from "@/lib/social/templates/ghost";
 import { spotifyPlaylistCover } from "@/lib/social/templates/spotify";
 import { devtoCover } from "@/lib/social/templates/devto";
 import { hashnodeCover } from "@/lib/social/templates/hashnode";
@@ -69,6 +70,7 @@ export const socialTemplates: SocialTemplate[] = [
   linkedinEvent,
   telegramCover,
   substackBanner,
+  ghostCover,
   spotifyPlaylistCover,
   devtoCover,
   hashnodeCover,
@@ -103,6 +105,7 @@ export const socialPlatforms: SocialPlatform[] = [
   "Bandcamp",
   "Telegram",
   "Substack",
+  "Ghost",
   "Spotify",
   "DEV",
   "Hashnode",
