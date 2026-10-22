@@ -34,7 +34,7 @@ import {
   toYaml,
   yamlString,
 } from "@/lib/tokens/formats";
-import { roleColor, toMauiColors, toQtQuickTheme, toWinUiTheme } from "@/lib/tokens/native";
+import { roleColor, toGodotTheme, toMauiColors, toQtQuickTheme, toWinUiTheme } from "@/lib/tokens/native";
 import { xmlError } from "@/lib/test/xml";
 import type { DesignTokens } from "@/types/tokens";
 
@@ -114,6 +114,7 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "nuxt-ui-colors.css",
       "vuetify.ts",
       "Theme.qml",
+      "theme.tres",
     ]),
   );
   expect(formats.map((format) => format.id)).toEqual(
@@ -129,6 +130,7 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "nuxt-ui",
       "nuxt-ui-colors",
       "qml",
+      "godot",
     ]),
   );
   expect(formats.find((format) => format.id === "shadcn")?.filename).toBe("globals.css");
@@ -1090,6 +1092,21 @@ describe("Qt Quick", () => {
     expect(code).toContain('readonly property color lightPrimary: "#FF6366F1"');
     expect(code).toContain("readonly property color darkPrimary:");
     expect(code).toContain("readonly property real spacing4: 16");
+  });
+});
+
+describe("Godot", () => {
+  test("is registered in the Export Engine", () => {
+    const format = tokenFormats(tokens()).find((item) => item.id === "godot");
+    expect(format?.filename).toBe("theme.tres");
+    expect(format?.language).toBe("text");
+  });
+
+  test("starts with a Theme resource header and covers one role", () => {
+    const code = toGodotTheme(tokens());
+    expect(code.startsWith('[gd_resource type="Theme"')).toBe(true);
+    expect(code).toContain("AcmeLabs/colors/light_primary = Color(");
+    expect(code).toMatch(/light_primary = Color\([0-9.]+, [0-9.]+, [0-9.]+, [0-9.]+\)/);
   });
 });
 
