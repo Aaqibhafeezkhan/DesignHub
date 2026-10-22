@@ -12,6 +12,7 @@ Common problems, what causes them and how to fix them. DesignHub has no server a
 8. [I still see an old version after an update](#i-still-see-an-old-version-after-an-update)
 9. [The language does not switch](#the-language-does-not-switch)
 10. [How do I reset everything?](#how-do-i-reset-everything)
+11. [The installed app](#the-installed-app)
 
 ## My work disappeared after I cleared site data
 
@@ -104,5 +105,57 @@ Common problems, what causes them and how to fix them. DesignHub has no server a
 3. Reload. DesignHub starts fresh with the default Acme brand.
 
 To reset only one studio, delete its row from the `kv` table of the `designhub` IndexedDB database and reload. Files written by folder autosave are never deleted by DesignHub. The full list of keys is in the [storage guide](storage.md#reset-everything).
+
+## The installed app
+
+DesignHub can be installed as a Progressive Web App. Once installed in Chromium, it can open `.designhub.json` files and appear as a share target. How those features work is described in the [storage guide](storage.md#opening-and-sharing-project-files-installed-app). The sections below cover the problems people hit with the installed app. The development server does not register a service worker, so install, file open and share target only apply to the hosted site or a local `pnpm build && pnpm start` session.
+
+### The install button is missing
+
+**Cause:** Browsers only offer install when the page is served over HTTPS (or `localhost`), the web app manifest is valid, and a service worker is registered. DesignHub registers the worker a few seconds after load, and only in production builds (`components/layout/pwa-register.tsx`). There is no in-app install button: the browser shows its own control in the address bar or app menu. Firefox and Safari use a different "Add to Home Screen" / "Add to Dock" flow and do not expose Chromium's install icon.
+
+**Fix:**
+
+- **Chrome and Edge:** Open the hosted site (or `http://localhost` after `pnpm build && pnpm start`), wait a few seconds, then look for the install icon in the address bar, or open the browser menu and choose **Install DesignHub** / **Apps** > **Install this site as an app**. If nothing appears, open DevTools, **Application**, **Manifest** and **Service Workers**: fix any manifest errors, and confirm a worker is registered for the origin. Private windows and some enterprise policies hide install.
+- **Safari (macOS):** **File** > **Add to Dock**, or share the page and choose **Add to Dock**. On iOS/iPadOS use **Share** > **Add to Home Screen**. Safari does not show a Chromium-style install icon.
+- Self-hosted copies need HTTPS (or localhost). A plain `http://` LAN IP will not become installable.
+
+### A `.designhub.json` file does not open in DesignHub
+
+**Cause:** Opening a project file by double click uses the manifest `file_handlers` entry (`app/manifest.ts`), which points at `/projects`. That only works after DesignHub is installed as an app in a Chromium browser. Firefox and Safari have no web file handlers, so double click does nothing special there. The file also has to keep the `.designhub.json` extension; a renamed `.json` or `.txt` file is not claimed.
+
+**Fix:**
+
+- **Chrome and Edge:** Install DesignHub first (see above). Export a project from **Brand Projects**, then double click the downloaded `.designhub.json` file. The installed app should open **Brand Projects** and ask before importing. If another app owns the extension, right click the file, **Open with**, and pick DesignHub, or reinstall the app so the handler is registered again. You can always use **Import** on the Brand Projects page instead.
+- **Safari:** There is no file handler. Use **Import** in **Brand Projects**, or drag the file into that page.
+
+### The share target does not appear
+
+**Cause:** The share target is declared in the manifest (`share_target` posts to `/share-target`). The service worker answers that POST, keeps the file in the short-lived `designhub-share` cache, and redirects to Brand Projects with `?shared=1` (see `scripts/generate-service-worker.mjs`). The target only shows up for the installed app, and only in browsers that implement the Web Share Target API (Chromium on desktop and Android). Safari and Firefox do not list DesignHub as a share destination for files.
+
+**Fix:**
+
+- **Chrome and Edge (installed app):** From another app's share sheet, or from the browser's share UI for a `.designhub.json` / JSON file, choose DesignHub. If it is missing, confirm the app is installed (not just a normal tab), then close every DesignHub window, reopen the installed app once so the worker is active, and try again. Uninstalling and reinstalling refreshes the share target registration.
+- **Safari:** Share target is not available. Use **Import** in **Brand Projects**.
+
+### The installed app still shows an old version after an update
+
+**Cause:** Same as [I still see an old version after an update](#i-still-see-an-old-version-after-an-update): a new service worker installs in the background and waits until you reload. An installed (standalone) window is easy to leave open, so the waiting worker never activates.
+
+**Fix:**
+
+- Click **Reload** in the **Update available** toast. If you dismissed it, close every DesignHub window (the installed app and any browser tabs on the same origin), then open the app again.
+- **Chrome and Edge:** Open the installed app, press F12 (or open DevTools from the app's menu if available), go to **Application** > **Service Workers**, click **Unregister**, then reload. You can also delete only the `designhub-static-*` and `designhub-runtime-*` caches under **Cache Storage** (see below).
+- **Safari:** Close the app, then **Settings** > **Privacy** > **Manage Website Data** (macOS: **Safari** > **Settings** > **Privacy** > **Manage Website Data**), remove the DesignHub site if you are ready to clear its data, and reopen. For a cache-only reset without wiping projects, use the Develop menu's storage tools when enabled, or see the next section.
+
+### How to reset the offline cache
+
+**Cause:** The offline shell and runtime responses live in Cache Storage as `designhub-static-*` and `designhub-runtime-*`. Clearing them forces a fresh download on the next visit without deleting your projects in IndexedDB. The short-lived `designhub-share` cache only holds a file mid-import; leave it alone unless a share import is stuck.
+
+**Fix:**
+
+- **Chrome and Edge:** DevTools > **Application** > **Cache Storage**. Delete `designhub-static-*` and `designhub-runtime-*`. Leave the `designhub` IndexedDB database untouched if you want to keep your work. Then reload (or close and reopen the installed app).
+- **Safari:** Enable the Develop menu if needed. Open the storage inspector for the DesignHub site and remove the DesignHub caches, or remove the site under **Manage Website Data** when you are fine clearing everything (export projects first). Then reload.
+- To wipe projects, settings and caches together, use [How do I reset everything?](#how-do-i-reset-everything) instead.
 
 Still stuck? Open an issue on [GitHub](https://github.com/yakew7/DesignHub/issues) with your browser, its version and what you tried.
