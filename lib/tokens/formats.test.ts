@@ -29,6 +29,7 @@ import {
   toTamaguiConfig,
   toStylus,
   toUnoConfig,
+  toUnityUss,
   toVuetifyTheme,
   toXcodeColorSets,
   toYaml,
@@ -115,6 +116,7 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "vuetify.ts",
       "Theme.qml",
       "theme.tres",
+      "theme.uss",
     ]),
   );
   expect(formats.map((format) => format.id)).toEqual(
@@ -131,6 +133,7 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "nuxt-ui-colors",
       "qml",
       "godot",
+      "uss",
     ]),
   );
   expect(formats.find((format) => format.id === "shadcn")?.filename).toBe("globals.css");
@@ -1107,6 +1110,47 @@ describe("Godot", () => {
     expect(code.startsWith('[gd_resource type="Theme"')).toBe(true);
     expect(code).toContain("AcmeLabs/colors/light_primary = Color(");
     expect(code).toMatch(/light_primary = Color\([0-9.]+, [0-9.]+, [0-9.]+, [0-9.]+\)/);
+  });
+});
+
+describe("Unity USS", () => {
+  test("is registered in the Export Engine", () => {
+    const format = tokenFormats(tokens()).find((item) => item.id === "uss");
+    expect(format?.filename).toBe("theme.uss");
+    expect(format?.language).toBe("css");
+  });
+
+  test("writes a color and a spacing token as hex and px", () => {
+    const code = toUnityUss(tokens());
+    expect(code).toContain(":root {");
+    expect(code).toContain("--color-indigo: #6366f1;");
+    expect(code).toContain("--spacing-4: 16px;");
+  });
+
+  test("never emits functions Unity cannot parse", () => {
+    const themed: DesignTokens = {
+      ...tokens(),
+      meta: { ...tokens().meta, colorFormat: "oklch" },
+      colors: [
+        {
+          name: "indigo",
+          value: fromHex("#6366f1"),
+          shades: [{ step: 250, value: { ...fromHex("#cdd9f3"), alpha: 0.5 } }],
+        },
+      ],
+    };
+    const code = toUnityUss(themed);
+    const block = code.match(/:root \{([\s\S]*)\}\s*$/)?.[1] ?? "";
+    const values = [...block.matchAll(/^\s*--[^:]+:\s*([^;]+);/gm)].map((match) => match[1]!.trim());
+    expect(values.length).toBeGreaterThan(0);
+    values.forEach((value) => {
+      expect(value).not.toMatch(/oklch\s*\(/i);
+      expect(value).not.toMatch(/color-mix\s*\(/i);
+      expect(value).not.toMatch(/clamp\s*\(/i);
+      expect(value).not.toMatch(/\d+(?:\.\d+)?rem\b/);
+      expect(value).toMatch(/^(?:#[0-9a-f]{3,8}|rgba?\([^)]+\)|var\([^)]+\)|0|\d+(?:\.\d+)?px)$/i);
+    });
+    expect(code).toContain("rgba(");
   });
 });
 
