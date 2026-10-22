@@ -30,7 +30,8 @@ export function TypographyExport({ fonts }: { fonts: FontFamily[] }) {
       <p className="max-w-2xl text-sm text-muted-foreground">
         Exports use your pairing (<strong className="font-medium text-foreground">{headingFont}</strong> +{" "}
         <strong className="font-medium text-foreground">{bodyFont}</strong>), fluid type scale, rhythm and enabled
-        OpenType features.
+        OpenType features. Fallback CSS emits a size-adjusted local face (Arial, Times New Roman or Courier New) so
+        layout stays stable while the webfont loads.
       </p>
       <ExportPanel formats={formats} label="Typography export format" />
     </div>

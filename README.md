@@ -47,7 +47,7 @@ A typical design session bounces between a font site, a palette generator, a con
 | **Social Media**      | GitHub, LinkedIn, X, YouTube, DEV, Hashnode, Telegram, OG…            | PNG (1× / 2×) · OG meta tags · social ZIP                                                                                                                                                                                                        |
 | **Brand Guidelines**  | A 22-page brand book generated from the brand                         | PDF · PNG per page · static website                                                                                                                                                                                                              |
 | **Brand Projects**    | Local brands with tags, share links, compare and version history      | Project JSON (one or all)                                                                                                                                                                                                                        |
-| **Typography Studio** | Google Fonts, variable axes, pairing, fluid type scale, OpenType      | CSS · Tailwind · SCSS · React · JSON tokens                                                                                                                                                                                                      |
+| **Typography Studio** | Google Fonts, variable axes, pairing, fluid type scale, OpenType      | CSS · Fallback CSS · Tailwind · SCSS · React · JSON tokens                                                                                                                                                                                       |
 | **Color Studio**      | Palettes, harmonies, OKLCH, shades 50–950, gradients, WCAG            | CSS variables · Tailwind · JSON tokens · SVG gradient · GIMP · ASE · Sketch · Procreate · Krita · PNG                                                                                                                                            |
 | **Icon Studio**       | 200,000+ Iconify icons, restyling, favicons                           | SVG · React · Vue · Svelte · Angular · Solid · Qwik · Lit · Astro · React Native · CSS · PNG · ICO · favicon ZIP                                                                                                                                 |
 | **Background Studio** | 35 generators: waves, mesh, aurora, voronoi, flow field…              | SVG · PNG (1× / 2×) · CSS background                                                                                                                                                                                                             |
@@ -128,7 +128,7 @@ A typical design session bounces between a font site, a palette generator, a con
 - Responsive preview at any viewport width
 - OpenType controls: ligatures, small caps, lining / oldstyle / tabular figures, fractions, slashed zero, stylistic sets
 - Local font inspector powered by OpenType.js (your file never leaves the browser)
-- Exports: **CSS, Tailwind, SCSS, React, JSON tokens** and a Google Fonts embed
+- Exports: **CSS, Fallback CSS** (size-adjusted system faces), **Tailwind, SCSS, React, JSON tokens** and a Google Fonts embed. See [typography fallbacks](docs/typography-fallbacks.md).
 
 ### Color Studio
 
