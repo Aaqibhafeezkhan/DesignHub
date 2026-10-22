@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { fromHex } from "@/lib/color/color";
-import { toComposeTheme, toFlutterTheme, toSwiftUITheme, toTokensStudio } from "@/lib/tokens/native";
+import { toComposeTheme, toFlutterTheme, toQtQuickTheme, toSwiftUITheme, toTokensStudio } from "@/lib/tokens/native";
 import type { DesignTokens } from "@/types/tokens";
 
 const shade = (step: number, hex: string) => ({ step, value: fromHex(hex) });
@@ -77,6 +77,18 @@ describe("native formats", () => {
     expect(code).toContain("val Color_ = Color(0xFF6366F1)");
     expect(code).toMatch(/darkColorScheme\(\n {4}primary = AcmeLabsColors\.Color_300,\n {4}onPrimary = Color\.Black,/);
     expect(code).toContain("val AcmeLabsShapes = Shapes()");
+  });
+
+  test("Qt Quick properties are valid, unique identifiers with ARGB colors", () => {
+    const code = toQtQuickTheme(tokens);
+    const ids = identifiers(code, /readonly property (?:color|real) ([A-Za-z_][A-Za-z0-9_]*)/g);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(code.startsWith("pragma Singleton")).toBe(true);
+    expect(code).toContain("QtObject {");
+    expect(code).toContain('readonly property color indigo_250: "#FFCDD9F3"');
+    expect(code).toContain('readonly property color lightPrimary: "#FF6366F1"');
+    expect(code).toContain('readonly property color darkPrimary: "#FF6366F1"');
+    expect(code).toContain("readonly property real spacing0_5: 2");
   });
 
   test("Tokens Studio resolves semantic aliases into the palette", () => {

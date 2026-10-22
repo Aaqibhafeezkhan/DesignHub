@@ -34,7 +34,7 @@ import {
   toYaml,
   yamlString,
 } from "@/lib/tokens/formats";
-import { roleColor, toMauiColors, toWinUiTheme } from "@/lib/tokens/native";
+import { roleColor, toMauiColors, toQtQuickTheme, toWinUiTheme } from "@/lib/tokens/native";
 import { xmlError } from "@/lib/test/xml";
 import type { DesignTokens } from "@/types/tokens";
 
@@ -113,6 +113,7 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "app.config.ts",
       "nuxt-ui-colors.css",
       "vuetify.ts",
+      "Theme.qml",
     ]),
   );
   expect(formats.map((format) => format.id)).toEqual(
@@ -127,6 +128,7 @@ test("the new formats are registered for the Export Engine and the ZIP", () => {
       "figma-variables",
       "nuxt-ui",
       "nuxt-ui-colors",
+      "qml",
     ]),
   );
   expect(formats.find((format) => format.id === "shadcn")?.filename).toBe("globals.css");
@@ -1072,6 +1074,22 @@ describe(".NET MAUI", () => {
 
   test("is registered in the Export Engine", () => {
     expect(tokenFormats(maui()).find((format) => format.id === "maui")?.filename).toBe("Colors.xaml");
+  });
+});
+
+describe("Qt Quick", () => {
+  test("is registered in the Export Engine", () => {
+    const format = tokenFormats(tokens()).find((item) => item.id === "qml");
+    expect(format?.filename).toBe("Theme.qml");
+    expect(format?.language).toBe("qml");
+  });
+
+  test("writes light and dark roles and spacing as QML properties", () => {
+    const code = toQtQuickTheme(tokens());
+    expect(code).toContain("pragma Singleton");
+    expect(code).toContain('readonly property color lightPrimary: "#FF6366F1"');
+    expect(code).toContain("readonly property color darkPrimary:");
+    expect(code).toContain("readonly property real spacing4: 16");
   });
 });
 
