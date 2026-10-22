@@ -13,6 +13,7 @@ export type LogoVariantId =
   | "wordmark"
   | "app-icon"
   | "avatar"
+  | "monogram"
   | "seal"
   | "social-share";
 
@@ -152,6 +153,39 @@ export function shareLockup(aspect: number, nameWidth: (size: number) => number)
   return { size, mark, markWidth, gap, width, scale };
 }
 
+const MONOGRAM_SIZE = 512;
+/** Max font size as a fraction of the tile; two letters still leave clear space. */
+const MONOGRAM_TEXT_MAX = 0.42;
+/** Letters may fill this share of the tile width before the type shrinks. */
+const MONOGRAM_FILL = 0.62;
+
+/**
+ * Initials for the monogram tile: the first letter of each word (Unicode letters only, so
+ * symbols and emoji are skipped). One-word names yield a single letter; longer names yield up
+ * to two. Names with no letters fall back to "B".
+ */
+export function monogramInitials(name: string): string {
+  const letters: string[] = [];
+  for (const word of name.trim().split(/\s+/)) {
+    if (!word) continue;
+    const match = word.match(/\p{L}/u);
+    if (!match) continue;
+    letters.push(match[0]!);
+    if (letters.length === 2) break;
+  }
+  if (letters.length === 0) return "B";
+  return letters.join("").toLocaleUpperCase();
+}
+
+/** Font size that fits the initials inside the monogram tile. */
+export function monogramLettering(initials: string, measure: (text: string, size: number) => number) {
+  const max = MONOGRAM_SIZE * MONOGRAM_TEXT_MAX;
+  const available = MONOGRAM_SIZE * MONOGRAM_FILL;
+  const width = measure(initials, max);
+  const size = width > available ? (max * available) / width : max;
+  return { size: Math.round(size * 10) / 10 };
+}
+
 export const logoVariants: LogoVariant[] = [
   {
     id: "color",
@@ -264,6 +298,25 @@ export const logoVariants: LogoVariant[] = [
             width,
             height,
           }),
+        ctx,
+      );
+    },
+  },
+  {
+    id: "monogram",
+    label: "Monogram",
+    description: "Initials in the heading font, centered in a circle, for avatars when there is no mark.",
+    background: () => "transparent",
+    pngSizes: [400, 1024],
+    render: (ctx) => {
+      const initials = monogramInitials(ctx.name);
+      const { size: fontSize } = monogramLettering(initials, ctx.measure);
+      const c = MONOGRAM_SIZE / 2;
+      return doc(
+        MONOGRAM_SIZE,
+        MONOGRAM_SIZE,
+        `<circle cx="${c}" cy="${c}" r="${c}" fill="${ctx.primary}"/>` +
+          `<text x="${c}" y="${c + fontSize * 0.35}" text-anchor="middle" font-family="'${ctx.fontFamily}', ui-sans-serif, system-ui, sans-serif" font-weight="${ctx.fontWeight}" font-size="${fontSize}" fill="${onPrimary(ctx)}">${escapeXml(initials)}</text>`,
         ctx,
       );
     },
