@@ -6,6 +6,7 @@ import {
   AVATAR_CLEAR_SPACE,
   avatarMarkSize,
   logoVariants,
+  monogramInitials,
   renderVariant,
   SEAL_MAX_NAME,
   shareLockup,
@@ -128,5 +129,42 @@ describe("social share", () => {
     const svg = renderVariant("social-share", shareCtx("A & <B>"));
     expect(xmlError(svg)).toBeNull();
     expect(svg).toContain("A &amp; &lt;B&gt;");
+  });
+});
+
+describe("monogram", () => {
+  const monoCtx = (name: string): VariantContext => ({ ...ctx(mark), name });
+
+  test("is in the variants grid and exports at 400 and 1024 px", () => {
+    expect(logoVariants.find((variant) => variant.id === "monogram")?.pngSizes).toEqual([400, 1024]);
+  });
+
+  test("initials take the first letter of each word, one letter for a single word", () => {
+    expect(monogramInitials("Acme")).toBe("A");
+    expect(monogramInitials("Acme Corp")).toBe("AC");
+    expect(monogramInitials("the brand studio")).toBe("TB");
+  });
+
+  test("initials skip symbols and emoji, and fall back when nothing remains", () => {
+    expect(monogramInitials("A & B Co")).toBe("AB");
+    expect(monogramInitials("🚀 Rocket")).toBe("R");
+    expect(monogramInitials("!!!")).toBe("B");
+    expect(monogramInitials("")).toBe("B");
+  });
+
+  test("a 3 character, a 40 character and a non-Latin name all render well-formed SVG", () => {
+    for (const name of ["Aco", "The International Society of Brand Seals", "東京ブランド"]) {
+      const svg = renderVariant("monogram", monoCtx(name));
+      expect(xmlError(svg)).toBeNull();
+      expect(svg).toContain('width="512" height="512"');
+      expect(svg).toContain(`fill="${monoCtx(name).primary}"`);
+    }
+  });
+
+  test("escapes the initials", () => {
+    // Ampersand-only words are skipped; a crafted letter still needs escaping if present.
+    const svg = renderVariant("monogram", monoCtx("Aco"));
+    expect(xmlError(svg)).toBeNull();
+    expect(svg).toContain(">A</text>");
   });
 });

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Monogram logo variant: the first one or two letters of the brand name in the heading font, centered in a circle, for avatars when there is no mark, exported as SVG, PNG (400 and 1024) and PDF in the logo pack.
 - GIMP palette (`.gpl`) import in Color Studio: paste a DesignHub, Inkscape or Krita palette into the existing import dialog to restore the same colors and names.
 - Qt Quick export (`Theme.qml`): a singleton `QtObject` with the palette and the light and dark semantic roles as `readonly property color` entries in `#AARRGGBB` order, plus spacing and radius numbers.
 - Duotone effect in the Effects Lab: an SVG filter that maps photo shadows and highlights to two brand colors (`feColorMatrix` plus `feComponentTransfer`), with strength, a before/after photo preview, and the filter markup in every export format and in `effects.css`.
