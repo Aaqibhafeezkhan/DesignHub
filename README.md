@@ -143,6 +143,7 @@ A typical design session bounces between a font site, a palette generator, a con
 - Color blindness preview (protanopia, deuteranopia, tritanopia, achromatopsia)
 - Exports: **CSS variables, Tailwind, JSON tokens, SVG gradient**, a **Markdown palette table** (`.md`), a **GIMP / Inkscape palette** (`.gpl`), an **Adobe Swatch Exchange** file (`.ase`), a **Sketch palette**, **Procreate swatches**, a **Krita palette**, a **Paint.NET palette** and a **PNG swatch strip**
 - Markdown tables include color names, HEX, OKLCH and the selected notation, with optional **50–950** shade rows. Preview, copy or download them from the Export tab.
+- Live UI preview on the Export tab: a card, button, link and input in light and dark, painted from the same semantic roles as the themed exports, with the contrast ratio on each surface
 
 ### Icon Studio
 

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- UI preview on the Color Studio export tab: a card, button, link and input drawn from the same `roleColor()` mapping the themed exports use, in light and dark, with the WCAG contrast of text on each surface.
 - Weight comparison strip in the Typography specimen view: one row per static face or variable named instance, labelled with its numeric weight and driven by the sample text.
 - Installed-app troubleshooting in the [troubleshooting guide](docs/troubleshooting.md#the-installed-app): missing install button, `.designhub.json` not opening, share target missing, stale service worker after an update, and resetting the offline cache, with Chrome, Edge and Safari steps where they differ.
 - VS Code color theme export (`brand-color-theme.json`): workbench `colors` for the editor, sidebar and status bar, plus `tokenColors` for comments, strings, keywords, functions and numbers from the semantic roles, with `type` set to `light` or `dark` from the background and every syntax color at least 4.5:1 against it.

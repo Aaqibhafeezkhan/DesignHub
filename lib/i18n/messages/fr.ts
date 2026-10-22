@@ -529,6 +529,17 @@ export const fr = {
   "colors.export.format.svg": "Dégradé SVG",
   "colors.export.format.gpl": "Palette GIMP",
   "colors.export.format.markdown": "Markdown",
+  "colors.export.preview.title": "Aperçu de l'interface",
+  "colors.export.preview.label": "Aperçu de la palette dans l'interface",
+  "colors.export.preview.hint":
+    "Carte, bouton, lien et champ dessinés avec les mêmes rôles sémantiques que les exports, en clair et sombre.",
+  "colors.export.preview.light": "Clair",
+  "colors.export.preview.dark": "Sombre",
+  "colors.export.preview.card": "Carte",
+  "colors.export.preview.button": "Bouton",
+  "colors.export.preview.link": "Lien",
+  "colors.export.preview.input": "Champ",
+  "colors.export.preview.contrast": "Contraste {ratio}",
 
   "share.button": "Copier le lien de partage",
   "share.buttonHint": "Copie un lien qui importe cette marque comme un nouveau projet",

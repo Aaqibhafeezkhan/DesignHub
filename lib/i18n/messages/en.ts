@@ -536,6 +536,17 @@ export const en = {
   "colors.export.format.svg": "SVG gradient",
   "colors.export.format.gpl": "GIMP palette",
   "colors.export.format.markdown": "Markdown",
+  "colors.export.preview.title": "UI preview",
+  "colors.export.preview.label": "Palette UI preview",
+  "colors.export.preview.hint":
+    "Card, button, link and input drawn from the same semantic roles the exports use, in light and dark.",
+  "colors.export.preview.light": "Light",
+  "colors.export.preview.dark": "Dark",
+  "colors.export.preview.card": "Card",
+  "colors.export.preview.button": "Button",
+  "colors.export.preview.link": "Link",
+  "colors.export.preview.input": "Input",
+  "colors.export.preview.contrast": "Contrast {ratio}",
 
   // Share links
   "share.button": "Copy share link",
