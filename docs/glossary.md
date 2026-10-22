@@ -41,3 +41,5 @@ Short definitions of the terms DesignHub uses, in alphabetical order. Each entry
 **Type scale**: A set of font sizes made by multiplying a base size by a fixed ratio, such as 1.25, step by step. DesignHub's scale is fluid, with one ratio for small screens and another for large ones. Build it in the [Typography Studio](../README.md#typography-studio).
 
 **Variable font**: A single font file with continuous axes, such as weight (`wght`) or width (`wdth`), instead of separate files per style. The [Typography Studio](../README.md#typography-studio) has a slider for every axis.
+
+**Size-adjust fallback**: A local `@font-face` whose `size-adjust` and metric overrides make a system font (Arial, Times New Roman or Courier New) occupy the same space as a webfont, so layout does not jump while the webfont loads. See [typography fallbacks](typography-fallbacks.md).
