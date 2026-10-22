@@ -4,6 +4,7 @@ import { Brush, ChevronDown, Download, ImageDown, Loader2, Paintbrush, Palette, 
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import { PalettePreview } from "@/components/colors/palette-preview";
 import { ExportPanel } from "@/components/export/export-panel";
 import { useI18n } from "@/components/layout/locale-provider";
 import { Button } from "@/components/ui/button";
@@ -201,6 +202,7 @@ export function ColorExport() {
         </Popover>
       </div>
       <p className="text-xs text-subtle-foreground">{t("colors.export.notation", { format: format.toUpperCase() })}</p>
+      <PalettePreview />
       <ExportPanel formats={formats} label={t("colors.export.formatLabel")} />
     </div>
   );

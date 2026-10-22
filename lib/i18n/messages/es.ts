@@ -524,6 +524,17 @@ export const es = {
   "colors.export.format.svg": "Degradado SVG",
   "colors.export.format.gpl": "Paleta de GIMP",
   "colors.export.format.markdown": "Markdown",
+  "colors.export.preview.title": "Vista previa de la interfaz",
+  "colors.export.preview.label": "Vista previa de la paleta en la interfaz",
+  "colors.export.preview.hint":
+    "Tarjeta, botón, enlace y campo dibujados con los mismos roles semánticos que usan las exportaciones, en claro y oscuro.",
+  "colors.export.preview.light": "Claro",
+  "colors.export.preview.dark": "Oscuro",
+  "colors.export.preview.card": "Tarjeta",
+  "colors.export.preview.button": "Botón",
+  "colors.export.preview.link": "Enlace",
+  "colors.export.preview.input": "Campo",
+  "colors.export.preview.contrast": "Contraste {ratio}",
 
   "share.button": "Copiar enlace para compartir",
   "share.buttonHint": "Copia un enlace que importa esta marca como un proyecto nuevo",

@@ -520,6 +520,17 @@ export const hi = {
   "colors.export.format.svg": "SVG ग्रेडिएंट",
   "colors.export.format.gpl": "GIMP पैलेट",
   "colors.export.format.markdown": "Markdown",
+  "colors.export.preview.title": "UI पूर्वावलोकन",
+  "colors.export.preview.label": "पैलेट UI पूर्वावलोकन",
+  "colors.export.preview.hint":
+    "कार्ड, बटन, लिंक और इनपुट उन्हीं सिमेंटिक भूमिकाओं से बने हैं जो एक्सपोर्ट उपयोग करते हैं, हल्के और गहरे दोनों में।",
+  "colors.export.preview.light": "हल्का",
+  "colors.export.preview.dark": "गहरा",
+  "colors.export.preview.card": "कार्ड",
+  "colors.export.preview.button": "बटन",
+  "colors.export.preview.link": "लिंक",
+  "colors.export.preview.input": "इनपुट",
+  "colors.export.preview.contrast": "कंट्रास्ट {ratio}",
 
   "share.button": "शेयर लिंक कॉपी करें",
   "share.buttonHint": "एक ऐसा लिंक कॉपी करें जो इस ब्रांड को नए प्रोजेक्ट के रूप में इंपोर्ट करता है",
