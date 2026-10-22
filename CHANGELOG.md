@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Duotone effect in the Effects Lab: an SVG filter that maps photo shadows and highlights to two brand colors (`feColorMatrix` plus `feComponentTransfer`), with strength, a before/after photo preview, and the filter markup in every export format and in `effects.css`.
 - Buy Me a Coffee page cover template (1200 x 400) in the Social Media Studio, with a covered avatar zone and the call to action drawn as a support button.
 - Ghost publication cover template (2000 x 1000) in the Social Media Studio, with the logo, publication name and a description wrapped to three lines.
 

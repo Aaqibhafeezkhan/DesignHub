@@ -18,7 +18,8 @@ export type EffectKind =
   | "selection"
   | "scroll-shadow"
   | "button-press"
-  | "link-underline";
+  | "link-underline"
+  | "duotone";
 
 export type GlassSettings = {
   blur: number;
@@ -250,6 +251,16 @@ export type ButtonPressSettings = {
   radius: number;
 };
 
+/** A two-color image filter: shadows take one color and highlights take another. */
+export type DuotoneSettings = {
+  /** Color the darkest parts of the photo become. */
+  shadow: string;
+  /** Color the brightest parts of the photo become. */
+  highlight: string;
+  /** 0 leaves the photo unchanged, 1 applies the duotone colors fully. */
+  strength: number;
+};
+
 /** A link underline: thickness, offset and color, which grows across the text on hover. */
 export type LinkUnderlineSettings = {
   /** Underline and link color. Must reach 4.5:1 against the page. */
@@ -281,6 +292,7 @@ export type EffectSettingsMap = {
   "scroll-shadow": ScrollShadowSettings;
   "button-press": ButtonPressSettings;
   "link-underline": LinkUnderlineSettings;
+  duotone: DuotoneSettings;
 };
 
 /** State from other studios an effect may build on. Effects read it here instead of copying it into their settings. */
