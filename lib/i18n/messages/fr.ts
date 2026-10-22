@@ -396,10 +396,12 @@ export const fr = {
   "colors.tag.Luxury": "Luxe",
   "colors.tag.Monochrome": "Monochrome",
   "colors.import.title": "Importer une palette",
-  "colors.import.description": "Collez une URL Coolors ou un texte contenant des codes hexadécimaux.",
+  "colors.import.description":
+    "Collez une URL Coolors, une palette GIMP .gpl ou un texte contenant des codes hexadécimaux.",
   "colors.import.value": "Texte de la palette à importer",
   "colors.import.tooFew": "Importez au moins 2 couleurs",
-  "colors.import.tooFewDescription": "Collez une URL Coolors ou un texte contenant au moins 2 codes hexadécimaux.",
+  "colors.import.tooFewDescription":
+    "Collez une URL Coolors, une palette GIMP .gpl ou un texte contenant au moins 2 codes hexadécimaux.",
   "colors.import.done": "Palette importée",
   "colors.import.dropped.one": "{kept} couleurs importées et {count} couleur en trop ignorée.",
   "colors.import.dropped.other": "{kept} couleurs importées et {count} couleurs en trop ignorées.",
