@@ -35,7 +35,14 @@ import {
   toYaml,
   yamlString,
 } from "@/lib/tokens/formats";
-import { roleColor, toGodotTheme, toMauiColors, toQtQuickTheme, toWinUiTheme } from "@/lib/tokens/native";
+import {
+  roleColor,
+  toGodotTheme,
+  toMauiColors,
+  toQtQuickTheme,
+  toWindowsTerminalScheme,
+  toWinUiTheme,
+} from "@/lib/tokens/native";
 import { xmlError } from "@/lib/test/xml";
 import type { DesignTokens } from "@/types/tokens";
 
@@ -1151,6 +1158,69 @@ describe("Unity USS", () => {
       expect(value).toMatch(/^(?:#[0-9a-f]{3,8}|rgba?\([^)]+\)|var\([^)]+\)|0|\d+(?:\.\d+)?px)$/i);
     });
     expect(code).toContain("rgba(");
+  });
+});
+
+describe("Windows Terminal", () => {
+  const ansiKeys = [
+    "black",
+    "red",
+    "green",
+    "yellow",
+    "blue",
+    "purple",
+    "cyan",
+    "white",
+    "brightBlack",
+    "brightRed",
+    "brightGreen",
+    "brightYellow",
+    "brightBlue",
+    "brightPurple",
+    "brightCyan",
+    "brightWhite",
+  ] as const;
+
+  test("is registered in the Export Engine", () => {
+    const format = tokenFormats(tokens()).find((item) => item.id === "windows-terminal");
+    expect(format?.filename).toBe("scheme.json");
+    expect(format?.language).toBe("json");
+  });
+
+  test("writes a schemes entry with all sixteen ANSI keys", () => {
+    const json = JSON.parse(toWindowsTerminalScheme(tokens()));
+    expect(json.schemes).toHaveLength(1);
+    const scheme = json.schemes[0] as Record<string, string>;
+    expect(scheme.name).toBe("Acme Labs");
+    expect(scheme.background).toMatch(/^#[0-9a-f]{6}$/i);
+    expect(scheme.foreground).toMatch(/^#[0-9a-f]{6}$/i);
+    expect(scheme.cursorColor).toMatch(/^#[0-9a-f]{6}$/i);
+    for (const key of ansiKeys) {
+      expect(scheme[key]).toMatch(/^#[0-9a-f]{6}$/i);
+    }
+  });
+
+  test("keeps foreground on background at least 4.5:1", () => {
+    const scheme = JSON.parse(toWindowsTerminalScheme(tokens())).schemes[0] as {
+      background: string;
+      foreground: string;
+    };
+    const ratio = contrastRatio(fromHex(scheme.foreground), fromHex(scheme.background));
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+  });
+
+  test("raises a weak foreground so normal text still reaches 4.5:1", () => {
+    const weak = tokens();
+    weak.semantic = [
+      { name: "primary", ref: "indigo", value: fromHex("#6366f1") },
+      { name: "background", ref: "indigo-2", value: fromHex("#0f172a") },
+      { name: "foreground", ref: "indigo", value: fromHex("#334155") },
+    ];
+    const scheme = JSON.parse(toWindowsTerminalScheme(weak)).schemes[0] as {
+      background: string;
+      foreground: string;
+    };
+    expect(contrastRatio(fromHex(scheme.foreground), fromHex(scheme.background))).toBeGreaterThanOrEqual(4.5);
   });
 });
 

@@ -14,6 +14,7 @@ import {
   toQtQuickTheme,
   toSwiftUITheme,
   toTokensStudio,
+  toWindowsTerminalScheme,
   toWinUiTheme,
   type RoleColor,
 } from "@/lib/tokens/native";
@@ -1983,6 +1984,13 @@ export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
     { id: "qml", label: "Qt Quick", filename: "Theme.qml", language: "qml", code: toQtQuickTheme(tokens) },
     { id: "godot", label: "Godot", filename: "theme.tres", language: "text", code: toGodotTheme(tokens) },
     { id: "uss", label: "Unity USS", filename: "theme.uss", language: "css", code: toUnityUss(tokens) },
+    {
+      id: "windows-terminal",
+      label: "Windows Terminal",
+      filename: "scheme.json",
+      language: "json",
+      code: toWindowsTerminalScheme(tokens),
+    },
     { id: "json", label: "JSON tokens", filename: "tokens.json", language: "json", code: toJsonTokens(tokens) },
     { id: "yaml", label: "YAML", filename: "tokens.yaml", language: "yaml", code: toYaml(tokens) },
     {
