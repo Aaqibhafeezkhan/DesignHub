@@ -1,7 +1,14 @@
 import { describe, expect, test } from "vitest";
 
 import { fromHex } from "@/lib/color/color";
-import { toComposeTheme, toFlutterTheme, toQtQuickTheme, toSwiftUITheme, toTokensStudio } from "@/lib/tokens/native";
+import {
+  toComposeTheme,
+  toFlutterTheme,
+  toGodotTheme,
+  toQtQuickTheme,
+  toSwiftUITheme,
+  toTokensStudio,
+} from "@/lib/tokens/native";
 import type { DesignTokens } from "@/types/tokens";
 
 const shade = (step: number, hex: string) => ({ step, value: fromHex(hex) });
@@ -89,6 +96,16 @@ describe("native formats", () => {
     expect(code).toContain('readonly property color lightPrimary: "#FF6366F1"');
     expect(code).toContain('readonly property color darkPrimary: "#FF6366F1"');
     expect(code).toContain("readonly property real spacing0_5: 2");
+  });
+
+  test("Godot Theme colors are unique with Color(r, g, b, a) floats", () => {
+    const code = toGodotTheme(tokens);
+    const ids = identifiers(code, /AcmeLabs\/colors\/([A-Za-z_][A-Za-z0-9_]*)/g);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(code.startsWith('[gd_resource type="Theme"')).toBe(true);
+    expect(code).toContain("AcmeLabs/colors/indigo_250 = Color(");
+    expect(code).toContain("AcmeLabs/colors/light_primary = Color(");
+    expect(code).toMatch(/Color\([0-9.]+, [0-9.]+, [0-9.]+, [0-9.]+\)/);
   });
 
   test("Tokens Studio resolves semantic aliases into the palette", () => {
