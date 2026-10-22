@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { fromHex } from "@/lib/color/color";
+import { contrastRatio, fromHex } from "@/lib/color/color";
 import {
   toComposeTheme,
   toFlutterTheme,
@@ -8,6 +8,7 @@ import {
   toQtQuickTheme,
   toSwiftUITheme,
   toTokensStudio,
+  toWindowsTerminalScheme,
 } from "@/lib/tokens/native";
 import type { DesignTokens } from "@/types/tokens";
 
@@ -106,6 +107,32 @@ describe("native formats", () => {
     expect(code).toContain("AcmeLabs/colors/indigo_250 = Color(");
     expect(code).toContain("AcmeLabs/colors/light_primary = Color(");
     expect(code).toMatch(/Color\([0-9.]+, [0-9.]+, [0-9.]+, [0-9.]+\)/);
+  });
+
+  test("Windows Terminal scheme has sixteen ANSI colors and 4.5:1 text", () => {
+    const scheme = JSON.parse(toWindowsTerminalScheme(tokens)).schemes[0] as Record<string, string>;
+    expect(scheme.name).toBe("Acme Labs");
+    for (const key of [
+      "black",
+      "red",
+      "green",
+      "yellow",
+      "blue",
+      "purple",
+      "cyan",
+      "white",
+      "brightBlack",
+      "brightRed",
+      "brightGreen",
+      "brightYellow",
+      "brightBlue",
+      "brightPurple",
+      "brightCyan",
+      "brightWhite",
+    ]) {
+      expect(scheme[key]).toMatch(/^#[0-9a-f]{6}$/i);
+    }
+    expect(contrastRatio(fromHex(scheme.foreground!), fromHex(scheme.background!))).toBeGreaterThanOrEqual(4.5);
   });
 
   test("Tokens Studio resolves semantic aliases into the palette", () => {
