@@ -6,24 +6,15 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useFontMeta } from "@/hooks/use-font-catalog";
+import { WEIGHT_NAMES, listFamilyWeights } from "@/lib/typography/compare";
 import { useTypographyStore } from "@/store/typography-store";
 import type { FontFamily } from "@/types/typography";
 
-export const weightNames: Record<number, string> = {
-  100: "Thin",
-  200: "Extra light",
-  300: "Light",
-  400: "Regular",
-  500: "Medium",
-  600: "Semibold",
-  700: "Bold",
-  800: "Extra bold",
-  900: "Black",
-};
+export const weightNames = WEIGHT_NAMES;
 
 /** The static weights a family offers, once each and in ascending order. */
 export function availableWeights(meta: FontFamily | undefined): number[] {
-  return meta?.weights.length ? [...new Set(meta.weights)].sort((a, b) => a - b) : [400];
+  return listFamilyWeights(meta);
 }
 
 export function WeightPicker() {
