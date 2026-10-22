@@ -9,7 +9,7 @@
 An open-source, local-first design & brand identity toolkit.
 Build a brand, then everything it needs: logo variants, mockups, social assets, a brand book and design tokens. Plus typography, color, icons, backgrounds, effects, SVG and accessibility tools, in one fast, keyboard-first workspace.
 
-[Features](#features) · [Screenshots](#screenshots) · [Quick start](#quick-start) · [Roadmap](https://github.com/yakew7/DesignHub/blob/main/ROADMAP.md) · [FAQ](https://github.com/yakew7/DesignHub/blob/main/docs/faq.md) · [Troubleshooting](https://github.com/yakew7/DesignHub/blob/main/docs/troubleshooting.md) · [Glossary](https://github.com/yakew7/DesignHub/blob/main/docs/glossary.md) · [Self-hosting](https://github.com/yakew7/DesignHub/blob/main/docs/self-hosting.md) · [Contributing](https://github.com/yakew7/DesignHub/blob/main/CONTRIBUTING.md). [Translation Guide](docs/translating.md)
+[Features](#features) · [Screenshots](#screenshots) · [Quick start](#quick-start) · [Roadmap](https://github.com/yakew7/DesignHub/blob/main/ROADMAP.md) · [FAQ](https://github.com/yakew7/DesignHub/blob/main/docs/faq.md) · [Troubleshooting](https://github.com/yakew7/DesignHub/blob/main/docs/troubleshooting.md) ([installed app](https://github.com/yakew7/DesignHub/blob/main/docs/troubleshooting.md#the-installed-app)) · [Glossary](https://github.com/yakew7/DesignHub/blob/main/docs/glossary.md) · [Self-hosting](https://github.com/yakew7/DesignHub/blob/main/docs/self-hosting.md) · [Contributing](https://github.com/yakew7/DesignHub/blob/main/CONTRIBUTING.md). [Translation Guide](docs/translating.md)
 
 [![CI](https://github.com/yakew7/DesignHub/actions/workflows/ci.yml/badge.svg)](https://github.com/yakew7/DesignHub/actions/workflows/ci.yml)
 ![MIT License](https://img.shields.io/badge/license-MIT-6366f1)
@@ -273,7 +273,7 @@ It imports the same generators the app uses, so the files match what the Export 
 
 Production builds register a service worker that precaches the prerendered routes and Next.js static assets. Google Fonts and Iconify responses are cached at runtime, so a studio that has been visited online can be reopened while offline.
 
-Installed in Chromium, the app also registers as a handler for `.designhub.json` files (double click one to open the import prompt) and as a share target for project files. The icon menu also jumps straight to Colors, Typography, Brand Projects and the Export Engine. Both file features are handled on the device, validate and sanitize the file like a normal import, and ask before adding anything.
+Installed in Chromium, the app also registers as a handler for `.designhub.json` files (double click one to open the import prompt) and as a share target for project files. The icon menu also jumps straight to Colors, Typography, Brand Projects and the Export Engine. Both file features are handled on the device, validate and sanitize the file like a normal import, and ask before adding anything. If install, file open, share target or a stale offline cache misbehaves, see [The installed app](docs/troubleshooting.md#the-installed-app).
 
 The service worker is generated after `next build` from the current Next.js build ID. Its caches are versioned by that build ID, and old DesignHub caches are removed when a new worker activates.
 
