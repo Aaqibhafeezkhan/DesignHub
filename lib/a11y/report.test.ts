@@ -14,6 +14,7 @@ import {
   reportToMarkdown,
   type A11yReportInput,
 } from "@/lib/a11y/report";
+import { headingSection } from "@/lib/a11y/headings";
 import { motionSection } from "@/lib/a11y/motion";
 import { textSpacingSection } from "@/lib/a11y/text-spacing";
 import { targetsSection } from "@/lib/a11y/targets";
@@ -52,6 +53,10 @@ const report = buildReport(input, {
   textSpacing: textSpacingSection(input.typography),
   motion: motionSection(effectDefaults),
   touchTargets: targetsSection(input.targets, input.targetGap),
+  headings: headingSection([
+    { title: "Cover", html: "<h1>Cover</h1><p>Text</p>" },
+    { title: "Downloads", html: "<h1>Downloads</h1><h2>Logo</h2><h2>Design tokens</h2>" },
+  ]),
 });
 
 const rows = (markdown: string) => markdown.split("\n").map((line) => line.split(/(?<!\\)\|/).map((c) => c.trim()));
@@ -168,6 +173,7 @@ describe("reportToMarkdown", () => {
       "## WCAG 1.4.12 Text Spacing (AA)",
       "## Reduced motion (prefers-reduced-motion)",
       "## Touch targets",
+      "## Brand book heading structure",
     ]);
     expect(markdown).toContain("2026-01-01T00:00:00.000Z");
   });
@@ -280,5 +286,28 @@ describe("motion in the report", () => {
     });
     expect(reportToMarkdown(none)).toContain("no effect moves with the current Effects Lab settings");
     expect(reportToHtml(none)).toContain("No effect moves with the current Effects Lab settings.");
+  });
+});
+
+describe("brand book headings in the report", () => {
+  test("Markdown and HTML list the criterion and every problem row", () => {
+    const markdown = reportToMarkdown(report);
+    expect(markdown).toContain("## Brand book heading structure");
+    expect(markdown).toContain("2 pages checked");
+    expect(markdown).toContain("✅ Pass: every page passes.");
+    const html = reportToHtml(report);
+    expect(html).toContain('<h2 id="headings">Brand book heading structure</h2>');
+    expect(html).toContain('<span class="badge pass">Pass</span>');
+  });
+
+  test("a failing page lists its problems in both reports", () => {
+    const failing = buildReport(input, {
+      ...report.sections,
+      headings: headingSection([{ title: "Logo usage", html: "<h1>Logo</h1><h1>Logo again</h1><h3>Care</h3>" }]),
+    });
+    expect(reportToMarkdown(failing)).toContain("| Logo usage | The page has 2 h1 elements; it needs exactly one. |");
+    expect(reportToMarkdown(failing)).toContain("| Logo usage | The page jumps from h1 to h3, skipping a level. |");
+    expect(reportToHtml(failing)).toContain("Brand book heading problems");
+    expect(reportToHtml(failing)).toContain("The page has 2 h1 elements; it needs exactly one.");
   });
 });
