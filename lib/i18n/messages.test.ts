@@ -44,8 +44,8 @@ describe("message catalogs", () => {
     }
   });
 
-  it("translates the Brand Studio and the home page in every locale", () => {
-    const areas = ["brand.", "home.", "error.svg.", "error.tokens."];
+  it("translates the Brand Studio, the home page and the Effects Lab picker and fields in every locale", () => {
+    const areas = ["brand.", "home.", "error.svg.", "error.tokens.", "effects."];
     const keys = Object.keys(en).filter((key) => areas.some((area) => key.startsWith(area)));
     for (const locale of ["es", "fr", "hi"] as const) {
       const missing = keys.filter((key) => !Object.hasOwn(catalogs[locale], key));
