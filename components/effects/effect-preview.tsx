@@ -25,6 +25,7 @@ const backdrops: { value: Backdrop; label: string }[] = [
 
 export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind: EffectKind }) {
   const chosen = useEffectsStore((state) => state.backdrop);
+  const scrimText = useEffectsStore((state) => state.settings.scrim.text);
   const setBackdrop = useEffectsStore((state) => state.setBackdrop);
   const surface = effect?.surface;
   const plain = Boolean(effect?.plainBackdrop);
@@ -44,7 +45,11 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
             ? `${PREVIEW_SELECTOR} .dh-effect-link`
             : kind === "duotone"
               ? `${PREVIEW_SELECTOR} .dh-effect-duotone`
-              : PREVIEW_SELECTOR;
+              : kind === "scrim"
+                ? `${PREVIEW_SELECTOR} .dh-effect-scrim`
+                : kind === "card-tilt"
+                  ? `${PREVIEW_SELECTOR} .dh-effect-tilt`
+                  : PREVIEW_SELECTOR;
 
   return (
     <>
@@ -138,6 +143,22 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
                   After
                 </figcaption>
               </figure>
+            </div>
+          ) : kind === "card-tilt" ? (
+            <>
+              <h3 className="font-display text-2xl font-semibold">Hover the card.</h3>
+              <div className="dh-effect-tilt mt-2 flex aspect-[3/2] w-full flex-col justify-end p-4 text-white">
+                <p className="font-display text-lg font-semibold">Tilts toward you</p>
+                <p className="text-sm opacity-90">The glare follows the light.</p>
+              </div>
+            </>
+          ) : kind === "scrim" ? (
+            <div
+              className="dh-effect-scrim flex aspect-[4/3] w-full flex-col justify-end rounded-md bg-cover bg-center p-4"
+              style={{ backgroundImage: `url("${EFFECT_PHOTO_DATA_URL}")`, color: scrimText }}
+            >
+              <h3 className="font-display text-xl font-semibold">Text that stays readable.</h3>
+              <p className="text-sm">A scrim darkens the photo behind it.</p>
             </div>
           ) : (
             <>

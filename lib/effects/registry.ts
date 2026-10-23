@@ -1,5 +1,6 @@
 import { border } from "@/lib/effects/border";
 import { buttonPress } from "@/lib/effects/button-press";
+import { cardTilt } from "@/lib/effects/card-tilt";
 import { defaultEffectContext, type AnyEffectDefinition, type EffectDefinition } from "@/lib/effects/define";
 import { duotone } from "@/lib/effects/duotone";
 import { focusRing } from "@/lib/effects/focus-ring";
@@ -12,6 +13,7 @@ import { inset } from "@/lib/effects/inset";
 import { linkUnderline } from "@/lib/effects/link-underline";
 import { longShadow } from "@/lib/effects/long-shadow";
 import { neumorphism } from "@/lib/effects/neumorphism";
+import { scrim } from "@/lib/effects/scrim";
 import { scrollbar } from "@/lib/effects/scrollbar";
 import { scrollShadow } from "@/lib/effects/scroll-shadow";
 import { selection } from "@/lib/effects/selection";
@@ -41,6 +43,8 @@ export const effectDefinitions: AnyEffectDefinition[] = [
   buttonPress,
   linkUnderline,
   duotone,
+  scrim,
+  cardTilt,
 ];
 
 export function generateEffect<K extends EffectKind>(

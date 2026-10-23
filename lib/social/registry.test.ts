@@ -1,5 +1,10 @@
 import { expect, test } from "vitest";
 
+import { brandSurface } from "@/lib/brand/theme";
+import { buildBrandTokens } from "@/lib/brand/tokens";
+import { measureText } from "@/lib/logo/measure";
+import { defaultSnapshot } from "@/lib/projects/snapshot";
+import { instagramHighlight } from "@/lib/social/templates/instagram-highlight";
 import { packTemplates } from "@/lib/social/pack";
 import { getSocialTemplate, socialPlatforms, socialTemplates } from "@/lib/social/registry";
 
@@ -27,6 +32,7 @@ test.each([
   ["twitch-banner", 1200, 480],
   ["mastodon-header", 1500, 500],
   ["instagram-portrait", 1080, 1350],
+  ["instagram-highlight", 1080, 1920],
   ["youtube-banner", 2560, 1440],
   ["reddit-banner", 1920, 384],
   ["tumblr-header", 3000, 1055],
@@ -56,4 +62,32 @@ test.each([
   const template = getSocialTemplate(id);
   expect(template).toMatchObject({ width, height });
   expect(packTemplates(null)).toContain(template);
+});
+
+test("the highlight cover shortens a long label to 12 characters", () => {
+  const { brand, colors, typography, tokens, effects, social } = defaultSnapshot();
+  const tokensForBrand = buildBrandTokens({
+    profile: brand.profile,
+    swatches: colors.swatches,
+    gradient: colors.gradient,
+    headingFont: typography.headingFont,
+    bodyFont: typography.bodyFont,
+    catalog: [],
+    rhythm: typography.rhythm,
+    scale: typography.scale,
+    radiusBase: tokens.settings.radiusBase,
+    spacingBase: tokens.settings.spacingBase,
+    shadowLayers: effects.settings.shadow.layers,
+  });
+  const svg = instagramHighlight.render({
+    brand: tokensForBrand,
+    surface: brandSurface(tokensForBrand, "light"),
+    mode: "light",
+    fontCss: "",
+    measure: measureText,
+    content: { ...social.content, name: "Brand", cta: "A very long highlight label indeed" },
+    layout: { padding: social.design.padding, background: social.design.background },
+  });
+  expect(svg).toContain("A very long…");
+  expect(svg).not.toContain("highlight label");
 });

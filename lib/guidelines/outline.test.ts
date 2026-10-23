@@ -75,8 +75,18 @@ describe("brand book navigation", () => {
         item.lookup(PDFName.of("Title"), PDFHexString).decodeText(),
       );
     const all = await titles([]);
-    expect(all[all.indexOf("Imagery") + 1]).toBe("Spacing & Layout");
+    expect(all[all.indexOf("Illustration") + 1]).toBe("Spacing & Layout");
     expect(await titles(["spacing-layout"])).not.toContain("Spacing & Layout");
+  });
+
+  test("bookmarks the Illustration page after Imagery unless it is switched off", async () => {
+    const titles = async (excluded: string[]) =>
+      outlineItems((await book(excluded)).pdf).map((item) =>
+        item.lookup(PDFName.of("Title"), PDFHexString).decodeText(),
+      );
+    const all = await titles([]);
+    expect(all[all.indexOf("Imagery") + 1]).toBe("Illustration");
+    expect(await titles(["illustration"])).not.toContain("Illustration");
   });
 
   test("bookmarks the Motion page after Spacing & Layout unless it is switched off", async () => {

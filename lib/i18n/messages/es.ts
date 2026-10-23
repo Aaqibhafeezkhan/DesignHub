@@ -174,6 +174,9 @@ export const es = {
   "projects.sort.newest": "Más recientes",
   "projects.import": "Importar",
   "projects.exportAll": "Exportar todo",
+  "projects.exportZip": "Exportar como ZIP",
+  "projects.exportZipHint":
+    "Un archivo .designhub.json por proyecto, con los mismos nombres que el guardado en carpeta",
   "projects.includeHistory": "Incluir historial",
   "projects.includeHistoryHint":
     "Añade a las exportaciones las versiones guardadas de cada proyecto. Los enlaces para compartir nunca las incluyen.",
@@ -218,6 +221,8 @@ export const es = {
   "projects.delete.description": "Se borra de este navegador. Podrás deshacerlo durante unos segundos.",
   "projects.toast.exported.one": "Se exportó {count} proyecto",
   "projects.toast.exported.other": "Se exportaron {count} proyectos",
+  "projects.toast.exportedZip.one": "Se exportó {count} proyecto como ZIP",
+  "projects.toast.exportedZip.other": "Se exportaron {count} proyectos como ZIP",
   "projects.toast.imported.one": "Se importó {count} proyecto",
   "projects.toast.imported.other": "Se importaron {count} proyectos",
   "projects.toast.tooLarge": "Ese archivo es demasiado grande para ser un proyecto.",
@@ -771,4 +776,89 @@ export const es = {
   "home.cta.contribute": "Contribuir",
   "home.footer.legal":
     "© {year} colaboradores de DesignHub · Publicado bajo la licencia MIT · Hecho para diseñadores, por diseñadores.",
+  "effects.picker.label": "Efecto",
+  "effects.picker.empty": "Aún no hay efectos.",
+  "effects.kind.glass.label": "Cristal",
+  "effects.kind.glass.description": "Cristal esmerilado: desenfoque del fondo, tinte y borde fino.",
+  "effects.kind.neumorphism.label": "Neumorfismo",
+  "effects.kind.neumorphism.description": "Superficies suaves en relieve iluminadas desde una dirección.",
+  "effects.kind.shadow.label": "Sombra",
+  "effects.kind.shadow.description": "Sombras de caja con varias capas y ajustes preestablecidos suaves.",
+  "effects.kind.inset.label": "Sombra interior",
+  "effects.kind.inset.description": "Sombras interiores para campos, huecos y estados pulsados.",
+  "effects.kind.glow.label": "Resplandor",
+  "effects.kind.glow.description": "Resplandor de estilo neón para tarjetas, botones y texto.",
+  "effects.kind.border.label": "Borde",
+  "effects.kind.border.description": "Bordes con degradado y animados, sin elementos adicionales.",
+  "effects.kind.grain.label": "Grano",
+  "effects.kind.grain.description": "Textura de grano de película superpuesta mediante un pseudoelemento.",
+  "effects.kind.long-shadow.label": "Sombra larga",
+  "effects.kind.long-shadow.description": "Sombras de diseño plano que se alargan en ángulo, para cajas y texto.",
+  "effects.kind.gradient-text.label": "Texto con degradado",
+  "effects.kind.gradient-text.description":
+    "Texto relleno con el degradado de Color Studio, con desplazamiento opcional.",
+  "effects.kind.skeleton.label": "Esqueleto",
+  "effects.kind.skeleton.description":
+    "Un marcador de posición de carga con destello en los colores neutros de tu marca.",
+  "effects.kind.text-outline.label": "Contorno de texto",
+  "effects.kind.text-outline.description":
+    "Texto con contorno, con copia de sombra desplazada opcional y un color sólido de reserva.",
+  "effects.kind.focus-ring.label": "Anillo de foco",
+  "effects.kind.focus-ring.description":
+    "Un anillo :focus-visible de dos tonos con comprobación de contraste WCAG integrada.",
+  "effects.kind.highlighter.label": "Marcador",
+  "effects.kind.highlighter.description":
+    "Una banda tipo marcador detrás del texto con grosor, desplazamiento y contraste ajustables.",
+  "effects.kind.scrollbar.label": "Barra de desplazamiento",
+  "effects.kind.scrollbar.description":
+    "Colores del control y de la pista, ancho y radio, con alternativa estándar y WebKit.",
+  "effects.kind.selection.label": "Selección",
+  "effects.kind.selection.description":
+    "El color de fondo y de texto del texto seleccionado, con comprobación de contraste 4.5:1.",
+  "effects.kind.scroll-shadow.label": "Sombra de desplazamiento",
+  "effects.kind.scroll-shadow.description":
+    "Sombras en los bordes que aparecen solo cuando hay más contenido por desplazar, sin JavaScript.",
+  "effects.kind.button-press.label": "Pulsación de botón",
+  "effects.kind.button-press.description":
+    "Una elevación al pasar el cursor y un estado pulsado con cambio de transformación y sombra, con alternativa para movimiento reducido.",
+  "effects.kind.link-underline.label": "Subrayado de enlace",
+  "effects.kind.link-underline.description":
+    "Un subrayado de enlace con grosor, desplazamiento y color que crece al pasar el cursor, con alternativa para movimiento reducido.",
+  "effects.kind.duotone.label": "Duotono",
+  "effects.kind.duotone.description":
+    "Asigna las sombras y las luces de una foto a dos colores de marca con un filtro SVG.",
+  "effects.kind.scrim.label": "Velo",
+  "effects.kind.scrim.description":
+    "Un degradado que oscurece la parte inferior o superior de una imagen para que el texto encima se lea bien.",
+  "effects.kind.card-tilt.label": "Inclinación de tarjeta",
+  "effects.kind.card-tilt.description":
+    "Una inclinación en perspectiva al pasar el cursor con un reflejo móvil, estática con movimiento reducido.",
+  "effects.field.gradient": "Degradado",
+  "effects.field.gradientColor": "Color del degradado {number}",
+  "effects.field.removeGradientColor": "Quitar el color del degradado {number}",
+  "effects.field.addGradientColor": "Añadir color al degradado",
+  "effects.badge.pass": "Cumple",
+  "effects.badge.fail": "No cumple",
+  "effects.focusRing.outer": "Anillo exterior",
+  "effects.focusRing.inner": "Anillo interior",
+  "effects.focusRing.width": "Grosor del anillo",
+  "effects.focusRing.offset": "Separación",
+  "effects.focusRing.background": "Fondo de la página",
+  "effects.focusRing.component": "Color del componente",
+  "effects.focusRing.title": "Indicador de foco (2.4.13, 1.4.11)",
+  "effects.focusRing.summary":
+    "Anillo exterior frente a la página {page}:1, frente al componente {component}:1. Ambos necesitan al menos {required}:1.",
+  "effects.focusRing.useSuggestion": "Usar {color}, el color más cercano que cumple",
+  "effects.scrollbar.thumb": "Control",
+  "effects.scrollbar.thumbHover": "Control al pasar el cursor",
+  "effects.scrollbar.track": "Pista",
+  "effects.scrollbar.width": "Ancho",
+  "effects.scrollbar.radius": "Radio del control",
+  "effects.scrollbar.title": "Contraste del control (1.4.11)",
+  "effects.scrollbar.summary": "Control frente a la pista: {ratio}:1. Se requiere al menos {required}:1.",
+  "effects.selection.background": "Fondo de la selección",
+  "effects.selection.text": "Texto seleccionado",
+  "effects.selection.page": "Fondo de la página",
+  "effects.selection.title": "Contraste del texto seleccionado (1.4.3)",
+  "effects.selection.summary": "Texto frente a la selección: {ratio}:1. Se requiere al menos {required}:1.",
 } satisfies Catalog;

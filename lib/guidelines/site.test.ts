@@ -9,7 +9,8 @@ import {
   offPaletteColor,
   textCombinations,
 } from "@/lib/guidelines/pages/color-usage";
-import { introductionPage } from "@/lib/guidelines/pages/intro";
+import { contentsRows, introductionPage } from "@/lib/guidelines/pages/intro";
+import { illustrationPage, illustrationStyle, PALETTE_SHARES } from "@/lib/guidelines/pages/illustration";
 import {
   BODY_MIN_LINE_HEIGHT,
   typeHierarchy,
@@ -277,9 +278,9 @@ describe("spacing and layout page", () => {
     expect(without.get("index.html")).not.toContain("Spacing &amp; Layout");
   });
 
-  test("numbers the page after Imagery and lists it in the contents", () => {
+  test("numbers the page after Illustration and lists it in the contents", () => {
     const { ctx } = guidelineContext("Acme Labs", []);
-    const imagery = ctx.contents.find((entry) => entry.id === "imagery");
+    const imagery = ctx.contents.find((entry) => entry.id === "illustration");
     const layout = ctx.contents.find((entry) => entry.id === "spacing-layout");
     expect(layout?.number).toBe((imagery?.number ?? 0) + 1);
     expect(introductionPage.render(ctx, 2)).toContain(">Spacing &amp; Layout</text>");
@@ -423,5 +424,83 @@ describe("motion page", () => {
       expect(svg).toContain("cubic-bezier(0.16, 1, 0.3, 1)");
       expect(svg).toContain(">17</text>");
     }
+  });
+});
+
+describe("illustration page", () => {
+  test("is in the site and its contents unless switched off", () => {
+    const { files } = site();
+    const page = files.get("illustration/index.html") ?? "";
+    expect(page).toContain("<h1>Illustration</h1>");
+    expect(page).toContain("<h2>LINE WEIGHT</h2>");
+    expect(page).toContain("<h2>CORNER STYLE</h2>");
+    expect(page).toContain("<h2>PALETTE USE</h2>");
+    expect(page).toContain("<h2>DO</h2>");
+    expect(page).toContain("<h2>DON'T</h2>");
+    expect(files.has("assets/pages/illustration.svg")).toBe(true);
+    expect(files.get("index.html")).toMatch(
+      /<a href="illustration\/index\.html"><span>[0-9]+<\/span> Illustration<\/a>/,
+    );
+
+    const without = site(["illustration"]).files;
+    expect(without.has("illustration/index.html")).toBe(false);
+    expect(without.has("assets/pages/illustration.svg")).toBe(false);
+    expect(without.get("index.html")).not.toContain("illustration/index.html");
+  });
+
+  test("numbers the page after Imagery, keeps the numbering in order and lists it", () => {
+    const { ctx } = guidelineContext("Acme Labs", []);
+    const imagery = ctx.contents.find((entry) => entry.id === "imagery");
+    const illustration = ctx.contents.find((entry) => entry.id === "illustration");
+    expect(illustration?.number).toBe((imagery?.number ?? 0) + 1);
+    expect(ctx.contents.map((entry) => entry.number)).toEqual(ctx.contents.map((_, index) => index + 1));
+    expect(introductionPage.render(ctx, 2)).toContain(">Illustration</text>");
+    const skipped = guidelineContext("Acme Labs", ["illustration"]).ctx.contents;
+    expect(skipped.map((entry) => entry.number)).toEqual(skipped.map((_, index) => index + 1));
+    expect(skipped.find((entry) => entry.id === "spacing-layout")?.number).toBe(illustration?.number);
+  });
+
+  test("the Introduction contents list still fits its card with the extra page", () => {
+    const { ctx } = guidelineContext("Acme Labs", []);
+    const rows = contentsRows(ctx.contents);
+    expect(rows.some((row) => row.entry.id === "illustration")).toBe(true);
+    expect(rows[1]!.baseline - rows[0]!.baseline).toBeGreaterThanOrEqual(22);
+    // The card runs from 240 to 880 in page units.
+    expect(rows.at(-1)!.baseline).toBeLessThan(880);
+  });
+
+  test("the style follows the brand radius: sharp, soft or round", () => {
+    expect(illustrationStyle(0)).toMatchObject({ corner: "sharp", weight: 2, cornerRadius: 0, join: "miter" });
+    expect(illustrationStyle(8)).toMatchObject({ corner: "soft", weight: 3, cornerRadius: 8, cap: "round" });
+    expect(illustrationStyle(16)).toMatchObject({ corner: "round", weight: 4, cornerRadius: 16 });
+    expect(illustrationStyle(9999).cornerRadius).toBe(24);
+    const weights = [0, 2, 3, 12, 13, 40].map((radius) => illustrationStyle(radius).weight);
+    expect(weights).toEqual([...weights].sort((a, b) => a - b));
+  });
+
+  test("palette shares add up to the whole artwork", () => {
+    expect(PALETTE_SHARES.reduce((sum, part) => sum + part.share, 0)).toBe(100);
+  });
+
+  test("renders well-formed SVG with the live brand colors and radius in light and dark", () => {
+    for (const mode of ["light", "dark"] as const) {
+      const { ctx } = guidelineContext("Acme Labs", [], mode);
+      const svg = illustrationPage.render(ctx, 17);
+      expect(xmlError(svg)).toBeNull();
+      expect(svg).toContain(`fill="${ctx.surface.background}"`);
+      expect(svg).toContain(`fill="${ctx.surface.primary}"`);
+      expect(svg).toContain(`fill="${ctx.surface.secondary}"`);
+      expect(svg).toContain(`rx="${illustrationStyle(ctx.brand.radius).cornerRadius}"`);
+      expect(svg).toContain(">17</text>");
+    }
+  });
+
+  test("a sharp brand draws sharp corners and mitred joins", () => {
+    const { ctx } = guidelineContext("Acme Labs", []);
+    const sharp = { ...ctx, brand: { ...ctx.brand, radius: 0 } };
+    const svg = illustrationPage.render(sharp, 5);
+    expect(svg).toContain('stroke-linejoin="miter"');
+    expect(svg).toContain('stroke-linecap="butt"');
+    expect(xmlError(svg)).toBeNull();
   });
 });

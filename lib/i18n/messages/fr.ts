@@ -175,6 +175,9 @@ export const fr = {
   "projects.sort.newest": "Les plus récents",
   "projects.import": "Importer",
   "projects.exportAll": "Tout exporter",
+  "projects.exportZip": "Exporter en ZIP",
+  "projects.exportZipHint":
+    "Un fichier .designhub.json par projet, nommé comme l’enregistrement automatique dans un dossier",
   "projects.includeHistory": "Inclure l'historique",
   "projects.includeHistoryHint":
     "Ajoute aux exports les versions enregistrées de chaque projet. Les liens de partage ne les contiennent jamais.",
@@ -220,6 +223,8 @@ export const fr = {
   "projects.delete.description": "Il est supprimé de ce navigateur. Vous pourrez annuler pendant quelques secondes.",
   "projects.toast.exported.one": "{count} projet exporté",
   "projects.toast.exported.other": "{count} projets exportés",
+  "projects.toast.exportedZip.one": "{count} projet exporté en ZIP",
+  "projects.toast.exportedZip.other": "{count} projets exportés en ZIP",
   "projects.toast.imported.one": "{count} projet importé",
   "projects.toast.imported.other": "{count} projets importés",
   "projects.toast.tooLarge": "Ce fichier est trop volumineux pour être un projet.",
@@ -781,4 +786,89 @@ export const fr = {
   "home.cta.contribute": "Contribuer",
   "home.footer.legal":
     "© {year} contributeurs de DesignHub · Publié sous licence MIT · Fait pour les designers, par des designers.",
+  "effects.picker.label": "Effet",
+  "effects.picker.empty": "Aucun effet pour le moment.",
+  "effects.kind.glass.label": "Verre",
+  "effects.kind.glass.description": "Verre dépoli : flou d'arrière-plan, teinte et bordure fine.",
+  "effects.kind.neumorphism.label": "Néomorphisme",
+  "effects.kind.neumorphism.description": "Surfaces douces en relief éclairées d'une seule direction.",
+  "effects.kind.shadow.label": "Ombre",
+  "effects.kind.shadow.description": "Ombres de boîte à plusieurs couches avec des préréglages doux.",
+  "effects.kind.inset.label": "Ombre intérieure",
+  "effects.kind.inset.description": "Ombres intérieures pour les champs, les creux et les états enfoncés.",
+  "effects.kind.glow.label": "Halo",
+  "effects.kind.glow.description": "Halo de style néon pour les cartes, les boutons et le texte.",
+  "effects.kind.border.label": "Bordure",
+  "effects.kind.border.description": "Bordures en dégradé et animées, sans élément supplémentaire.",
+  "effects.kind.grain.label": "Grain",
+  "effects.kind.grain.description": "Texture de grain de film superposée via un pseudo-élément.",
+  "effects.kind.long-shadow.label": "Ombre longue",
+  "effects.kind.long-shadow.description": "Ombres de design plat qui s'étirent en biais, pour les boîtes et le texte.",
+  "effects.kind.gradient-text.label": "Texte en dégradé",
+  "effects.kind.gradient-text.description":
+    "Texte rempli avec le dégradé de Color Studio, avec un défilement facultatif.",
+  "effects.kind.skeleton.label": "Squelette",
+  "effects.kind.skeleton.description":
+    "Un espace réservé de chargement scintillant aux couleurs neutres de votre marque.",
+  "effects.kind.text-outline.label": "Contour de texte",
+  "effects.kind.text-outline.description":
+    "Texte contouré, avec une copie d'ombre décalée facultative et une couleur pleine de secours.",
+  "effects.kind.focus-ring.label": "Anneau de focus",
+  "effects.kind.focus-ring.description":
+    "Un anneau :focus-visible à deux tons avec vérification du contraste WCAG intégrée.",
+  "effects.kind.highlighter.label": "Surligneur",
+  "effects.kind.highlighter.description":
+    "Une bande façon surligneur derrière le texte, avec épaisseur, décalage et contraste réglables.",
+  "effects.kind.scrollbar.label": "Barre de défilement",
+  "effects.kind.scrollbar.description":
+    "Couleurs du curseur et de la piste, largeur et rayon, avec une version standard et une version WebKit.",
+  "effects.kind.selection.label": "Sélection",
+  "effects.kind.selection.description":
+    "La couleur de fond et de texte du texte sélectionné, avec une vérification du contraste 4.5:1.",
+  "effects.kind.scroll-shadow.label": "Ombre de défilement",
+  "effects.kind.scroll-shadow.description":
+    "Ombres de bord qui n'apparaissent que s'il reste du contenu à faire défiler, sans JavaScript.",
+  "effects.kind.button-press.label": "Appui de bouton",
+  "effects.kind.button-press.description":
+    "Un soulèvement au survol et un état enfoncé avec changement de transformation et d'ombre, avec une solution pour le mouvement réduit.",
+  "effects.kind.link-underline.label": "Soulignement de lien",
+  "effects.kind.link-underline.description":
+    "Un soulignement de lien dont l'épaisseur, le décalage et la couleur se règlent et qui s'étend au survol, avec une solution pour le mouvement réduit.",
+  "effects.kind.duotone.label": "Duotone",
+  "effects.kind.duotone.description":
+    "Associe les ombres et les hautes lumières d'une photo à deux couleurs de marque avec un filtre SVG.",
+  "effects.kind.scrim.label": "Voile",
+  "effects.kind.scrim.description":
+    "Un dégradé qui assombrit le bas ou le haut d'une image pour que le texte reste lisible.",
+  "effects.kind.card-tilt.label": "Inclinaison de carte",
+  "effects.kind.card-tilt.description":
+    "Une inclinaison en perspective au survol avec un reflet mobile, fixe en mouvement réduit.",
+  "effects.field.gradient": "Dégradé",
+  "effects.field.gradientColor": "Couleur du dégradé {number}",
+  "effects.field.removeGradientColor": "Supprimer la couleur du dégradé {number}",
+  "effects.field.addGradientColor": "Ajouter une couleur au dégradé",
+  "effects.badge.pass": "Conforme",
+  "effects.badge.fail": "Non conforme",
+  "effects.focusRing.outer": "Anneau extérieur",
+  "effects.focusRing.inner": "Anneau intérieur",
+  "effects.focusRing.width": "Épaisseur de l'anneau",
+  "effects.focusRing.offset": "Décalage",
+  "effects.focusRing.background": "Fond de la page",
+  "effects.focusRing.component": "Couleur du composant",
+  "effects.focusRing.title": "Indicateur de focus (2.4.13, 1.4.11)",
+  "effects.focusRing.summary":
+    "Anneau extérieur contre la page {page}:1, contre le composant {component}:1. Les deux doivent atteindre au moins {required}:1.",
+  "effects.focusRing.useSuggestion": "Utiliser {color}, la couleur conforme la plus proche",
+  "effects.scrollbar.thumb": "Curseur",
+  "effects.scrollbar.thumbHover": "Curseur au survol",
+  "effects.scrollbar.track": "Piste",
+  "effects.scrollbar.width": "Largeur",
+  "effects.scrollbar.radius": "Rayon du curseur",
+  "effects.scrollbar.title": "Contraste du curseur (1.4.11)",
+  "effects.scrollbar.summary": "Curseur contre la piste : {ratio}:1. Au moins {required}:1 est requis.",
+  "effects.selection.background": "Fond de la sélection",
+  "effects.selection.text": "Texte sélectionné",
+  "effects.selection.page": "Fond de la page",
+  "effects.selection.title": "Contraste du texte sélectionné (1.4.3)",
+  "effects.selection.summary": "Texte contre la sélection : {ratio}:1. Au moins {required}:1 est requis.",
 } satisfies Catalog;

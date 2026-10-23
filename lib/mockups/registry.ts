@@ -2,6 +2,7 @@ import { billboard } from "@/lib/mockups/templates/billboard";
 import { browserTab } from "@/lib/mockups/templates/browser-tab";
 import { businessCard } from "@/lib/mockups/templates/business-card";
 import { coffeeCup } from "@/lib/mockups/templates/coffee-cup";
+import { deliveryVan } from "@/lib/mockups/templates/delivery-van";
 import { desktopDashboard } from "@/lib/mockups/templates/desktop-dashboard";
 import { emailSignature } from "@/lib/mockups/templates/email-signature";
 import { envelope } from "@/lib/mockups/templates/envelope";
@@ -9,12 +10,15 @@ import { idBadge } from "@/lib/mockups/templates/id-badge";
 import { letterhead } from "@/lib/mockups/templates/letterhead";
 import { laptopLanding } from "@/lib/mockups/templates/laptop-landing";
 import { lockScreenMockup } from "@/lib/mockups/templates/lock-screen";
+import { notebook } from "@/lib/mockups/templates/notebook";
 import { merch } from "@/lib/mockups/templates/merch";
 import { mobileApp } from "@/lib/mockups/templates/mobile-app";
 import { appStoreScreenshots } from "@/lib/mockups/templates/app-store";
+import { presentation } from "@/lib/mockups/templates/presentation";
 import { poster } from "@/lib/mockups/templates/poster";
 import { shoppingBag } from "@/lib/mockups/templates/shopping-bag";
 import { smartwatch } from "@/lib/mockups/templates/smartwatch";
+import { tradeShowBooth } from "@/lib/mockups/templates/trade-show-booth";
 import { sticker } from "@/lib/mockups/templates/sticker";
 import { tabletScreens } from "@/lib/mockups/templates/tablet";
 import type { MockupTemplate } from "@/lib/mockups/types";
@@ -27,8 +31,11 @@ export const mockupTemplates: MockupTemplate[] = [
   sticker,
   poster,
   billboard,
+  tradeShowBooth,
+  deliveryVan,
   merch,
   coffeeCup,
+  notebook,
   shoppingBag,
   idBadge,
   laptopLanding,
@@ -38,6 +45,7 @@ export const mockupTemplates: MockupTemplate[] = [
   smartwatch,
   lockScreenMockup,
   tabletScreens,
+  presentation,
   browserTab,
   emailSignature,
 ];

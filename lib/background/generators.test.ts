@@ -8,6 +8,7 @@ import { maxPackedCircles, packCircles } from "@/lib/background/generators/circl
 import { plaidBands } from "@/lib/background/generators/plaid";
 import { concentricArcLayout, maxConcentricArcs } from "@/lib/background/generators/arcs";
 import { rhombusTile, type RhombusFace } from "@/lib/background/generators/rhombus";
+import { grainGradientLayout, maxGrainStops } from "@/lib/background/generators/grain-gradient";
 import { hypotrochoid, maxSpirographPoints } from "@/lib/background/generators/spirograph";
 import { maxWaveLinePoints, maxWaveLines } from "@/lib/background/generators/wave-lines";
 import { truchetPaths } from "@/lib/background/generators/truchet";
@@ -53,6 +54,7 @@ describe.each([
   "rhombus",
   "wave-lines",
   "arcs",
+  "grain-gradient",
 ] as const)("%s", (kind) => {
   test("the same seed renders the same output", () => {
     for (const patch of [{ seed: 7 }, { seed: 7, rotation: 30, density: 100, scale: 2 }]) {
@@ -636,5 +638,29 @@ describe("arcs", () => {
     expect(backgroundCss(settings("arcs"))).toContain("data:image/svg+xml");
     const huge = renderBackgroundSvg(settings("arcs", { width: 3840, height: 2160, density: 100 }));
     expect((huge.match(/<path /g) ?? []).length).toBeLessThanOrEqual(maxConcentricArcs);
+  });
+});
+
+describe("grain-gradient", () => {
+  test("uses the seed for the angle and the stop order", () => {
+    const layouts = [1, 2, 3, 4].map((seed) => grainGradientLayout(settings("grain-gradient", { seed })));
+    expect(new Set(layouts.map((layout) => layout.angle)).size).toBeGreaterThan(1);
+    for (const layout of layouts)
+      expect([...layout.stops].sort()).toEqual([...settings("grain-gradient").colors].sort());
+  });
+
+  test("bounds the stops and adds the canvas color to a single-color palette", () => {
+    const many = Array.from({ length: 12 }, (_, i) => `#0000${(i + 10).toString(16)}`);
+    expect(grainGradientLayout(settings("grain-gradient", { colors: many })).stops).toHaveLength(maxGrainStops);
+    const single = grainGradientLayout(settings("grain-gradient", { colors: ["#ff0000"] })).stops;
+    expect([...single].sort()).toEqual(["#0b1020", "#ff0000"]);
+  });
+
+  test("draws the grain with feTurbulence and embeds no images", () => {
+    const svg = renderBackgroundSvg(settings("grain-gradient"));
+    expect(svg).toContain("<feTurbulence");
+    expect(svg).not.toContain("<image");
+    expect(svg).not.toContain("data:");
+    expect(svg.length).toBeLessThan(2500);
   });
 });

@@ -117,7 +117,7 @@ return guidelinePage(
 
 `section` is the label in the running header. Reuse an existing section name when the new page belongs with it (for example `Color` or `Typography`).
 
-**6. Register it.** In `lib/guidelines/registry.ts`, import the page and put it in the `guidelinePages` array. Its position in the array is its position in the book. Spacing & Layout sits after `imageryPage`, followed by `motionPage` and then `componentsPage`.
+**6. Register it.** In `lib/guidelines/registry.ts`, import the page and put it in the `guidelinePages` array. Its position in the array is its position in the book. Spacing & Layout sits after `illustrationPage` (which follows `imageryPage`), followed by `motionPage` and then `componentsPage`.
 
 ## Adding a page: checklist
 

@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 
 import { BorderControls } from "@/components/effects/border-controls";
 import { ButtonPressControls } from "@/components/effects/button-press-controls";
+import { CardTiltControls } from "@/components/effects/card-tilt-controls";
 import { DuotoneControls } from "@/components/effects/duotone-controls";
 import { FocusRingControls } from "@/components/effects/focus-ring-controls";
 import { GlassControls } from "@/components/effects/glass-controls";
@@ -13,6 +14,7 @@ import { InsetControls } from "@/components/effects/inset-controls";
 import { LinkUnderlineControls } from "@/components/effects/link-underline-controls";
 import { LongShadowControls } from "@/components/effects/long-shadow-controls";
 import { NeumorphismControls } from "@/components/effects/neumorphism-controls";
+import { ScrimControls } from "@/components/effects/scrim-controls";
 import { ScrollbarControls } from "@/components/effects/scrollbar-controls";
 import { ScrollShadowControls } from "@/components/effects/scroll-shadow-controls";
 import { SelectionControls } from "@/components/effects/selection-controls";
@@ -42,4 +44,6 @@ export const effectControls: Partial<Record<EffectKind, ComponentType>> = {
   "button-press": ButtonPressControls,
   "link-underline": LinkUnderlineControls,
   duotone: DuotoneControls,
+  scrim: ScrimControls,
+  "card-tilt": CardTiltControls,
 };

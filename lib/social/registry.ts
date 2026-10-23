@@ -1,4 +1,5 @@
 import { githubBannerStyles } from "@/lib/social/templates/github";
+import { instagramHighlight } from "@/lib/social/templates/instagram-highlight";
 import { instagramPortrait, instagramSquare, instagramStory } from "@/lib/social/templates/instagram";
 import { linkedinCover } from "@/lib/social/templates/linkedin-cover";
 import { ogTemplates } from "@/lib/social/templates/open-graph";
@@ -46,6 +47,7 @@ export const socialTemplates: SocialTemplate[] = [
   instagramSquare,
   instagramPortrait,
   instagramStory,
+  instagramHighlight,
   ...ogTemplates,
   productHuntGallery,
   productHuntThumbnail,
