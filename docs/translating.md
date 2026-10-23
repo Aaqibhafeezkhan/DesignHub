@@ -8,6 +8,8 @@ DesignHub stores its translations in `lib/i18n/messages/`. The English catalog, 
 
 Use the existing translation system instead of writing translated UI text directly in components.
 
+Some areas must be complete in every language, and a test fails when a key is missing: the Brand Studio and home page (`brand.`, `home.`), the SVG and token errors (`error.svg.`, `error.tokens.`) and the Effects Lab picker, shared fields and accessibility controls (`effects.`). Other areas fall back to English until someone translates them, so a studio at a time is a good first contribution.
+
 ## 2. Improve an existing translation
 
 1. Open `lib/i18n/messages/` and select the language file you want to improve, such as `es.ts`, `fr.ts`, or `hi.ts`.

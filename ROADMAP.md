@@ -1,12 +1,14 @@
 # Roadmap
 
+DesignHub 1.0.0 shipped seventeen studios. The next major version, 2.0.0, is about making them fewer, better and fully tested rather than adding more. The three groups below were the build order of 1.0.0, not separate versions.
+
 DesignHub grows one studio at a time. Every studio follows the same principles: open source, local first, no login, no backend, offline first, keyboard first and production ready.
 
 Have an idea, or want to help build something here? Open an issue or discussion - see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
-## V1 - Foundations ✅ _(released 1.0.0)_
+## Shipped in 1.0.0: Foundations ✅
 
 ### Typography
 
@@ -39,7 +41,7 @@ Have an idea, or want to help build something here? Open an issue or discussion 
 
 ---
 
-## V2 - Surfaces, effects, SVG & accessibility ✅ _(released in 1.0.0)_
+## Shipped in 1.0.0: Surfaces, effects, SVG & accessibility ✅
 
 ### Background Studio
 
@@ -69,7 +71,7 @@ Have an idea, or want to help build something here? Open an issue or discussion 
 
 ---
 
-## V3 - Brand platform ✅ _(released in 1.0.0)_
+## Shipped in 1.0.0: Brand platform ✅
 
 ### Brand Studio
 
@@ -108,7 +110,57 @@ Have an idea, or want to help build something here? Open an issue or discussion 
 
 ---
 
-## Future 🔭
+## 2.0.0 - Quality and consolidation 🎯
+
+**Goal:** fewer, better and fully tested studios. DesignHub stays local first, with no login and no backend. No AI is used unless a person pastes their own key, and nothing in the app calls a model without one.
+
+Follow the work by label: [issues labelled `v2.0.0`](https://github.com/yakew7/DesignHub/issues?q=is%3Aopen+label%3Av2.0.0).
+
+### Reduce
+
+- **Niche social templates**: keep about 20 core platforms (GitHub, LinkedIn, X, YouTube, Instagram, Open Graph, Product Hunt, Facebook, Bluesky, Discord, Twitch, Mastodon, Medium, Substack, DEV, Hashnode, Pinterest, Notion, Reddit, Telegram) and move the rest (Kick, Bandcamp, Etsy, Gumroad, Ko-fi, Tumblr, Patreon, Behance, Dribbble and similar) into a data-driven "more templates" group that the community owns.
+- **Overlapping backgrounds**: merge near-duplicates into one generator with a variant control (rings, concentric arcs and squares; argyle, plaid and checks; zigzag, chevron and squiggle), taking 39 generators to about 28 without losing a look.
+- **Duplicated framework converters**: one shared SVG-to-component converter module, shown in both the SVG Playground and Icon Studio.
+- **Token formats in tiers**: Core (CSS, SCSS, Tailwind, JS, JSON DTCG, Style Dictionary, Figma), Frameworks and Platforms. The least used are deprecated in 2.0 and removed in 2.1. New niche format requests are declined.
+- **Mockups**: about 14, with the object mockups (cup, bag, billboard, lock screen) folded into fewer parameterized templates.
+- **Dependencies**: replace the lazily loaded `@anthropic-ai/sdk` with a small `fetch` client in Brand DNA, so the bring-your-own-key providers share one request path, and audit the rest.
+
+### Add (quality only)
+
+- **Project file schema v2**: a versioned `.designhub.json`, IndexedDB schema and share-link format, with migrations from v1 and fixture-based migration tests. This is the breaking change that makes it 2.0.
+- **Extension points**: formats, generators, templates and mockups become small typed modules on one registry shape with one test harness each, and `lib/tokens/formats.ts` is split. This prepares a plugin system without shipping one.
+- **Test depth**: golden-file snapshot tests for every generator, template, mockup and format, component tests for the stores and flows, end to end flow tests (brand to export, import and export a project, offline, keyboard only) and coverage thresholds in CI.
+- **Full translations**: every studio in en, es, fr and hi, a CI check that fails on a missing key in any language, and right-to-left support proved with one RTL language.
+- **Accessibility and UX polish**: axe checks in the end to end tests for every studio, a mobile pass on the dense studios, a reduced-motion audit, and one empty state, undo and error pattern.
+- **Export trust**: exports that match their previews (embedded fonts included), bounded PDF, PNG and ZIP sizes, an adversarial corpus for the SVG sanitizer, and the CLI published to npm with the app's output.
+- **Docs**: a v1 to v2 migration guide, a "which studio do I need" page and a first-run tour.
+
+### AI policy
+
+- No AI by default. Brand DNA's opt-in provider uses a key the person pastes, shows the exact payload before the first request and falls back to the on-device result.
+- The model becomes a setting, and an OpenAI-compatible endpoint option (which also covers local models such as Ollama) joins the key panel.
+- A test and an end to end check keep the app from making any network request without a key. Brand DNA stays beta until it is shown to work across a test set of images.
+
+### Phases
+
+| Phase         | Contents                                                                                                               | Exit                                                  |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `2.0.0-alpha` | Schema v2 and migrations, the registry refactor, the prune and merge, the dependency cleanup.                          | The pruned build passes every gate.                   |
+| `2.0.0-beta`  | Snapshot, component and end to end tests, full translations, the accessibility pass, verified exports, the CLI on npm. | Coverage gates are green, every language is complete. |
+| `2.0.0-rc`    | Feature freeze, the migration guide, a bug bash, Lighthouse and bundle budgets held.                                   | Two weeks with no blocker issues.                     |
+| `2.0.0`       | The release, with a deprecation list for 2.1.                                                                          | The release checklist below.                          |
+
+### Release checklist
+
+- `pnpm typecheck && pnpm test && pnpm lint && pnpm format:check && pnpm check:dashes && pnpm build` pass.
+- v1 projects, share links and IndexedDB data migrate with no loss.
+- No missing translation key in any language, and axe finds no violation in any studio.
+- Lighthouse stays at 100 for accessibility, best practices and SEO and at 95 or more for performance.
+- No network request is made without a person's own key.
+
+---
+
+## After 2.0 🔭
 
 ### Plugin Marketplace
 
@@ -129,4 +181,4 @@ Have an idea, or want to help build something here? Open an issue or discussion 
 
 ---
 
-Items are ordered by priority but not by date. Scope may change based on community feedback.
+The plugin marketplace, the desktop app and team collaboration wait until after 2.0: collaboration conflicts with local-first storage, and a marketplace needs a sandbox design first. Folder sync already covers sharing through Git. Items are ordered by priority but not by date. Scope may change based on community feedback.

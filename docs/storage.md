@@ -78,7 +78,7 @@ When the browser blocks IndexedDB (some private windows do, and so do "block all
 
 ## Back up your work
 
-- **Brand Projects:** use **Export** on a project, or **Export all**, to download `.designhub.json` files. Import them again from the same page, on any browser.
+- **Brand Projects:** use **Export** on a project, **Export all** (one file) or **Export as ZIP** (one `.designhub.json` per project, named like the folder autosave names them) to download your projects. Import them again from the same page, on any browser.
 - **Assets:** anything you export (tokens, logo packs, social assets, the brand book) is a normal file and needs no backup from DesignHub.
 
 ## Reset everything

@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Notebook mockup: a portrait hardcover notebook with the logo debossed (a light edge and a pressed copy), the name on the cover, the website at the foot and an elastic band in the secondary color, on a desk, in light and dark. The name and website are shortened to the cover, never clipped.
+- Presentation mockup: a title slide and a content slide in 16:9 on a stage, with slide title, heading and body sizes taken from the live type scale (kept inside a readable range), a headline that wraps to at most three lines and is cut to fit, the call to action as a pill and the presenter from the person and role fields.
+- Trade show booth mockup: a 3 x 3 m booth in one-point perspective (back wall, side walls and floor as polygons toward one vanishing point) with a back wall graphic, a counter with the logo and a pull-up banner in the brand colors, with every line of copy kept inside a flat panel.
+- Delivery van mockup: a van in side view with the livery wrapped around the body through a clip path in the brand gradient, so it follows the roof, windscreen and bonnet, with the logo, name, website and phone number shortened to the flat part of the cargo panel.
+- Instagram highlight cover template (1080 x 1920): the mark and a short label centered in the circle Instagram crops to, with the label cut to 12 characters and then to the circle's width, and the zones outside the circle marked as covered.
+- Grainy gradient background generator: a multi-stop gradient in palette colors (at most five stops, with the seed picking the angle and the stop order) under a fine `feTurbulence` grain blended on top, with grain strength and size controls and no embedded images.
+- Scrim effect in the Effects Lab: a `::after` gradient that darkens the bottom or top of an image, with direction, strength, height and color, a preview with text over the photo backdrop, and a contrast check of the text color against the scrim over a white image that reports both ends and how far into the scrim the text stays at 4.5:1.
+- Card tilt effect in the Effects Lab: a perspective hover tilt and a moving glare as plain CSS with `--tilt-x`, `--tilt-y`, `--glare-x` and `--glare-y` fallbacks, an optional snippet that sets them from the pointer, and no transform or transition under `prefers-reduced-motion`.
+- Export all projects as a ZIP in Brand Projects: one `.designhub.json` per project, named like the folder autosave names them so an unpacked ZIP matches the folder, with unique and safe names, optional version history and the button disabled when there are no projects.
+- Illustration brand book page (after Imagery): line weight, corner style and palette share derived from the brand radius (sharp, soft or round), and three do and three don't examples drawn with the brand colors and radius. It is in the PDF with a bookmark, the website export and the Markdown export, can be switched off, and the contents numbering follows it.
+- One-color print check in the Logo Studio's Variants view: the monochrome mark is rasterized at a printed width and measured for the thinnest solid stroke and the thinnest gap (a morphological opening, in plain arrays), then compared with a 0.25, 0.5 or 1 pt minimum, with the result in millimetres, points and plain words. Corners and tapering points are not reported as thin lines.
+- Guide to adding an export format (`docs/export-formats.md`): the token model, the helpers to reuse (`flatten`, `variable`, `yamlString`, `roleColor`), naming rules, light and dark roles, a worked TOML example whose code is compiled and tested, registration, the tests to write and how the ZIP and the CLI pick a format up.
 - Angular Material theme export (`_theme.scss`): `mat.define-palette` maps for the primary and accent colors with every shade 50 to 900 plus the accent tones A100 to A700 (standing in for the palette's 200, 300, 400 and 500 shades), a contrast map that picks white or black per tone, and a `define-light-theme` and `define-dark-theme` pair.
 - Brand book heading structure check in the Accessibility Lab: every exported brand book page needs exactly one h1, no skipped heading level and no empty heading, read from the generated HTML of the pages the website export uses, with the problems in the Reading tab and the JSON, Markdown and HTML reports.
 - UI preview on the Color Studio export tab: a card, button, link and input drawn from the same `roleColor()` mapping the themed exports use, in light and dark, with the WCAG contrast of text on each surface.
@@ -27,6 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ghost publication cover template (2000 x 1000) in the Social Media Studio, with the logo, publication name and a description wrapped to three lines.
 
 ### Changed
+
+- Translate the Effects Lab effect picker (every effect's name and description), the shared color and gradient fields and the focus ring, scrollbar and selection controls in every language (en, es, fr, hi), with the contrast results as `{ratio}` placeholders. A test now keeps the `effects.` messages complete in every language.
 
 ### Fixed
 
