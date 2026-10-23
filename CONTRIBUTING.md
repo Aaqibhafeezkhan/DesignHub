@@ -195,6 +195,8 @@ Write comments only when they add information the code can't express - the _why_
 3. Add a test in `lib/tokens/formats.test.ts` (use `lib/test/xml.ts` for XML formats). The CLI and the all-formats ZIP pick the format up automatically.
 4. Verify the output is valid by pasting it into a real project.
 
+The full walkthrough, with a worked example, the naming helpers, light and dark roles and the tests, is in [docs/export-formats.md](docs/export-formats.md).
+
 ## Adding data (palettes, icons, fonts, presets)
 
 A lot of DesignHub is curated data, and adding to it is a great first contribution. Keep each entry high quality rather than adding many.

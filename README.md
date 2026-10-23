@@ -409,7 +409,7 @@ DesignHub/
 └── docs/                   # Architecture notes and screenshots
 ```
 
-Read [docs/architecture.md](docs/architecture.md) for how the pieces fit together and [docs/design-tokens.md](docs/design-tokens.md) for the token format. [docs/glossary.md](docs/glossary.md) defines the terms DesignHub uses. To add a mockup, follow [docs/mockup-templates.md](docs/mockup-templates.md); for a social template, [docs/social-templates.md](docs/social-templates.md); for a brand book page, [docs/guidelines-pages.md](docs/guidelines-pages.md).
+Read [docs/architecture.md](docs/architecture.md) for how the pieces fit together and [docs/design-tokens.md](docs/design-tokens.md) for the token format. [docs/glossary.md](docs/glossary.md) defines the terms DesignHub uses. To add a mockup, follow [docs/mockup-templates.md](docs/mockup-templates.md); for a social template, [docs/social-templates.md](docs/social-templates.md); for a brand book page, [docs/guidelines-pages.md](docs/guidelines-pages.md); for an export format, [docs/export-formats.md](docs/export-formats.md).
 
 ## Privacy
 
