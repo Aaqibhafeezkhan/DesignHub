@@ -8,6 +8,12 @@ import { watchFace, watchNotification } from "@/lib/mockups/templates/smartwatch
 import { storeCaptions, captionLines } from "@/lib/mockups/templates/app-store";
 import { landingNav } from "@/lib/mockups/templates/laptop-landing";
 import { notebookCopy, NOTEBOOK_TEXT_WIDTH } from "@/lib/mockups/templates/notebook";
+import {
+  SLIDE_TITLE_LINES,
+  SLIDE_TITLE_WIDTH,
+  slideSizes,
+  slideTitleLines,
+} from "@/lib/mockups/templates/presentation";
 import type { MockupContext } from "@/lib/mockups/types";
 import { defaultSnapshot } from "@/lib/projects/snapshot";
 import { resolveSocialContent } from "@/lib/social/content";
@@ -460,6 +466,45 @@ describe("long copy on the newer print and screen mockups", () => {
   test("the notebook draws short names in full", () => {
     const ctx = mockupContext("light", "Acme");
     expect(notebookCopy(ctx).name).toBe("Acme");
+  });
+
+  test("the presentation wraps a long headline to at most three lines that fit the slide", () => {
+    for (const mode of modes) {
+      const ctx = longContext(mode);
+      const lines = slideTitleLines(ctx);
+      const { title } = slideSizes(ctx);
+      expect(lines.length).toBeLessThanOrEqual(SLIDE_TITLE_LINES);
+      expect(lines.at(-1)!.endsWith("...")).toBe(true);
+      for (const line of lines) expect(width(ctx, line, title, "h")).toBeLessThanOrEqual(SLIDE_TITLE_WIDTH);
+    }
+    const unbroken = {
+      ...mockupContext("light"),
+      content: { ...mockupContext("light").content, headline: "x".repeat(200) },
+    };
+    expect(slideTitleLines(unbroken)).toHaveLength(1);
+  });
+
+  test("the presentation takes slide sizes from the live type scale, within a readable range", () => {
+    const ctx = mockupContext("light");
+    const sizes = slideSizes(ctx);
+    expect(sizes.title).toBeGreaterThanOrEqual(56);
+    expect(sizes.title).toBeLessThanOrEqual(84);
+    expect(sizes.title).toBeGreaterThan(sizes.heading);
+    expect(sizes.heading).toBeGreaterThan(sizes.body);
+    const scale = ctx.brand.typography.scale.map((step) => ({ ...step, maxPx: step.maxPx * 3 }));
+    const big = { ...ctx, brand: { ...ctx.brand, typography: { ...ctx.brand.typography, scale } } };
+    expect(slideSizes(big).title).toBe(84);
+  });
+
+  test("the presentation draws two slides and falls back to the brand name without a headline", () => {
+    const ctx = mockupContext("light", "Acme");
+    const empty = { ...ctx, content: { ...ctx.content, headline: "" } };
+    expect(slideTitleLines(empty)).toEqual(["Acme"]);
+    expect(
+      getTemplate("presentation")!
+        .render(ctx)
+        .match(/viewBox="0 0 1280 720"/g),
+    ).toHaveLength(2);
   });
 
 });

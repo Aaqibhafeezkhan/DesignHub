@@ -13,6 +13,7 @@ import { notebook } from "@/lib/mockups/templates/notebook";
 import { merch } from "@/lib/mockups/templates/merch";
 import { mobileApp } from "@/lib/mockups/templates/mobile-app";
 import { appStoreScreenshots } from "@/lib/mockups/templates/app-store";
+import { presentation } from "@/lib/mockups/templates/presentation";
 import { poster } from "@/lib/mockups/templates/poster";
 import { shoppingBag } from "@/lib/mockups/templates/shopping-bag";
 import { smartwatch } from "@/lib/mockups/templates/smartwatch";
@@ -40,6 +41,7 @@ export const mockupTemplates: MockupTemplate[] = [
   smartwatch,
   lockScreenMockup,
   tabletScreens,
+  presentation,
   browserTab,
   emailSignature,
 ];
