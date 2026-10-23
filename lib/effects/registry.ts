@@ -1,5 +1,6 @@
 import { border } from "@/lib/effects/border";
 import { buttonPress } from "@/lib/effects/button-press";
+import { cardTilt } from "@/lib/effects/card-tilt";
 import { defaultEffectContext, type AnyEffectDefinition, type EffectDefinition } from "@/lib/effects/define";
 import { duotone } from "@/lib/effects/duotone";
 import { focusRing } from "@/lib/effects/focus-ring";
@@ -43,6 +44,7 @@ export const effectDefinitions: AnyEffectDefinition[] = [
   linkUnderline,
   duotone,
   scrim,
+  cardTilt,
 ];
 
 export function generateEffect<K extends EffectKind>(

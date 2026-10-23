@@ -20,7 +20,8 @@ export type EffectKind =
   | "button-press"
   | "link-underline"
   | "duotone"
-  | "scrim";
+  | "scrim"
+  | "card-tilt";
 
 export type GlassSettings = {
   blur: number;
@@ -262,6 +263,21 @@ export type DuotoneSettings = {
   strength: number;
 };
 
+/** A card that tilts toward the pointer in perspective, with a glare that follows the light. */
+export type CardTiltSettings = {
+  /** The tilt on hover with no script, and the limit the snippet uses, in degrees. */
+  maxTilt: number;
+  /** Perspective distance in px. Smaller is more dramatic. */
+  perspective: number;
+  /** White glare opacity, 0 to 1. */
+  glare: number;
+  /** Transition time in ms. */
+  duration: number;
+  /** Card color. */
+  fill: string;
+  radius: number;
+};
+
 /** Which edge of the image the scrim grows from. */
 export type ScrimDirection = "bottom" | "top";
 
@@ -311,6 +327,7 @@ export type EffectSettingsMap = {
   "link-underline": LinkUnderlineSettings;
   duotone: DuotoneSettings;
   scrim: ScrimSettings;
+  "card-tilt": CardTiltSettings;
 };
 
 /** State from other studios an effect may build on. Effects read it here instead of copying it into their settings. */

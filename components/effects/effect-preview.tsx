@@ -47,7 +47,9 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
               ? `${PREVIEW_SELECTOR} .dh-effect-duotone`
               : kind === "scrim"
                 ? `${PREVIEW_SELECTOR} .dh-effect-scrim`
-                : PREVIEW_SELECTOR;
+                : kind === "card-tilt"
+                  ? `${PREVIEW_SELECTOR} .dh-effect-tilt`
+                  : PREVIEW_SELECTOR;
 
   return (
     <>
@@ -142,6 +144,14 @@ export function EffectPreview({ effect, kind }: { effect: EffectCss | null; kind
                 </figcaption>
               </figure>
             </div>
+          ) : kind === "card-tilt" ? (
+            <>
+              <h3 className="font-display text-2xl font-semibold">Hover the card.</h3>
+              <div className="dh-effect-tilt mt-2 flex aspect-[3/2] w-full flex-col justify-end p-4 text-white">
+                <p className="font-display text-lg font-semibold">Tilts toward you</p>
+                <p className="text-sm opacity-90">The glare follows the light.</p>
+              </div>
+            </>
           ) : kind === "scrim" ? (
             <div
               className="dh-effect-scrim flex aspect-[4/3] w-full flex-col justify-end rounded-md bg-cover bg-center p-4"
