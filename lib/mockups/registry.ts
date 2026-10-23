@@ -2,6 +2,7 @@ import { billboard } from "@/lib/mockups/templates/billboard";
 import { browserTab } from "@/lib/mockups/templates/browser-tab";
 import { businessCard } from "@/lib/mockups/templates/business-card";
 import { coffeeCup } from "@/lib/mockups/templates/coffee-cup";
+import { deliveryVan } from "@/lib/mockups/templates/delivery-van";
 import { desktopDashboard } from "@/lib/mockups/templates/desktop-dashboard";
 import { emailSignature } from "@/lib/mockups/templates/email-signature";
 import { envelope } from "@/lib/mockups/templates/envelope";
@@ -31,6 +32,7 @@ export const mockupTemplates: MockupTemplate[] = [
   poster,
   billboard,
   tradeShowBooth,
+  deliveryVan,
   merch,
   coffeeCup,
   notebook,

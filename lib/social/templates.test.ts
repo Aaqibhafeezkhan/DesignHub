@@ -15,6 +15,7 @@ import {
   slideTitleLines,
 } from "@/lib/mockups/templates/presentation";
 import { BOOTH, boothCopy } from "@/lib/mockups/templates/trade-show-booth";
+import { VAN, vanCopy } from "@/lib/mockups/templates/delivery-van";
 import type { MockupContext } from "@/lib/mockups/types";
 import { defaultSnapshot } from "@/lib/projects/snapshot";
 import { resolveSocialContent } from "@/lib/social/content";
@@ -529,4 +530,26 @@ describe("long copy on the newer print and screen mockups", () => {
     expect(svg).toContain(`stop-color="${mockupContext("light").surface.primary}"`);
   });
 
+  test("the delivery van shortens a 60 character name, website and phone to its side panel", () => {
+    for (const mode of modes) {
+      const ctx = longContext(mode);
+      const copy = vanCopy(ctx);
+      expect(copy.name.length).toBeLessThanOrEqual(VAN.nameLines);
+      for (const line of copy.name) expect(width(ctx, line, 70, "h")).toBeLessThanOrEqual(VAN.textWidth);
+      expect(width(ctx, copy.website, 40, "bb")).toBeLessThanOrEqual(VAN.websiteWidth);
+      expect(width(ctx, copy.phone, 40, "bb")).toBeLessThanOrEqual(VAN.websiteWidth);
+      expect(copy.website.endsWith("...")).toBe(true);
+    }
+  });
+
+  test("the delivery van wraps the livery with a clip path in the brand colors", () => {
+    for (const mode of modes) {
+      const ctx = mockupContext(mode);
+      const svg = getTemplate("delivery-van")!.render(ctx);
+      expect(svg).toContain('<clipPath id="van-body">');
+      expect(svg).toContain('clip-path="url(#van-body)"');
+      expect(svg).toContain(`stop-color="${ctx.surface.primary}"`);
+      expect(svg).toContain(`stop-color="${ctx.surface.secondary}"`);
+    }
+  });
 });
