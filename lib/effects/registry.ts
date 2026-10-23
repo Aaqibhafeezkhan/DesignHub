@@ -12,6 +12,7 @@ import { inset } from "@/lib/effects/inset";
 import { linkUnderline } from "@/lib/effects/link-underline";
 import { longShadow } from "@/lib/effects/long-shadow";
 import { neumorphism } from "@/lib/effects/neumorphism";
+import { scrim } from "@/lib/effects/scrim";
 import { scrollbar } from "@/lib/effects/scrollbar";
 import { scrollShadow } from "@/lib/effects/scroll-shadow";
 import { selection } from "@/lib/effects/selection";
@@ -41,6 +42,7 @@ export const effectDefinitions: AnyEffectDefinition[] = [
   buttonPress,
   linkUnderline,
   duotone,
+  scrim,
 ];
 
 export function generateEffect<K extends EffectKind>(

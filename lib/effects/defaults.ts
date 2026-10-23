@@ -62,6 +62,7 @@ export const effectDefaults: EffectSettingsMap = {
   "scroll-shadow": { color: "#0f172a", opacity: 0.35, size: 14, surface: "#ffffff" },
   "button-press": { fill: "#6366f1", lift: 3, press: 2, duration: 150, easing: "ease-out", radius: 12 },
   "link-underline": { color: "#4338ca", thickness: 2, offset: 4, page: "#ffffff" },
+  scrim: { direction: "bottom", strength: 0.7, height: 60, color: "#000000", text: "#ffffff" },
   duotone: { shadow: "#1e1b4b", highlight: "#fbbf24", strength: 1 },
   selection: { background: "#4f46e5", text: "#ffffff", page: "#ffffff" },
   scrollbar: { thumb: "#6366f1", thumbHover: "#4338ca", track: "#e4e4e7", width: 10, radius: 6 },

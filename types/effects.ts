@@ -19,7 +19,8 @@ export type EffectKind =
   | "scroll-shadow"
   | "button-press"
   | "link-underline"
-  | "duotone";
+  | "duotone"
+  | "scrim";
 
 export type GlassSettings = {
   blur: number;
@@ -261,6 +262,22 @@ export type DuotoneSettings = {
   strength: number;
 };
 
+/** Which edge of the image the scrim grows from. */
+export type ScrimDirection = "bottom" | "top";
+
+/** A gradient overlay that darkens one edge of an image so text over it stays readable. */
+export type ScrimSettings = {
+  direction: ScrimDirection;
+  /** Opacity at the edge, 0 to 1. It fades to zero at the other end. */
+  strength: number;
+  /** How much of the image the scrim covers, in percent. */
+  height: number;
+  /** Overlay color. */
+  color: string;
+  /** The text color checked against the scrim over a white image. */
+  text: string;
+};
+
 /** A link underline: thickness, offset and color, which grows across the text on hover. */
 export type LinkUnderlineSettings = {
   /** Underline and link color. Must reach 4.5:1 against the page. */
@@ -293,6 +310,7 @@ export type EffectSettingsMap = {
   "button-press": ButtonPressSettings;
   "link-underline": LinkUnderlineSettings;
   duotone: DuotoneSettings;
+  scrim: ScrimSettings;
 };
 
 /** State from other studios an effect may build on. Effects read it here instead of copying it into their settings. */

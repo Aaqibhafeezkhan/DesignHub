@@ -13,6 +13,7 @@ import { InsetControls } from "@/components/effects/inset-controls";
 import { LinkUnderlineControls } from "@/components/effects/link-underline-controls";
 import { LongShadowControls } from "@/components/effects/long-shadow-controls";
 import { NeumorphismControls } from "@/components/effects/neumorphism-controls";
+import { ScrimControls } from "@/components/effects/scrim-controls";
 import { ScrollbarControls } from "@/components/effects/scrollbar-controls";
 import { ScrollShadowControls } from "@/components/effects/scroll-shadow-controls";
 import { SelectionControls } from "@/components/effects/selection-controls";
@@ -42,4 +43,5 @@ export const effectControls: Partial<Record<EffectKind, ComponentType>> = {
   "button-press": ButtonPressControls,
   "link-underline": LinkUnderlineControls,
   duotone: DuotoneControls,
+  scrim: ScrimControls,
 };
