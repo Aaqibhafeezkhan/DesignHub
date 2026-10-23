@@ -13,6 +13,7 @@ import { coverPage, introductionPage, voicePage } from "@/lib/guidelines/pages/i
 import { missionPage } from "@/lib/guidelines/pages/mission";
 import { clearSpacePage, incorrectUsagePage, logoUsagePage, minimumSizePage } from "@/lib/guidelines/pages/logo";
 import { colorTokensPage, scaleTokensPage } from "@/lib/guidelines/pages/tokens";
+import { illustrationPage } from "@/lib/guidelines/pages/illustration";
 import { motionPage } from "@/lib/guidelines/pages/motion";
 import { spacingLayoutPage } from "@/lib/guidelines/pages/spacing-layout";
 import { typographyUsagePage } from "@/lib/guidelines/pages/typography-usage";
@@ -35,6 +36,7 @@ export const guidelinePages: GuidelinePage[] = [
   typographyUsagePage,
   iconographyPage,
   imageryPage,
+  illustrationPage,
   spacingLayoutPage,
   motionPage,
   componentsPage,
