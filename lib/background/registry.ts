@@ -20,6 +20,7 @@ import { sunburst } from "@/lib/background/generators/sunburst";
 import { aurora } from "@/lib/background/generators/aurora";
 import { blobs } from "@/lib/background/generators/blobs";
 import { dots } from "@/lib/background/generators/dots";
+import { grainGradient } from "@/lib/background/generators/grain-gradient";
 import { grid } from "@/lib/background/generators/grid";
 import { isometric } from "@/lib/background/generators/isometric";
 import { mesh } from "@/lib/background/generators/mesh";
@@ -79,6 +80,7 @@ export const backgroundGenerators: BackgroundDefinition[] = [
   circlePacking,
   rhombus,
   arcs,
+  grainGradient,
 ];
 
 export function getGenerator(kind: BackgroundKind): BackgroundDefinition | undefined {

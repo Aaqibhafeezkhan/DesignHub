@@ -36,7 +36,8 @@ export type BackgroundKind =
   | "plaid"
   | "circle-packing"
   | "rhombus"
-  | "arcs";
+  | "arcs"
+  | "grain-gradient";
 
 /** Halftone gradient shape: forced linear or radial, or picked by the seed. */
 export type HalftoneGradientChoice = "seeded" | "linear" | "radial";
