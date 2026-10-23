@@ -57,6 +57,13 @@ export const en = {
   "svg.compare.value": "{original}% original, {optimized}% optimized",
   "svg.compare.instructions":
     "Drag to compare. Use arrow keys to move, Shift for larger steps, Home and End for either edge.",
+    "svg.compare.toggle": "Comparar SVG optimizado",
+  "svg.compare.original": "SVG original",
+  "svg.compare.optimized": "SVG optimizado",
+  "svg.compare.divider": "Divisor entre el SVG original y el optimizado",
+  "svg.compare.value": "{original} % original, {optimized} % optimizado",
+  "svg.compare.instructions":
+    "Arrastra para comparar. Usa las flechas para moverte, Mayús para pasos más grandes e Inicio y Fin para ir a cualquiera de los extremos.",
   "studio.svg.title": "SVG Playground",
   "studio.svg.short": "SVG Playground",
   "studio.svg.description":
