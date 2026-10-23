@@ -10,6 +10,7 @@ import { VisionPreview } from "@/components/accessibility/vision-preview";
 import { ContrastResults } from "@/components/accessibility/contrast-results";
 import { FocusIndicatorResults } from "@/components/accessibility/focus-indicator-results";
 import { GradientContrastResults } from "@/components/accessibility/gradient-contrast-results";
+import { HeadingsResults } from "@/components/accessibility/headings-results";
 import { MotionResults } from "@/components/accessibility/motion-results";
 import { ReadabilityPanel } from "@/components/accessibility/readability-panel";
 import { TargetsPanel } from "@/components/accessibility/targets-panel";
@@ -68,6 +69,7 @@ export function A11yWorkspace() {
             <A11yTypePanel />
             <ReadabilityPanel />
             <TextSpacingPanel />
+            <HeadingsResults section={report.sections.headings} />
           </TabsContent>
           <TabsContent value="targets" className="flex flex-col gap-4">
             <TargetsPanel />

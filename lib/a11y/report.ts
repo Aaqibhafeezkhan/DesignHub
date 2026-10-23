@@ -1,5 +1,6 @@
 import type { contrastSection, focusSection } from "@/lib/a11y/contrast";
 import type { gradientSection } from "@/lib/a11y/gradient-contrast";
+import type { HeadingsSection } from "@/lib/a11y/headings";
 import type { MotionSection } from "@/lib/a11y/motion";
 import type { Verdict } from "@/lib/a11y/readability";
 import type { TextSpacingSection } from "@/lib/a11y/text-spacing";
@@ -33,6 +34,7 @@ export type A11yReportSections = {
   textSpacing: TextSpacingSection;
   motion: MotionSection;
   touchTargets: ReturnType<typeof targetsSection>;
+  headings: HeadingsSection;
 };
 
 export type A11yReport = {
@@ -139,6 +141,20 @@ function motionMarkdown(section: MotionSection): string {
   return `${section.note}\n\n${motionTable(section)}`;
 }
 
+/** One row per brand book page whose heading structure has a problem. */
+export function headingsTable(section: HeadingsSection): string {
+  return table(
+    ["Page", "Problem"],
+    section.checks.map((check) => [check.page, check.problem]),
+  );
+}
+
+function headingsMarkdown(section: HeadingsSection): string {
+  const intro = `${section.note} ${section.pages} page${section.pages === 1 ? "" : "s"} checked.`;
+  if (!section.checks.length) return `${intro}\n\n${mark(true)}: every page passes.`;
+  return `${intro}\n\n${headingsTable(section)}`;
+}
+
 /** One row per palette pair that becomes too similar under a simulation, with its lightness fix. */
 export function paletteVisionTable(section: PaletteVisionSection): string {
   return table(
@@ -239,6 +255,8 @@ export function reportToMarkdown(report: A11yReport): string {
         item.note,
       ]),
     ),
+    `## ${sections.headings.criterion}`,
+    headingsMarkdown(sections.headings),
   ];
   return `${parts.filter(Boolean).join("\n\n")}\n`;
 }
@@ -511,6 +529,17 @@ ${htmlTable(
     item.note,
   ]),
 )}`,
+    `<h2 id="headings">${escapeHtml(sections.headings.criterion)}</h2>
+<p>${escapeHtml(sections.headings.note)} ${sections.headings.pages} page${sections.headings.pages === 1 ? "" : "s"} checked.</p>
+${
+  sections.headings.checks.length
+    ? htmlTable(
+        "Brand book heading problems",
+        ["Page", "Problem"],
+        sections.headings.checks.map((check) => [check.page, check.problem]),
+      )
+    : `<p>${passBadge(true)} Every page passes.</p>`
+}`,
   ];
   return `<!doctype html>
 <html lang="en">
