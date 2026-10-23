@@ -1503,3 +1503,67 @@ describe("GTK, Tamagui and Radix Themes exports", () => {
     });
   });
 });
+
+describe("Angular Material theme", () => {
+  const code = () => tokenFormats(tokens()).find((format) => format.id === "angular-material")!.code;
+
+  test("registers _theme.scss for the Export Engine, the ZIP and designhub build", () => {
+    const format = tokenFormats(tokens()).find((item) => item.id === "angular-material");
+    expect(format?.label).toBe("Angular Material");
+    expect(format?.filename).toBe("_theme.scss");
+    expect(format?.language).toBe("scss");
+  });
+
+  test("the palettes carry the 50 to 900 keys and the A100 to A700 accent tones", () => {
+    const theme = code();
+    expect(theme).toContain('@use "@angular/material" as mat;');
+    for (const palette of ["$acme-labs-primary", "$acme-labs-accent"]) {
+      expect(theme).toContain(`${palette}: mat.define-palette((`);
+    }
+    for (const key of [
+      "50:",
+      "100:",
+      "200:",
+      "300:",
+      "400:",
+      "500:",
+      "600:",
+      "700:",
+      "800:",
+      "900:",
+      "A100:",
+      "A200:",
+      "A400:",
+      "A700:",
+    ]) {
+      expect(theme).toContain(`    ${key} `);
+    }
+    // the fixture's only indigo shade (250, #cdd9f3) is the nearest stand-in for every step
+    expect(theme).toContain("50: #cdd9f3,");
+    expect(theme).toContain("A700: #cdd9f3,");
+  });
+
+  test("the contrast map picks the tone that reads on each key", () => {
+    const theme = code();
+    // #cdd9f3 is light, so its contrast tone is black
+    expect(theme).toContain("contrast: (\n    50: #000000,");
+    expect(theme).toContain("A100: #000000,");
+    // with a dark shade in the palette, its contrast tone is white
+    const dark = tokens();
+    dark.colors[0]!.shades = [{ step: 500, value: fromHex("#0f172a") }];
+    const darkTheme = tokenFormats(dark).find((item) => item.id === "angular-material")!.code;
+    expect(darkTheme).toContain("500: #0f172a,");
+    expect(darkTheme).toContain("    500: #ffffff,");
+    expect(darkTheme).not.toContain("#000000");
+  });
+
+  test("defines a light and a dark theme over the same palettes", () => {
+    const theme = code();
+    expect(theme).toContain(
+      "$acme-labs-theme: mat.define-light-theme((\n  color: (primary: $acme-labs-primary, accent: $acme-labs-accent),\n));",
+    );
+    expect(theme).toContain(
+      "$acme-labs-dark-theme: mat.define-dark-theme((\n  color: (primary: $acme-labs-primary, accent: $acme-labs-accent),\n));",
+    );
+  });
+});

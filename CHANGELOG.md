@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Angular Material theme export (`_theme.scss`): `mat.define-palette` maps for the primary and accent colors with every shade 50 to 900 plus the accent tones A100 to A700 (standing in for the palette's 200, 300, 400 and 500 shades), a contrast map that picks white or black per tone, and a `define-light-theme` and `define-dark-theme` pair.
 - Brand book heading structure check in the Accessibility Lab: every exported brand book page needs exactly one h1, no skipped heading level and no empty heading, read from the generated HTML of the pages the website export uses, with the problems in the Reading tab and the JSON, Markdown and HTML reports.
 - UI preview on the Color Studio export tab: a card, button, link and input drawn from the same `roleColor()` mapping the themed exports use, in light and dark, with the WCAG contrast of text on each surface.
 - Weight comparison strip in the Typography specimen view: one row per static face or variable named instance, labelled with its numeric weight and driven by the sample text.
