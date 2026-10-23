@@ -49,6 +49,13 @@ export const fr = {
   "studio.effects.short": "Effets",
   "studio.effects.description":
     "Verre, néomorphisme, ombres superposées et intérieures, lueurs, bordures en dégradé et grain, en CSS et Tailwind.",
+  "svg.compare.toggle": "Comparer le SVG optimisé",
+  "svg.compare.original": "SVG d'origine",
+  "svg.compare.optimized": "SVG optimisé",
+  "svg.compare.divider": "Séparateur entre le SVG d'origine et le SVG optimisé",
+  "svg.compare.value": "{original} % d'origine, {optimized} % optimisé",
+  "svg.compare.instructions":
+    "Faites glisser pour comparer. Utilisez les flèches pour vous déplacer, Maj pour des pas plus grands, et Début et Fin pour atteindre l'un ou l'autre bord.",
   "studio.svg.title": "Atelier SVG",
   "studio.svg.short": "Atelier SVG",
   "studio.svg.description":
@@ -70,6 +77,7 @@ export const fr = {
   "nav.more": "Plus",
   "nav.resources": "Ressources",
   "nav.project": "Projet",
+  "nav.github": "GitHub",
   "nav.roadmap": "Feuille de route",
   "nav.changelog": "Journal des modifications",
   "nav.contributing": "Contribuer",

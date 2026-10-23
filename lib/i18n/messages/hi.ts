@@ -47,6 +47,13 @@ export const hi = {
   "studio.effects.short": "इफ़ेक्ट्स",
   "studio.effects.description":
     "ग्लास, न्यूमॉर्फ़िज़्म, परतदार और भीतरी शैडो, ग्लो, ग्रेडिएंट बॉर्डर और ग्रेन, CSS और Tailwind के रूप में।",
+  "svg.compare.toggle": "ऑप्टिमाइज़ किए गए SVG की तुलना करें",
+  "svg.compare.original": "मूल SVG",
+  "svg.compare.optimized": "ऑप्टिमाइज़ किया गया SVG",
+  "svg.compare.divider": "मूल और ऑप्टिमाइज़ किए गए SVG के बीच का विभाजक",
+  "svg.compare.value": "{original}% मूल, {optimized}% ऑप्टिमाइज़ किया गया",
+  "svg.compare.instructions":
+    "तुलना के लिए खींचें। हिलाने के लिए ऐरो कुंजियों का उपयोग करें, बड़े कदमों के लिए Shift, और किसी भी छोर पर जाने के लिए Home और End दबाएँ।",
   "studio.svg.title": "SVG प्लेग्राउंड",
   "studio.svg.short": "SVG प्लेग्राउंड",
   "studio.svg.description":
@@ -68,6 +75,7 @@ export const hi = {
   "nav.main": "मुख्य",
   "nav.resources": "संसाधन",
   "nav.project": "प्रोजेक्ट",
+  "nav.github": "GitHub",
   "nav.roadmap": "रोडमैप",
   "nav.changelog": "बदलाव",
   "nav.contributing": "योगदान",
