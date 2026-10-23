@@ -9,6 +9,7 @@ import { idBadge } from "@/lib/mockups/templates/id-badge";
 import { letterhead } from "@/lib/mockups/templates/letterhead";
 import { laptopLanding } from "@/lib/mockups/templates/laptop-landing";
 import { lockScreenMockup } from "@/lib/mockups/templates/lock-screen";
+import { notebook } from "@/lib/mockups/templates/notebook";
 import { merch } from "@/lib/mockups/templates/merch";
 import { mobileApp } from "@/lib/mockups/templates/mobile-app";
 import { appStoreScreenshots } from "@/lib/mockups/templates/app-store";
@@ -29,6 +30,7 @@ export const mockupTemplates: MockupTemplate[] = [
   billboard,
   merch,
   coffeeCup,
+  notebook,
   shoppingBag,
   idBadge,
   laptopLanding,

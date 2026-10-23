@@ -7,6 +7,7 @@ import { getTemplate, mockupTemplates } from "@/lib/mockups/registry";
 import { watchFace, watchNotification } from "@/lib/mockups/templates/smartwatch";
 import { storeCaptions, captionLines } from "@/lib/mockups/templates/app-store";
 import { landingNav } from "@/lib/mockups/templates/laptop-landing";
+import { notebookCopy, NOTEBOOK_TEXT_WIDTH } from "@/lib/mockups/templates/notebook";
 import type { MockupContext } from "@/lib/mockups/types";
 import { defaultSnapshot } from "@/lib/projects/snapshot";
 import { resolveSocialContent } from "@/lib/social/content";
@@ -415,4 +416,50 @@ describe("Ghost publication cover", () => {
     expect(svg).toContain("The Slow Draft");
     expect(svg).toContain("Notes on building calm software");
   });
+});
+
+describe("long copy on the newer print and screen mockups", () => {
+  const sixty = "Northwind Analytics Cooperative for Sustainable Data Systems";
+  const word = "northwindanalyticscooperativeforsustainabledatasystems.co.uk";
+  const phone = "+44 (0) 20 7946 0958 extension 12345 and then some more";
+  const headline = `${sixty} and a headline that keeps going well past any sensible length for a slide`;
+
+  function longContext(mode: BrandMode): MockupContext {
+    const ctx = mockupContext(mode, sixty);
+    return { ...ctx, content: { ...ctx.content, headline, website: word, phone } };
+  }
+
+  const width = (ctx: MockupContext, value: string, size: number, font: "h" | "bb" | "b") => {
+    const { heading, headingWeight, body } = ctx.brand.typography;
+    return ctx.measure(
+      value,
+      font === "h" ? heading : body,
+      font === "h" ? headingWeight : font === "bb" ? 600 : 400,
+      size,
+    );
+  };
+
+  test("the notebook shortens a 60 character name and a long website instead of clipping them", () => {
+    expect(sixty).toHaveLength(60);
+    for (const mode of modes) {
+      const ctx = longContext(mode);
+      const copy = notebookCopy(ctx);
+      expect(copy.name.endsWith("...")).toBe(true);
+      expect(width(ctx, copy.name, 46, "h") + 2 * copy.name.length).toBeLessThanOrEqual(NOTEBOOK_TEXT_WIDTH);
+      expect(width(ctx, copy.website, 24, "bb") + 2 * copy.website.length).toBeLessThanOrEqual(NOTEBOOK_TEXT_WIDTH);
+      const svg = getTemplate("notebook")!.render(ctx);
+      expect(svg).toContain(copy.name);
+      expect(svg).toContain(`fill="${ctx.surface.secondary}"`);
+      expect(svg).toContain(`fill="${ctx.surface.primary}"`);
+      // The mark is debossed: a highlight copy and a pressed copy.
+      expect(svg).toContain('<g opacity=".3">');
+      expect(svg).toContain('<g opacity=".28">');
+    }
+  });
+
+  test("the notebook draws short names in full", () => {
+    const ctx = mockupContext("light", "Acme");
+    expect(notebookCopy(ctx).name).toBe("Acme");
+  });
+
 });
