@@ -17,6 +17,7 @@ import { presentation } from "@/lib/mockups/templates/presentation";
 import { poster } from "@/lib/mockups/templates/poster";
 import { shoppingBag } from "@/lib/mockups/templates/shopping-bag";
 import { smartwatch } from "@/lib/mockups/templates/smartwatch";
+import { tradeShowBooth } from "@/lib/mockups/templates/trade-show-booth";
 import { sticker } from "@/lib/mockups/templates/sticker";
 import { tabletScreens } from "@/lib/mockups/templates/tablet";
 import type { MockupTemplate } from "@/lib/mockups/types";
@@ -29,6 +30,7 @@ export const mockupTemplates: MockupTemplate[] = [
   sticker,
   poster,
   billboard,
+  tradeShowBooth,
   merch,
   coffeeCup,
   notebook,

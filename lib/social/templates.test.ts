@@ -14,6 +14,7 @@ import {
   slideSizes,
   slideTitleLines,
 } from "@/lib/mockups/templates/presentation";
+import { BOOTH, boothCopy } from "@/lib/mockups/templates/trade-show-booth";
 import type { MockupContext } from "@/lib/mockups/types";
 import { defaultSnapshot } from "@/lib/projects/snapshot";
 import { resolveSocialContent } from "@/lib/social/content";
@@ -505,6 +506,27 @@ describe("long copy on the newer print and screen mockups", () => {
         .render(ctx)
         .match(/viewBox="0 0 1280 720"/g),
     ).toHaveLength(2);
+  });
+
+  test("the trade show booth keeps every line of copy inside its flat panel", () => {
+    expect(BOOTH.bannerLines).toBe(5);
+    for (const mode of modes) {
+      const ctx = longContext(mode);
+      const copy = boothCopy(ctx);
+      expect(copy.wall.length).toBeLessThanOrEqual(2);
+      expect(copy.banner.length).toBeLessThanOrEqual(BOOTH.bannerLines);
+      for (const line of copy.wall) expect(width(ctx, line, 58, "h")).toBeLessThanOrEqual(BOOTH.wallTextWidth);
+      for (const line of copy.banner) expect(width(ctx, line, 21, "h")).toBeLessThanOrEqual(BOOTH.bannerTextWidth);
+      expect(width(ctx, copy.counterName, 36, "h")).toBeLessThanOrEqual(BOOTH.counterTextWidth);
+      expect(width(ctx, copy.website, 26, "bb")).toBeLessThanOrEqual(BOOTH.wallTextWidth);
+      expect(copy.website.endsWith("...")).toBe(true);
+    }
+  });
+
+  test("the trade show booth draws the walls and floor as polygons toward one vanishing point", () => {
+    const svg = getTemplate("trade-show-booth")!.render(mockupContext("light"));
+    expect(svg.match(/<polygon points=/g)!.length).toBeGreaterThanOrEqual(3);
+    expect(svg).toContain(`stop-color="${mockupContext("light").surface.primary}"`);
   });
 
 });
