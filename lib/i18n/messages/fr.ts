@@ -175,6 +175,9 @@ export const fr = {
   "projects.sort.newest": "Les plus récents",
   "projects.import": "Importer",
   "projects.exportAll": "Tout exporter",
+  "projects.exportZip": "Exporter en ZIP",
+  "projects.exportZipHint":
+    "Un fichier .designhub.json par projet, nommé comme l’enregistrement automatique dans un dossier",
   "projects.includeHistory": "Inclure l'historique",
   "projects.includeHistoryHint":
     "Ajoute aux exports les versions enregistrées de chaque projet. Les liens de partage ne les contiennent jamais.",
@@ -220,6 +223,8 @@ export const fr = {
   "projects.delete.description": "Il est supprimé de ce navigateur. Vous pourrez annuler pendant quelques secondes.",
   "projects.toast.exported.one": "{count} projet exporté",
   "projects.toast.exported.other": "{count} projets exportés",
+  "projects.toast.exportedZip.one": "{count} projet exporté en ZIP",
+  "projects.toast.exportedZip.other": "{count} projets exportés en ZIP",
   "projects.toast.imported.one": "{count} projet importé",
   "projects.toast.imported.other": "{count} projets importés",
   "projects.toast.tooLarge": "Ce fichier est trop volumineux pour être un projet.",

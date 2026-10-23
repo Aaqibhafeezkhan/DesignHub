@@ -4,6 +4,7 @@ import {
   ArrowLeftRight,
   Copy,
   Download,
+  FileArchive,
   FileDown,
   History,
   Link2,
@@ -30,7 +31,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useProjects } from "@/hooks/use-projects";
-import { downloadText } from "@/lib/download";
+import { downloadBlob, downloadText } from "@/lib/download";
 import { errorMessage } from "@/lib/i18n/errors";
 import { slugify } from "@/lib/logo/pack";
 import {
@@ -53,6 +54,7 @@ import { listVersions } from "@/lib/projects/versions";
 import { projectSorts, sortProjects, type ProjectSort } from "@/lib/projects/sort";
 import { projectTags } from "@/lib/projects/tags";
 import { projectsToJson, projectToJson } from "@/lib/projects/transfer";
+import { projectsZip } from "@/lib/projects/zip";
 import { projectName, type BrandProject } from "@/lib/projects/types";
 import { cn } from "@/lib/utils";
 import { useProjectStore } from "@/store/project-store";
@@ -101,6 +103,18 @@ export function ProjectManager() {
     const histories = exportHistory ? await projectHistories(all) : undefined;
     downloadText(projectsToJson(all, histories), `designhub-projects-${new Date().toISOString().slice(0, 10)}.json`);
     toast.success(plural("projects.toast.exported", all.length));
+  }
+
+  async function exportZip() {
+    await saveActiveProject();
+    const all = await listProjects();
+    if (!all.length) return;
+    const histories = exportHistory ? await projectHistories(all) : undefined;
+    downloadBlob(
+      new Blob([projectsZip(all, histories)], { type: "application/zip" }),
+      `designhub-projects-${new Date().toISOString().slice(0, 10)}.zip`,
+    );
+    toast.success(plural("projects.toast.exportedZip", all.length));
   }
 
   async function importFile(file: File | undefined) {
@@ -228,6 +242,15 @@ export function ProjectManager() {
         </Button>
         <Button variant="outline" size="sm" onClick={() => void exportAll()} disabled={!projects?.length}>
           <FileDown /> {t("projects.exportAll")}
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => void exportZip()}
+          disabled={!projects?.length}
+          title={t("projects.exportZipHint")}
+        >
+          <FileArchive /> {t("projects.exportZip")}
         </Button>
         <input
           ref={fileRef}
