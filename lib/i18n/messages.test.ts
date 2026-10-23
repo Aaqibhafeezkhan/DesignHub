@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { completeAreas } from "@/lib/i18n/complete-areas";
 import { LocalizedError, translateLocalized } from "@/lib/i18n/errors";
 import { catalogs, locales, resolveLocale } from "@/lib/i18n/locales";
 import { en } from "@/lib/i18n/messages/en";
@@ -29,14 +30,6 @@ describe("message catalogs", () => {
     });
   }
 
-  it("translates every translated area completely into Spanish", () => {
-    const areas = ["compare.", "history.", "colors.", "copy.", "code."];
-    const missing = Object.keys(en).filter(
-      (key) => areas.some((area) => key.startsWith(area)) && !Object.hasOwn(catalogs.es, key),
-    );
-    expect(missing).toEqual([]);
-  });
-
   it("has a Hindi and a French translation for every Spanish key", () => {
     for (const locale of ["hi", "fr"] as const) {
       const missing = Object.keys(catalogs.es).filter((key) => !Object.hasOwn(catalogs[locale], key));
@@ -44,13 +37,17 @@ describe("message catalogs", () => {
     }
   });
 
-  it("translates the Brand Studio, the home page and the Effects Lab picker and fields in every locale", () => {
-    const areas = ["brand.", "home.", "error.svg.", "error.tokens.", "effects."];
-    const keys = Object.keys(en).filter((key) => areas.some((area) => key.startsWith(area)));
+  it("translates every complete area in every language", () => {
+    const keys = Object.keys(en).filter((key) => completeAreas.some((area) => key.startsWith(area)));
     for (const locale of ["es", "fr", "hi"] as const) {
       const missing = keys.filter((key) => !Object.hasOwn(catalogs[locale], key));
-      expect(missing, locale).toEqual([]);
+      expect(missing, `${locale} is missing keys in a complete area`).toEqual([]);
     }
+  });
+
+  it("lists only areas that exist in English", () => {
+    const unused = completeAreas.filter((area) => !Object.keys(en).some((key) => key.startsWith(area)));
+    expect(unused).toEqual([]);
   });
 });
 
