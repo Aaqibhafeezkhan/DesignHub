@@ -5,6 +5,7 @@
  * missing, and name it. See docs/translating.md.
  */
 export const completeAreas = [
+  "a11y.",
   "brand.",
   "code.",
   "colors.",

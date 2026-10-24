@@ -1,17 +1,18 @@
 import { AlertTriangle, Check, X } from "lucide-react";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { cn } from "@/lib/utils";
 import type { Verdict } from "@/lib/a11y/readability";
 
 export type CheckItem = { id: string; label: string; value: string; verdict: Verdict; guidance: string };
 
-const icons = {
-  pass: <Check className="size-4 text-success" aria-label="Pass" />,
-  warn: <AlertTriangle className="size-4 text-warning" aria-label="Warning" />,
-  fail: <X className="size-4 text-destructive" aria-label="Fail" />,
-};
-
 export function CheckList({ items, label }: { items: CheckItem[]; label: string }) {
+  const { t } = useI18n();
+  const icons = {
+    pass: <Check className="size-4 text-success" aria-label={t("a11y.verdict.pass")} />,
+    warn: <AlertTriangle className="size-4 text-warning" aria-label={t("a11y.verdict.warn")} />,
+    fail: <X className="size-4 text-destructive" aria-label={t("a11y.verdict.fail")} />,
+  };
   return (
     <ul className="flex flex-col gap-1.5" aria-label={label}>
       {items.map((item) => (
