@@ -31,6 +31,8 @@ function ThemePanel({ theme, title }: { theme: PalettePreviewTheme; title: strin
     <figure className="flex min-w-0 flex-1 flex-col gap-2">
       <figcaption className="text-xs font-medium text-subtle-foreground">{title}</figcaption>
       <div
+        // The person's own colors, shown with their contrast ratios: some pairs are meant to fail.
+        data-user-colors=""
         className="flex flex-col gap-3 rounded-lg border p-4"
         style={{ background: page, borderColor: input?.border ? toHex(input.border) : undefined }}
       >

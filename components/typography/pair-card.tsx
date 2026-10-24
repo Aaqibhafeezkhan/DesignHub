@@ -38,16 +38,24 @@ export function PairCard({ pair, catalog, active, onSelect }: PairCardProps) {
       type="button"
       onClick={() => onSelect(pair)}
       aria-pressed={active}
-      aria-label={t("typography.pair.use", { heading: pair.heading, body: pair.body })}
+      title={t("typography.pair.use", { heading: pair.heading, body: pair.body })}
       className={cn(
         "flex w-full flex-col gap-2 rounded-lg border bg-card p-4 text-left transition-[border-color,background-color] duration-150 hover:border-border-strong hover:bg-surface-raised",
         active && "border-brand/60",
       )}
     >
-      <span className="text-xl font-semibold" style={{ fontFamily: fontStack(pair.heading, heading?.category) }}>
+      <span
+        aria-hidden
+        className="text-xl font-semibold"
+        style={{ fontFamily: fontStack(pair.heading, heading?.category) }}
+      >
         {SAMPLE_HEADING}
       </span>
-      <span className="text-sm text-muted-foreground" style={{ fontFamily: fontStack(pair.body, body?.category) }}>
+      <span
+        aria-hidden
+        className="text-sm text-muted-foreground"
+        style={{ fontFamily: fontStack(pair.body, body?.category) }}
+      >
         {SAMPLE_BODY}
       </span>
       <span className="pt-2 text-xs text-subtle-foreground">

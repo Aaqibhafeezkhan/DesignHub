@@ -49,6 +49,7 @@ export function WeightWaterfall() {
               </span>
               {/* A fixed line box and clipped overflow mean a font swap can't move anything. */}
               <span
+                aria-hidden
                 className="block h-9 overflow-hidden text-[28px] leading-9 text-ellipsis whitespace-nowrap"
                 style={{
                   fontFamily: family,

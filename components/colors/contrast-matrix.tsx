@@ -36,7 +36,7 @@ export function ContrastMatrix() {
         </ToggleGroup>
       </div>
       <div className="overflow-x-auto rounded-lg border scrollbar-thin">
-        <table className="w-full border-collapse text-xs">
+        <table data-user-colors="" className="w-full border-collapse text-xs">
           <caption className="sr-only">
             {t("colors.matrix.caption")} {mode === "apca" ? t("colors.matrix.apcaCaption") : ""}
           </caption>
@@ -82,13 +82,13 @@ export function ContrastMatrix() {
                           aria-label={t(cell.mode === "wcag" ? "colors.matrix.cell" : "colors.matrix.apcaCell", {
                             text: names[rowIndex] ?? "",
                             background: names[swatches.indexOf(column)] ?? "",
-                            ratio: cell.mode === "wcag" ? cell.ratio.toFixed(2) : cell.value,
+                            ratio: cell.value,
                             rating,
                           })}
                           className="flex h-12 w-full min-w-20 flex-col items-center justify-center rounded-md transition-transform duration-150 hover:scale-[1.03]"
                           style={{ background: toHex(column.color), color: toHex(row.color) }}
                         >
-                          <span className="text-sm font-semibold tabular-nums">{cell.value}</span>
+                          <span className="text-sm font-semibold tabular-nums">{cell.value}</span>{" "}
                           <span className="text-[10px] opacity-80">{rating}</span>
                           {cell.mode === "apca" ? (
                             <span aria-hidden className="mt-0.5 flex gap-0.5">

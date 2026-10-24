@@ -1,0 +1,79 @@
+import AxeBuilder from "@axe-core/playwright";
+import { expect, test, type Page } from "@playwright/test";
+
+import { studios } from "../../lib/navigation";
+
+/**
+ * Runs axe on every studio in light and dark, on first view and again with each of the studio's tabs
+ * opened (most studios put their tools behind tabs, which Lighthouse never looks at). Serious and critical
+ * violations fail the test, and the message names the rule, the selector and the studio.
+ */
+const THEMES = ["light", "dark"] as const;
+
+/**
+ * Rules switched off, each with the reason. There are none today: add one only for something outside the
+ * app's control (a third-party canvas, for example), with a linked issue, never as a blanket disable.
+ */
+const DISABLED_RULES: { rule: string; reason: string }[] = [];
+
+/**
+ * Regions where one rule is skipped, each with the reason. Everything else is still checked in them.
+ * `data-user-colors` marks swatches, ramps and previews that show the person's own colors with their
+ * contrast ratios: a pair that fails WCAG there is the information being shown, not a defect.
+ */
+const USER_COLORS = "[data-user-colors]";
+
+const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"];
+
+async function scan(page: Page, where: string): Promise<string[]> {
+  const disabled = DISABLED_RULES.map((item) => item.rule);
+  // The page without the user-color regions, with every rule; then those regions without the contrast rule.
+  const outside = await new AxeBuilder({ page }).withTags(TAGS).disableRules(disabled).exclude(USER_COLORS).analyze();
+  const inside = (await page.locator(USER_COLORS).count())
+    ? await new AxeBuilder({ page })
+        .withTags(TAGS)
+        .disableRules([...disabled, "color-contrast"])
+        .include(USER_COLORS)
+        .analyze()
+    : { violations: [] };
+  const results = { violations: [...outside.violations, ...inside.violations] };
+  return results.violations
+    .filter((violation) => violation.impact === "serious" || violation.impact === "critical")
+    .flatMap((violation) =>
+      violation.nodes.map((node) => `${violation.id} (${violation.impact}) at ${node.target.join(" ")} in ${where}`),
+    );
+}
+
+for (const theme of THEMES) {
+  test.describe(`axe, ${theme} theme`, () => {
+    test.use({ colorScheme: theme });
+
+    for (const studio of studios) {
+      test(`${studio.title} has no serious or critical violations`, async ({ page }) => {
+        await page.addInitScript((value) => window.localStorage.setItem("theme", value), theme);
+        await page.goto(studio.href);
+        await expect(page.locator("h1").first()).toBeVisible();
+
+        const problems = await scan(page, `${studio.title}, first view (${theme})`);
+
+        // Open every tab the studio has, one at a time, and scan what it shows.
+        const tabs = page.getByRole("tab");
+        const count = await tabs.count();
+        for (let index = 0; index < count; index += 1) {
+          const tab = tabs.nth(index);
+          if (!(await tab.isVisible()) || (await tab.getAttribute("aria-selected")) === "true") continue;
+          const name = ((await tab.innerText()) || (await tab.getAttribute("aria-label")) || `tab ${index + 1}`).trim();
+          await tab.click();
+          await page.waitForTimeout(250);
+          problems.push(...(await scan(page, `${studio.title}, ${name} tab (${theme})`)));
+        }
+
+        expect([...new Set(problems)], `Violations in ${studio.title}`).toEqual([]);
+      });
+    }
+  });
+}
+
+test("the list of disabled rules is empty or explained", () => {
+  for (const item of DISABLED_RULES) expect(item.reason.length, item.rule).toBeGreaterThan(20);
+});

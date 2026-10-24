@@ -103,7 +103,6 @@ function WeightComparisonStrip({ family }: { family: string }) {
               key={weight}
               type="button"
               aria-pressed={selected}
-              aria-label={`${name} (${weight})`}
               onClick={() => updateSpecimen({ weight })}
               className={cn(
                 "grid h-10 grid-cols-[3.25rem_minmax(0,1fr)] items-center gap-3 rounded-md px-1 text-left transition-colors duration-150 outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
@@ -117,8 +116,11 @@ function WeightComparisonStrip({ family }: { family: string }) {
                 )}
               >
                 {weight}
+                {/* The button is named by its text: the number, and the weight's name for screen readers. */}
+                <span className="sr-only"> {name}</span>
               </span>
               <span
+                aria-hidden
                 className="block overflow-hidden text-[22px] leading-8 text-ellipsis whitespace-nowrap"
                 style={{
                   fontFamily: stack,

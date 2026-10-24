@@ -4,6 +4,7 @@ import { SearchX } from "lucide-react";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent, UIEvent } from "react";
 
+import { FavoriteFontButton } from "@/components/typography/favorite-button";
 import { FontCard } from "@/components/typography/font-card";
 import { FontFilters } from "@/components/typography/font-filters";
 import { RecentFonts } from "@/components/typography/recent-fonts";
@@ -210,49 +211,73 @@ export function FontBrowser({ fonts, loading, className }: FontBrowserProps) {
         <p id={hintId} className="sr-only">
           Arrow keys, Page Up, Page Down, Home and End move through the fonts. Enter opens one. S adds it to favorites.
         </p>
-        <ul
-          ref={listboxRef}
-          role="listbox"
-          tabIndex={shown.length > 0 ? 0 : undefined}
-          className="group/fonts relative rounded-md focus-visible:outline-none"
-          style={{ height: shown.length * ROW_HEIGHT }}
-          aria-label="Fonts"
-          aria-describedby={hintId}
-          aria-activedescendant={activeDescendant}
-          onKeyDown={handleKeyDown}
-          // Clicking a heart shouldn't pull focus out of the list and strand the arrow keys.
-          onMouseDown={(event) => {
-            if ((event.target as HTMLElement).closest("button")) event.preventDefault();
-          }}
-          onFocus={(event) => {
-            // Tabbing in starts on the open font, or the first one.
-            if (event.target === event.currentTarget && focusedIndex === null && results.length > 0) {
-              setFocusedIndex(Math.max(0, activeIndex));
-            }
-          }}
-        >
-          {rowIndexes.map((index) => {
-            const font = shown[index];
-            if (!font) return null;
+        <div className="relative">
+          <ul
+            ref={listboxRef}
+            role="listbox"
+            tabIndex={shown.length > 0 ? 0 : undefined}
+            className="group/fonts relative rounded-md focus-visible:outline-none"
+            style={{ height: shown.length * ROW_HEIGHT }}
+            aria-label="Fonts"
+            aria-describedby={hintId}
+            aria-activedescendant={activeDescendant}
+            onKeyDown={handleKeyDown}
+            // Clicking a heart shouldn't pull focus out of the list and strand the arrow keys.
+            onMouseDown={(event) => {
+              if ((event.target as HTMLElement).closest("button")) event.preventDefault();
+            }}
+            onFocus={(event) => {
+              // Tabbing in starts on the open font, or the first one.
+              if (event.target === event.currentTarget && focusedIndex === null && results.length > 0) {
+                setFocusedIndex(Math.max(0, activeIndex));
+              }
+            }}
+          >
+            {rowIndexes.map((index) => {
+              const font = shown[index];
+              if (!font) return null;
 
-            return (
-              <li
-                key={font.family}
-                id={`${optionId}-${index}`}
-                role="option"
-                aria-selected={font.family === activeFont}
-                aria-label={font.family}
-                data-highlighted={index === focused ? "" : undefined}
-                className="absolute inset-x-0 h-[60px] rounded-md group-focus-visible/fonts:data-highlighted:ring-2 group-focus-visible/fonts:data-highlighted:ring-ring"
-                style={{ top: index * ROW_HEIGHT }}
-                aria-setsize={results.length}
-                aria-posinset={index + 1}
-              >
-                <FontCard font={font} active={font.family === activeFont} onSelect={handleSelect} />
-              </li>
-            );
-          })}
-        </ul>
+              return (
+                <li
+                  key={font.family}
+                  id={`${optionId}-${index}`}
+                  role="option"
+                  aria-selected={font.family === activeFont}
+                  data-highlighted={index === focused ? "" : undefined}
+                  className="absolute inset-x-0 h-[60px] rounded-md group-focus-visible/fonts:data-highlighted:ring-2 group-focus-visible/fonts:data-highlighted:ring-ring"
+                  style={{ top: index * ROW_HEIGHT }}
+                  aria-setsize={results.length}
+                  aria-posinset={index + 1}
+                >
+                  <FontCard font={font} active={font.family === activeFont} onSelect={handleSelect} />
+                </li>
+              );
+            })}
+          </ul>
+          {/* An option can't hold a button, so the hearts sit in a layer over the rows. Pointer only: S toggles the
+              highlighted font from the keyboard, and the layer is hidden from assistive technology. */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0"
+            style={{ height: shown.length * ROW_HEIGHT }}
+            // Clicking a heart shouldn't pull focus out of the list and strand the arrow keys.
+            onMouseDown={(event) => event.preventDefault()}
+          >
+            {rowIndexes.map((index) => {
+              const font = shown[index];
+              if (!font) return null;
+              return (
+                <div
+                  key={font.family}
+                  className="pointer-events-auto absolute right-2 flex h-[60px] items-center"
+                  style={{ top: index * ROW_HEIGHT }}
+                >
+                  <FavoriteFontButton family={font.family} tabIndex={-1} />
+                </div>
+              );
+            })}
+          </div>
+        </div>
         {hasMore ? (
           <div ref={sentinelRef} className="flex justify-center py-3">
             <Button variant="ghost" size="sm" onClick={() => setVisible((count) => count + PAGE_SIZE)}>

@@ -2,7 +2,6 @@
 
 import { memo, useEffect } from "react";
 
-import { FavoriteFontButton } from "@/components/typography/favorite-button";
 import { Badge } from "@/components/ui/badge";
 import { useInView } from "@/hooks/use-in-view";
 import { fontCategoryLabels, isVariableFont } from "@/lib/typography/catalog";
@@ -19,7 +18,8 @@ type FontCardProps = {
 
 /**
  * One option in the font listbox: the family name set in its own typeface, plus its details.
- * The listbox owns keyboard focus, so nothing in here is a tab stop.
+ * The listbox owns keyboard focus, so nothing in here is a tab stop. The favorite heart is not in here: an
+ * option can't contain a button, so the browser draws the hearts in a layer over the list.
  */
 export const FontCard = memo(function FontCard({ font, active, onSelect }: FontCardProps) {
   const { ref, inView } = useInView<HTMLDivElement>();
@@ -48,7 +48,6 @@ export const FontCard = memo(function FontCard({ font, active, onSelect }: FontC
           {isVariableFont(font) ? <Badge variant="brand">Variable</Badge> : null}
         </span>
       </div>
-      <FavoriteFontButton family={font.family} tabIndex={-1} className="absolute top-1/2 right-2 -translate-y-1/2" />
     </div>
   );
 });

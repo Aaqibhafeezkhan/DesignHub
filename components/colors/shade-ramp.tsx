@@ -23,6 +23,7 @@ export function ShadeRamp({ name, shades, size = "lg", anchorStep }: ShadeRampPr
 
   return (
     <ol
+      data-user-colors=""
       aria-label={t("colors.shades.ramp", { name })}
       className={cn("grid grid-cols-11 overflow-hidden rounded-lg border", size === "lg" ? "min-h-40" : "h-12")}
     >
@@ -37,7 +38,7 @@ export function ShadeRamp({ name, shades, size = "lg", anchorStep }: ShadeRampPr
             <button
               type="button"
               onClick={() => copy(value, t("colors.shades.copied", { token, value }))}
-              aria-label={t("colors.shades.copy", { token, value })}
+              aria-label={`${t("colors.shades.copy", { token, value })}${size === "lg" && passesOnWhite ? `, ${t("colors.shades.aaOnWhite")}` : ""}`}
               title={`${token} · ${value}`}
               className="flex w-full flex-col justify-end gap-1 p-2 text-left transition-transform duration-150 hover:-translate-y-0.5 focus-visible:ring-4 focus-visible:ring-current/40 focus-visible:ring-inset focus-visible:outline-none"
               style={{ background: toHex(shade.color), color: text }}
@@ -49,10 +50,10 @@ export function ShadeRamp({ name, shades, size = "lg", anchorStep }: ShadeRampPr
                     {shade.step === anchorStep ? (
                       <span className="size-1.5 rounded-full bg-current" aria-label={t("colors.shades.baseMarker")} />
                     ) : null}
-                  </span>
+                  </span>{" "}
                   <span className="hidden font-mono text-[10px] uppercase opacity-80 xl:block">
                     {toHex(shade.color).slice(1)}
-                  </span>
+                  </span>{" "}
                   <span className="hidden text-[10px] opacity-70 xl:block">
                     {passesOnWhite ? t("colors.shades.aaOnWhite") : ""}
                   </span>
