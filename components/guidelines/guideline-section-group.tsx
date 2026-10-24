@@ -40,6 +40,7 @@ export function GuidelineSectionGroup({
   const { section, pages } = group;
   const listId = `guideline-section-${section.toLowerCase()}`;
   const sectionOn = isSectionOn(pages, excluded);
+  const on = includedCount(pages, excluded);
 
   return (
     <li className="flex flex-col gap-1">
@@ -48,6 +49,7 @@ export function GuidelineSectionGroup({
           type="button"
           aria-expanded={open}
           aria-controls={listId}
+          title={`${on} of ${pages.length} pages on`}
           onClick={() => onOpenChange(!open)}
           className="flex h-9 min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 text-left text-sm font-medium text-foreground transition-colors duration-150 hover:bg-surface-raised"
         >
@@ -60,7 +62,12 @@ export function GuidelineSectionGroup({
           />
           <span className="truncate">{section}</span>
           <span className="ml-auto shrink-0 font-mono text-[11px] font-normal text-muted-foreground">
-            {includedCount(pages, excluded)} of {pages.length} on
+            <span aria-hidden>
+              {on}/{pages.length}
+            </span>
+            <span className="sr-only">
+              {on} of {pages.length} pages on
+            </span>
           </span>
         </button>
         <Switch
@@ -82,8 +89,8 @@ export function GuidelineSectionGroup({
                   title={page.description}
                   className={cn(
                     "flex h-9 min-w-0 flex-1 items-center gap-2.5 rounded-md border border-transparent px-2.5 text-left text-sm text-muted-foreground transition-colors duration-150 hover:border-border hover:text-foreground",
+                    number === undefined && "text-subtle-foreground",
                     page.id === selected && "border-brand/60 bg-surface-raised text-foreground",
-                    number === undefined && "opacity-50",
                   )}
                 >
                   <span className="w-5 shrink-0 font-mono text-[11px] text-subtle-foreground">
