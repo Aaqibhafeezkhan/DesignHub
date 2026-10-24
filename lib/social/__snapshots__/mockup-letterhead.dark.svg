@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1800" viewBox="0 0 1400 1800"><style>
+.h{font-family:'Space Grotesk',ui-sans-serif, system-ui, sans-serif;font-weight:600}
+.b{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:400}
+.bb{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:600}</style><defs><filter id="soft" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".28"/></filter></defs><defs><linearGradient id="desk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#15161a"/><stop offset="1" stop-color="#0b0c0f"/></linearGradient></defs><rect width="1400" height="1800" fill="url(#desk)"/><g transform="translate(200 193)"><rect width="1000" height="1414" fill="#0b0c16" filter="url(#soft)"/>
+      <rect width="1000" height="10" fill="#6366f1"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="64" height="64" x="88" y="78" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#6366f1"/><path d="M48 4 92 48H4Z" fill="#f472b6"/></svg>
+      <text class="h" x="172" y="122" font-size="30" fill="#f0f1f9" text-anchor="start">Acme</text>
+      <text class="bb" x="912" y="100" font-size="15" fill="#686cf8" text-anchor="end"></text>
+      <text class="b" x="912" y="124" font-size="15" fill="#a7aab8" text-anchor="end"></text>
+      <text class="b" x="912" y="148" font-size="15" fill="#a7aab8" text-anchor="end">+1 (555) 010-2030</text>
+      <rect x="88" y="196" width="824" height="1.5" fill="#2b2d38"/>
+      <text class="b" x="88" y="280" font-size="17" fill="#a7aab8" text-anchor="start">September 23, 2026</text>
+      <text class="b" x="88" y="350" font-size="19" fill="#f0f1f9" text-anchor="start">Dear Alex,</text>
+      <rect x="88" y="396" width="742" height="12" rx="6" fill="#2b2d38"/><rect x="88" y="430" width="799" height="12" rx="6" fill="#2b2d38"/><rect x="88" y="464" width="775" height="12" rx="6" fill="#2b2d38"/><rect x="88" y="498" width="750" height="12" rx="6" fill="#2b2d38"/><rect x="88" y="532" width="808" height="12" rx="6" fill="#2b2d38"/><rect x="88" y="566" width="511" height="12" rx="6" fill="#2b2d38"/>
+      <rect x="88" y="632" width="742" height="12" rx="6" fill="#2b2d38"/><rect x="88" y="666" width="799" height="12" rx="6" fill="#2b2d38"/><rect x="88" y="700" width="775" height="12" rx="6" fill="#2b2d38"/><rect x="88" y="734" width="750" height="12" rx="6" fill="#2b2d38"/><rect x="88" y="768" width="511" height="12" rx="6" fill="#2b2d38"/>
+      <rect x="88" y="834" width="742" height="12" rx="6" fill="#2b2d38"/><rect x="88" y="868" width="799" height="12" rx="6" fill="#2b2d38"/><rect x="88" y="902" width="775" height="12" rx="6" fill="#2b2d38"/><rect x="88" y="936" width="511" height="12" rx="6" fill="#2b2d38"/>
+      <text class="b" x="88" y="1030" font-size="19" fill="#f0f1f9" text-anchor="start">Kind regards,</text>
+      <text class="bb" x="88" y="1100" font-size="22" fill="#f0f1f9" text-anchor="start">Jordan Lee</text>
+      <text class="b" x="88" y="1130" font-size="16" fill="#a7aab8" text-anchor="start">Head of Design, Acme</text>
+      <rect y="1318" width="1000" height="96" fill="#161822"/>
+      <text class="b" x="88" y="1372" font-size="15" fill="#a7aab8" text-anchor="start">100 Market Street, San Francisco</text>
+      <text class="bb" x="912" y="1372" font-size="15" fill="#686cf8" text-anchor="end"></text></g></svg>

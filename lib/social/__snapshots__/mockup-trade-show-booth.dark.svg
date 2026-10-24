@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1300" viewBox="0 0 2000 1300"><style>
+.h{font-family:'Space Grotesk',ui-sans-serif, system-ui, sans-serif;font-weight:600}
+.b{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:400}
+.bb{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:600}</style><defs><filter id="soft" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".28"/></filter><linearGradient id="tb-hall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0c10"/><stop offset="1" stop-color="#15161b"/></linearGradient>
+      <linearGradient id="tb-graphic" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#f472b6"/></linearGradient>
+      <linearGradient id="tb-side" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity=".08"/></linearGradient>
+      <linearGradient id="tb-carpet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0.1"/><stop offset="1" stop-color="#000" stop-opacity="0.4"/></linearGradient>
+      <filter id="tb-blur" x="-30%" y="-250%" width="160%" height="600%"><feGaussianBlur stdDeviation="16"/></filter></defs><rect width="2000" height="1300" fill="url(#tb-hall)"/>
+      <rect y="1030" width="2000" height="270" fill="#1c1d23"/>
+      <rect y="1030" width="2000" height="270" fill="url(#tb-carpet)"/><g transform="translate(0 130)"><polygon points="520,740 1480,740 1720,900 280,900" fill="#f472b6"/>
+      <polygon points="520,740 1480,740 1720,900 280,900" fill="url(#tb-carpet)"/>
+      <polygon points="520,250 520,740 280,900 280,165" fill="#161822"/>
+      <polygon points="520,250 520,740 280,900 280,165" fill="#6366f1" fill-opacity=".18"/>
+      <polygon points="520,250 520,740 280,900 280,165" fill="url(#tb-side)"/>
+      <polygon points="1480,250 1480,740 1720,900 1720,165" fill="#161822"/>
+      <polygon points="1480,250 1480,740 1720,900 1720,165" fill="#6366f1" fill-opacity=".18"/>
+      <polygon points="1480,250 1480,740 1720,900 1720,165" fill="#000" fill-opacity=".14"/>
+      <rect x="520" y="250" width="960" height="490" fill="url(#tb-graphic)"/>
+      <circle cx="1310" cy="380" r="250" fill="#ffffff" fill-opacity=".08"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" fill="#ffffff" x="610" y="306" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#ffffff"/><path d="M48 4 92 48H4Z" fill="#ffffff"/></svg>
+      <text class="h" x="610" y="500" font-size="58" fill="#ffffff" text-anchor="start">Acme</text>
+      
+      <polyline points="280,165 520,250 1480,250 1720,165" fill="none" stroke="#3a3d46" stroke-width="10" stroke-linejoin="round"/>
+      <line x1="520" y1="250" x2="520" y2="740" stroke="#3a3d46" stroke-width="8"/>
+      <line x1="1480" y1="250" x2="1480" y2="740" stroke="#3a3d46" stroke-width="8"/>
+      <ellipse cx="1000" cy="868" rx="270" ry="22" fill="#000" fill-opacity="0.55" filter="url(#tb-blur)"/>
+      <rect x="780" y="690" width="440" height="170" fill="#6366f1" filter="url(#soft)"/>
+      <rect x="780" y="690" width="440" height="170" fill="#000" fill-opacity=".06"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="72" height="72" fill="#ffffff" x="808" y="728" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#ffffff"/><path d="M48 4 92 48H4Z" fill="#ffffff"/></svg>
+      <text class="h" x="888" y="786" font-size="36" fill="#ffffff" text-anchor="start">Acme</text>
+      <polygon points="780,690 1220,690 1186,654 814,654" fill="#e8e8ec" fill-opacity="0.85"/>
+      <polygon points="780,690 1220,690 1186,654 814,654" fill="none" stroke="#000" stroke-opacity=".1"/>
+      <ellipse cx="1435" cy="856" rx="120" ry="16" fill="#000" fill-opacity="0.5" filter="url(#tb-blur)"/>
+      <rect x="1346" y="842" width="178" height="18" rx="6" fill="#3a3d46"/>
+      <rect x="1360" y="392" width="150" height="450" fill="url(#tb-graphic)" filter="url(#soft)"/>
+      <rect x="1360" y="392" width="150" height="14" fill="#3a3d46"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="64" height="64" fill="#ffffff" x="1376" y="436" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#ffffff"/><path d="M48 4 92 48H4Z" fill="#ffffff"/></svg>
+      <text class="h" x="1376" y="622" font-size="21" fill="#ffffff" text-anchor="start">Acme</text></g></svg>

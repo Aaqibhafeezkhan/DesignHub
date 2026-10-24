@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640"><style>
+.h{font-family:'Space Grotesk',ui-sans-serif, system-ui, sans-serif;font-weight:600}
+.b{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:400}
+.bb{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:600}</style><defs><filter id="soft" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".28"/></filter><filter id="term-shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="20" stdDeviation="24" flood-color="#000" flood-opacity=".35"/></filter></defs><rect width="1280" height="640" fill="#050806"/>
+      <rect x="56" y="56" width="1168" height="528" rx="16" fill="#0b0f0d" stroke="#1f2a24" filter="url(#term-shadow)"/>
+      <path d="M56 72a16 16 0 0 1 16 -16h1136a16 16 0 0 1 16 16v26H56Z" fill="#111814"/>
+      <circle cx="82" cy="80" r="7" fill="#ff5f57"/><circle cx="104" cy="80" r="7" fill="#febc2e"/><circle cx="126" cy="80" r="7" fill="#28c840"/>
+      <text x="640" y="85" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="400" fill="#8b9a91" text-anchor="middle">~/acme/acme - zsh</text>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="56" height="56" x="1128" y="132" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#6366f1"/><path d="M48 4 92 48H4Z" fill="#f472b6"/></svg>
+      <text x="100" y="166" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="400" fill="#c9d5ce" text-anchor="start">$ git clone github.com/acme/acme</text>
+      <text x="100" y="202" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="400" fill="#c9d5ce" text-anchor="start">$ cd acme &amp;&amp; pnpm dev</text>
+      <text x="100" y="306" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="64" font-weight="700" fill="#ffffff">Acme</text>
+      <rect x="265.6" y="256.08" width="32" height="55.04" fill="#4ade80"/>
+      <text x="100" y="356" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="400" fill="#7f8d85" text-anchor="start">// Design tools for people who ship.</text>
+      <text x="100" y="422" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" fill="#4ade80" text-anchor="start">✓ Ready</text>
+      <text x="218" y="422" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="600" fill="#686cf8" text-anchor="start">→ acme.com</text>
+      <rect x="56" y="544" width="1168" height="1" fill="#1f2a24"/>
+      <text x="100" y="570" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="400" fill="#6b7a72" text-anchor="start">main  ●  acme/acme</text>
+      <text x="1180" y="570" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="400" fill="#6b7a72" text-anchor="end">UTF-8  zsh</text></svg>

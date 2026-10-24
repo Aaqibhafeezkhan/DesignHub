@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640"><style>
+.h{font-family:'Space Grotesk',ui-sans-serif, system-ui, sans-serif;font-weight:600}
+.b{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:400}
+.bb{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:600}</style><defs><filter id="soft" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".28"/></filter></defs><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+    <rect width="1280" height="640" fill="url(#bg)"/>
+    <circle cx="1280" cy="0" r="537.6" fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="25.6"/>
+    <circle cx="1280" cy="0" r="358.40000000000003" fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="25.6"/>
+    <circle cx="0" cy="640" r="281.6" fill="#ffffff" fill-opacity=".07"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="48" height="48" fill="#ffffff" x="80" y="100" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#ffffff"/><path d="M48 4 92 48H4Z" fill="#ffffff"/></svg>
+    <text class="h" x="142.4" y="138.4" font-size="38.400000000000006" fill="#ffffff" text-anchor="start">A...</text>
+      <text class="bb" x="1200" y="132" font-size="20" fill="#ffffff" text-anchor="end" fill-opacity="0.85">github.com/acme</text>
+      <text class="h" x="80" y="290" font-size="64" fill="#ffffff" text-anchor="start">Design tools for</text><text class="h" x="80" y="359.12" font-size="64" fill="#ffffff" text-anchor="start">people who ship.</text>
+      <text class="b" x="80" y="419.12" font-size="26" fill="#ffffff" text-anchor="start" fill-opacity="0.85">Open source. Local first. Free forever.</text>
+      <rect x="80" y="502" width="188.76" height="52.8" rx="26.4" fill="#ffffff"/>
+    <text class="bb" x="174.38" y="536.3199999999999" font-size="22" fill="#6366f1" text-anchor="middle">Try it free</text>
+      <text class="bb" x="292.76" y="539" font-size="22" fill="#ffffff" text-anchor="start" fill-opacity="0.9">acme.com</text>
+      <circle cx="1030" cy="320" r="170" fill="#ffffff" fill-opacity=".1"/>
+      <circle cx="1030" cy="320" r="170" fill="none" stroke="#ffffff" stroke-opacity=".3" stroke-width="2"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="220" height="220" fill="#ffffff" x="920" y="210" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#ffffff"/><path d="M48 4 92 48H4Z" fill="#ffffff"/></svg></svg>

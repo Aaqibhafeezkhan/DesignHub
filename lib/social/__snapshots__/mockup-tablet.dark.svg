@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1300" viewBox="0 0 2400 1300"><style>
+.h{font-family:'Space Grotesk',ui-sans-serif, system-ui, sans-serif;font-weight:600}
+.b{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:400}
+.bb{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:600}</style><defs><filter id="soft" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".28"/></filter></defs><defs><radialGradient id="studio" cx=".5" cy=".35" r=".85"><stop offset="0" stop-color="#1b1c21"/><stop offset="1" stop-color="#08090b"/></radialGradient></defs><rect width="2400" height="1300" fill="url(#studio)"/>
+      <g transform="translate(112 174)">
+    <rect width="1492" height="952" rx="42" fill="#1d1e22" filter="url(#soft)"/>
+    <rect x="1.5" y="1.5" width="1489" height="949" rx="40.5" fill="none" stroke="#45464d" stroke-width="3"/>
+    <circle cx="746" cy="13" r="4" fill="#3a3b41"/>
+    <clipPath id="tablet-112-174"><rect x="26" y="26" width="1440" height="900" rx="18"/></clipPath>
+    <g clip-path="url(#tablet-112-174)"><svg x="26" y="26" width="1440" height="900" viewBox="0 0 1600 1000" overflow="hidden"><defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6366f1" stop-opacity=".3"/><stop offset="1" stop-color="#6366f1" stop-opacity="0"/></linearGradient></defs>
+    <rect width="1600" height="1000" fill="#0b0c16"/>
+    <rect width="280" height="1000" fill="#161822"/>
+    <rect x="280" width="1" height="1000" fill="#2b2d38"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="36" height="36" x="32" y="32" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#6366f1"/><path d="M48 4 92 48H4Z" fill="#f472b6"/></svg>
+    <text class="h" x="80" y="58" font-size="22" fill="#f0f1f9" text-anchor="start">Acme</text>
+    <rect x="20" y="118" width="240" height="46" rx="12" fill="#6366f1" fill-opacity=".12"/>
+        <rect x="40" y="133" width="16" height="16" rx="4" fill="#6366f1" fill-opacity="1"/>
+        <text class="bb" x="72" y="147" font-size="18" fill="#f0f1f9" text-anchor="start">Overview</text>
+        <rect x="40" y="189" width="16" height="16" rx="4" fill="#a7aab8" fill-opacity="0.5"/>
+        <text class="b" x="72" y="203" font-size="18" fill="#a7aab8" text-anchor="start">Projects</text>
+        <rect x="40" y="245" width="16" height="16" rx="4" fill="#a7aab8" fill-opacity="0.5"/>
+        <text class="b" x="72" y="259" font-size="18" fill="#a7aab8" text-anchor="start">Analytics</text>
+        <rect x="40" y="301" width="16" height="16" rx="4" fill="#a7aab8" fill-opacity="0.5"/>
+        <text class="b" x="72" y="315" font-size="18" fill="#a7aab8" text-anchor="start">Customers</text>
+        <rect x="40" y="357" width="16" height="16" rx="4" fill="#a7aab8" fill-opacity="0.5"/>
+        <text class="b" x="72" y="371" font-size="18" fill="#a7aab8" text-anchor="start">Settings</text>
+    <text class="h" x="328" y="90" font-size="34" fill="#f0f1f9" text-anchor="start">Overview</text>
+    <rect x="1172" y="54" width="300" height="48" rx="12" fill="#161822" stroke="#2b2d38"/>
+    <text class="b" x="1196" y="85" font-size="17" fill="#a7aab8" text-anchor="start">Search...</text>
+    <circle cx="1524" cy="78" r="26" fill="#6366f1"/>
+    <text class="bb" x="1524" y="85" font-size="18" fill="#ffffff" text-anchor="middle">JL</text>
+    <rect x="328" y="140" width="288" height="150" rx="12" fill="#161822" stroke="#2b2d38"/>
+        <text class="b" x="356" y="184" font-size="17" fill="#a7aab8" text-anchor="start">Revenue</text>
+        <text class="h" x="356" y="238" font-size="38" fill="#f0f1f9" text-anchor="start">$48.2k</text>
+        <text class="bb" x="356" y="270" font-size="15" fill="#686cf8" text-anchor="start">+12.4%</text><rect x="640" y="140" width="288" height="150" rx="12" fill="#161822" stroke="#2b2d38"/>
+        <text class="b" x="668" y="184" font-size="17" fill="#a7aab8" text-anchor="start">Active users</text>
+        <text class="h" x="668" y="238" font-size="38" fill="#f0f1f9" text-anchor="start">9,381</text>
+        <text class="bb" x="668" y="270" font-size="15" fill="#686cf8" text-anchor="start">+5.1%</text><rect x="952" y="140" width="288" height="150" rx="12" fill="#161822" stroke="#2b2d38"/>
+        <text class="b" x="980" y="184" font-size="17" fill="#a7aab8" text-anchor="start">Conversion</text>
+        <text class="h" x="980" y="238" font-size="38" fill="#f0f1f9" text-anchor="start">3.8%</text>
+        <text class="bb" x="980" y="270" font-size="15" fill="#686cf8" text-anchor="start">+0.6%</text><rect x="1264" y="140" width="288" height="150" rx="12" fill="#161822" stroke="#2b2d38"/>
+        <text class="b" x="1292" y="184" font-size="17" fill="#a7aab8" text-anchor="start">Churn</text>
+        <text class="h" x="1292" y="238" font-size="38" fill="#f0f1f9" text-anchor="start">1.2%</text>
+        <text class="bb" x="1292" y="270" font-size="15" fill="#686cf8" text-anchor="start">-0.3%</text>
+    <rect x="328" y="318" width="783.36" height="400" rx="12" fill="#161822" stroke="#2b2d38"/>
+    <text class="h" x="368" y="372" font-size="22" fill="#f0f1f9" text-anchor="start">Revenue over time</text>
+    <rect x="368" y="408" width="703.36" height="1" fill="#2b2d38"/><rect x="368" y="478" width="703.36" height="1" fill="#2b2d38"/><rect x="368" y="548" width="703.36" height="1" fill="#2b2d38"/><rect x="368" y="618" width="703.36" height="1" fill="#2b2d38"/>
+    <path d="M368.0 554.6 L431.9 538.4 L495.9 546.5 L559.8 511.4 L623.8 522.2 L687.7 489.8 L751.7 500.6 L815.6 468.2 L879.5 476.3 L943.5 443.9 L1007.4 452.0 L1071.4 419.6 L1071.4 668 L368.0 668 Z" fill="url(#area)"/>
+    <path d="M368.0 554.6 L431.9 538.4 L495.9 546.5 L559.8 511.4 L623.8 522.2 L687.7 489.8 L751.7 500.6 L815.6 468.2 L879.5 476.3 L943.5 443.9 L1007.4 452.0 L1071.4 419.6" fill="none" stroke="#6366f1" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="1071.3600000000001" cy="419.6" r="8" fill="#6366f1" stroke="#0b0c16" stroke-width="4"/>
+    <rect x="1135.3600000000001" y="318" width="416.64" height="400" rx="12" fill="#161822" stroke="#2b2d38"/>
+    <text class="h" x="1167.3600000000001" y="372" font-size="22" fill="#f0f1f9" text-anchor="start">Channels</text>
+    <text class="b" x="1167.3600000000001" y="428" font-size="16" fill="#a7aab8" text-anchor="start">Organic</text>
+        <rect x="1167.3600000000001" y="442" width="352.64" height="12" rx="6" fill="#2b2d38"/>
+        <rect x="1167.3600000000001" y="442" width="254" height="12" rx="6" fill="#6366f1"/><text class="b" x="1167.3600000000001" y="496" font-size="16" fill="#a7aab8" text-anchor="start">Referral</text>
+        <rect x="1167.3600000000001" y="510" width="352.64" height="12" rx="6" fill="#2b2d38"/>
+        <rect x="1167.3600000000001" y="510" width="190" height="12" rx="6" fill="#f472b6"/><text class="b" x="1167.3600000000001" y="564" font-size="16" fill="#a7aab8" text-anchor="start">Social</text>
+        <rect x="1167.3600000000001" y="578" width="352.64" height="12" rx="6" fill="#2b2d38"/>
+        <rect x="1167.3600000000001" y="578" width="134" height="12" rx="6" fill="#6366f1"/><text class="b" x="1167.3600000000001" y="632" font-size="16" fill="#a7aab8" text-anchor="start">Email</text>
+        <rect x="1167.3600000000001" y="646" width="352.64" height="12" rx="6" fill="#2b2d38"/>
+        <rect x="1167.3600000000001" y="646" width="92" height="12" rx="6" fill="#f472b6"/>
+    <rect x="328" y="742" width="1224" height="222" rx="12" fill="#161822" stroke="#2b2d38"/>
+    
+          <text class="bb" x="360" y="794" font-size="18" fill="#f0f1f9" text-anchor="start">Website redesign</text>
+          <text class="b" x="878.8000000000001" y="794" font-size="17" fill="#a7aab8" text-anchor="start">Jordan Lee</text>
+          <rect x="1380" y="770" width="140" height="34" rx="17" fill="#6366f1" fill-opacity="0.14"/>
+          <text class="bb" x="1450" y="793" font-size="15" fill="#6366f1" text-anchor="middle">In progress</text><rect x="360" y="820" width="1160" height="1" fill="#2b2d38"/>
+          <text class="bb" x="360" y="856" font-size="18" fill="#f0f1f9" text-anchor="start">Brand refresh</text>
+          <text class="b" x="878.8000000000001" y="856" font-size="17" fill="#a7aab8" text-anchor="start">Jordan Lee</text>
+          <rect x="1380" y="832" width="140" height="34" rx="17" fill="#2b2d38" fill-opacity="1"/>
+          <text class="bb" x="1450" y="855" font-size="15" fill="#a7aab8" text-anchor="middle">Done</text><rect x="360" y="882" width="1160" height="1" fill="#2b2d38"/>
+          <text class="bb" x="360" y="918" font-size="18" fill="#f0f1f9" text-anchor="start">Mobile launch</text>
+          <text class="b" x="878.8000000000001" y="918" font-size="17" fill="#a7aab8" text-anchor="start">Jordan Lee</text>
+          <rect x="1380" y="894" width="140" height="34" rx="17" fill="#2b2d38" fill-opacity="1"/>
+          <text class="bb" x="1450" y="917" font-size="15" fill="#a7aab8" text-anchor="middle">Done</text></svg></g>
+  </g>
+      <g transform="translate(1676 176)">
+    <rect width="612" height="948" rx="42" fill="#1d1e22" filter="url(#soft)"/>
+    <rect x="1.5" y="1.5" width="609" height="945" rx="40.5" fill="none" stroke="#45464d" stroke-width="3"/>
+    <circle cx="306" cy="13" r="4" fill="#3a3b41"/>
+    <clipPath id="tablet-1676-176"><rect x="26" y="26" width="560" height="896" rx="18"/></clipPath>
+    <g clip-path="url(#tablet-1676-176)"><svg x="26" y="26" width="560" height="896" viewBox="0 0 800 1280" overflow="hidden"><defs><linearGradient id="tm-hero" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+    <rect width="800" height="1280" fill="#0b0c16"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="36" height="36" x="56" y="40" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#6366f1"/><path d="M48 4 92 48H4Z" fill="#f472b6"/></svg>
+    <text class="h" x="106" y="67" font-size="24" fill="#f0f1f9" text-anchor="start">Acme</text>
+    <rect x="712" y="46" width="32" height="3" rx="1.5" fill="#f0f1f9"/><rect x="712" y="57" width="32" height="3" rx="1.5" fill="#f0f1f9"/><rect x="712" y="68" width="32" height="3" rx="1.5" fill="#f0f1f9"/>
+    <rect y="112" width="800" height="1" fill="#2b2d38"/>
+    <text class="bb" x="56" y="190" font-size="16" fill="#686cf8" text-anchor="start" letter-spacing="3">NEW  ·  ACME 2.0</text>
+    
+    <text class="b" x="56" y="253.6" font-size="24" fill="#a7aab8" text-anchor="start">Acme helps teams move from idea to launch with</text><text class="b" x="56" y="289.6" font-size="24" fill="#a7aab8" text-anchor="start">one consistent system.</text>
+    <rect x="56" y="333.6" width="334" height="64" rx="12" fill="#6366f1"/>
+    <text class="bb" x="223" y="373.6" font-size="21" fill="#ffffff" text-anchor="middle">Get started</text>
+    <rect x="410" y="333.6" width="334" height="64" rx="12" fill="none" stroke="#2b2d38" stroke-width="2"/>
+    <text class="bb" x="577" y="373.6" font-size="21" fill="#f0f1f9" text-anchor="middle">Learn more</text>
+    <rect x="56" y="445.6" width="688" height="340" rx="18" fill="url(#tm-hero)"/>
+    <rect x="92" y="485.6" width="616" height="260" rx="12" fill="#0b0c16" fill-opacity=".94"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="44" height="44" x="124" y="517.6" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#6366f1"/><path d="M48 4 92 48H4Z" fill="#f472b6"/></svg>
+    <text class="h" x="184" y="548.6" font-size="22" fill="#f0f1f9" text-anchor="start">Acme</text>
+    <rect x="124" y="595.6" width="497" height="9" rx="5" fill="#2b2d38"/><rect x="124" y="621.6" width="342" height="9" rx="5" fill="#2b2d38"/>
+    <rect x="124" y="659.6" width="268" height="56" rx="12" fill="#f472b6" fill-opacity=".14"/>
+    <rect x="408" y="659.6" width="268" height="56" rx="12" fill="#6366f1" fill-opacity=".14"/>
+    <rect x="56" y="825.6" width="688" height="132" rx="12" fill="#161822" stroke="#2b2d38"/>
+        <rect x="84" y="853.6" width="52" height="52" rx="12" fill="#6366f1" fill-opacity=".16"/>
+        <circle cx="110" cy="879.6" r="9" fill="#6366f1"/>
+        <text class="h" x="160" y="879.6" font-size="24" fill="#f0f1f9" text-anchor="start">Consistent</text>
+        <rect x="160" y="899.6" width="493" height="9" rx="4" fill="#2b2d38"/><rect x="160" y="923.6" width="340" height="9" rx="4" fill="#2b2d38"/><rect x="56" y="981.6" width="688" height="132" rx="12" fill="#161822" stroke="#2b2d38"/>
+        <rect x="84" y="1009.6" width="52" height="52" rx="12" fill="#f472b6" fill-opacity=".16"/>
+        <circle cx="110" cy="1035.6" r="9" fill="#f472b6"/>
+        <text class="h" x="160" y="1035.6" font-size="24" fill="#f0f1f9" text-anchor="start">Accessible</text>
+        <rect x="160" y="1055.6" width="493" height="9" rx="4" fill="#2b2d38"/><rect x="160" y="1079.6" width="340" height="9" rx="4" fill="#2b2d38"/><rect x="56" y="1137.6" width="688" height="132" rx="12" fill="#161822" stroke="#2b2d38"/>
+        <rect x="84" y="1165.6" width="52" height="52" rx="12" fill="#6366f1" fill-opacity=".16"/>
+        <circle cx="110" cy="1191.6" r="9" fill="#6366f1"/>
+        <text class="h" x="160" y="1191.6" font-size="24" fill="#f0f1f9" text-anchor="start">Local first</text>
+        <rect x="160" y="1211.6" width="493" height="9" rx="4" fill="#2b2d38"/><rect x="160" y="1235.6" width="340" height="9" rx="4" fill="#2b2d38"/></svg></g>
+  </g></svg>

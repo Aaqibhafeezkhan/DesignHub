@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1700" viewBox="0 0 1400 1700"><style>
+.h{font-family:'Space Grotesk',ui-sans-serif, system-ui, sans-serif;font-weight:600}
+.b{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:400}
+.bb{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:600}</style><defs><filter id="soft" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".28"/></filter><linearGradient id="nb-spine" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#000" stop-opacity=".32"/>
+        <stop offset=".05" stop-color="#fff" stop-opacity=".12"/>
+        <stop offset=".11" stop-color="#000" stop-opacity=".18"/>
+        <stop offset=".16" stop-color="#000" stop-opacity="0"/>
+        <stop offset="1" stop-color="#000" stop-opacity=".1"/>
+      </linearGradient>
+      <linearGradient id="nb-sheen" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#fff" stop-opacity="0.16"/>
+        <stop offset=".5" stop-color="#fff" stop-opacity="0"/>
+        <stop offset="1" stop-color="#000" stop-opacity=".16"/>
+      </linearGradient>
+      <linearGradient id="nb-band" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#000" stop-opacity=".22"/>
+        <stop offset=".3" stop-color="#fff" stop-opacity=".16"/>
+        <stop offset="1" stop-color="#000" stop-opacity=".26"/>
+      </linearGradient>
+      <clipPath id="nb-clip"><path d="M320 240 H1004 Q1030 240 1030 266 V1214 Q1030 1240 1004 1240 H320 Q310 1240 310 1230 V250 Q310 240 320 240 Z"/></clipPath>
+      <filter id="nb-blur" x="-30%" y="-250%" width="160%" height="600%"><feGaussianBlur stdDeviation="26"/></filter></defs><defs><linearGradient id="desk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9e7e3"/><stop offset="1" stop-color="#d8d5cf"/></linearGradient></defs><rect width="1400" height="1700" fill="url(#desk)"/><ellipse cx="694" cy="1276" rx="420" ry="34" fill="#000" fill-opacity="0.28" filter="url(#nb-blur)"/>
+      <path d="M334 254 H1044 Q1052 254 1052 266 V1232 Q1052 1248 1040 1248 H334 Z" fill="#f1ede4"/>
+      <path d="M1032 260 V1242 H334 " fill="none" stroke="#cfcac1" stroke-width="1.5"/><path d="M1032 262 V1244 H334 " fill="none" stroke="#cfcac1" stroke-width="1.5"/><path d="M1032 264 V1246 H334 " fill="none" stroke="#cfcac1" stroke-width="1.5"/><path d="M1032 266 V1248 H334 " fill="none" stroke="#cfcac1" stroke-width="1.5"/><path d="M1032 268 V1250 H334 " fill="none" stroke="#cfcac1" stroke-width="1.5"/><path d="M1032 270 V1252 H334 " fill="none" stroke="#cfcac1" stroke-width="1.5"/><path d="M1032 272 V1254 H334 " fill="none" stroke="#cfcac1" stroke-width="1.5"/><path d="M1032 274 V1256 H334 " fill="none" stroke="#cfcac1" stroke-width="1.5"/><path d="M1032 276 V1258 H334 " fill="none" stroke="#cfcac1" stroke-width="1.5"/>
+      <path d="M320 240 H1004 Q1030 240 1030 266 V1214 Q1030 1240 1004 1240 H320 Q310 1240 310 1230 V250 Q310 240 320 240 Z" fill="#6366f1" filter="url(#soft)"/>
+      <g clip-path="url(#nb-clip)">
+        <rect x="310" y="240" width="720" height="1000" fill="url(#nb-sheen)"/>
+        <rect x="910" y="238" width="34" height="1004" fill="#f472b6"/>
+        <rect x="910" y="238" width="34" height="1004" fill="url(#nb-band)"/>
+        <rect x="310" y="240" width="720" height="1000" fill="url(#nb-spine)"/>
+        <rect x="380" y="280" width="3" height="920" fill="#000" fill-opacity=".14"/>
+      </g>
+      <g opacity=".3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="220" height="220" fill="#ffffff" x="383" y="433" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#ffffff"/><path d="M48 4 92 48H4Z" fill="#ffffff"/></svg></g>
+      <g opacity=".28"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="220" height="220" fill="#000000" x="380" y="430" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#000000"/><path d="M48 4 92 48H4Z" fill="#000000"/></svg></g>
+      <text class="h" x="380" y="760" font-size="46" fill="#ffffff" text-anchor="start" letter-spacing="2">Acme</text>
+      <rect x="380" y="796" width="90" height="6" rx="3" fill="#ffffff" fill-opacity=".7"/>
+      <text class="bb" x="380" y="1170" font-size="24" fill="#ffffff" text-anchor="start" letter-spacing="2" fill-opacity="0.85"></text></svg>

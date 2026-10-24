@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="624" viewBox="0 0 1640 624"><style>
+.h{font-family:'Space Grotesk',ui-sans-serif, system-ui, sans-serif;font-weight:600}
+.b{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:400}
+.bb{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:600}</style><defs><filter id="soft" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".28"/></filter></defs><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+    <rect width="1640" height="624" fill="url(#bg)"/>
+    <circle cx="1640" cy="0" r="688.8" fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="32.8"/>
+    <circle cx="1640" cy="0" r="459.20000000000005" fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="32.8"/>
+    <circle cx="0" cy="624" r="360.8" fill="#ffffff" fill-opacity=".07"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" fill="#ffffff" x="772" y="120" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#ffffff"/><path d="M48 4 92 48H4Z" fill="#ffffff"/></svg>
+      <text class="h" x="820" y="330" font-size="64" fill="#ffffff" text-anchor="middle">Design tools for people who</text><text class="h" x="820" y="399.12" font-size="64" fill="#ffffff" text-anchor="middle">ship.</text>
+      <text class="b" x="820" y="453.12" font-size="26" fill="#ffffff" text-anchor="middle" fill-opacity="0.85">Open source. Local first. Free forever.</text>
+      <rect x="744.76" y="489.12" width="150.48000000000002" height="52.8" rx="26.4" fill="#ffffff"/>
+    <text class="bb" x="820" y="523.4399999999999" font-size="22" fill="#6366f1" text-anchor="middle">acme.com</text></svg>

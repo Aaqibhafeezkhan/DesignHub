@@ -11,3 +11,4 @@ packages/cli/dist
 
 lib/background/__fixtures__
 lib/background/__snapshots__
+lib/social/__snapshots__

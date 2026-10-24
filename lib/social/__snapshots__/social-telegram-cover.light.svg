@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720"><style>
+.h{font-family:'Space Grotesk',ui-sans-serif, system-ui, sans-serif;font-weight:600}
+.b{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:400}
+.bb{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:600}</style><defs><filter id="soft" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".28"/></filter></defs><defs>
+      <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#14151f" stroke-opacity="0.06" stroke-width="1"/></pattern>
+      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="130"/></filter>
+      <radialGradient id="fade" cx=".5" cy=".5" r=".75"><stop offset=".3" stop-color="#fafbff" stop-opacity="0"/><stop offset="1" stop-color="#fafbff"/></radialGradient>
+    </defs>
+    <rect width="1280" height="720" fill="#fafbff"/>
+    <rect width="1280" height="720" fill="url(#grid)"/>
+    <circle cx="1049.6" cy="144" r="302.4" fill="#6366f1" fill-opacity="0.35" filter="url(#glow)"/>
+    <circle cx="793.6" cy="684" r="244.8" fill="#f472b6" fill-opacity="0.28" filter="url(#glow)"/>
+    <rect width="1280" height="720" fill="url(#fade)"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="104" height="104" x="588" y="152" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#6366f1"/><path d="M48 4 92 48H4Z" fill="#f472b6"/></svg>
+      <text class="h" x="640" y="358" font-size="64" fill="#14151f" text-anchor="middle">Acme</text>
+      <text class="b" x="640" y="410" font-size="28" fill="#525461" text-anchor="middle">Design tools for people who ship.</text>
+      <text class="bb" x="640" y="568" font-size="24" fill="#5e60ea" text-anchor="middle">acme.com  ·  @acme</text></svg>

@@ -1,8 +1,5 @@
 import { describe, expect, test } from "vitest";
 
-import { brandSurface } from "@/lib/brand/theme";
-import { buildBrandTokens } from "@/lib/brand/tokens";
-import { measureText } from "@/lib/logo/measure";
 import { getTemplate, mockupTemplates } from "@/lib/mockups/registry";
 import { watchFace, watchNotification } from "@/lib/mockups/templates/smartwatch";
 import { storeCaptions, captionLines } from "@/lib/mockups/templates/app-store";
@@ -17,51 +14,11 @@ import {
 import { BOOTH, boothCopy } from "@/lib/mockups/templates/trade-show-booth";
 import { VAN, vanCopy } from "@/lib/mockups/templates/delivery-van";
 import type { MockupContext } from "@/lib/mockups/types";
-import { defaultSnapshot } from "@/lib/projects/snapshot";
-import { resolveSocialContent } from "@/lib/social/content";
 import { socialTemplates } from "@/lib/social/registry";
 import type { SocialContext } from "@/lib/social/types";
+import { mockupContext, socialContext } from "@/lib/test/draw-context";
 import { rootSize, xmlError } from "@/lib/test/xml";
 import type { BrandMode } from "@/types/brand";
-
-/** The default brand, built the same way `useBrandTokens()` builds the live one. */
-function drawContext(mode: BrandMode, name?: string) {
-  const { brand, colors, typography, tokens, effects } = defaultSnapshot(name);
-  const tokensForBrand = buildBrandTokens({
-    profile: brand.profile,
-    swatches: colors.swatches,
-    gradient: colors.gradient,
-    headingFont: typography.headingFont,
-    bodyFont: typography.bodyFont,
-    catalog: [],
-    rhythm: typography.rhythm,
-    scale: typography.scale,
-    radiusBase: tokens.settings.radiusBase,
-    spacingBase: tokens.settings.spacingBase,
-    shadowLayers: effects.settings.shadow.layers,
-  });
-  return {
-    brand: tokensForBrand,
-    surface: brandSurface(tokensForBrand, mode),
-    mode,
-    fontCss: "",
-    measure: measureText,
-  };
-}
-
-function socialContext(mode: BrandMode, name?: string): SocialContext {
-  const draw = drawContext(mode, name);
-  const { social } = defaultSnapshot(name);
-  return {
-    ...draw,
-    content: resolveSocialContent(social.content, draw.brand),
-    layout: { padding: social.design.padding, background: social.design.background },
-  };
-}
-
-function mockupContext(mode: BrandMode, name?: string): MockupContext {
-  return { ...drawContext(mode, name), content: defaultSnapshot(name).mockups.content };
-}
 
 const modes: BrandMode[] = ["light", "dark"];
 // Characters that must be escaped, to catch text written into the SVG unescaped.

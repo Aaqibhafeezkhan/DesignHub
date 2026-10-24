@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100"><style>
+.h{font-family:'Space Grotesk',ui-sans-serif, system-ui, sans-serif;font-weight:600}
+.b{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:400}
+.bb{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:600}</style><defs><filter id="soft" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".28"/></filter></defs><defs><linearGradient id="desk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9e7e3"/><stop offset="1" stop-color="#d8d5cf"/></linearGradient></defs><rect width="1600" height="1100" fill="url(#desk)"/>
+      <g transform="translate(180 110)"><g transform="rotate(-5 550 275)"><rect width="1100" height="550" rx="6" fill="#f0f3ff" filter="url(#soft)"/>
+      <path d="M0 6 Q0 0 6 0 H1094 Q1100 0 1100 6 L590 286 Q550 319 510 286 Z" fill="#6366f1"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="68" height="68" fill="#ffffff" x="516" y="99" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#ffffff"/><path d="M48 4 92 48H4Z" fill="#ffffff"/></svg></g></g>
+      <g transform="translate(330 470)"><g transform="rotate(3 550 275)"><rect width="1100" height="550" rx="6" fill="#fafbff" filter="url(#soft)"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="52" height="52" x="56" y="52" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#6366f1"/><path d="M48 4 92 48H4Z" fill="#f472b6"/></svg>
+      <text class="h" x="124" y="88" font-size="24" fill="#14151f" text-anchor="start">Acme</text>
+      <text class="b" x="56" y="138" font-size="15" fill="#525461" text-anchor="start">100 Market Street, San Francisco</text>
+      <rect x="944" y="48" width="100" height="120" rx="4" fill="none" stroke="#daddec" stroke-width="2" stroke-dasharray="6 5"/>
+      <text class="b" x="994" y="116" font-size="13" fill="#525461" text-anchor="middle" letter-spacing="2">STAMP</text>
+      <text class="bb" x="490" y="300" font-size="24" fill="#14151f" text-anchor="start">Alex Morgan</text>
+      <text class="b" x="490" y="336" font-size="19" fill="#14151f" text-anchor="start">24 Harbour Lane</text>
+      <text class="b" x="490" y="366" font-size="19" fill="#14151f" text-anchor="start">Portland, OR 97205</text>
+      <rect y="538" width="1100" height="12" fill="#6366f1"/></g></g></svg>

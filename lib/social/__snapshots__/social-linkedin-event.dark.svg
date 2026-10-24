@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1776" height="444" viewBox="0 0 1776 444"><style>
+.h{font-family:'Space Grotesk',ui-sans-serif, system-ui, sans-serif;font-weight:600}
+.b{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:400}
+.bb{font-family:'Inter',ui-sans-serif, system-ui, sans-serif;font-weight:600}</style><defs><filter id="soft" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".28"/></filter></defs><defs>
+      <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#f0f1f9" stroke-opacity="0.07" stroke-width="1"/></pattern>
+      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="80"/></filter>
+      <radialGradient id="fade" cx=".5" cy=".5" r=".75"><stop offset=".3" stop-color="#0b0c16" stop-opacity="0"/><stop offset="1" stop-color="#0b0c16"/></radialGradient>
+    </defs>
+    <rect width="1776" height="444" fill="#0b0c16"/>
+    <rect width="1776" height="444" fill="url(#grid)"/>
+    <circle cx="1456.32" cy="88.80000000000001" r="186.48" fill="#6366f1" fill-opacity="0.55" filter="url(#glow)"/>
+    <circle cx="1101.12" cy="421.79999999999995" r="150.96" fill="#f472b6" fill-opacity="0.4" filter="url(#glow)"/>
+    <rect width="1776" height="444" fill="url(#fade)"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="56" height="56" x="288" y="44" preserveAspectRatio="xMidYMid meet"><path d="M48 4 92 48 48 92 4 48Z" fill="#6366f1"/><path d="M48 4 92 48H4Z" fill="#f472b6"/></svg>
+      <text class="h" x="368" y="84" font-size="34" fill="#f0f1f9" text-anchor="start">Acme</text>
+      <text class="h" x="288" y="218" font-size="72" fill="#f0f1f9" text-anchor="start">Design tools for people who</text><text class="h" x="288" y="295.76" font-size="72" fill="#f0f1f9" text-anchor="start">ship.</text>
+      <text class="bb" x="288" y="388" font-size="26" fill="#686cf8" text-anchor="start">acme.com  ·  @acme</text>
+      <g transform="translate(1396.2 362)"><rect x="0" y="0" width="91.8" height="43.199999999999996" rx="21.599999999999998" fill="#6366f1"/>
+    <text class="bb" x="45.9" y="28.08" font-size="18" fill="#ffffff" text-anchor="middle">EVENT</text></g></svg>
