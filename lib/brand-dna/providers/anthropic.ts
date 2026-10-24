@@ -1,5 +1,3 @@
-import type Anthropic from "@anthropic-ai/sdk";
-
 import { loadAiKey, type StoredAiKey } from "@/lib/brand-dna/ai-key";
 import { sampleToPngBase64 } from "@/lib/brand-dna/providers/encode";
 import { localProvider } from "@/lib/brand-dna/providers/local";
@@ -49,15 +47,80 @@ export const AI_OUTPUT_SCHEMA = {
   additionalProperties: false,
 } as const;
 
-/** The only part of the SDK client the provider uses, so tests can stand in for it without a network. */
+/** One block of a message: an image sent as base64 PNG, or text. */
+export type MessageBlock =
+  { type: "image"; source: { type: "base64"; media_type: "image/png"; data: string } } | { type: "text"; text: string };
+
+/** The request body of the Messages API, with only the fields the provider sends. */
+export type MessagesRequest = {
+  model: string;
+  max_tokens: number;
+  system: string;
+  output_config: { effort: "low"; format: { type: "json_schema"; schema: typeof AI_OUTPUT_SCHEMA } };
+  messages: { role: "user"; content: MessageBlock[] }[];
+};
+
+/** The part of the response the provider reads. */
+export type MessagesResponse = {
+  content: { type: string; text?: string }[];
+  stop_reason: string | null;
+};
+
+/** The only part of a client the provider uses, so tests can stand in for it without a network. */
 export type MessagesClient = {
   messages: {
-    create: (
-      body: Anthropic.MessageCreateParamsNonStreaming,
-      options?: { signal?: AbortSignal },
-    ) => Promise<Anthropic.Message>;
+    create: (body: MessagesRequest, options?: { signal?: AbortSignal }) => Promise<MessagesResponse>;
   };
 };
+
+export const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
+const API_VERSION = "2023-06-01";
+/** Statuses worth one more try, like the SDK did: rate limits and server errors. */
+const RETRY_STATUSES = new Set([408, 409, 429, 500, 502, 503, 504, 529]);
+
+/** An HTTP failure with its status, so `describeAiError` can explain it. */
+export class ProviderHttpError extends Error {
+  constructor(readonly status: number) {
+    super(`The provider answered with status ${status}.`);
+  }
+}
+
+/**
+ * A Messages API client built on `fetch`. The person supplied their own key and it only goes to the
+ * provider, so the header that allows calls from a browser is intended. Rate limits and server errors
+ * are tried once more. The key is only ever put in a header, never in a URL, an error or a log.
+ */
+export function createFetchClient(
+  key: string,
+  fetchImpl: typeof fetch = (...args) => fetch(...args),
+  wait: (ms: number) => Promise<void> = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+): MessagesClient {
+  return {
+    messages: {
+      async create(body, options = {}) {
+        for (let attempt = 0; ; attempt += 1) {
+          const response = await fetchImpl(MESSAGES_URL, {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              "x-api-key": key,
+              "anthropic-version": API_VERSION,
+              "anthropic-dangerous-direct-browser-access": "true",
+            },
+            body: JSON.stringify(body),
+            signal: options.signal,
+          });
+          if (response.ok) return (await response.json()) as MessagesResponse;
+          if (attempt === 0 && RETRY_STATUSES.has(response.status)) {
+            await wait(500);
+            continue;
+          }
+          throw new ProviderHttpError(response.status);
+        }
+      },
+    },
+  };
+}
 
 /** Everything that is sent: the images (as the exact PNG data), the instructions and the model. */
 export type AiRequestPreview = {
@@ -77,7 +140,7 @@ export function aiRequestPreview(images: DnaImage[], encode: (image: DnaImage) =
 }
 
 /** The request body for the preview: one image block per image, then the instruction. */
-export function buildAiRequest(preview: AiRequestPreview): Anthropic.MessageCreateParamsNonStreaming {
+export function buildAiRequest(preview: AiRequestPreview): MessagesRequest {
   return {
     model: preview.model,
     max_tokens: 4096,
@@ -87,13 +150,10 @@ export function buildAiRequest(preview: AiRequestPreview): Anthropic.MessageCrea
       {
         role: "user",
         content: [
-          ...preview.images.map(
-            (image) =>
-              ({
-                type: "image",
-                source: { type: "base64", media_type: "image/png", data: image.base64 },
-              }) as const,
-          ),
+          ...preview.images.map((image): MessageBlock => ({
+            type: "image",
+            source: { type: "base64", media_type: "image/png", data: image.base64 },
+          })),
           { type: "text", text: preview.prompt },
         ],
       },
@@ -168,10 +228,7 @@ export type AiProviderDeps = {
 };
 
 async function browserClient(key: string): Promise<MessagesClient> {
-  // Loaded on first use, so the SDK stays out of every other page.
-  const { default: Client } = await import("@anthropic-ai/sdk");
-  // The person supplied their own key and it only goes to the provider, so browser use is intended.
-  return new Client({ apiKey: key, dangerouslyAllowBrowser: true, maxRetries: 1 });
+  return createFetchClient(key);
 }
 
 /**
@@ -208,7 +265,7 @@ export function createAiProvider(deps: AiProviderDeps): BrandDnaProvider {
         if (response.stop_reason === "refusal") throw new Error("The model declined to describe these images.");
         if (response.stop_reason === "max_tokens") throw new Error("The answer was cut off.");
         const block = response.content.find((item) => item.type === "text");
-        if (!block || block.type !== "text") throw new Error("The model returned no answer.");
+        if (!block?.text) throw new Error("The model returned no answer.");
         const result = parseAiAnswer(block.text);
         onStage?.("type");
         onStage?.("done");
@@ -223,7 +280,7 @@ export function createAiProvider(deps: AiProviderDeps): BrandDnaProvider {
   };
 }
 
-/** The provider the app registers: the real SDK, the stored key and the canvas encoder. */
+/** The provider the app registers: the fetch client, the stored key and the canvas encoder. */
 export const aiProvider = createAiProvider({
   loadKey: loadAiKey,
   createClient: browserClient,

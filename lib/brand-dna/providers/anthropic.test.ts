@@ -6,8 +6,11 @@ import {
   aiRequestPreview,
   buildAiRequest,
   createAiProvider,
+  createFetchClient,
   describeAiError,
+  MESSAGES_URL,
   parseAiAnswer,
+  ProviderHttpError,
   type MessagesClient,
 } from "@/lib/brand-dna/providers/anthropic";
 import { localProvider } from "@/lib/brand-dna/providers/local";
@@ -173,5 +176,75 @@ describe("keys and errors", () => {
     expect(describeAiError({ status: 500 })).toContain("problem");
     expect(describeAiError(new Error("custom"))).toBe("custom");
     expect(describeAiError("???")).toBe("The analysis failed.");
+  });
+});
+
+describe("the fetch client", () => {
+  const body = buildAiRequest(aiRequestPreview([image("a.png")], encode));
+  const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status });
+  const noWait = async () => {};
+
+  test("posts the request body to the Messages API with the key in a header only", async () => {
+    const fetchImpl = vi.fn(async () => json({ content: [], stop_reason: "end_turn" }));
+    const key = "sk-ant-test-key-123456789";
+    const controller = new AbortController();
+    await createFetchClient(key, fetchImpl, noWait).messages.create(body, { signal: controller.signal });
+    expect(fetchImpl).toHaveBeenCalledOnce();
+    const [url, init] = fetchImpl.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toBe(MESSAGES_URL);
+    expect(url).not.toContain(key);
+    expect(init.method).toBe("POST");
+    expect(init.headers).toEqual({
+      "content-type": "application/json",
+      "x-api-key": key,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true",
+    });
+    expect(JSON.parse(init.body as string)).toEqual(body);
+    expect(init.body).not.toContain(key);
+    expect(init.signal).toBe(controller.signal);
+  });
+
+  test("returns the parsed response", async () => {
+    const fetchImpl = async () => json({ content: [{ type: "text", text: "{}" }], stop_reason: "end_turn" });
+    const response = await createFetchClient("k".repeat(24), fetchImpl, noWait).messages.create(body);
+    expect(response.content[0]).toEqual({ type: "text", text: "{}" });
+  });
+
+  test("tries a rate limit or a server error once more, and no other status", async () => {
+    const calls: number[] = [];
+    const flaky = async () => {
+      calls.push(1);
+      return calls.length === 1 ? json({}, 429) : json({ content: [], stop_reason: "end_turn" });
+    };
+    await createFetchClient("k".repeat(24), flaky, noWait).messages.create(body);
+    expect(calls).toHaveLength(2);
+
+    const rejected = vi.fn(async () => json({}, 401));
+    await expect(createFetchClient("k".repeat(24), rejected, noWait).messages.create(body)).rejects.toMatchObject({
+      status: 401,
+    });
+    expect(rejected).toHaveBeenCalledOnce();
+
+    const down = vi.fn(async () => json({}, 503));
+    await expect(createFetchClient("k".repeat(24), down, noWait).messages.create(body)).rejects.toBeInstanceOf(
+      ProviderHttpError,
+    );
+    expect(down).toHaveBeenCalledTimes(2);
+  });
+
+  test("an HTTP error is described without the key", () => {
+    expect(describeAiError(new ProviderHttpError(401))).toContain("key was rejected");
+    expect(describeAiError(new ProviderHttpError(429))).toContain("rate limiting");
+    expect(describeAiError(new ProviderHttpError(502))).toContain("problem");
+  });
+
+  test("a network error is passed through so it can be described", async () => {
+    const offline = async () => {
+      throw new TypeError("Failed to fetch");
+    };
+    await expect(createFetchClient("k".repeat(24), offline, noWait).messages.create(body)).rejects.toThrow(
+      "Failed to fetch",
+    );
   });
 });
