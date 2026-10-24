@@ -6,16 +6,17 @@ This guide builds a small format end to end, then points at the real ones to cop
 
 ## The pieces
 
-| File                                 | What it does                                                                                                           |
-| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
-| `types/tokens.ts`                    | `DesignTokens`: the model every generator reads.                                                                       |
-| `types/export.ts`                    | `ExportFormat` and the `ExportLanguage` names the code viewer understands.                                             |
-| `lib/tokens/formats.ts`              | Web and tooling generators, the `flatten` helper, `variable`, `yamlString` and `tokenFormats()`, the registry.         |
-| `lib/tokens/native.ts`               | Native and design-tool generators (Flutter, SwiftUI, Compose, Qt, Godot, VS Code), and `roleColor` for light and dark. |
-| `lib/tokens/formats.test.ts`         | Tests for the formats. Add yours here (or in a new `*.test.ts` file next to it).                                       |
-| `lib/test/xml.ts`                    | `xmlError(source)`: a dependency-free well-formedness check for XML formats.                                           |
-| `packages/cli/src/build.ts`          | Builds formats for the command line from `tokenFormats()`. It needs no change when you add a format.                   |
-| `components/export/token-output.tsx` | The Export Engine's ZIP, built from `tokenFormats()` too.                                                              |
+| File                                 | What it does                                                                                                                                                                      |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `types/tokens.ts`                    | `DesignTokens`: the model every generator reads.                                                                                                                                  |
+| `types/export.ts`                    | `ExportFormat` and the `ExportLanguage` names the code viewer understands.                                                                                                        |
+| `lib/tokens/formats/<id>.ts`         | One module per format: its generator and one `defineFormat` entry. `shared.ts` and `shared-native.ts` hold what several share (`flatten`, `variable`, `yamlString`, `roleColor`). |
+| `lib/tokens/formats.ts`              | `tokenFormatDefinitions`, the ordered list, and `tokenFormats()`. Also re-exports every generator under the old import path.                                                      |
+| `lib/tokens/tiers.ts`                | The tier of each format (core, frameworks, platforms) and the deprecated ones.                                                                                                    |
+| `lib/tokens/formats.test.ts`         | Tests for the formats. Add yours here (or in a new `*.test.ts` file next to it).                                                                                                  |
+| `lib/test/xml.ts`                    | `xmlError(source)`: a dependency-free well-formedness check for XML formats.                                                                                                      |
+| `packages/cli/src/build.ts`          | Builds formats for the command line from `tokenFormats()`. It needs no change when you add a format.                                                                              |
+| `components/export/token-output.tsx` | The Export Engine's ZIP, built from `tokenFormats()` too.                                                                                                                         |
 
 ## The token model
 
@@ -40,14 +41,14 @@ Several parts can be missing or empty: a person can switch a section off, so `ty
 
 Read these before writing your own string handling:
 
-- `flatten(tokens)` (`formats.ts`) returns one flat list of `{ group, name, value }` with colors already written in the notation the person chose (`meta.colorFormat`). The CSS, SCSS, Less, Stylus, YAML and Sass map formats all start from it, so they can never disagree about a name or a value. Names look like `color-indigo`, `color-indigo-500`, `spacing-4`, `radius-lg` and `text-xl`.
+- `flatten(tokens)` (`formats/shared.ts`) returns one flat list of `{ group, name, value }` with colors already written in the notation the person chose (`meta.colorFormat`). The CSS, SCSS, Less, Stylus, YAML and Sass map formats all start from it, so they can never disagree about a name or a value. Names look like `color-indigo`, `color-indigo-500`, `spacing-4`, `radius-lg` and `text-xl`.
 - `variable(tokens, name)` writes a CSS custom property name with the token prefix applied (`--acme-color-indigo`) and escapes the `.` in names like `spacing-0.5`.
 - `yamlString(value)` quotes a YAML scalar only when YAML would misread it.
-- `roleColor(tokens, roleName, dark)` (`native.ts`) gives a semantic role's color in light or dark mode. Dark mode swaps the background and foreground and lifts the other roles to their 300 (or 200) shade. Use it instead of inventing your own dark mapping, so every format agrees.
+- `roleColor(tokens, roleName, dark)` (`formats/shared-native.ts`) gives a semantic role's color in light or dark mode. Dark mode swaps the background and foreground and lifts the other roles to their 300 (or 200) shade. Use it instead of inventing your own dark mapping, so every format agrees.
 - `toHex`, `toRgb`, `formatColor`, `readableTextColor` and `contrastRatio` (`lib/color/color.ts`) convert and compare colors. A format that cannot express `oklch()` should write hex.
 - `siteConfig.github` is the URL for the "generated by DesignHub" header comment.
 
-Naming rules the native formats follow, so yours should too when it makes identifiers: letters and digits only, camelCase or PascalCase as the target language expects, and a prefix when a name would start with a digit (`indigo-500` becomes `indigo500`, and `0.5` becomes `s0_5`). Drop later duplicates, since two palette entries can produce the same identifier. The helpers for this (`pascal`, `ident`, `unique`, `colorEntries`) are private to `native.ts`: export one if you need it rather than copying it.
+Naming rules the native formats follow, so yours should too when it makes identifiers: letters and digits only, camelCase or PascalCase as the target language expects, and a prefix when a name would start with a digit (`indigo-500` becomes `indigo500`, and `0.5` becomes `s0_5`). Drop later duplicates, since two palette entries can produce the same identifier. The helpers for this (`pascal`, `ident`, `unique`, `colorEntries`) live in `formats/shared-native.ts`: import them from there rather than copying them.
 
 Honour the token prefix everywhere (`tokens.meta.prefix`), put the header comment first in formats that allow comments, and end the file with a newline.
 
@@ -100,7 +101,7 @@ export function tomlRoles(tokens: DesignTokens): string {
 
 ## Register it
 
-Add the generator to `formats.ts` (or `native.ts` for a native target) and add one entry to `tokenFormats()`. Its position in the array is its position in the Export Engine's picker:
+Put the generator and a `defineFormat` entry in `lib/tokens/formats/<id>.ts`, add the entry to `tokenFormatDefinitions` in `formats.ts`, and give the id a tier in `tiers.ts` (a test fails without one). Its position in the array is its position in the Export Engine's picker:
 
 ```ts
 export function tomlFormat(tokens: DesignTokens): ExportFormat {
@@ -139,11 +140,11 @@ Finally, verify the output in a real project: paste it into the tool it is for. 
 
 ## Real examples to copy from
 
-| Format        | Where                         | Good for                                                       |
-| ------------- | ----------------------------- | -------------------------------------------------------------- |
-| CSS variables | `toCss` in `formats.ts`       | The simplest `flatten`-based format.                           |
-| YAML          | `toYaml` and `yamlString`     | Quoting values a format would misread.                         |
-| Mantine       | `toMantineTheme`              | A TypeScript theme with ten-shade tuples.                      |
-| Vuetify       | `toVuetifyTheme`              | Light and dark sets built with `roleColor`.                    |
-| WinUI / WPF   | `toWinUiTheme` in `native.ts` | An XML format, tested with `xmlError`.                         |
-| Godot         | `toGodotTheme` in `native.ts` | Identifiers, unique names and light and dark entries together. |
+| Format        | Where                     | Good for                                                       |
+| ------------- | ------------------------- | -------------------------------------------------------------- |
+| CSS variables | `formats/css.ts`          | The simplest `flatten`-based format.                           |
+| YAML          | `toYaml` and `yamlString` | Quoting values a format would misread.                         |
+| Mantine       | `toMantineTheme`          | A TypeScript theme with ten-shade tuples.                      |
+| Vuetify       | `toVuetifyTheme`          | Light and dark sets built with `roleColor`.                    |
+| WinUI / WPF   | `formats/winui.ts`        | An XML format, tested with `xmlError`.                         |
+| Godot         | `formats/godot.ts`        | Identifiers, unique names and light and dark entries together. |

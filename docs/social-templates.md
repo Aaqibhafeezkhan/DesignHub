@@ -148,7 +148,7 @@ What to notice:
 
 ### 3. Register it
 
-In `lib/social/registry.ts`, import the template, add it to `socialTemplates`, and add the platform to `socialPlatforms`:
+In `lib/social/registry.ts`, import the template, add it to `socialTemplates`, add the platform to `socialPlatforms`, and give the platform a group in `socialPlatformGroups` (`core` for the main platforms, shown first and in the default ZIP; `more` for the rest, under "More platforms"). The record is exhaustive, so a new platform will not type-check without one:
 
 ```ts
 import { notionCover } from "@/lib/social/templates/notion";

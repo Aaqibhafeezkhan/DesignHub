@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Project file version 2 and migrations from 1.0 (`lib/projects/migrate.ts`): files, share links and the snapshots saved in IndexedDB carry a version; a version 1 file, link or stored project is migrated in memory (the ZIP selection of the social studio is part of the snapshot now, and effects added since 1.0 get their defaults), a file from a newer version is refused with a message that says to update, and fixtures written by 1.0 are committed with tests that open them. See [docs/migrating-to-v2.md](docs/migrating-to-v2.md).
+- Token formats in tiers (Core, Frameworks, Platforms) in the Export Engine, with a search across all of them, and a deprecation note for GTK 4 CSS and Stylus (still built; removal in 2.1), also grouped in `designhub --help`.
+- Brand DNA: choose the model for the AI provider, and an OpenAI-compatible provider (a base URL, a model and a key; a local server needs no key) with the destination host shown before the first request. An end-to-end test proves nothing is sent to a model host without a key.
+- Golden-file snapshots for every background generator and look, every social template and mockup (light and dark) and every token format (two token sets), so any change to a drawing or an export shows in review.
+- End-to-end flow tests (brand to export, project export, delete and import, keyboard only, offline) and an axe scan of every studio and tab in light and dark.
+- "More platforms" in the Social Media Studio: twenty core platforms first, the rest behind a disclosure, and a default ZIP pack of the core platforms.
+- Look control for the Concentric, Woven and Zigzag background generators.
+- Accessibility Lab tabs, colors, contrast results and check list in en, es, fr and hi, and `completeAreas` now includes them.
 - Notebook mockup: a portrait hardcover notebook with the logo debossed (a light edge and a pressed copy), the name on the cover, the website at the foot and an elastic band in the secondary color, on a desk, in light and dark. The name and website are shortened to the cover, never clipped.
 - Presentation mockup: a title slide and a content slide in 16:9 on a stage, with slide title, heading and body sizes taken from the live type scale (kept inside a readable range), a headline that wraps to at most three lines and is cut to fit, the call to action as a pill and the presenter from the person and role fields.
 - Trade show booth mockup: a 3 x 3 m booth in one-point perspective (back wall, side walls and floor as polygons toward one vanishing point) with a back wall graphic, a counter with the logo and a pull-up banner in the brand colors, with every line of copy kept inside a flat panel.
@@ -40,6 +48,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Brand DNA calls the Anthropic Messages API with `fetch` and local types; `@anthropic-ai/sdk` is no longer a dependency.
+- Rings, arcs and squares, argyle, plaid and checks, and zigzag, chevron and squiggle are three generators with a Look control (33 generators from 39). Saved backgrounds with an old kind open as the same look.
+- `lib/tokens/formats.ts` and `native.ts` are split into one module per format in `lib/tokens/formats/`; the output is unchanged byte for byte.
+- The default social ZIP pack holds the core platforms instead of every template.
+- Fixes found by axe: tinted success and brand badges, names that did not contain their visible text (weight rows, pairs, shades, contrast cells, font options) and the favorite heart no longer sits inside a listbox option.
 - Translate the Effects Lab effect picker (every effect's name and description), the shared color and gradient fields and the focus ring, scrollbar and selection controls in every language (en, es, fr, hi), with the contrast results as `{ratio}` placeholders. A test now keeps the `effects.` messages complete in every language.
 
 ### Fixed

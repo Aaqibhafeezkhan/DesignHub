@@ -29,20 +29,20 @@ The app runs at [http://localhost:3000](http://localhost:3000). There is no back
 
 ### pnpm commands
 
-| Command              | What it does                                                        |
-| -------------------- | ------------------------------------------------------------------- |
-| `pnpm dev`           | Start the dev server with hot reload                                |
-| `pnpm build`         | Production build (must pass before merging)                         |
-| `pnpm start`         | Serve the production build locally                                  |
-| `pnpm lint`          | ESLint (Next.js + TypeScript rules)                                 |
-| `pnpm typecheck`     | `tsc --noEmit` in strict mode                                       |
-| `pnpm test`          | Unit tests with Vitest (`lib/**` and `packages/*/src/**`)           |
-| `pnpm test:e2e`      | Playwright smoke tests against the production build (see below)     |
-| `pnpm format`        | Format all files with Prettier                                      |
-| `pnpm format:check`  | Verify formatting without writing                                   |
-| `pnpm fonts:catalog` | Regenerate `lib/typography/catalog.json` from Google Fonts metadata |
-| `pnpm check:dashes`  | Fail if any file contains an em dash (also runs in CI)              |
-| `pnpm bundle:size`   | Report each route's first-load JS after a build (see below)         |
+| Command              | What it does                                                                  |
+| -------------------- | ----------------------------------------------------------------------------- |
+| `pnpm dev`           | Start the dev server with hot reload                                          |
+| `pnpm build`         | Production build (must pass before merging)                                   |
+| `pnpm start`         | Serve the production build locally                                            |
+| `pnpm lint`          | ESLint (Next.js + TypeScript rules)                                           |
+| `pnpm typecheck`     | `tsc --noEmit` in strict mode                                                 |
+| `pnpm test`          | Unit tests with Vitest (`lib/**` and `packages/*/src/**`)                     |
+| `pnpm test:e2e`      | Playwright tests against the production build: routes, flows, axe (see below) |
+| `pnpm format`        | Format all files with Prettier                                                |
+| `pnpm format:check`  | Verify formatting without writing                                             |
+| `pnpm fonts:catalog` | Regenerate `lib/typography/catalog.json` from Google Fonts metadata           |
+| `pnpm check:dashes`  | Fail if any file contains an em dash (also runs in CI)                        |
+| `pnpm bundle:size`   | Report each route's first-load JS after a build (see below)                   |
 
 Before pushing, run the same checks as CI:
 
@@ -190,12 +190,12 @@ Write comments only when they add information the code can't express - the _why_
 
 ## Adding a new export format
 
-1. Write a pure generator in `lib/tokens/formats.ts` that takes `DesignTokens` and returns a string.
-2. Register it in `tokenFormats()` with an `id`, `label`, `filename` and `language`.
+1. Add a module `lib/tokens/formats/<id>.ts` with a pure generator that takes `DesignTokens` and returns a string, and a `defineFormat({ id, label, filename, language, generate })` entry.
+2. Add the entry to `tokenFormatDefinitions` in `lib/tokens/formats.ts`, and give the id a tier (and a deprecation note, if any) in `lib/tokens/tiers.ts`.
 3. Add a test in `lib/tokens/formats.test.ts` (use `lib/test/xml.ts` for XML formats). The CLI and the all-formats ZIP pick the format up automatically.
 4. Verify the output is valid by pasting it into a real project.
 
-The full walkthrough, with a worked example, the naming helpers, light and dark roles and the tests, is in [docs/export-formats.md](docs/export-formats.md).
+Every format is also pinned byte for byte in `lib/tokens/__snapshots__`: after adding one, run `pnpm vitest run lib/tokens -u` and read the new files. The full walkthrough, with a worked example, the naming helpers, light and dark roles and the tests, is in [docs/export-formats.md](docs/export-formats.md).
 
 ## Adding data (palettes, icons, fonts, presets)
 
@@ -214,6 +214,7 @@ A lot of DesignHub is curated data, and adding to it is a great first contributi
 
 Background generators live in `lib/background/generators/` and are pure functions of `BackgroundSettings`.
 
+0. Several looks that share the same controls are one generator with variants (`backgroundFamily` in `lib/background/family.ts`, as Concentric, Woven and Zigzag do); a removed kind needs an alias in `lib/background/aliases.ts` so saved backgrounds still open.
 1. Create `lib/background/generators/<name>.ts` exporting a `BackgroundDefinition` (`kind`, `label`, `description`, `render`, optional `css` and `defaults`), and add the kind to `BackgroundKind` in `types/background.ts`.
 2. **Be deterministic.** Take all randomness from `createRandom(settings.seed)`, never `Math.random()`. The same seed must always draw the same background.
 3. Map the shared controls consistently: `density` → how much (layers, points, spacing), `scale` → how big, `colors` → foreground palette, `background` → canvas color.

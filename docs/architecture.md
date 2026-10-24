@@ -97,7 +97,7 @@ UI components stay thin, and the real work is plain TypeScript functions that ar
 - `lib/svg/` - svgson parsing, a serializer (minify / pretty print), the optimizer and path optimizer, the inspector, JSX / React / React Native converters and the sprite builder.
 - `lib/a11y/` - contrast pairs, vision re-measurement, readability metrics, touch-target rules and the JSON report.
 - `lib/brand/`, `lib/logo/`, `lib/mockups/`, `lib/social/`, `lib/guidelines/`, `lib/projects/`, `lib/brand-dna/` - the brand platform described above.
-- `lib/tokens/` - the shared `DesignTokens` model (`build.ts`), the format generators (`formats.ts`) and the PDF style guide (`pdf.ts`).
+- `lib/tokens/` - the shared `DesignTokens` model (`build.ts`), the format generators (one module per format in `formats/`, listed in `formats.ts`, with tiers in `tiers.ts`) and the PDF style guide (`pdf.ts`).
 - `lib/zip.ts` - a dependency-free ZIP (store) writer used by every "download all" button.
 
 ## Color model
