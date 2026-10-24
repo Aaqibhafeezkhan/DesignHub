@@ -10,3 +10,4 @@ playwright-report
 packages/cli/dist
 
 lib/background/__fixtures__
+lib/background/__snapshots__
