@@ -18,7 +18,7 @@ export type ExportLanguage =
   | "svelte"
   | "astro";
 
-/** Where a token format sits in the picker: what most projects need, UI library themes, or native and tool targets. */
+/** Where a format sits in the picker: what most projects need, framework targets, or native and tool targets. */
 export type ExportTier = "core" | "frameworks" | "platforms";
 
 export type ExportFormat = {
@@ -27,7 +27,7 @@ export type ExportFormat = {
   filename: string;
   language: ExportLanguage;
   code: string;
-  /** Set on token formats: the group the picker and the CLI list the format under. */
+  /** Set on token and icon formats: the group the picker (and, for tokens, the CLI) lists the format under. */
   tier?: ExportTier;
   /** Set when the format is still built but will be removed: the reason, shown with the format. */
   deprecated?: string;

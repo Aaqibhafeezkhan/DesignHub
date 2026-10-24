@@ -1,5 +1,6 @@
 import { splitIconId } from "@/lib/icons/iconify";
 import { buildIconSvg } from "@/lib/icons/svg";
+import { iconTierOf } from "@/lib/icons/tiers";
 import { escapeAngularText, escapeTemplateLiteral, kebabCase } from "@/lib/svg/angular";
 import { svgCssUrl } from "@/lib/svg/data-uri";
 import { parseSvg } from "@/lib/svg/parse";
@@ -331,9 +332,10 @@ function cssDataUri(icon: IconData, style: IconStyle): string {
     : `.icon {\n  display: inline-block;\n  width: 1em;\n  height: 1em;\n  background: ${uri} no-repeat center / contain;\n}\n`;
 }
 
+/** Every export for an icon, each with its tier. The picker groups by tier and keeps this order inside each group. */
 export function iconExports(id: IconId, icon: IconData, style: IconStyle): ExportFormat[] {
   const { name } = splitIconId(id);
-  return [
+  const formats: Omit<ExportFormat, "tier">[] = [
     {
       id: "svg",
       label: "SVG",
@@ -427,4 +429,5 @@ export function iconExports(id: IconId, icon: IconData, style: IconStyle): Expor
     },
     { id: "css", label: "CSS", filename: `${name}.css`, language: "css", code: cssDataUri(icon, style) },
   ];
+  return formats.map((format) => ({ ...format, tier: iconTierOf(format.id) }));
 }

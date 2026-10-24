@@ -154,6 +154,7 @@ A typical design session bounces between a font site, a palette generator, a con
 - Browse by topic before you search: 10 curated packs of 24 icons (UI essentials, arrows, brands, developer, design, commerce, communication, media, files, weather), plus one-click search suggestions
 - Restyle: color, stroke width, rounded or sharp corners, rotate, flip, padding and background shapes
 - Exports: **SVG, React (TSX), Vue, Svelte, Angular, SolidJS, Qwik, Lit, Astro and React Native components, CSS data URI, PNG (16–1024 px) and ICO**
+- Export formats grouped in three tiers like the Export Engine (**Core**: SVG, React, HTML; **Frameworks**: Vue, Svelte, Angular, Solid, Qwik, Lit, Astro, Preact, React Native; **Platforms**: CSS data URI), with a search across all of them; the group that holds the open format stays open
 - Favicon generator: `favicon.ico`, `icon.svg`, Apple touch icon, PWA icons, `site.webmanifest` and HTML - zipped
 
 ### Export Engine
