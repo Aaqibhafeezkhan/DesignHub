@@ -1,12 +1,12 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 
 import { useHotkey } from "@/hooks/use-hotkeys";
 import { useRovingRadio } from "@/hooks/use-roving-radio";
-import { socialPlatforms, socialTemplates } from "@/lib/social/registry";
-import type { SocialTemplate } from "@/lib/social/types";
+import { orderedSocialPlatforms, socialPlatformGroups, socialTemplates } from "@/lib/social/registry";
+import type { SocialPlatform, SocialTemplate } from "@/lib/social/types";
 import { cn } from "@/lib/utils";
 import { useSocialStore } from "@/store/social-store";
 
@@ -30,15 +30,132 @@ function entriesFor(platform: string): Entry[] {
 const rowClass =
   "flex h-9 min-w-0 items-center justify-between gap-2 rounded-md border px-2.5 text-left text-sm text-muted-foreground transition-colors duration-150 hover:border-border-strong hover:text-foreground";
 
+function PlatformSection({
+  platform,
+  folded,
+  setFolded,
+}: {
+  platform: SocialPlatform;
+  folded: Record<string, boolean>;
+  setFolded: Dispatch<SetStateAction<Record<string, boolean>>>;
+}) {
+  const template = useSocialStore((state) => state.template);
+  const setTemplate = useSocialStore((state) => state.setTemplate);
+  return (
+    <div key={platform} role="radiogroup" aria-label={platform} className="flex flex-col gap-1.5">
+      <span className="text-[11px] font-medium tracking-[0.12em] text-subtle-foreground uppercase">{platform}</span>
+      <div className="flex flex-col gap-1.5">
+        {entriesFor(platform).map((entry) => {
+          if (entry.kind === "single") {
+            const item = entry.template;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                role="radio"
+                aria-checked={item.id === template}
+                title={item.description}
+                onClick={() => setTemplate(item.id)}
+                className={cn(rowClass, item.id === template && "border-brand/60 bg-surface-raised text-foreground")}
+              >
+                <span className="truncate">{item.label}</span>
+                <span className="shrink-0 font-mono text-[11px] text-subtle-foreground">
+                  {item.width}×{item.height}
+                </span>
+              </button>
+            );
+          }
+          const first = entry.styles[0];
+          const active = entry.styles.some((item) => item.id === template);
+          const open = active && !folded[entry.name];
+          const listId = `styles-${entry.name.toLowerCase().replace(/\s+/g, "-")}`;
+          return (
+            <div key={entry.name} className="flex flex-col gap-1">
+              <button
+                type="button"
+                aria-expanded={open}
+                aria-controls={listId}
+                title={`${entry.styles.length} styles`}
+                onClick={() => {
+                  if (!active && first) setTemplate(first.id);
+                  setFolded((state) => ({ ...state, [entry.name]: active ? open : false }));
+                }}
+                className={cn(rowClass, active && "border-brand/60 bg-surface-raised text-foreground")}
+              >
+                <span className="flex min-w-0 items-center gap-1.5">
+                  <ChevronDown
+                    className={cn("size-3.5 shrink-0 transition-transform duration-150", !open && "-rotate-90")}
+                    aria-hidden
+                  />
+                  <span className="truncate">{entry.name}</span>
+                </span>
+                <span className="shrink-0 font-mono text-[11px] text-subtle-foreground">
+                  {open
+                    ? entry.styles.length
+                    : active
+                      ? entry.styles.find((item) => item.id === template)?.style
+                      : `${first?.width}×${first?.height}`}
+                </span>
+              </button>
+              {open ? (
+                <div
+                  id={listId}
+                  role="radiogroup"
+                  aria-label={`${entry.name} styles`}
+                  className="ml-3 flex flex-col gap-0.5 border-l pl-2"
+                >
+                  {entry.styles.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={item.id === template}
+                      title={item.description}
+                      onClick={() => setTemplate(item.id)}
+                      className={cn(
+                        "flex h-8 items-center gap-2 rounded-md px-2 text-left text-sm text-muted-foreground transition-colors duration-150 hover:bg-surface-raised hover:text-foreground",
+                        item.id === template && "bg-surface-raised font-medium text-foreground",
+                      )}
+                    >
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "size-1.5 shrink-0 rounded-full bg-border-strong transition-colors duration-150",
+                          item.id === template && "bg-brand",
+                        )}
+                      />
+                      {item.style}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function SocialPicker() {
   const radiosRef = useRovingRadio<HTMLDivElement>();
   const template = useSocialStore((state) => state.template);
   const setTemplate = useSocialStore((state) => state.setTemplate);
+  const moreOpen = useSocialStore((state) => state.morePlatformsOpen);
+  const setMoreOpen = useSocialStore((state) => state.setMorePlatformsOpen);
   // Groups the user folded away. A group with the selected style is open unless folded.
   const [folded, setFolded] = useState<Record<string, boolean>>({});
-  const platforms = socialPlatforms.filter((platform) => socialTemplates.some((item) => item.platform === platform));
+  const platforms = orderedSocialPlatforms.filter((platform) =>
+    socialTemplates.some((item) => item.platform === platform),
+  );
+  const core = platforms.filter((platform) => socialPlatformGroups[platform] === "core");
+  const more = platforms.filter((platform) => socialPlatformGroups[platform] === "more");
   // Cycle in the order the picker shows them (grouped by platform), wrapping at both ends.
   const ordered = platforms.flatMap((platform) => socialTemplates.filter((item) => item.platform === platform));
+  const selected = socialTemplates.find((item) => item.id === template);
+  // The selected template is never hidden: its platform's group opens with it.
+  const selectedIsMore = selected ? socialPlatformGroups[selected.platform] === "more" : false;
+  const showMore = moreOpen || selectedIsMore;
   const cycle = (step: number) => {
     if (ordered.length === 0) return;
     const index = ordered.findIndex((item) => item.id === template);
@@ -54,103 +171,35 @@ export function SocialPicker() {
 
   return (
     <div ref={radiosRef} className="flex flex-col gap-3">
-      {platforms.map((platform) => (
-        <div key={platform} role="radiogroup" aria-label={platform} className="flex flex-col gap-1.5">
-          <span className="text-[11px] font-medium tracking-[0.12em] text-subtle-foreground uppercase">{platform}</span>
-          <div className="flex flex-col gap-1.5">
-            {entriesFor(platform).map((entry) => {
-              if (entry.kind === "single") {
-                const item = entry.template;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={item.id === template}
-                    title={item.description}
-                    onClick={() => setTemplate(item.id)}
-                    className={cn(
-                      rowClass,
-                      item.id === template && "border-brand/60 bg-surface-raised text-foreground",
-                    )}
-                  >
-                    <span className="truncate">{item.label}</span>
-                    <span className="shrink-0 font-mono text-[11px] text-subtle-foreground">
-                      {item.width}×{item.height}
-                    </span>
-                  </button>
-                );
-              }
-              const first = entry.styles[0];
-              const active = entry.styles.some((item) => item.id === template);
-              const open = active && !folded[entry.name];
-              const listId = `styles-${entry.name.toLowerCase().replace(/\s+/g, "-")}`;
-              return (
-                <div key={entry.name} className="flex flex-col gap-1">
-                  <button
-                    type="button"
-                    aria-expanded={open}
-                    aria-controls={listId}
-                    title={`${entry.styles.length} styles`}
-                    onClick={() => {
-                      if (!active && first) setTemplate(first.id);
-                      setFolded((state) => ({ ...state, [entry.name]: active ? open : false }));
-                    }}
-                    className={cn(rowClass, active && "border-brand/60 bg-surface-raised text-foreground")}
-                  >
-                    <span className="flex min-w-0 items-center gap-1.5">
-                      <ChevronDown
-                        className={cn("size-3.5 shrink-0 transition-transform duration-150", !open && "-rotate-90")}
-                        aria-hidden
-                      />
-                      <span className="truncate">{entry.name}</span>
-                    </span>
-                    <span className="shrink-0 font-mono text-[11px] text-subtle-foreground">
-                      {open
-                        ? entry.styles.length
-                        : active
-                          ? entry.styles.find((item) => item.id === template)?.style
-                          : `${first?.width}×${first?.height}`}
-                    </span>
-                  </button>
-                  {open ? (
-                    <div
-                      id={listId}
-                      role="radiogroup"
-                      aria-label={`${entry.name} styles`}
-                      className="ml-3 flex flex-col gap-0.5 border-l pl-2"
-                    >
-                      {entry.styles.map((item) => (
-                        <button
-                          key={item.id}
-                          type="button"
-                          role="radio"
-                          aria-checked={item.id === template}
-                          title={item.description}
-                          onClick={() => setTemplate(item.id)}
-                          className={cn(
-                            "flex h-8 items-center gap-2 rounded-md px-2 text-left text-sm text-muted-foreground transition-colors duration-150 hover:bg-surface-raised hover:text-foreground",
-                            item.id === template && "bg-surface-raised font-medium text-foreground",
-                          )}
-                        >
-                          <span
-                            aria-hidden
-                            className={cn(
-                              "size-1.5 shrink-0 rounded-full bg-border-strong transition-colors duration-150",
-                              item.id === template && "bg-brand",
-                            )}
-                          />
-                          {item.style}
-                        </button>
-                      ))}
-                    </div>
-                  ) : null}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+      {core.map((platform) => (
+        <PlatformSection key={platform} platform={platform} folded={folded} setFolded={setFolded} />
       ))}
+      {more.length > 0 ? (
+        <div className="flex flex-col gap-3">
+          <button
+            type="button"
+            aria-expanded={showMore}
+            aria-controls="social-more-platforms"
+            onClick={() => setMoreOpen(!moreOpen)}
+            className="flex items-center justify-between gap-2 rounded-md border border-dashed px-2.5 py-2 text-left text-xs font-medium text-muted-foreground transition-colors duration-150 hover:border-border-strong hover:text-foreground"
+          >
+            <span>
+              More platforms <span className="font-normal">({more.length})</span>
+            </span>
+            <ChevronDown
+              className={cn("size-3.5 transition-transform duration-150", !showMore && "-rotate-90")}
+              aria-hidden
+            />
+          </button>
+          {showMore ? (
+            <div id="social-more-platforms" className="flex flex-col gap-3">
+              {more.map((platform) => (
+                <PlatformSection key={platform} platform={platform} folded={folded} setFolded={setFolded} />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

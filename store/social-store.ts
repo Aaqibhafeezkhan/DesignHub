@@ -33,8 +33,11 @@ type SocialState = {
   safeArea: boolean;
   /** Add "Banner made with DesignHub" under the README snippet. */
   credit: boolean;
-  /** Templates in the ZIP pack. Null means all of them. */
+  /** Templates in the ZIP pack. Null means the templates of the core platforms. */
   packSelection: string[] | null;
+  /** The "More platforms" list in the picker is open. */
+  morePlatformsOpen: boolean;
+  setMorePlatformsOpen: (open: boolean) => void;
   setTemplate: (template: string) => void;
   setMode: (mode: BrandMode) => void;
   setContent: (patch: Partial<SocialContent>) => void;
@@ -55,6 +58,8 @@ export const useSocialStore = create<SocialState>()(
       safeArea: false,
       credit: true,
       packSelection: null,
+      morePlatformsOpen: false,
+      setMorePlatformsOpen: (morePlatformsOpen) => set({ morePlatformsOpen }),
       setTemplate: (template) => set({ template }),
       setMode: (mode) => set({ mode }),
       setContent: (patch) => set((state) => ({ content: { ...state.content, ...patch } })),
@@ -68,7 +73,7 @@ export const useSocialStore = create<SocialState>()(
       name: "designhub:social",
       version: 2,
       storage: createJSONStorage(() => indexedDbStorage),
-      partialize: ({ template, mode, content, design, safeArea, credit, packSelection }) => ({
+      partialize: ({ template, mode, content, design, safeArea, credit, packSelection, morePlatformsOpen }) => ({
         template,
         mode,
         content,
@@ -76,6 +81,7 @@ export const useSocialStore = create<SocialState>()(
         safeArea,
         credit,
         packSelection,
+        morePlatformsOpen,
       }),
       // v1 had no design settings and fewer content fields; fill them from the defaults.
       migrate: (persisted) => persisted as SocialState,

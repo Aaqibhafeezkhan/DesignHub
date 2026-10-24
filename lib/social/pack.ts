@@ -1,13 +1,18 @@
 import { CREDIT_TEXT } from "@/lib/export/credit";
 import { rasterize } from "@/lib/export/raster";
 import { slugify } from "@/lib/logo/pack";
-import { socialTemplates } from "@/lib/social/registry";
+import { isCoreTemplate, socialTemplates } from "@/lib/social/registry";
 import type { SocialContext } from "@/lib/social/types";
 import { createZip, type ZipEntry } from "@/lib/zip";
 
-/** Templates a pack will contain: the saved selection, or every template when there is none. */
+/** Templates of the core platforms: the pack when nothing was chosen. The others are added by choice. */
+export function defaultPackTemplates() {
+  return socialTemplates.filter(isCoreTemplate);
+}
+
+/** Templates a pack will contain: the saved selection, or the core platforms when there is none. */
 export function packTemplates(selection: string[] | null) {
-  return selection ? socialTemplates.filter((template) => selection.includes(template.id)) : socialTemplates;
+  return selection ? socialTemplates.filter((template) => selection.includes(template.id)) : defaultPackTemplates();
 }
 
 /** The selected social templates as PNGs at their platform sizes, grouped by platform. */

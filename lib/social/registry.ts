@@ -119,6 +119,58 @@ export const socialPlatforms: SocialPlatform[] = [
   "Medium",
 ];
 
+export type SocialPlatformGroup = "core" | "more";
+
+/**
+ * Where each platform sits in the picker and the default pack. Core platforms are shown first and go
+ * into the default ZIP; the rest are under "More platforms" and are added to a pack by choice. A new
+ * platform must be listed here (the record is exhaustive), so it is a deliberate decision.
+ */
+export const socialPlatformGroups: Record<SocialPlatform, SocialPlatformGroup> = {
+  GitHub: "core",
+  LinkedIn: "core",
+  X: "core",
+  Instagram: "core",
+  "Open Graph": "core",
+  "Product Hunt": "core",
+  YouTube: "core",
+  Pinterest: "core",
+  Bluesky: "core",
+  Facebook: "core",
+  Discord: "core",
+  Twitch: "core",
+  Mastodon: "core",
+  Reddit: "core",
+  Telegram: "core",
+  Substack: "core",
+  DEV: "core",
+  Hashnode: "core",
+  Notion: "core",
+  Medium: "core",
+  Tumblr: "more",
+  Dribbble: "more",
+  Behance: "more",
+  Patreon: "more",
+  Kick: "more",
+  Bandcamp: "more",
+  Ghost: "more",
+  Spotify: "more",
+  Etsy: "more",
+  Gumroad: "more",
+  "Ko-fi": "more",
+  "Buy Me a Coffee": "more",
+};
+
+/** Platforms in picker order: the core ones first, then the rest, each in registry order. */
+export const orderedSocialPlatforms: SocialPlatform[] = [
+  ...socialPlatforms.filter((platform) => socialPlatformGroups[platform] === "core"),
+  ...socialPlatforms.filter((platform) => socialPlatformGroups[platform] === "more"),
+];
+
+export function isCoreTemplate(template: SocialTemplate): boolean {
+  return socialPlatformGroups[template.platform] === "core";
+}
+
 /** Ids from earlier versions, so saved selections keep working. */
 const aliases: Record<string, string> = { "github-banner": "github-classic" };
 

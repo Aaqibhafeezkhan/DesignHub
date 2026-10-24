@@ -5,8 +5,15 @@ import { buildBrandTokens } from "@/lib/brand/tokens";
 import { measureText } from "@/lib/logo/measure";
 import { defaultSnapshot } from "@/lib/projects/snapshot";
 import { instagramHighlight } from "@/lib/social/templates/instagram-highlight";
-import { packTemplates } from "@/lib/social/pack";
-import { getSocialTemplate, socialPlatforms, socialTemplates } from "@/lib/social/registry";
+import { defaultPackTemplates, packTemplates } from "@/lib/social/pack";
+import {
+  getSocialTemplate,
+  isCoreTemplate,
+  orderedSocialPlatforms,
+  socialPlatformGroups,
+  socialPlatforms,
+  socialTemplates,
+} from "@/lib/social/registry";
 
 test("template ids are unique", () => {
   const ids = socialTemplates.map((template) => template.id);
@@ -58,10 +65,65 @@ test.each([
   ["buy-me-a-coffee-cover", 1200, 400],
   ["notion-cover", 1500, 600],
   ["medium-banner", 1500, 500],
-])("%s is registered at %ix%i and included in the full pack", (id, width, height) => {
+])("%s is registered at %ix%i and can be added to a pack", (id, width, height) => {
   const template = getSocialTemplate(id);
   expect(template).toMatchObject({ width, height });
-  expect(packTemplates(null)).toContain(template);
+  expect(packTemplates(socialTemplates.map((item) => item.id))).toContain(template);
+});
+
+const CORE = [
+  "GitHub",
+  "LinkedIn",
+  "X",
+  "YouTube",
+  "Instagram",
+  "Open Graph",
+  "Product Hunt",
+  "Facebook",
+  "Bluesky",
+  "Discord",
+  "Twitch",
+  "Mastodon",
+  "Medium",
+  "Substack",
+  "DEV",
+  "Hashnode",
+  "Pinterest",
+  "Notion",
+  "Reddit",
+  "Telegram",
+];
+
+test("every listed platform has a group, and the core group is the twenty main platforms", () => {
+  expect(Object.keys(socialPlatformGroups).sort()).toEqual([...socialPlatforms].sort());
+  for (const platform of socialPlatforms) expect(["core", "more"], platform).toContain(socialPlatformGroups[platform]);
+  const core = socialPlatforms.filter((platform) => socialPlatformGroups[platform] === "core");
+  expect([...core].sort()).toEqual([...CORE].sort());
+});
+
+test("the picker lists core platforms first, then the rest, without dropping any", () => {
+  expect([...orderedSocialPlatforms].sort()).toEqual([...socialPlatforms].sort());
+  const groups = orderedSocialPlatforms.map((platform) => socialPlatformGroups[platform]);
+  expect(groups.indexOf("more")).toBe(groups.lastIndexOf("core") + 1);
+});
+
+test("the default pack holds only core templates, and a saved selection can add any other", () => {
+  const defaults = packTemplates(null);
+  expect(defaults.length).toBeGreaterThan(0);
+  expect(defaults).toEqual(defaultPackTemplates());
+  expect(defaults.every(isCoreTemplate)).toBe(true);
+  const more = socialTemplates.filter((template) => !isCoreTemplate(template));
+  expect(more.length).toBeGreaterThan(0);
+  for (const template of more) expect(defaults).not.toContain(template);
+  const kick = getSocialTemplate("kick-banner")!;
+  expect(packTemplates([...defaults.map((item) => item.id), kick.id])).toContain(kick);
+  expect(packTemplates([kick.id])).toEqual([kick]);
+});
+
+test("no template id changed, so saved selections keep working", () => {
+  for (const id of ["github-classic", "instagram-square", "kofi-banner", "kick-banner", "etsy-shop-banner"]) {
+    expect(getSocialTemplate(id), id).toBeDefined();
+  }
 });
 
 test("the highlight cover shortens a long label to 12 characters", () => {
