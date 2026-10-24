@@ -19,6 +19,7 @@ import {
   toWinUiTheme,
   type RoleColor,
 } from "@/lib/tokens/native";
+import { deprecationOf, tierOf } from "@/lib/tokens/tiers";
 import { googleFontsCssUrl } from "@/lib/typography/google-fonts";
 import type { ExportFormat } from "@/types/export";
 import type { Oklch } from "@/types/color";
@@ -1946,7 +1947,15 @@ $${base}-dark-theme: mat.define-dark-theme((
 `;
 }
 
+/** Every token format, in the Export Engine's order, each with its tier and its deprecation note when it has one. */
 export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
+  return baseTokenFormats(tokens).map((format) => {
+    const deprecated = deprecationOf(format.id);
+    return { ...format, tier: tierOf(format.id), ...(deprecated ? { deprecated } : {}) };
+  });
+}
+
+function baseTokenFormats(tokens: DesignTokens): ExportFormat[] {
   return [
     {
       id: "angular-material",

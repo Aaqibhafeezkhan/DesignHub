@@ -895,4 +895,11 @@ export const en = {
   "a11y.verdict.pass": "Pass",
   "a11y.verdict.warn": "Warning",
   "a11y.verdict.fail": "Fail",
+  "code.search": "Find a format",
+  "code.tier.core": "Core",
+  "code.tier.frameworks": "Frameworks",
+  "code.tier.platforms": "Platforms",
+  "code.deprecated": "Deprecated",
+  "code.deprecatedNote": "This format is deprecated.",
+  "code.noMatch": "No format matches that search.",
 } as const;

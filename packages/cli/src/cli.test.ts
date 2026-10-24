@@ -265,6 +265,30 @@ describe("designhub build --watch", () => {
     expect(output.err).toContain('Can\'t read "missing.json"');
   });
 
+  test("--help groups the formats by tier and marks the deprecated ones", async () => {
+    expect(await run(["--help"], io)).toBe(0);
+    const help = output.out;
+    const core = help.indexOf("\nCore\n");
+    const frameworks = help.indexOf("\nFrameworks\n");
+    const platforms = help.indexOf("\nPlatforms\n");
+    expect(core).toBeGreaterThan(-1);
+    expect(frameworks).toBeGreaterThan(core);
+    expect(platforms).toBeGreaterThan(frameworks);
+    const line = (id: string) => help.split("\n").find((text) => text.trimStart().startsWith(`${id} `)) ?? "";
+    expect(help.indexOf(line("css"))).toBeLessThan(frameworks);
+    expect(help.indexOf(line("mui"))).toBeGreaterThan(frameworks);
+    expect(help.indexOf(line("flutter"))).toBeGreaterThan(platforms);
+    expect(line("gtk")).toContain("[deprecated:");
+    expect(line("stylus")).toContain("[deprecated:");
+    expect(line("css")).not.toContain("deprecated");
+  });
+
+  test("a deprecated format still builds", async () => {
+    const formats = await listFormats();
+    expect(formats.find((format) => format.id === "gtk")?.deprecated).toBeTruthy();
+    expect(formats.every((format) => format.tier)).toBe(true);
+  });
+
   test("--help documents --watch", async () => {
     expect(await run(["--help"], io)).toBe(0);
     expect(output.out).toContain("-w, --watch");

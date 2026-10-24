@@ -2,6 +2,8 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve, sep } from "node:path";
 
 import { parseArgs, type ParsedArgs } from "./args";
+import type { ExportTier } from "@/types/export";
+
 import { buildTokenFiles, CliError, listFormats } from "./build";
 
 export const VERSION = "1.0.0";
@@ -27,6 +29,13 @@ export type Io = {
   debounceMs?: number;
 };
 
+/** The tiers in the order the help lists them. */
+const TIER_NAMES: [ExportTier, string][] = [
+  ["core", "Core"],
+  ["frameworks", "Frameworks"],
+  ["platforms", "Platforms"],
+];
+
 export async function helpText(): Promise<string> {
   const formats = await listFormats();
   const width = Math.max(...formats.map((format) => format.id.length));
@@ -44,7 +53,17 @@ Options
   -v, --version        Show the version
 
 Formats
-${formats.map((format) => `  ${format.id.padEnd(width)}  ${format.label} (${format.filename})`).join("\n")}
+${TIER_NAMES.map(([tier, name]) => {
+  const inTier = formats.filter((format) => format.tier === tier);
+  if (inTier.length === 0) return "";
+  const lines = inTier.map(
+    (format) =>
+      `  ${format.id.padEnd(width)}  ${format.label} (${format.filename})${format.deprecated ? ` [deprecated: ${format.deprecated}]` : ""}`,
+  );
+  return `${name}\n${lines.join("\n")}`;
+})
+  .filter(Boolean)
+  .join("\n\n")}
 
 Examples
   npx designhub build brand.designhub.json --format css,tailwind-v4 --out tokens/

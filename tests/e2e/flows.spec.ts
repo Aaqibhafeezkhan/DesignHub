@@ -37,7 +37,7 @@ test("brand to export: a new primary color reaches the CSS in the Export Engine"
     .or(page.getByRole("radiogroup", { name: "Color notation" }))
     .getByRole("radio", { name: "hex" })
     .click();
-  await page.getByRole("radiogroup", { name: "Token format" }).getByRole("radio", { name: "CSS variables" }).click();
+  await page.getByRole("radio", { name: "CSS variables" }).click();
 
   const css = page.getByLabel("tokens.css contents");
   await expect(css).toBeVisible();

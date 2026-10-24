@@ -913,4 +913,11 @@ export const fr = {
   "a11y.verdict.pass": "Conforme",
   "a11y.verdict.warn": "Avertissement",
   "a11y.verdict.fail": "Non conforme",
+  "code.search": "Rechercher un format",
+  "code.tier.core": "Essentiels",
+  "code.tier.frameworks": "Frameworks",
+  "code.tier.platforms": "Plateformes",
+  "code.deprecated": "Obsolète",
+  "code.deprecatedNote": "Ce format est obsolète.",
+  "code.noMatch": "Aucun format ne correspond à cette recherche.",
 } satisfies Catalog;

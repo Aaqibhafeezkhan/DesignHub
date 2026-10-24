@@ -4,16 +4,32 @@ import { parseProjectsFile } from "@/lib/projects/transfer";
 import { tokensFromSnapshot } from "@/lib/tokens/from-snapshot";
 import { tokenFormats } from "@/lib/tokens/formats";
 import { loadFontCatalog } from "@/lib/typography/catalog";
+import type { ExportTier } from "@/types/export";
 
 /** A readable failure the command line prints without a stack trace. */
 export class CliError extends Error {}
 
 export type CliFile = { path: string; data: string };
 
-/** The id, label and file name of every format, in the Export Engine's order. */
-export async function listFormats(): Promise<{ id: string; label: string; filename: string }[]> {
+export type FormatListing = {
+  id: string;
+  label: string;
+  filename: string;
+  tier: ExportTier;
+  /** Why the format will be removed, when it is deprecated. */
+  deprecated?: string;
+};
+
+/** The id, label, file name, tier and deprecation note of every format, in the Export Engine's order. */
+export async function listFormats(): Promise<FormatListing[]> {
   const tokens = tokensFromSnapshot(defaultSnapshot("Brand"), await loadFontCatalog(), new Date(0).toISOString());
-  return tokenFormats(tokens).map(({ id, label, filename }) => ({ id, label, filename }));
+  return tokenFormats(tokens).map(({ id, label, filename, tier, deprecated }) => ({
+    id,
+    label,
+    filename,
+    tier: tier ?? "core",
+    ...(deprecated ? { deprecated } : {}),
+  }));
 }
 
 /** The time recorded in the file, so the same file always builds the same output. */
