@@ -1,11 +1,11 @@
 import { colorRamp } from "@/lib/background/palette";
 import { createRandom, r1, range } from "@/lib/background/random";
 import { wrapSvg } from "@/lib/background/svg";
-import type { BackgroundDefinition } from "@/types/background";
+import type { BackgroundVariantDefinition } from "@/types/background";
 
 /** Nested squares growing from a seeded center, alternating through the palette. */
-export const squares: BackgroundDefinition = {
-  kind: "squares",
+export const squares: BackgroundVariantDefinition = {
+  variant: "squares",
   label: "Squares",
   description: "Concentric squares from a seeded center, like rings but square.",
   defaults: { density: 45, scale: 1 },

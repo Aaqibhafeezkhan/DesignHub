@@ -1,6 +1,6 @@
 import { patternSvg, spacingFor } from "@/lib/background/pattern";
 import { r1 } from "@/lib/background/random";
-import type { BackgroundDefinition } from "@/types/background";
+import type { BackgroundVariantDefinition } from "@/types/background";
 
 /** A diamond with its points at the given half width and half height. */
 function diamond(cx: number, cy: number, hw: number, hh: number, fill: string): string {
@@ -8,8 +8,8 @@ function diamond(cx: number, cy: number, hw: number, hh: number, fill: string): 
 }
 
 /** Overlapping palette diamonds with thin diagonal stitch lines. */
-export const argyle: BackgroundDefinition = {
-  kind: "argyle",
+export const argyle: BackgroundVariantDefinition = {
+  variant: "argyle",
   label: "Argyle",
   description: "Overlapping diamonds with thin diagonal stitch lines, like a knitted sock.",
   defaults: { density: 40, scale: 1 },

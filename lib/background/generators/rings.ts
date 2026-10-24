@@ -1,11 +1,11 @@
 import { colorRamp } from "@/lib/background/palette";
 import { createRandom, r1, range } from "@/lib/background/random";
 import { wrapSvg } from "@/lib/background/svg";
-import type { BackgroundDefinition } from "@/types/background";
+import type { BackgroundVariantDefinition } from "@/types/background";
 
 /** Concentric ripples spreading from two or three seeded centers. */
-export const rings: BackgroundDefinition = {
-  kind: "rings",
+export const rings: BackgroundVariantDefinition = {
+  variant: "rings",
   label: "Rings",
   description: "Concentric ripples from a few seeded centers.",
   defaults: { density: 45, scale: 1 },

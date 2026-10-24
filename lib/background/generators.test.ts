@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 
+import { migrateBackgroundSettings, type legacyKinds } from "@/lib/background/aliases";
 import { backgroundCss } from "@/lib/background/export";
 import { circuitTraces, type GridNode } from "@/lib/background/generators/circuit";
 import { halftoneGradient, halftoneStrength } from "@/lib/background/generators/halftone";
@@ -19,18 +20,23 @@ import { renderBackgroundSvg } from "@/lib/background/registry";
 import { xmlError } from "@/lib/test/xml";
 import type { BackgroundKind, BackgroundSettings } from "@/types/background";
 
-const settings = (kind: BackgroundKind, patch: Partial<BackgroundSettings> = {}): BackgroundSettings => ({
-  kind,
-  seed: 42,
-  colors: ["#6366f1", "#ec4899", "#f59e0b"],
-  background: "#0b1020",
-  density: 50,
-  scale: 1,
-  rotation: 0,
-  width: 1920,
-  height: 1080,
-  ...patch,
-});
+/** Settings for a kind, old or new: an old kind (arcs, plaid, ...) is mapped to its merged generator and variant. */
+const settings = (
+  kind: BackgroundKind | keyof typeof legacyKinds,
+  patch: Partial<BackgroundSettings> = {},
+): BackgroundSettings =>
+  migrateBackgroundSettings({
+    kind,
+    seed: 42,
+    colors: ["#6366f1", "#ec4899", "#f59e0b"],
+    background: "#0b1020",
+    density: 50,
+    scale: 1,
+    rotation: 0,
+    width: 1920,
+    height: 1080,
+    ...patch,
+  });
 
 const nodeCount = (svg: string) => (svg.match(/<[a-zA-Z]/g) ?? []).length;
 

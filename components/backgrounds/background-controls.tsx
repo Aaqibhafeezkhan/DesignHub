@@ -13,6 +13,8 @@ import { Panel } from "@/components/ui/panel";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useHotkey } from "@/hooks/use-hotkeys";
+import { variantOf } from "@/lib/background/family";
+import { getGenerator } from "@/lib/background/registry";
 import { useBackgroundStore } from "@/store/background-store";
 import type { HalftoneGradientChoice } from "@/types/background";
 
@@ -34,6 +36,9 @@ export function BackgroundControls() {
   const settings = useBackgroundStore((state) => state.settings);
   const update = useBackgroundStore((state) => state.update);
   const updateOptions = useBackgroundStore((state) => state.updateOptions);
+  const setVariant = useBackgroundStore((state) => state.setVariant);
+  const generator = getGenerator(settings.kind);
+  const variants = generator?.variants;
   const randomize = useBackgroundStore((state) => state.randomize);
   const reset = useBackgroundStore((state) => state.reset);
   useHotkey("space", randomize);
@@ -70,6 +75,27 @@ export function BackgroundControls() {
         <p className="-mt-2 text-[11px] text-subtle-foreground">
           Press <Kbd>Space</Kbd> for a new seed.
         </p>
+        {variants ? (
+          <div className="flex flex-col gap-2">
+            <Label>Look</Label>
+            <ToggleGroup
+              type="single"
+              value={variantOf(settings, variants).variant}
+              onValueChange={(value) => {
+                const next = variants.find((item) => item.variant === value);
+                if (next) setVariant(next);
+              }}
+              aria-label={`${generator?.label} look`}
+              className="w-full"
+            >
+              {variants.map((item) => (
+                <ToggleGroupItem key={item.variant} value={item.variant} className="flex-1" title={item.description}>
+                  {item.label}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </div>
+        ) : null}
         {settings.kind === "halftone" && (
           <div className="flex flex-col gap-2">
             <Label>Gradient</Label>

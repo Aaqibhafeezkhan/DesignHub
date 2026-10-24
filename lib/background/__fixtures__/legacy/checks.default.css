@@ -1,0 +1,5 @@
+.background {
+  background-color: #0e0e10;
+  background-image: repeating-conic-gradient(#6366f1 0 25%, transparent 0 50%);
+  background-size: 208px 208px;
+}

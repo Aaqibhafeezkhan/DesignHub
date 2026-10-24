@@ -1,6 +1,6 @@
 import { patternSvg, spacingFor } from "@/lib/background/pattern";
 import { createRandom, pick, r1, range } from "@/lib/background/random";
-import type { BackgroundDefinition } from "@/types/background";
+import type { BackgroundVariantDefinition } from "@/types/background";
 
 /** Bands per direction in one tile. */
 const BANDS = 3;
@@ -21,8 +21,8 @@ export function plaidBands(random: () => number, period: number, colors: string[
 }
 
 /** Overlapping translucent horizontal and vertical bands, like a tartan or gingham. */
-export const plaid: BackgroundDefinition = {
-  kind: "plaid",
+export const plaid: BackgroundVariantDefinition = {
+  variant: "plaid",
   label: "Plaid",
   description: "Translucent crossing bands in your palette, like a tartan or gingham.",
   defaults: { density: 45, scale: 1 },

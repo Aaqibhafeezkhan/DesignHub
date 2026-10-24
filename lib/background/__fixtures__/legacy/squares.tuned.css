@@ -1,0 +1,6 @@
+.background {
+  background-color: #0e0e10;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360' viewBox='0 0 640 360' preserveAspectRatio='xMidYMid slice'%3E%3Crect width='100%25' height='100%25' fill='%230e0e10'/%3E%3Cg transform='rotate(30 320 180) translate(320 180) scale(1.755) translate(-320 -180)'%3E%3Crect x='-360.8' y='-438.8' width='1111.5' height='1111.5' fill='%2344aa88'/%3E%3Crect x='-275.3' y='-353.3' width='940.5' height='940.5' fill='%23112233'/%3E%3Crect x='-189.8' y='-267.8' width='769.5' height='769.5' fill='%2344aa88'/%3E%3Crect x='-104.3' y='-182.3' width='598.5' height='598.5' fill='%23112233'/%3E%3Crect x='-18.8' y='-96.8' width='427.5' height='427.5' fill='%2344aa88'/%3E%3Crect x='66.7' y='-11.3' width='256.5' height='256.5' fill='%23112233'/%3E%3Crect x='152.2' y='74.2' width='85.5' height='85.5' fill='%2344aa88'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: cover;
+  background-position: center;
+}

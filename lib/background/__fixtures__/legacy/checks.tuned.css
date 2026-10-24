@@ -1,0 +1,6 @@
+.background {
+  background-color: #0e0e10;
+  background-image: repeating-conic-gradient(#112233 0 25%, transparent 0 50%);
+  background-size: 168px 168px;
+  /* CSS patterns can't be rotated; use the SVG export for the rotated version. */
+}

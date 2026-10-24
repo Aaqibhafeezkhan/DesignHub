@@ -1,6 +1,6 @@
 import { cssRotationNote, patternSvg, spacingFor } from "@/lib/background/pattern";
 import { r1 } from "@/lib/background/random";
-import type { BackgroundDefinition, BackgroundSettings } from "@/types/background";
+import type { BackgroundVariantDefinition, BackgroundSettings } from "@/types/background";
 
 function geometry(settings: BackgroundSettings) {
   const size = r1(spacingFor(settings.density, settings.scale, 140, 20));
@@ -9,8 +9,8 @@ function geometry(settings: BackgroundSettings) {
 }
 
 /** Classic checkerboard, with an optional second color on the alternate squares. */
-export const checks: BackgroundDefinition = {
-  kind: "checks",
+export const checks: BackgroundVariantDefinition = {
+  variant: "checks",
   label: "Checks",
   description: "Checkerboard squares, great for playful or retro sites.",
   defaults: { density: 30, scale: 1 },

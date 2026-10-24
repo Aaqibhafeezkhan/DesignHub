@@ -1,12 +1,12 @@
 import { patternSvg, spacingFor } from "@/lib/background/pattern";
 import { createRandom, pick, r1 } from "@/lib/background/random";
-import type { BackgroundDefinition } from "@/types/background";
+import type { BackgroundVariantDefinition } from "@/types/background";
 
 const pathNumber = (value: number) => String(r1(value)).replace(/^(-?)0\./, "$1.");
 
 /** Fine, repeating chevron strokes with seeded palette colors on each row. */
-export const zigzag: BackgroundDefinition = {
-  kind: "zigzag",
+export const zigzag: BackgroundVariantDefinition = {
+  variant: "zigzag",
   label: "Zigzag",
   description: "Fine zigzag strokes in seeded palette colors.",
   defaults: { density: 45, scale: 1 },

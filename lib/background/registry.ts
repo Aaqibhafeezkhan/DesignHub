@@ -1,8 +1,4 @@
-import { arcs } from "@/lib/background/generators/arcs";
-import { argyle } from "@/lib/background/generators/argyle";
 import { bokeh } from "@/lib/background/generators/bokeh";
-import { checks } from "@/lib/background/generators/checks";
-import { chevron } from "@/lib/background/generators/chevron";
 import { circuit } from "@/lib/background/generators/circuit";
 import { confetti } from "@/lib/background/generators/confetti";
 import { crosshatch } from "@/lib/background/generators/crosshatch";
@@ -10,12 +6,9 @@ import { halftone } from "@/lib/background/generators/halftone";
 import { hexagons } from "@/lib/background/generators/hexagons";
 import { lowPoly } from "@/lib/background/generators/low-poly";
 import { plus } from "@/lib/background/generators/plus";
-import { rings } from "@/lib/background/generators/rings";
 import { starfield } from "@/lib/background/generators/starfield";
 import { stripes } from "@/lib/background/generators/stripes";
 import { spirograph } from "@/lib/background/generators/spirograph";
-import { squiggle } from "@/lib/background/generators/squiggle";
-import { squares } from "@/lib/background/generators/squares";
 import { sunburst } from "@/lib/background/generators/sunburst";
 import { aurora } from "@/lib/background/generators/aurora";
 import { blobs } from "@/lib/background/generators/blobs";
@@ -30,13 +23,14 @@ import { topographic } from "@/lib/background/generators/topographic";
 import { voronoi } from "@/lib/background/generators/voronoi";
 import { waves } from "@/lib/background/generators/waves";
 import { waveLines } from "@/lib/background/generators/wave-lines";
-import { zigzag } from "@/lib/background/generators/zigzag";
 import { truchet } from "@/lib/background/generators/truchet";
 import { memphis } from "@/lib/background/generators/memphis";
 import { flowField } from "@/lib/background/generators/flow-field";
 import { circlePacking } from "@/lib/background/generators/circle-packing";
-import { plaid } from "@/lib/background/generators/plaid";
 import { rhombus } from "@/lib/background/generators/rhombus";
+import { concentric } from "@/lib/background/generators/concentric";
+import { woven } from "@/lib/background/generators/woven";
+import { zigzags } from "@/lib/background/generators/zigzags";
 import { wrapSvg } from "@/lib/background/svg";
 import type { BackgroundDefinition, BackgroundKind, BackgroundSettings } from "@/types/background";
 
@@ -51,12 +45,9 @@ export const backgroundGenerators: BackgroundDefinition[] = [
   dots,
   grid,
   isometric,
-  rings,
-  checks,
   lowPoly,
   bokeh,
   confetti,
-  chevron,
   hexagons,
   sunburst,
   topographic,
@@ -68,19 +59,16 @@ export const backgroundGenerators: BackgroundDefinition[] = [
   circuit,
   halftone,
   triangles,
-  squiggle,
-  squares,
-  argyle,
-  zigzag,
   spirograph,
   truchet,
   memphis,
   flowField,
-  plaid,
   circlePacking,
   rhombus,
-  arcs,
   grainGradient,
+  concentric,
+  woven,
+  zigzags,
 ];
 
 export function getGenerator(kind: BackgroundKind): BackgroundDefinition | undefined {

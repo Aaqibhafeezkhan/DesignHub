@@ -1,6 +1,6 @@
 import { createRandom, r1, range } from "@/lib/background/random";
 import { wrapSvg } from "@/lib/background/svg";
-import type { BackgroundDefinition, BackgroundSettings } from "@/types/background";
+import type { BackgroundVariantDefinition, BackgroundSettings } from "@/types/background";
 
 /** Hard cap so a huge canvas cannot emit hundreds of paths. */
 export const maxConcentricArcs = 48;
@@ -58,8 +58,8 @@ function arcPath(cx: number, cy: number, radius: number, start: number, sweep: n
 }
 
 /** Concentric arcs sharing one seeded center, open so they are not rings. */
-export const arcs: BackgroundDefinition = {
-  kind: "arcs",
+export const arcs: BackgroundVariantDefinition = {
+  variant: "arcs",
   label: "Arcs",
   description: "Concentric arcs from a seeded center, open instead of closed rings.",
   defaults: { density: 45, scale: 1 },

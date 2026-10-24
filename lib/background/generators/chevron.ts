@@ -1,10 +1,10 @@
 import { patternSvg, spacingFor } from "@/lib/background/pattern";
 import { r1 } from "@/lib/background/random";
-import type { BackgroundDefinition } from "@/types/background";
+import type { BackgroundVariantDefinition } from "@/types/background";
 
 /** Zigzag chevron rows alternating between the first two colors. */
-export const chevron: BackgroundDefinition = {
-  kind: "chevron",
+export const chevron: BackgroundVariantDefinition = {
+  variant: "chevron",
   label: "Chevron",
   description: "Zigzag rows, bold and energetic.",
   defaults: { density: 30, scale: 1 },

@@ -2,7 +2,7 @@ import { smoothPath, type Point } from "@/lib/background/path";
 import { createRandom, r1 } from "@/lib/background/random";
 import { spacingFor } from "@/lib/background/pattern";
 import { wrapSvg } from "@/lib/background/svg";
-import type { BackgroundDefinition, BackgroundSettings } from "@/types/background";
+import type { BackgroundVariantDefinition, BackgroundSettings } from "@/types/background";
 
 function geometry(settings: BackgroundSettings) {
   const spacing = r1(spacingFor(settings.density, 1, 72, 18));
@@ -15,8 +15,8 @@ function geometry(settings: BackgroundSettings) {
 }
 
 /** Short, repeating wavy strokes that cycle through the selected palette. */
-export const squiggle: BackgroundDefinition = {
-  kind: "squiggle",
+export const squiggle: BackgroundVariantDefinition = {
+  variant: "squiggle",
   label: "Squiggle",
   description: "Rows of short, wavy strokes in your palette colors.",
   defaults: { density: 52, scale: 1.5, rotation: 0 },
