@@ -1,0 +1,61 @@
+{
+  "name": "Acme Labs",
+  "type": "light",
+  "colors": {
+    "editor.background": "#ffc935",
+    "editor.foreground": "#0f172a",
+    "sideBar.background": "#fac534",
+    "sideBar.foreground": "#0f172a",
+    "statusBar.background": "#6366f1",
+    "statusBar.foreground": "#000000"
+  },
+  "tokenColors": [
+    {
+      "scope": [
+        "comment",
+        "punctuation.definition.comment"
+      ],
+      "settings": {
+        "foreground": "#3c507f",
+        "fontStyle": "italic"
+      }
+    },
+    {
+      "scope": [
+        "string",
+        "string.quoted"
+      ],
+      "settings": {
+        "foreground": "#a2246e"
+      }
+    },
+    {
+      "scope": [
+        "keyword",
+        "storage.type",
+        "storage.modifier"
+      ],
+      "settings": {
+        "foreground": "#4944cd"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.function",
+        "support.function"
+      ],
+      "settings": {
+        "foreground": "#a2246e"
+      }
+    },
+    {
+      "scope": [
+        "constant.numeric",
+        "constant.language.numeric"
+      ],
+      "settings": {
+        "foreground": "#006740"
+      }
+    }
+  ]
+}

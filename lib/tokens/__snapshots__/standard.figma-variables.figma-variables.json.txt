@@ -1,0 +1,1890 @@
+{
+  "variableCollections": [
+    {
+      "action": "CREATE",
+      "id": "primitives",
+      "name": "Primitives",
+      "initialModeId": "primitives:value"
+    },
+    {
+      "action": "CREATE",
+      "id": "semantic",
+      "name": "Semantic",
+      "initialModeId": "semantic:light"
+    }
+  ],
+  "variableModes": [
+    {
+      "action": "UPDATE",
+      "id": "primitives:value",
+      "name": "Value",
+      "variableCollectionId": "primitives"
+    },
+    {
+      "action": "UPDATE",
+      "id": "semantic:light",
+      "name": "Light",
+      "variableCollectionId": "semantic"
+    },
+    {
+      "action": "CREATE",
+      "id": "semantic:dark",
+      "name": "Dark",
+      "variableCollectionId": "semantic"
+    }
+  ],
+  "variables": [
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo/base",
+      "name": "color/indigo/base",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo/50",
+      "name": "color/indigo/50",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-50)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo/100",
+      "name": "color/indigo/100",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-100)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo/200",
+      "name": "color/indigo/200",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-200)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo/300",
+      "name": "color/indigo/300",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-300)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo/400",
+      "name": "color/indigo/400",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-400)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo/500",
+      "name": "color/indigo/500",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-500)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo/600",
+      "name": "color/indigo/600",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-600)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo/700",
+      "name": "color/indigo/700",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-700)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo/800",
+      "name": "color/indigo/800",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-800)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo/900",
+      "name": "color/indigo/900",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-900)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo/950",
+      "name": "color/indigo/950",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-950)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo-2/base",
+      "name": "color/indigo-2/base",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-2)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo-2/50",
+      "name": "color/indigo-2/50",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-2-50)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo-2/100",
+      "name": "color/indigo-2/100",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-2-100)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo-2/200",
+      "name": "color/indigo-2/200",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-2-200)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo-2/300",
+      "name": "color/indigo-2/300",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-2-300)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo-2/400",
+      "name": "color/indigo-2/400",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-2-400)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo-2/500",
+      "name": "color/indigo-2/500",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-2-500)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo-2/600",
+      "name": "color/indigo-2/600",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-2-600)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo-2/700",
+      "name": "color/indigo-2/700",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-2-700)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo-2/800",
+      "name": "color/indigo-2/800",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-2-800)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo-2/900",
+      "name": "color/indigo-2/900",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-2-900)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/indigo-2/950",
+      "name": "color/indigo-2/950",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-indigo-2-950)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/pink/base",
+      "name": "color/pink/base",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-pink)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/pink/50",
+      "name": "color/pink/50",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-pink-50)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/pink/100",
+      "name": "color/pink/100",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-pink-100)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/pink/200",
+      "name": "color/pink/200",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-pink-200)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/pink/300",
+      "name": "color/pink/300",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-pink-300)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/pink/400",
+      "name": "color/pink/400",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-pink-400)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/pink/500",
+      "name": "color/pink/500",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-pink-500)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/pink/600",
+      "name": "color/pink/600",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-pink-600)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/pink/700",
+      "name": "color/pink/700",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-pink-700)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/pink/800",
+      "name": "color/pink/800",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-pink-800)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/pink/900",
+      "name": "color/pink/900",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-pink-900)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/pink/950",
+      "name": "color/pink/950",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-pink-950)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/yellow/base",
+      "name": "color/yellow/base",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-yellow)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/yellow/50",
+      "name": "color/yellow/50",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-yellow-50)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/yellow/100",
+      "name": "color/yellow/100",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-yellow-100)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/yellow/200",
+      "name": "color/yellow/200",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-yellow-200)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/yellow/300",
+      "name": "color/yellow/300",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-yellow-300)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/yellow/400",
+      "name": "color/yellow/400",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-yellow-400)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/yellow/500",
+      "name": "color/yellow/500",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-yellow-500)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/yellow/600",
+      "name": "color/yellow/600",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-yellow-600)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/yellow/700",
+      "name": "color/yellow/700",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-yellow-700)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/yellow/800",
+      "name": "color/yellow/800",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-yellow-800)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/yellow/900",
+      "name": "color/yellow/900",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-yellow-900)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/yellow/950",
+      "name": "color/yellow/950",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-yellow-950)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/emerald/base",
+      "name": "color/emerald/base",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-emerald)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/emerald/50",
+      "name": "color/emerald/50",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-emerald-50)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/emerald/100",
+      "name": "color/emerald/100",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-emerald-100)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/emerald/200",
+      "name": "color/emerald/200",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-emerald-200)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/emerald/300",
+      "name": "color/emerald/300",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-emerald-300)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/emerald/400",
+      "name": "color/emerald/400",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-emerald-400)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/emerald/500",
+      "name": "color/emerald/500",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-emerald-500)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/emerald/600",
+      "name": "color/emerald/600",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-emerald-600)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/emerald/700",
+      "name": "color/emerald/700",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-emerald-700)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/emerald/800",
+      "name": "color/emerald/800",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-emerald-800)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/emerald/900",
+      "name": "color/emerald/900",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-emerald-900)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/color/emerald/950",
+      "name": "color/emerald/950",
+      "variableCollectionId": "primitives",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-emerald-950)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/spacing/0",
+      "name": "spacing/0",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--spacing-0)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/spacing/px",
+      "name": "spacing/px",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--spacing-px)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/spacing/0_5",
+      "name": "spacing/0_5",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--spacing-0\\.5)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/spacing/1",
+      "name": "spacing/1",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--spacing-1)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/spacing/2",
+      "name": "spacing/2",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--spacing-2)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/spacing/3",
+      "name": "spacing/3",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--spacing-3)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/spacing/4",
+      "name": "spacing/4",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--spacing-4)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/spacing/6",
+      "name": "spacing/6",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--spacing-6)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/spacing/8",
+      "name": "spacing/8",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--spacing-8)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/spacing/12",
+      "name": "spacing/12",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--spacing-12)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/spacing/16",
+      "name": "spacing/16",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--spacing-16)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/spacing/24",
+      "name": "spacing/24",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "GAP",
+        "WIDTH_HEIGHT"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--spacing-24)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/radius/none",
+      "name": "radius/none",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--radius-none)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/radius/sm",
+      "name": "radius/sm",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--radius-sm)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/radius/md",
+      "name": "radius/md",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--radius-md)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/radius/lg",
+      "name": "radius/lg",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--radius-lg)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/radius/xl",
+      "name": "radius/xl",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--radius-xl)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/radius/2xl",
+      "name": "radius/2xl",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--radius-2xl)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "primitives/radius/full",
+      "name": "radius/full",
+      "variableCollectionId": "primitives",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--radius-full)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "semantic/color/primary",
+      "name": "color/primary",
+      "variableCollectionId": "semantic",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-primary)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "semantic/color/accent",
+      "name": "color/accent",
+      "variableCollectionId": "semantic",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-accent)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "semantic/color/foreground",
+      "name": "color/foreground",
+      "variableCollectionId": "semantic",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-foreground)"
+      }
+    },
+    {
+      "action": "CREATE",
+      "id": "semantic/color/background",
+      "name": "color/background",
+      "variableCollectionId": "semantic",
+      "resolvedType": "COLOR",
+      "scopes": [
+        "ALL_SCOPES"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--color-background)"
+      }
+    }
+  ],
+  "variableModeValues": [
+    {
+      "variableId": "primitives/color/indigo/base",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.0588,
+        "g": 0.0902,
+        "b": 0.1647,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo/50",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.9529,
+        "g": 0.9686,
+        "b": 0.9961,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo/100",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.8941,
+        "g": 0.9216,
+        "b": 0.9804,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo/200",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.8039,
+        "g": 0.851,
+        "b": 0.9529,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo/300",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.6902,
+        "g": 0.7569,
+        "b": 0.902,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo/400",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.5529,
+        "g": 0.6314,
+        "b": 0.8039,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo/500",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.4471,
+        "g": 0.5294,
+        "b": 0.7176,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo/600",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.3608,
+        "g": 0.4431,
+        "b": 0.6235,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo/700",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.2784,
+        "g": 0.349,
+        "b": 0.5098,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo/800",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.2039,
+        "g": 0.2588,
+        "b": 0.3922,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo/900",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.1412,
+        "g": 0.1882,
+        "b": 0.2941,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo/950",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.0588,
+        "g": 0.0902,
+        "b": 0.1647,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo-2/base",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.3882,
+        "g": 0.4,
+        "b": 0.9451,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo-2/50",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.9451,
+        "g": 0.9647,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo-2/100",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.8863,
+        "g": 0.9137,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo-2/200",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.8,
+        "g": 0.8353,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo-2/300",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.6941,
+        "g": 0.7412,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo-2/400",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.5569,
+        "g": 0.6039,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo-2/500",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.4588,
+        "g": 0.4824,
+        "b": 1,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo-2/600",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.3882,
+        "g": 0.4,
+        "b": 0.9451,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo-2/700",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.3137,
+        "g": 0.3137,
+        "b": 0.8039,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo-2/800",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.2431,
+        "g": 0.2392,
+        "b": 0.651,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo-2/900",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.1843,
+        "g": 0.1804,
+        "b": 0.5137,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/indigo-2/950",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.102,
+        "g": 0.098,
+        "b": 0.3333,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/pink/base",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.9569,
+        "g": 0.4471,
+        "b": 0.7137,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/pink/50",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 1,
+        "g": 0.9412,
+        "b": 0.9765,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/pink/100",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 1,
+        "g": 0.8706,
+        "b": 0.949,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/pink/200",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 1,
+        "g": 0.7647,
+        "b": 0.898,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/pink/300",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 1,
+        "g": 0.6157,
+        "b": 0.8235,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/pink/400",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.9569,
+        "g": 0.4471,
+        "b": 0.7137,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/pink/500",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.8627,
+        "g": 0.298,
+        "b": 0.6118,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/pink/600",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.7529,
+        "g": 0.1922,
+        "b": 0.5176,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/pink/700",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.6353,
+        "g": 0.1216,
+        "b": 0.4275,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/pink/800",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.5098,
+        "g": 0.0745,
+        "b": 0.3373,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/pink/900",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.4078,
+        "g": 0.0549,
+        "b": 0.2667,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/pink/950",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.2667,
+        "g": 0.0157,
+        "b": 0.1686,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/yellow/base",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 1,
+        "g": 0.7882,
+        "b": 0.2078,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/yellow/50",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 1,
+        "g": 0.949,
+        "b": 0.8196,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/yellow/100",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 1,
+        "g": 0.8863,
+        "b": 0.6235,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/yellow/200",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 1,
+        "g": 0.7882,
+        "b": 0.2078,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/yellow/300",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.9294,
+        "g": 0.6941,
+        "b": 0,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/yellow/400",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.7882,
+        "g": 0.5843,
+        "b": 0,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/yellow/500",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.6706,
+        "g": 0.4941,
+        "b": 0,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/yellow/600",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.5725,
+        "g": 0.4157,
+        "b": 0,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/yellow/700",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.4784,
+        "g": 0.3412,
+        "b": 0,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/yellow/800",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.3843,
+        "g": 0.2706,
+        "b": 0,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/yellow/900",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.3098,
+        "g": 0.2118,
+        "b": 0,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/yellow/950",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.2,
+        "g": 0.1255,
+        "b": 0,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/emerald/base",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.2039,
+        "g": 0.8275,
+        "b": 0.6,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/emerald/50",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.8902,
+        "g": 0.9804,
+        "b": 0.9333,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/emerald/100",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.7608,
+        "g": 0.949,
+        "b": 0.8549,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/emerald/200",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.5451,
+        "g": 0.902,
+        "b": 0.7373,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/emerald/300",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0.2039,
+        "g": 0.8275,
+        "b": 0.6,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/emerald/400",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0,
+        "g": 0.7216,
+        "b": 0.4784,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/emerald/500",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0,
+        "g": 0.6196,
+        "b": 0.4039,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/emerald/600",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0,
+        "g": 0.5294,
+        "b": 0.3412,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/emerald/700",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0,
+        "g": 0.451,
+        "b": 0.2824,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/emerald/800",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0,
+        "g": 0.3608,
+        "b": 0.2196,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/emerald/900",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0,
+        "g": 0.2902,
+        "b": 0.1686,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/color/emerald/950",
+      "modeId": "primitives:value",
+      "value": {
+        "r": 0,
+        "g": 0.1843,
+        "b": 0.0941,
+        "a": 1
+      }
+    },
+    {
+      "variableId": "primitives/spacing/0",
+      "modeId": "primitives:value",
+      "value": 0
+    },
+    {
+      "variableId": "primitives/spacing/px",
+      "modeId": "primitives:value",
+      "value": 1
+    },
+    {
+      "variableId": "primitives/spacing/0_5",
+      "modeId": "primitives:value",
+      "value": 2
+    },
+    {
+      "variableId": "primitives/spacing/1",
+      "modeId": "primitives:value",
+      "value": 4
+    },
+    {
+      "variableId": "primitives/spacing/2",
+      "modeId": "primitives:value",
+      "value": 8
+    },
+    {
+      "variableId": "primitives/spacing/3",
+      "modeId": "primitives:value",
+      "value": 12
+    },
+    {
+      "variableId": "primitives/spacing/4",
+      "modeId": "primitives:value",
+      "value": 16
+    },
+    {
+      "variableId": "primitives/spacing/6",
+      "modeId": "primitives:value",
+      "value": 24
+    },
+    {
+      "variableId": "primitives/spacing/8",
+      "modeId": "primitives:value",
+      "value": 32
+    },
+    {
+      "variableId": "primitives/spacing/12",
+      "modeId": "primitives:value",
+      "value": 48
+    },
+    {
+      "variableId": "primitives/spacing/16",
+      "modeId": "primitives:value",
+      "value": 64
+    },
+    {
+      "variableId": "primitives/spacing/24",
+      "modeId": "primitives:value",
+      "value": 96
+    },
+    {
+      "variableId": "primitives/radius/none",
+      "modeId": "primitives:value",
+      "value": 0
+    },
+    {
+      "variableId": "primitives/radius/sm",
+      "modeId": "primitives:value",
+      "value": 4
+    },
+    {
+      "variableId": "primitives/radius/md",
+      "modeId": "primitives:value",
+      "value": 8
+    },
+    {
+      "variableId": "primitives/radius/lg",
+      "modeId": "primitives:value",
+      "value": 12
+    },
+    {
+      "variableId": "primitives/radius/xl",
+      "modeId": "primitives:value",
+      "value": 16
+    },
+    {
+      "variableId": "primitives/radius/2xl",
+      "modeId": "primitives:value",
+      "value": 24
+    },
+    {
+      "variableId": "primitives/radius/full",
+      "modeId": "primitives:value",
+      "value": 9999
+    },
+    {
+      "variableId": "semantic/color/primary",
+      "modeId": "semantic:light",
+      "value": {
+        "type": "VARIABLE_ALIAS",
+        "id": "primitives/color/indigo-2/base"
+      }
+    },
+    {
+      "variableId": "semantic/color/primary",
+      "modeId": "semantic:dark",
+      "value": {
+        "type": "VARIABLE_ALIAS",
+        "id": "primitives/color/indigo-2/300"
+      }
+    },
+    {
+      "variableId": "semantic/color/accent",
+      "modeId": "semantic:light",
+      "value": {
+        "type": "VARIABLE_ALIAS",
+        "id": "primitives/color/pink/base"
+      }
+    },
+    {
+      "variableId": "semantic/color/accent",
+      "modeId": "semantic:dark",
+      "value": {
+        "type": "VARIABLE_ALIAS",
+        "id": "primitives/color/pink/300"
+      }
+    },
+    {
+      "variableId": "semantic/color/foreground",
+      "modeId": "semantic:light",
+      "value": {
+        "type": "VARIABLE_ALIAS",
+        "id": "primitives/color/indigo/base"
+      }
+    },
+    {
+      "variableId": "semantic/color/foreground",
+      "modeId": "semantic:dark",
+      "value": {
+        "type": "VARIABLE_ALIAS",
+        "id": "primitives/color/yellow/base"
+      }
+    },
+    {
+      "variableId": "semantic/color/background",
+      "modeId": "semantic:light",
+      "value": {
+        "type": "VARIABLE_ALIAS",
+        "id": "primitives/color/yellow/base"
+      }
+    },
+    {
+      "variableId": "semantic/color/background",
+      "modeId": "semantic:dark",
+      "value": {
+        "type": "VARIABLE_ALIAS",
+        "id": "primitives/color/indigo/base"
+      }
+    }
+  ]
+}

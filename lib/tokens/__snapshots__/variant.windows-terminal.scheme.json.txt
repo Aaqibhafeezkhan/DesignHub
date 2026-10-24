@@ -1,0 +1,26 @@
+{
+  "schemes": [
+    {
+      "name": "Acme Labs",
+      "background": "#ffc935",
+      "foreground": "#0f172a",
+      "cursorColor": "#6164ee",
+      "black": "#0f172a",
+      "red": "#ce232c",
+      "green": "#008757",
+      "yellow": "#edb100",
+      "blue": "#5050cd",
+      "purple": "#c03184",
+      "cyan": "#00b87a",
+      "white": "#cdd9f3",
+      "brightBlack": "#0f172a",
+      "brightRed": "#fd5654",
+      "brightGreen": "#00b87a",
+      "brightYellow": "#ffc935",
+      "brightBlue": "#757bff",
+      "brightPurple": "#dc4c9c",
+      "brightCyan": "#34d399",
+      "brightWhite": "#e3faee"
+    }
+  ]
+}

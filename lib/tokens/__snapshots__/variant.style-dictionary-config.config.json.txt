@@ -1,0 +1,52 @@
+{
+  "source": [
+    "style-dictionary.tokens.json"
+  ],
+  "platforms": {
+    "css": {
+      "prefix": "acme",
+      "transforms": [
+        "name/kebab"
+      ],
+      "buildPath": "build/css/",
+      "files": [
+        {
+          "destination": "tokens.css",
+          "format": "css/variables",
+          "options": {
+            "outputReferences": true
+          }
+        }
+      ]
+    },
+    "scss": {
+      "prefix": "acme",
+      "transforms": [
+        "name/kebab"
+      ],
+      "buildPath": "build/scss/",
+      "files": [
+        {
+          "destination": "_tokens.scss",
+          "format": "scss/variables",
+          "options": {
+            "outputReferences": true
+          }
+        }
+      ]
+    },
+    "js": {
+      "prefix": "acme",
+      "transforms": [
+        "name/camel"
+      ],
+      "buildPath": "build/js/",
+      "files": [
+        {
+          "destination": "tokens.js",
+          "format": "javascript/es6"
+        }
+      ]
+    }
+  }
+}
