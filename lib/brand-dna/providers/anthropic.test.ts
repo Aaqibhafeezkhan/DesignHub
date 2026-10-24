@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 
-import { cleanAiKey } from "@/lib/brand-dna/ai-key";
+import { cleanAiKey, type StoredAiKey } from "@/lib/brand-dna/ai-key";
 import {
   AI_MODEL,
   aiRequestPreview,
@@ -43,7 +43,7 @@ const encode = () => "UE5H";
 
 function provider(
   create: MessagesClient["messages"]["create"],
-  stored = { key: "sk-ant-test-key-123456789", reviewed: true },
+  stored: StoredAiKey = { key: "sk-ant-test-key-123456789", reviewed: true },
 ) {
   return createAiProvider({
     loadKey: async () => stored,
@@ -157,6 +157,17 @@ describe("the provider", () => {
       throw new DOMException("Aborted", "AbortError");
     };
     await expect(provider(create).analyze([image("a.png")], { signal: controller.signal })).rejects.toThrow("Aborted");
+  });
+
+  test("asks the model the person chose and names it", async () => {
+    const create = vi.fn(async () => reply(JSON.stringify(answer)));
+    const result = await provider(create, {
+      key: "sk-ant-test-key-123456789",
+      reviewed: true,
+      model: "claude-test-model",
+    }).analyze([image("a.png")]);
+    expect((create.mock.calls[0] as unknown as [{ model: string }])[0].model).toBe("claude-test-model");
+    expect(result.notes[0]).toContain("claude-test-model");
   });
 
   test("is marked as not private and not mocked", () => {

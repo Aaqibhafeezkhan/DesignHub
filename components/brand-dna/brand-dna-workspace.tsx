@@ -283,8 +283,13 @@ export function BrandDnaWorkspace() {
                 </button>
               ))}
             </div>
-            {provider.id === "anthropic" ? (
-              <AiKeyPanel images={images} onChange={() => images.length > 0 && void analyze(images)} />
+            {provider.id === "anthropic" || provider.id === "openai-compatible" ? (
+              <AiKeyPanel
+                key={provider.id}
+                provider={provider.id}
+                images={images}
+                onChange={() => images.length > 0 && void analyze(images)}
+              />
             ) : null}
           </Panel>
         </>

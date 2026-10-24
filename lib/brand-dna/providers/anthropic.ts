@@ -130,9 +130,13 @@ export type AiRequestPreview = {
   images: { name: string; base64: string }[];
 };
 
-export function aiRequestPreview(images: DnaImage[], encode: (image: DnaImage) => string): AiRequestPreview {
+export function aiRequestPreview(
+  images: DnaImage[],
+  encode: (image: DnaImage) => string,
+  model: string = AI_MODEL,
+): AiRequestPreview {
   return {
-    model: AI_MODEL,
+    model,
     system: AI_SYSTEM_PROMPT,
     prompt: AI_USER_PROMPT,
     images: images.map((image) => ({ name: image.name, base64: encode(image) })),
@@ -257,7 +261,8 @@ export function createAiProvider(deps: AiProviderDeps): BrandDnaProvider {
 
       try {
         onStage?.("reading");
-        const request = buildAiRequest(aiRequestPreview(images, deps.encode));
+        const model = stored.model || AI_MODEL;
+        const request = buildAiRequest(aiRequestPreview(images, deps.encode, model));
         const client = await deps.createClient(stored.key);
         onStage?.("palette");
         const response = await client.messages.create(request, { signal });
@@ -269,7 +274,7 @@ export function createAiProvider(deps: AiProviderDeps): BrandDnaProvider {
         const result = parseAiAnswer(block.text);
         onStage?.("type");
         onStage?.("done");
-        return { ...result, notes: [`Described by ${AI_MODEL}.`, ...result.notes] };
+        return { ...result, notes: [`Described by ${model}.`, ...result.notes] };
       } catch (error) {
         if (signal?.aborted || (error instanceof DOMException && error.name === "AbortError")) {
           throw new DOMException("Aborted", "AbortError");
