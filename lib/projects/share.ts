@@ -1,5 +1,6 @@
 import { LocalizedError } from "@/lib/i18n/errors";
 import type { BrandSnapshot } from "@/lib/projects/snapshot";
+import { SCHEMA_VERSION } from "@/lib/projects/migrate";
 import { parseProjectsFile, PROJECT_FORMAT } from "@/lib/projects/transfer";
 import { crc32 } from "@/lib/zip";
 
@@ -56,7 +57,7 @@ function fromBase64Url(value: string): Uint8Array {
 const checksum = (bytes: Uint8Array) => crc32(bytes).toString(16).padStart(8, "0");
 
 async function encodeToken(snapshot: BrandSnapshot, logoOmitted: boolean): Promise<string> {
-  const json = JSON.stringify({ format: PROJECT_FORMAT, version: 1, logoOmitted, snapshot });
+  const json = JSON.stringify({ format: PROJECT_FORMAT, version: SCHEMA_VERSION, logoOmitted, snapshot });
   const bytes = new TextEncoder().encode(json);
   const packed = await pipe(bytes, new CompressionStream("deflate-raw"));
   return `${VERSION}.${checksum(bytes)}.${toBase64Url(packed)}`;

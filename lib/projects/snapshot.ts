@@ -14,7 +14,7 @@ type State<T extends { getState: () => unknown }> = ReturnType<T["getState"]>;
  * a snapshot is only written when a project is saved and read when it is opened.
  */
 export type BrandSnapshot = {
-  version: 1;
+  version: 2;
   brand: Pick<State<typeof useBrandStore>, "profile">;
   colors: Pick<State<typeof useColorStore>, "swatches" | "shadeOptions" | "gradient">;
   typography: Pick<State<typeof useTypographyStore>, "headingFont" | "bodyFont" | "scale" | "rhythm">;
@@ -22,7 +22,7 @@ export type BrandSnapshot = {
   effects: Pick<State<typeof useEffectsStore>, "settings">;
   logo: Pick<State<typeof useLogoStore>, "clearSpace">;
   mockups: Pick<State<typeof useMockupStore>, "content" | "mode">;
-  social: Pick<State<typeof useSocialStore>, "content" | "mode" | "design">;
+  social: Pick<State<typeof useSocialStore>, "content" | "mode" | "design" | "packSelection">;
 };
 
 /** The stores a snapshot covers, used to capture, restore and watch for edits. */
@@ -49,7 +49,7 @@ function slices(source: {
 }): BrandSnapshot {
   const { brand, colors, typography, tokens, effects, logo, mockups, social } = source;
   return structuredClone({
-    version: 1,
+    version: 2,
     brand: { profile: brand.profile },
     colors: { swatches: colors.swatches, shadeOptions: colors.shadeOptions, gradient: colors.gradient },
     typography: {
@@ -62,7 +62,7 @@ function slices(source: {
     effects: { settings: effects.settings },
     logo: { clearSpace: logo.clearSpace },
     mockups: { content: mockups.content, mode: mockups.mode },
-    social: { content: social.content, mode: social.mode, design: social.design },
+    social: { content: social.content, mode: social.mode, design: social.design, packSelection: social.packSelection },
   });
 }
 
@@ -139,6 +139,7 @@ export function applySnapshot(snapshot: BrandSnapshot, options: { preserveColorH
     content: { ...base.social.content, ...data.social.content },
     mode: data.social.mode,
     design: { ...base.social.design, ...data.social.design },
+    packSelection: data.social.packSelection ?? null,
   });
 }
 

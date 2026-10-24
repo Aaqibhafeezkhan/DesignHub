@@ -1,4 +1,5 @@
 import { safeDb } from "@/lib/db";
+import { upgradeStored } from "@/lib/projects/migrate";
 import {
   autoVersionDue,
   planVersion,
@@ -16,7 +17,7 @@ const memory = new Map<string, ProjectVersion[]>();
 /** Newest first. */
 export async function listVersions(projectId: string): Promise<ProjectVersion[]> {
   const stored = await safeDb((db) => db.versions.where("projectId").equals(projectId).toArray(), null);
-  return sortVersions(stored ?? memory.get(projectId) ?? []);
+  return sortVersions((stored ?? memory.get(projectId) ?? []).map(upgradeStored));
 }
 
 /** Saves a version unless it matches the newest one, then trims the history to the cap. */

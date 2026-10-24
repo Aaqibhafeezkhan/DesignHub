@@ -1,4 +1,5 @@
 import { LocalizedError } from "@/lib/i18n/errors";
+import { assertKnownVersion, migrateSnapshot, readSchemaVersion, SCHEMA_VERSION } from "@/lib/projects/migrate";
 import {
   MAX_VERSIONS,
   sortVersions,
@@ -36,7 +37,7 @@ export function projectToJson(project: BrandProject, history?: ProjectVersion[])
   return JSON.stringify(
     {
       format: PROJECT_FORMAT,
-      version: 1,
+      version: SCHEMA_VERSION,
       exportedAt: new Date().toISOString(),
       name: projectName(project),
       favorite: project.favorite,
@@ -53,7 +54,7 @@ export function projectsToJson(projects: BrandProject[], histories?: ProjectHist
   return JSON.stringify(
     {
       format: PROJECTS_FORMAT,
-      version: 1,
+      version: SCHEMA_VERSION,
       exportedAt: new Date().toISOString(),
       projects: projects.map((project) => ({
         favorite: project.favorite,
@@ -102,7 +103,9 @@ function normalizeMission(value: unknown, fallback: Mission): Mission {
  * Checks a snapshot from a file and fills anything missing from the defaults, so an
  * older or hand-edited file still opens. The logo is re-sanitized: files are untrusted.
  */
-function normalizeSnapshot(value: unknown): BrandSnapshot {
+function normalizeSnapshot(input: unknown): BrandSnapshot {
+  // Older snapshots are brought up to the current version first; a newer one is refused.
+  const value = migrateSnapshot(input);
   if (!isObject(value)) throw new LocalizedError("error.file.noBrand");
   const base = defaultSnapshot();
   const brand = isObject(value.brand) && isObject(value.brand.profile) ? value.brand.profile : null;
@@ -122,12 +125,13 @@ function normalizeSnapshot(value: unknown): BrandSnapshot {
     const design = { ...base.social.design, ...(isObject(social.design) ? social.design : {}) };
     return {
       ...social,
+      packSelection: normalizePackSelection(social.packSelection),
       content: { ...base.social.content, ...(isObject(social.content) ? social.content : {}) },
       design: { ...design, logoSvg: typeof design.logoSvg === "string" ? sanitizeSvg(design.logoSvg) : null },
     };
   };
   const snapshot: BrandSnapshot = {
-    version: 1,
+    version: SCHEMA_VERSION,
     brand: {
       profile: {
         ...base.brand.profile,
@@ -151,6 +155,12 @@ function normalizeSnapshot(value: unknown): BrandSnapshot {
     throw new LocalizedError("error.file.fonts");
   }
   return snapshot;
+}
+
+/** The social ZIP selection from a file: template ids as text, or null for the default. Ids are not looked up here. */
+function normalizePackSelection(value: unknown): string[] | null {
+  if (!Array.isArray(value)) return null;
+  return value.filter((id): id is string => typeof id === "string" && /^[a-z0-9-]{1,80}$/.test(id)).slice(0, 300);
 }
 
 const isReason = (value: unknown): value is VersionReason =>
@@ -194,6 +204,8 @@ export function parseProjectsFile(text: string): ProjectEntry[] {
     throw new LocalizedError("error.file.json");
   }
   if (!isObject(data)) throw new LocalizedError("error.file.notProject");
+  if (data.format === PROJECT_FORMAT || data.format === PROJECTS_FORMAT)
+    assertKnownVersion(readSchemaVersion(data.version));
   if (data.format === PROJECT_FORMAT) return [toEntry(data)];
   if (data.format === PROJECTS_FORMAT && Array.isArray(data.projects)) {
     return data.projects.map((item) => {

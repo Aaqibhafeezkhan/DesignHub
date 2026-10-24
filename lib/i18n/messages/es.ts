@@ -910,4 +910,6 @@ export const es = {
   "code.deprecated": "Obsoleto",
   "code.deprecatedNote": "Este formato está obsoleto.",
   "code.noMatch": "Ningún formato coincide con esa búsqueda.",
+  "error.file.newer":
+    "Este archivo lo guardó una versión más reciente de DesignHub (versión de archivo {version}). Actualiza la aplicación e inténtalo de nuevo.",
 } satisfies Catalog;

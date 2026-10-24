@@ -902,4 +902,6 @@ export const en = {
   "code.deprecated": "Deprecated",
   "code.deprecatedNote": "This format is deprecated.",
   "code.noMatch": "No format matches that search.",
+  "error.file.newer":
+    "This file was saved by a newer version of DesignHub (file version {version}). Update the app, then try again.",
 } as const;
