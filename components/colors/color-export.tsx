@@ -1,7 +1,17 @@
 "use client";
 
-import { Brush, ChevronDown, Download, ImageDown, Loader2, Paintbrush, Palette, SwatchBook } from "lucide-react";
-import { useMemo, useState } from "react";
+import {
+  Brush,
+  ChevronDown,
+  Download,
+  FileText,
+  ImageDown,
+  Loader2,
+  Paintbrush,
+  Palette,
+  SwatchBook,
+} from "lucide-react";
+import { useId, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { PalettePreview } from "@/components/colors/palette-preview";
@@ -151,14 +161,54 @@ export function ColorExport() {
     toast.success(t("colors.export.kritaReady"));
   }
 
-  const downloads = [
-    { label: t("colors.export.png"), hint: ".png", icon: ImageDown, run: downloadPng },
-    { label: t("colors.export.ase"), hint: ".ase", icon: SwatchBook, run: downloadAse },
-    { label: t("colors.export.sketch"), hint: ".sketchpalette", icon: Palette, run: downloadSketch },
-    { label: t("colors.export.procreate"), hint: ".swatches", icon: Brush, run: downloadProcreate },
-    { label: t("colors.export.paintnet"), hint: ".txt", icon: Palette, run: downloadPaintNet },
-    { label: t("colors.export.krita"), hint: ".kpl", icon: Paintbrush, run: downloadKrita },
+  /** The GIMP palette (also read by Inkscape) or the Markdown table, exactly as the code tabs show them. */
+  function downloadText(id: "gpl" | "markdown", extension: string, readyKey: PlainMessageKey) {
+    const item = formats.find((format) => format.id === id);
+    if (swatches.length === 0 || !item) return;
+    downloadBlob(new Blob([item.code], { type: "text/plain" }), filename(extension));
+    toast.success(t(readyKey));
+  }
+
+  /** The download menu, grouped by the tool that opens each file. */
+  const downloadGroups = [
+    {
+      id: "design",
+      label: t("colors.export.group.design"),
+      items: [
+        { label: t("colors.export.sketch"), hint: ".sketchpalette", icon: Palette, run: downloadSketch },
+        { label: t("colors.export.procreate"), hint: ".swatches", icon: Brush, run: downloadProcreate },
+        { label: t("colors.export.ase"), hint: ".ase", icon: SwatchBook, run: downloadAse },
+      ],
+    },
+    {
+      id: "open",
+      label: t("colors.export.group.open"),
+      items: [
+        {
+          label: t("colors.export.gimp"),
+          hint: ".gpl",
+          icon: Palette,
+          run: () => downloadText("gpl", "gpl", "colors.export.gimpReady"),
+        },
+        { label: t("colors.export.krita"), hint: ".kpl", icon: Paintbrush, run: downloadKrita },
+        { label: t("colors.export.paintnet"), hint: ".txt", icon: Palette, run: downloadPaintNet },
+      ],
+    },
+    {
+      id: "documents",
+      label: t("colors.export.group.documents"),
+      items: [
+        {
+          label: t("colors.export.markdown"),
+          hint: ".md",
+          icon: FileText,
+          run: () => downloadText("markdown", "md", "colors.export.markdownReady"),
+        },
+        { label: t("colors.export.png"), hint: ".png", icon: ImageDown, run: downloadPng },
+      ],
+    },
   ];
+  const menuId = useId();
 
   return (
     <div className="flex flex-col gap-6">
@@ -182,21 +232,28 @@ export function ColorExport() {
             </Button>
           </PopoverTrigger>
           <PopoverContent align="end" className="w-72 p-1" aria-label={t("colors.export.menu")}>
-            {downloads.map((item) => (
-              <Button
-                key={item.label}
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start"
-                onClick={() => {
-                  setMenuOpen(false);
-                  void item.run();
-                }}
-              >
-                <item.icon />
-                {item.label}
-                <span className="ml-auto text-xs text-subtle-foreground">{item.hint}</span>
-              </Button>
+            {downloadGroups.map((group) => (
+              <div key={group.id} role="group" aria-labelledby={`${menuId}-${group.id}`} className="py-1">
+                <p id={`${menuId}-${group.id}`} className="px-2 pb-0.5 pt-1 text-xs font-medium text-subtle-foreground">
+                  {group.label}
+                </p>
+                {group.items.map((item) => (
+                  <Button
+                    key={item.label}
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      void item.run();
+                    }}
+                  >
+                    <item.icon />
+                    {item.label}
+                    <span className="ml-auto text-xs text-subtle-foreground">{item.hint}</span>
+                  </Button>
+                ))}
+              </div>
             ))}
           </PopoverContent>
         </Popover>

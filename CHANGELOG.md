@@ -49,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Color Studio: the "Download palette" menu now groups its files by the tool that opens them (Design apps: Sketch, Procreate, Adobe ASE; Open tools: GIMP and Inkscape, Krita, Paint.NET; Documents: Markdown table, PNG strip), adds GIMP and Markdown downloads, and every palette file for a fixed palette is covered by a snapshot test (#424).
 - Brand DNA calls the Anthropic Messages API with `fetch` and local types; `@anthropic-ai/sdk` is no longer a dependency.
 - Rings, arcs and squares, argyle, plaid and checks, and zigzag, chevron and squiggle are three generators with a Look control (33 generators from 39). Saved backgrounds with an old kind open as the same look.
 - `lib/tokens/formats.ts` and `native.ts` are split into one module per format in `lib/tokens/formats/`; the output is unchanged byte for byte.
