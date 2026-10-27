@@ -15,3 +15,4 @@ lib/social/__snapshots__
 lib/tokens/__snapshots__
 lib/projects/__fixtures__
 lib/icons/__snapshots__
+lib/svg/__snapshots__

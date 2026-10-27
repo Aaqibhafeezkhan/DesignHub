@@ -2,6 +2,7 @@ import { splitIconId } from "@/lib/icons/iconify";
 import { buildIconSvg } from "@/lib/icons/svg";
 import { iconTierOf } from "@/lib/icons/tiers";
 import { escapeAngularText, escapeTemplateLiteral, kebabCase } from "@/lib/svg/angular";
+import { frameworkFormat } from "@/lib/svg/converters";
 import { svgCssUrl } from "@/lib/svg/data-uri";
 import { parseSvg } from "@/lib/svg/parse";
 import { reactNativeComponent } from "@/lib/svg/react-native";
@@ -335,6 +336,7 @@ function cssDataUri(icon: IconData, style: IconStyle): string {
 /** Every export for an icon, each with its tier. The picker groups by tier and keeps this order inside each group. */
 export function iconExports(id: IconId, icon: IconData, style: IconStyle): ExportFormat[] {
   const { name } = splitIconId(id);
+  const component = componentName(id);
   const formats: Omit<ExportFormat, "tier">[] = [
     {
       id: "svg",
@@ -343,76 +345,16 @@ export function iconExports(id: IconId, icon: IconData, style: IconStyle): Expor
       language: "svg",
       code: `${buildIconSvg(icon, style, { uniqueIds: true })}\n`,
     },
-    {
-      id: "react",
-      label: "React",
-      filename: `${componentName(id)}.tsx`,
-      language: "tsx",
-      code: reactComponent(id, icon, style),
-    },
-    {
-      id: "vue",
-      label: "Vue",
-      filename: `${componentName(id)}.vue`,
-      language: "vue",
-      code: vueComponent(id, icon, style),
-    },
-    {
-      id: "svelte",
-      label: "Svelte",
-      filename: `${componentName(id)}.svelte`,
-      language: "svelte",
-      code: svelteComponent(id, icon, style),
-    },
-    {
-      id: "solid",
-      label: "Solid",
-      filename: `${componentName(id)}.tsx`,
-      language: "tsx",
-      code: solidComponent(id, icon, style),
-    },
-    {
-      id: "preact",
-      label: "Preact",
-      filename: `${componentName(id)}.tsx`,
-      language: "tsx",
-      code: preactComponent(id, icon, style),
-    },
-    {
-      id: "qwik",
-      label: "Qwik",
-      filename: `${componentName(id)}.tsx`,
-      language: "tsx",
-      code: qwikComponent(id, icon, style),
-    },
-    {
-      id: "native",
-      label: "React Native",
-      filename: `${componentName(id)}.native.tsx`,
-      language: "tsx",
-      code: reactNativeIcon(id, icon, style),
-    },
-    {
-      id: "angular",
-      label: "Angular",
-      filename: `${kebabCase(componentName(id))}.component.ts`,
-      language: "ts",
-      code: angularComponent(id, icon, style),
-    },
-    {
-      id: "lit",
-      label: "Lit",
-      filename: `${kebabCase(componentName(id))}.ts`,
-      language: "ts",
-      code: litComponent(id, icon, style),
-    },
-    {
-      id: "astro",
-      label: "Astro",
-      filename: `${componentName(id)}.astro`,
-      language: "astro",
-      code: astroComponent(id, icon, style),
-    },
+    frameworkFormat("react", component, reactComponent(id, icon, style)),
+    frameworkFormat("vue", component, vueComponent(id, icon, style)),
+    frameworkFormat("svelte", component, svelteComponent(id, icon, style)),
+    frameworkFormat("solid", component, solidComponent(id, icon, style)),
+    frameworkFormat("preact", component, preactComponent(id, icon, style)),
+    frameworkFormat("qwik", component, qwikComponent(id, icon, style)),
+    frameworkFormat("native", component, reactNativeIcon(id, icon, style)),
+    frameworkFormat("angular", component, angularComponent(id, icon, style)),
+    frameworkFormat("lit", component, litComponent(id, icon, style)),
+    frameworkFormat("astro", component, astroComponent(id, icon, style)),
     {
       id: "html",
       label: "HTML",

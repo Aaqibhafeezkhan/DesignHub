@@ -1,0 +1,43 @@
+import { LitElement, html, nothing, svg } from "lit";
+
+export class Badge extends LitElement {
+  static properties = {
+    size: { type: String },
+    label: { type: String },
+  };
+
+  declare size: string;
+  declare label: string | undefined;
+
+  constructor() {
+    super();
+    /** Width and height. The default follows the surrounding font size. */
+    this.size = "1em";
+  }
+
+  render() {
+    return html`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width=${this.size} height=${this.size} role=${this.label ? "img" : nothing} aria-label=${this.label ?? nothing} aria-hidden=${this.label ? nothing : "true"}>
+        ${this.label ? svg`<title>${this.label}</title>` : nothing}${svg`
+        <defs>
+          <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#6366f1"/>
+            <stop offset="1" stop-color="#ec4899"/>
+          </linearGradient>
+        </defs>
+        <rect x="20" y="20" width="200" height="200" rx="48" fill="url(#gradient)"/>
+        <path d="M80.12 122.65l28.87 27.46 53.34-57.67" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="186" cy="54" r="10" fill="currentColor" fill-rule="nonzero"/>
+      `}
+      </svg>
+    `;
+  }
+}
+
+customElements.define("svg-badge", Badge);
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "svg-badge": Badge;
+  }
+}

@@ -1,0 +1,16 @@
+<!-- 1. Inline the sprite once (e.g. right after <body>), or serve it as /sprite.svg -->
+
+<!-- 2. Use any symbol -->
+<svg width="24" height="24" aria-hidden="true">
+  <use href="#badge" />
+</svg>
+
+<!-- From an external file (same origin) -->
+<svg width="24" height="24" aria-hidden="true">
+  <use href="/sprite.svg#badge" />
+</svg>
+
+<!-- React -->
+<svg width={24} height={24} aria-hidden="true"><use href="/sprite.svg#badge" /></svg>
+
+<!-- Symbols: badge, dot -->
