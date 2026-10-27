@@ -86,6 +86,7 @@ export function voronoiCells(
 /** Seeded Voronoi cells filled with the palette, outlined in the canvas color. */
 export const voronoi: BackgroundDefinition = {
   kind: "voronoi",
+  category: "maps",
   label: "Voronoi",
   description: "Organic cells in your palette, outlined in the canvas color.",
   defaults: { density: 45, scale: 1 },

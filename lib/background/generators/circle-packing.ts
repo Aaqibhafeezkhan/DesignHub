@@ -34,6 +34,7 @@ export function packCircles(
 /** Many non-overlapping circles of varied size filling the canvas, in palette colors. */
 export const circlePacking: BackgroundDefinition = {
   kind: "circle-packing",
+  category: "maps",
   label: "Circle packing",
   description: "Non-overlapping circles of every size, packed edge to edge in your palette.",
   defaults: { density: 55, scale: 1 },

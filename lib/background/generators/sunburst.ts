@@ -14,6 +14,7 @@ function geometry(settings: BackgroundSettings) {
 /** Alternating rays fanning out from a seeded point near the bottom of the canvas. */
 export const sunburst: BackgroundDefinition = {
   kind: "sunburst",
+  category: "shapes",
   label: "Sunburst",
   description: "Radiating rays, retro poster style.",
   defaults: { density: 35, scale: 1 },

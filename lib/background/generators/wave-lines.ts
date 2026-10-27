@@ -18,6 +18,7 @@ function pointCount(density: number): number {
 /** Parallel sine curves, each shifted in phase, like a stylized sound wave. */
 export const waveLines: BackgroundDefinition = {
   kind: "wave-lines",
+  category: "flows",
   label: "Wave lines",
   description: "Parallel sine curves, each shifted in phase, like a sound wave.",
   defaults: { density: 48, scale: 1.25 },

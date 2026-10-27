@@ -7,6 +7,7 @@ import type { BackgroundDefinition } from "@/types/background";
 /** Stacked, layered waves - the classic landing-page footer, but seeded. */
 export const waves: BackgroundDefinition = {
   kind: "waves",
+  category: "flows",
   label: "Waves",
   description: "Layered, flowing wave bands.",
   defaults: { density: 45, scale: 1 },

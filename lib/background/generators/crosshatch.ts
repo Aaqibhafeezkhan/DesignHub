@@ -16,6 +16,7 @@ function geometry(settings: BackgroundSettings) {
 /** Two sets of thin lines crossing at right angles. Rotation sets the angle of the first set. */
 export const crosshatch: BackgroundDefinition = {
   kind: "crosshatch",
+  category: "patterns",
   label: "Crosshatch",
   description: "Two sets of thin crossing lines, a classic print texture.",
   defaults: { density: 60, scale: 1, rotation: 45 },

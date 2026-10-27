@@ -155,6 +155,7 @@ function thin(points: Point[], closed: boolean): Point[] {
 /** Contour lines of a seeded noise field, like the relief on a map. */
 export const topographic: BackgroundDefinition = {
   kind: "topographic",
+  category: "maps",
   label: "Topographic",
   description: "Smooth contour lines, like a map.",
   defaults: { density: 50, scale: 1 },

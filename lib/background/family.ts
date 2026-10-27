@@ -1,4 +1,5 @@
 import type {
+  BackgroundCategory,
   BackgroundDefinition,
   BackgroundKind,
   BackgroundSettings,
@@ -18,7 +19,7 @@ export function variantOf(
  * `options.variant`, and a look draws exactly what its own generator drew before they were merged.
  */
 export function backgroundFamily(
-  definition: { kind: BackgroundKind; label: string; description: string },
+  definition: { kind: BackgroundKind; category: BackgroundCategory; label: string; description: string },
   variants: BackgroundVariantDefinition[],
 ): BackgroundDefinition {
   return {

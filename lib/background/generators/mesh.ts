@@ -19,6 +19,7 @@ function meshPoints(settings: BackgroundSettings): MeshPoint[] {
 
 export const mesh: BackgroundDefinition = {
   kind: "mesh",
+  category: "flows",
   label: "Mesh",
   description: "Soft color fields that blend into each other.",
   defaults: { density: 45, scale: 1 },

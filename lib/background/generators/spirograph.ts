@@ -54,6 +54,7 @@ export function hypotrochoid(
 /** Thin overlapping hypotrochoids in palette colors, a few per tile with seeded gear ratios. */
 export const spirograph: BackgroundDefinition = {
   kind: "spirograph",
+  category: "flows",
   label: "Spirograph",
   description: "Thin, overlapping hypotrochoid curves with seeded gear ratios and phases.",
   defaults: { density: 35, scale: 1 },

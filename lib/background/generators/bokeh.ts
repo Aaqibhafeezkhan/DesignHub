@@ -5,6 +5,7 @@ import type { BackgroundDefinition } from "@/types/background";
 /** Out-of-focus light circles: a blurred back layer and a crisper front layer. */
 export const bokeh: BackgroundDefinition = {
   kind: "bokeh",
+  category: "textures",
   label: "Bokeh",
   description: "Soft, out-of-focus circles of light.",
   defaults: { density: 45, scale: 1 },

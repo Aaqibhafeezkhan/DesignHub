@@ -18,6 +18,7 @@ const fixed = (value: number) => Math.round(value * 1000) / 1000;
  */
 export const noise: BackgroundDefinition = {
   kind: "noise",
+  category: "textures",
   label: "Noise",
   description: "Grain and mottled texture from fractal noise.",
   defaults: { density: 55, scale: 1 },

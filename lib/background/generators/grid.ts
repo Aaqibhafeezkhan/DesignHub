@@ -22,6 +22,7 @@ function geometry(settings: BackgroundSettings) {
 /** Graph-paper grid with major lines every four cells and a few seeded accent cells. */
 export const grid: BackgroundDefinition = {
   kind: "grid",
+  category: "patterns",
   label: "Grid",
   description: "Blueprint grid with major and minor lines.",
   defaults: { density: 55, scale: 1 },

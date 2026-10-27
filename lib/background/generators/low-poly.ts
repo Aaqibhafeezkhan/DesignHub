@@ -6,6 +6,7 @@ import type { BackgroundDefinition } from "@/types/background";
 /** Jittered triangle mosaic shaded along a diagonal through the palette. */
 export const lowPoly: BackgroundDefinition = {
   kind: "low-poly",
+  category: "maps",
   label: "Low poly",
   description: "Faceted triangle mosaic, shaded across your palette.",
   defaults: { density: 40, scale: 1 },

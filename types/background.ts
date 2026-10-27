@@ -81,7 +81,11 @@ export type BackgroundVariantDefinition = {
   defaults?: Partial<Omit<BackgroundSettings, "kind" | "seed" | "width" | "height" | "options">>;
 };
 
+/** What a generator draws, so the picker can group the generators. */
+export type BackgroundCategory = "flows" | "patterns" | "shapes" | "textures" | "maps";
+
 export type BackgroundDefinition = {
+  category: BackgroundCategory;
   /** The looks of a generator that has several, in picker order. The first is the default. */
   variants?: BackgroundVariantDefinition[];
   kind: BackgroundKind;

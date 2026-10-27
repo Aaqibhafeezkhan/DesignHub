@@ -22,6 +22,7 @@ function shapeMarkup(shape: MemphisShape, x: number, y: number, size: number, an
 /** Seeded Memphis shapes placed on a jittered grid and grouped by shape type. */
 export const memphis: BackgroundDefinition = {
   kind: "memphis",
+  category: "shapes",
   label: "Memphis",
   description: "A playful 80s Memphis pattern of scattered squiggles, triangles, circles and zigzags.",
   defaults: { density: 42, scale: 1, rotation: 0 },

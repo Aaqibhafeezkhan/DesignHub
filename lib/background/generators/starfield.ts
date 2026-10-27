@@ -8,6 +8,7 @@ const MAX_STARS = 1200;
 /** Scattered stars of varied size and brightness on a dark gradient; the brightest get a soft glow. */
 export const starfield: BackgroundDefinition = {
   kind: "starfield",
+  category: "textures",
   label: "Starfield",
   description: "Scattered stars on a dark sky, with a soft glow on the brightest.",
   defaults: { density: 50, scale: 1, background: "#05060f" },

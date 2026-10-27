@@ -28,6 +28,7 @@ function blobPath(points: Point[]): string {
 
 export const blobs: BackgroundDefinition = {
   kind: "blobs",
+  category: "flows",
   label: "Blobs",
   description: "Soft, organic shapes. Smoothed with Paper.js.",
   usesPaper: true,
