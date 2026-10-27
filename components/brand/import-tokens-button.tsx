@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { errorMessage, translateLocalized } from "@/lib/i18n/errors";
 import type { ImportedTokens } from "@/lib/brand/import-tokens";
 import { createStop } from "@/lib/color/gradient";
-import { loadFontCatalog } from "@/lib/typography/catalog";
+import { loadFontIndex } from "@/lib/typography/catalog";
 import { createSwatch, useColorStore } from "@/store/color-store";
 import { useTokensStore } from "@/store/tokens-store";
 import { useTypographyStore } from "@/store/typography-store";
@@ -52,7 +52,7 @@ export function ImportTokensButton() {
       const [text, catalog, { parseTokensFile, summarizeImport }, { applySnapshot, captureSnapshot }, { checkpoint }] =
         await Promise.all([
           file.text(),
-          loadFontCatalog(),
+          loadFontIndex(),
           import("@/lib/brand/import-tokens"),
           import("@/lib/projects/snapshot"),
           import("@/lib/projects/versions"),

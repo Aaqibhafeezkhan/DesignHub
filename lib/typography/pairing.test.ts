@@ -1,10 +1,10 @@
 import { describe, expect, test } from "vitest";
 
-import catalog from "@/lib/typography/catalog.json";
+import { loadFontCatalog } from "@/lib/typography/catalog";
 import { curatedPairs, isBodyCandidate, randomPair, scoreBody, suggestBodies } from "@/lib/typography/pairing";
 import type { FontFamily } from "@/types/typography";
 
-const fonts = catalog as FontFamily[];
+const fonts: FontFamily[] = await loadFontCatalog();
 const byFamily = new Map(fonts.map((font) => [font.family, font]));
 
 /** Small seeded PRNG (mulberry32) so random pairings are repeatable. */

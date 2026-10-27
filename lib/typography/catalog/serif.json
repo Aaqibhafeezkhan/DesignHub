@@ -1,0 +1,732 @@
+[
+  {
+    "family": "Playfair Display",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 900, "default": 400 }],
+    "rank": 16
+  },
+  {
+    "family": "Roboto Slab",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 100, "max": 900, "default": 400 }],
+    "rank": 18
+  },
+  {
+    "family": "Merriweather",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [
+      { "tag": "wght", "min": 300, "max": 900, "default": 400 },
+      { "tag": "opsz", "min": 18, "max": 144, "default": 18 },
+      { "tag": "wdth", "min": 87, "max": 112, "default": 100 }
+    ],
+    "rank": 23
+  },
+  {
+    "family": "Lora",
+    "category": "serif",
+    "weights": [400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 700, "default": 400 }],
+    "rank": 28
+  },
+  {
+    "family": "Noto Serif",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [
+      { "tag": "wght", "min": 100, "max": 900, "default": 400 },
+      { "tag": "wdth", "min": 62.5, "max": 100, "default": 100 }
+    ],
+    "rank": 47
+  },
+  {
+    "family": "Libre Baskerville",
+    "category": "serif",
+    "weights": [400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 700, "default": 400 }],
+    "rank": 52
+  },
+  { "family": "PT Serif", "category": "serif", "weights": [400, 700], "italic": true, "rank": 55 },
+  {
+    "family": "Cormorant Garamond",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 300, "max": 700, "default": 400 }],
+    "rank": 56
+  },
+  { "family": "Instrument Serif", "category": "serif", "weights": [400], "italic": true, "rank": 61 },
+  {
+    "family": "EB Garamond",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 800],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 800, "default": 400 }],
+    "rank": 68
+  },
+  {
+    "family": "Fraunces",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [
+      { "tag": "wght", "min": 100, "max": 900, "default": 400 },
+      { "tag": "opsz", "min": 9, "max": 144, "default": 14 },
+      { "tag": "SOFT", "min": 0, "max": 100, "default": 0 },
+      { "tag": "WONK", "min": 0, "max": 1, "default": 0 }
+    ],
+    "rank": 71
+  },
+  {
+    "family": "Bitter",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 100, "max": 900, "default": 400 }],
+    "rank": 73
+  },
+  { "family": "DM Serif Display", "category": "serif", "weights": [400], "italic": true, "rank": 83 },
+  {
+    "family": "Source Serif 4",
+    "category": "serif",
+    "weights": [200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [
+      { "tag": "wght", "min": 200, "max": 900, "default": 400 },
+      { "tag": "opsz", "min": 8, "max": 60, "default": 14 }
+    ],
+    "rank": 95
+  },
+  {
+    "family": "Newsreader",
+    "category": "serif",
+    "weights": [200, 300, 400, 500, 600, 700, 800],
+    "italic": true,
+    "axes": [
+      { "tag": "wght", "min": 200, "max": 800, "default": 400 },
+      { "tag": "opsz", "min": 6, "max": 72, "default": 16 }
+    ],
+    "rank": 99
+  },
+  { "family": "Crimson Text", "category": "serif", "weights": [400, 600, 700], "italic": true, "rank": 102 },
+  {
+    "family": "Cinzel",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 800, 900],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 400, "max": 900, "default": 400 }],
+    "rank": 108
+  },
+  { "family": "Slabo 27px", "category": "serif", "weights": [400], "italic": false, "rank": 112 },
+  { "family": "Arvo", "category": "serif", "weights": [400, 700], "italic": true, "rank": 115 },
+  {
+    "family": "Domine",
+    "category": "serif",
+    "weights": [400, 500, 600, 700],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 400, "max": 700, "default": 400 }],
+    "rank": 116
+  },
+  {
+    "family": "Bodoni Moda",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [
+      { "tag": "wght", "min": 400, "max": 900, "default": 400 },
+      { "tag": "opsz", "min": 6, "max": 96, "default": 11 }
+    ],
+    "rank": 122
+  },
+  { "family": "Zilla Slab", "category": "serif", "weights": [300, 400, 500, 600, 700], "italic": true, "rank": 132 },
+  {
+    "family": "Spectral",
+    "category": "serif",
+    "weights": [200, 300, 400, 500, 600, 700, 800],
+    "italic": true,
+    "rank": 145
+  },
+  {
+    "family": "IBM Plex Serif",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700],
+    "italic": true,
+    "rank": 147
+  },
+  { "family": "Marcellus", "category": "serif", "weights": [400], "italic": false, "rank": 149 },
+  {
+    "family": "Cormorant",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 300, "max": 700, "default": 400 }],
+    "rank": 151
+  },
+  { "family": "Sanchez", "category": "serif", "weights": [400], "italic": true, "rank": 155 },
+  {
+    "family": "Roboto Serif",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [
+      { "tag": "wght", "min": 100, "max": 900, "default": 400 },
+      { "tag": "GRAD", "min": -50, "max": 100, "default": 0 },
+      { "tag": "opsz", "min": 8, "max": 144, "default": 14 },
+      { "tag": "wdth", "min": 50, "max": 150, "default": 100 }
+    ],
+    "rank": 161
+  },
+  {
+    "family": "Frank Ruhl Libre",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700, 800, 900],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 300, "max": 900, "default": 400 }],
+    "rank": 165
+  },
+  { "family": "Nanum Myeongjo", "category": "serif", "weights": [400, 700, 800], "italic": false, "rank": 167 },
+  { "family": "Amiri", "category": "serif", "weights": [400, 700], "italic": true, "rank": 174 },
+  {
+    "family": "Crimson Pro",
+    "category": "serif",
+    "weights": [200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 200, "max": 900, "default": 400 }],
+    "rank": 177
+  },
+  {
+    "family": "Vollkorn",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 900, "default": 400 }],
+    "rank": 178
+  },
+  {
+    "family": "Playfair",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [
+      { "tag": "wght", "min": 300, "max": 900, "default": 400 },
+      { "tag": "opsz", "min": 5, "max": 1200, "default": 14 },
+      { "tag": "wdth", "min": 87.5, "max": 112.5, "default": 100 }
+    ],
+    "rank": 182
+  },
+  {
+    "family": "Literata",
+    "category": "serif",
+    "weights": [200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [
+      { "tag": "wght", "min": 200, "max": 900, "default": 400 },
+      { "tag": "opsz", "min": 7, "max": 72, "default": 14 }
+    ],
+    "rank": 185
+  },
+  { "family": "Antic Slab", "category": "serif", "weights": [400], "italic": false, "rank": 187 },
+  {
+    "family": "Andada Pro",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 800],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 840, "default": 400 }],
+    "rank": 191
+  },
+  { "family": "DM Serif Text", "category": "serif", "weights": [400], "italic": true, "rank": 192 },
+  {
+    "family": "Baskervville",
+    "category": "serif",
+    "weights": [400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 700, "default": 400 }],
+    "rank": 195
+  },
+  { "family": "Cardo", "category": "serif", "weights": [400, 700], "italic": true, "rank": 197 },
+  { "family": "Bree Serif", "category": "serif", "weights": [400], "italic": false, "rank": 198 },
+  { "family": "Tinos", "category": "serif", "weights": [400, 700], "italic": true, "rank": 200 },
+  { "family": "Prata", "category": "serif", "weights": [400], "italic": false, "rank": 203 },
+  {
+    "family": "Shippori Mincho",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 800],
+    "italic": false,
+    "rank": 210
+  },
+  {
+    "family": "Alegreya",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 900, "default": 400 }],
+    "rank": 218
+  },
+  { "family": "Old Standard TT", "category": "serif", "weights": [400, 700], "italic": true, "rank": 219 },
+  {
+    "family": "Aleo",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 100, "max": 900, "default": 400 }],
+    "rank": 222
+  },
+  {
+    "family": "Faustina",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700, 800],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 300, "max": 800, "default": 400 }],
+    "rank": 224
+  },
+  { "family": "Libre Caslon Text", "category": "serif", "weights": [400, 700], "italic": true, "rank": 233 },
+  { "family": "Sawarabi Mincho", "category": "serif", "weights": [400], "italic": false, "rank": 240 },
+  { "family": "Noticia Text", "category": "serif", "weights": [400, 700], "italic": true, "rank": 249 },
+  { "family": "Crete Round", "category": "serif", "weights": [400], "italic": true, "rank": 255 },
+  {
+    "family": "STIX Two Text",
+    "category": "serif",
+    "weights": [400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 700, "default": 400 }],
+    "rank": 258
+  },
+  { "family": "Quattrocento", "category": "serif", "weights": [400, 700], "italic": false, "rank": 260 },
+  {
+    "family": "Gelasio",
+    "category": "serif",
+    "weights": [400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 700, "default": 400 }],
+    "rank": 261
+  },
+  {
+    "family": "Zen Old Mincho",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 900],
+    "italic": false,
+    "rank": 263
+  },
+  { "family": "Neuton", "category": "serif", "weights": [200, 300, 400, 700, 800], "italic": true, "rank": 275 },
+  {
+    "family": "Josefin Slab",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 100, "max": 700, "default": 400 }],
+    "rank": 279
+  },
+  {
+    "family": "Martel",
+    "category": "serif",
+    "weights": [200, 300, 400, 600, 700, 800, 900],
+    "italic": false,
+    "rank": 281
+  },
+  {
+    "family": "Rokkitt",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 100, "max": 900, "default": 400 }],
+    "rank": 282
+  },
+  { "family": "Unna", "category": "serif", "weights": [400, 700], "italic": true, "rank": 284 },
+  { "family": "Gilda Display", "category": "serif", "weights": [400], "italic": false, "rank": 295 },
+  { "family": "Playfair Display SC", "category": "serif", "weights": [400, 700, 900], "italic": true, "rank": 298 },
+  {
+    "family": "Cormorant Infant",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 300, "max": 700, "default": 400 }],
+    "rank": 305
+  },
+  { "family": "Lustria", "category": "serif", "weights": [400], "italic": false, "rank": 310 },
+  { "family": "Lusitana", "category": "serif", "weights": [400, 700], "italic": false, "rank": 314 },
+  { "family": "Abhaya Libre", "category": "serif", "weights": [400, 500, 600, 700, 800], "italic": false, "rank": 317 },
+  { "family": "Volkhov", "category": "serif", "weights": [400, 700], "italic": true, "rank": 329 },
+  {
+    "family": "Eczar",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 800],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 400, "max": 800, "default": 400 }],
+    "rank": 330
+  },
+  {
+    "family": "Libre Bodoni",
+    "category": "serif",
+    "weights": [400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 700, "default": 400 }],
+    "rank": 338
+  },
+  { "family": "GFS Didot", "category": "serif", "weights": [400], "italic": false, "rank": 339 },
+  { "family": "Sorts Mill Goudy", "category": "serif", "weights": [400], "italic": true, "rank": 349 },
+  {
+    "family": "Noto Serif Display",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [
+      { "tag": "wght", "min": 100, "max": 900, "default": 400 },
+      { "tag": "wdth", "min": 62.5, "max": 100, "default": 100 }
+    ],
+    "rank": 356
+  },
+  { "family": "Vidaloka", "category": "serif", "weights": [400], "italic": false, "rank": 361 },
+  {
+    "family": "Kreon",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 300, "max": 700, "default": 400 }],
+    "rank": 365
+  },
+  {
+    "family": "Petrona",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 100, "max": 900, "default": 400 }],
+    "rank": 367
+  },
+  {
+    "family": "Besley",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 900, "default": 400 }],
+    "rank": 379
+  },
+  { "family": "Arapey", "category": "serif", "weights": [400], "italic": true, "rank": 386 },
+  { "family": "Bevan", "category": "serif", "weights": [400], "italic": true, "rank": 387 },
+  {
+    "family": "Taviraj",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "rank": 400
+  },
+  { "family": "Alice", "category": "serif", "weights": [400], "italic": false, "rank": 402 },
+  {
+    "family": "Shippori Mincho B1",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 800],
+    "italic": false,
+    "rank": 405
+  },
+  { "family": "Rozha One", "category": "serif", "weights": [400], "italic": false, "rank": 408 },
+  { "family": "Ultra", "category": "serif", "weights": [400], "italic": false, "rank": 409 },
+  { "family": "Kaisei Decol", "category": "serif", "weights": [400, 500, 700], "italic": false, "rank": 422 },
+  { "family": "Pridi", "category": "serif", "weights": [200, 300, 400, 500, 600, 700], "italic": false, "rank": 426 },
+  { "family": "Gloock", "category": "serif", "weights": [400], "italic": false, "rank": 430 },
+  {
+    "family": "Kameron",
+    "category": "serif",
+    "weights": [400, 500, 600, 700],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 400, "max": 700, "default": 400 }],
+    "rank": 435
+  },
+  { "family": "Bentham", "category": "serif", "weights": [400], "italic": false, "rank": 441 },
+  { "family": "Adamina", "category": "serif", "weights": [400], "italic": false, "rank": 449 },
+  { "family": "IM Fell English", "category": "serif", "weights": [400], "italic": true, "rank": 474 },
+  { "family": "Mate", "category": "serif", "weights": [400], "italic": true, "rank": 477 },
+  { "family": "Marcellus SC", "category": "serif", "weights": [400], "italic": false, "rank": 495 },
+  { "family": "Slabo 13px", "category": "serif", "weights": [400], "italic": false, "rank": 496 },
+  { "family": "Ovo", "category": "serif", "weights": [400], "italic": false, "rank": 498 },
+  { "family": "Rufina", "category": "serif", "weights": [400, 700], "italic": false, "rank": 513 },
+  { "family": "Yuji Mai", "category": "serif", "weights": [400], "italic": false, "rank": 514 },
+  {
+    "family": "Yrsa",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 300, "max": 700, "default": 400 }],
+    "rank": 516
+  },
+  {
+    "family": "Trirong",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "rank": 522
+  },
+  { "family": "Charis SIL", "category": "serif", "weights": [400, 700], "italic": true, "rank": 531 },
+  { "family": "Libre Caslon Display", "category": "serif", "weights": [400], "italic": false, "rank": 532 },
+  { "family": "Tiro Bangla", "category": "serif", "weights": [400], "italic": true, "rank": 533 },
+  { "family": "Gowun Batang", "category": "serif", "weights": [400, 700], "italic": false, "rank": 538 },
+  { "family": "Suez One", "category": "serif", "weights": [400], "italic": false, "rank": 539 },
+  { "family": "Radley", "category": "serif", "weights": [400], "italic": true, "rank": 540 },
+  { "family": "Caladea", "category": "serif", "weights": [400, 700], "italic": true, "rank": 543 },
+  {
+    "family": "Hepta Slab",
+    "category": "serif",
+    "weights": [1, 100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 1, "max": 900, "default": 400 }],
+    "rank": 546
+  },
+  { "family": "Kiwi Maru", "category": "serif", "weights": [300, 400, 500], "italic": false, "rank": 547 },
+  { "family": "Judson", "category": "serif", "weights": [400, 700], "italic": true, "rank": 551 },
+  { "family": "Cantata One", "category": "serif", "weights": [400], "italic": false, "rank": 552 },
+  { "family": "Young Serif", "category": "serif", "weights": [400], "italic": false, "rank": 554 },
+  { "family": "PT Serif Caption", "category": "serif", "weights": [400], "italic": true, "rank": 556 },
+  {
+    "family": "Lateef",
+    "category": "serif",
+    "weights": [200, 300, 400, 500, 600, 700, 800],
+    "italic": false,
+    "rank": 557
+  },
+  { "family": "Inria Serif", "category": "serif", "weights": [300, 400, 700], "italic": true, "rank": 558 },
+  { "family": "Castoro", "category": "serif", "weights": [400], "italic": true, "rank": 561 },
+  { "family": "Enriqueta", "category": "serif", "weights": [400, 500, 600, 700], "italic": false, "rank": 566 },
+  { "family": "Caudex", "category": "serif", "weights": [400, 700], "italic": true, "rank": 572 },
+  {
+    "family": "Podkova",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 800],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 400, "max": 800, "default": 400 }],
+    "rank": 578
+  },
+  { "family": "Graduate", "category": "serif", "weights": [400], "italic": false, "rank": 580 },
+  {
+    "family": "BioRhyme",
+    "category": "serif",
+    "weights": [200, 300, 400, 500, 600, 700, 800],
+    "italic": false,
+    "axes": [
+      { "tag": "wght", "min": 200, "max": 800, "default": 400 },
+      { "tag": "wdth", "min": 100, "max": 125, "default": 100 }
+    ],
+    "rank": 584
+  },
+  { "family": "Cormorant SC", "category": "serif", "weights": [300, 400, 500, 600, 700], "italic": false, "rank": 585 },
+  {
+    "family": "Ibarra Real Nova",
+    "category": "serif",
+    "weights": [400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 700, "default": 400 }],
+    "rank": 588
+  },
+  { "family": "Bellefair", "category": "serif", "weights": [400], "italic": false, "rank": 590 },
+  { "family": "Bona Nova SC", "category": "serif", "weights": [400, 700], "italic": true, "rank": 594 },
+  { "family": "Karma", "category": "serif", "weights": [300, 400, 500, 600, 700], "italic": false, "rank": 595 },
+  { "family": "Oranienbaum", "category": "serif", "weights": [400], "italic": false, "rank": 596 },
+  {
+    "family": "Brygada 1918",
+    "category": "serif",
+    "weights": [400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 700, "default": 400 }],
+    "rank": 601
+  },
+  { "family": "Laila", "category": "serif", "weights": [300, 400, 500, 600, 700], "italic": false, "rank": 603 },
+  { "family": "Halant", "category": "serif", "weights": [300, 400, 500, 600, 700], "italic": false, "rank": 607 },
+  { "family": "Glegoo", "category": "serif", "weights": [400, 700], "italic": false, "rank": 609 },
+  {
+    "family": "Markazi Text",
+    "category": "serif",
+    "weights": [400, 500, 600, 700],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 400, "max": 700, "default": 400 }],
+    "rank": 612
+  },
+  { "family": "IM Fell English SC", "category": "serif", "weights": [400], "italic": false, "rank": 613 },
+  {
+    "family": "Cormorant Upright",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700],
+    "italic": false,
+    "rank": 623
+  },
+  {
+    "family": "Hahmlet",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 100, "max": 900, "default": 400 }],
+    "rank": 626
+  },
+  { "family": "Hina Mincho", "category": "serif", "weights": [400], "italic": false, "rank": 630 },
+  { "family": "Tiro Devanagari Hindi", "category": "serif", "weights": [400], "italic": true, "rank": 632 },
+  { "family": "Gabriela", "category": "serif", "weights": [400], "italic": false, "rank": 634 },
+  { "family": "Alegreya SC", "category": "serif", "weights": [400, 500, 700, 800, 900], "italic": true, "rank": 642 },
+  { "family": "Arbutus Slab", "category": "serif", "weights": [400], "italic": false, "rank": 646 },
+  { "family": "Antic Didone", "category": "serif", "weights": [400], "italic": false, "rank": 647 },
+  {
+    "family": "Montagu Slab",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700],
+    "italic": false,
+    "axes": [
+      { "tag": "wght", "min": 100, "max": 700, "default": 400 },
+      { "tag": "opsz", "min": 16, "max": 144, "default": 144 }
+    ],
+    "rank": 656
+  },
+  { "family": "BIZ UDPMincho", "category": "serif", "weights": [400, 700], "italic": false, "rank": 657 },
+  {
+    "family": "Cormorant Unicase",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700],
+    "italic": false,
+    "rank": 664
+  },
+  { "family": "Fjord One", "category": "serif", "weights": [400], "italic": false, "rank": 665 },
+  { "family": "Goudy Bookletter 1911", "category": "serif", "weights": [400], "italic": false, "rank": 668 },
+  { "family": "Aref Ruqaa", "category": "serif", "weights": [400, 700], "italic": false, "rank": 686 },
+  { "family": "Trocchi", "category": "serif", "weights": [400], "italic": false, "rank": 689 },
+  {
+    "family": "Hedvig Letters Serif",
+    "category": "serif",
+    "weights": [400],
+    "italic": false,
+    "axes": [{ "tag": "opsz", "min": 12, "max": 24, "default": 24 }],
+    "rank": 692
+  },
+  { "family": "Libertinus Serif", "category": "serif", "weights": [400, 600, 700], "italic": true, "rank": 697 },
+  {
+    "family": "Inknut Antiqua",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700, 800, 900],
+    "italic": false,
+    "rank": 717
+  },
+  { "family": "David Libre", "category": "serif", "weights": [400, 500, 700], "italic": false, "rank": 721 },
+  { "family": "Abyssinica SIL", "category": "serif", "weights": [400], "italic": false, "rank": 734 },
+  { "family": "Fanwood Text", "category": "serif", "weights": [400], "italic": true, "rank": 736 },
+  { "family": "Scheherazade New", "category": "serif", "weights": [400, 500, 600, 700], "italic": false, "rank": 737 },
+  { "family": "IM Fell DW Pica", "category": "serif", "weights": [400], "italic": true, "rank": 740 },
+  { "family": "Maitree", "category": "serif", "weights": [200, 300, 400, 500, 600, 700], "italic": false, "rank": 742 },
+  { "family": "Average", "category": "serif", "weights": [400], "italic": false, "rank": 749 },
+  { "family": "Copse", "category": "serif", "weights": [400], "italic": false, "rank": 750 },
+  {
+    "family": "Hanuman",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 100, "max": 900, "default": 400 }],
+    "rank": 755
+  },
+  { "family": "Asul", "category": "serif", "weights": [400, 700], "italic": false, "rank": 757 },
+  {
+    "family": "Platypi",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700, 800],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 300, "max": 800, "default": 400 }],
+    "rank": 763
+  },
+  { "family": "Asar", "category": "serif", "weights": [400], "italic": false, "rank": 770 },
+  { "family": "Fauna One", "category": "serif", "weights": [400], "italic": false, "rank": 772 },
+  { "family": "Almendra", "category": "serif", "weights": [400, 700], "italic": true, "rank": 775 },
+  {
+    "family": "Spectral SC",
+    "category": "serif",
+    "weights": [200, 300, 400, 500, 600, 700, 800],
+    "italic": true,
+    "rank": 779
+  },
+  { "family": "Kaisei Opti", "category": "serif", "weights": [400, 500, 700], "italic": false, "rank": 788 },
+  { "family": "Yuji Syuku", "category": "serif", "weights": [400], "italic": false, "rank": 790 },
+  { "family": "Solway", "category": "serif", "weights": [300, 400, 500, 700, 800], "italic": false, "rank": 792 },
+  { "family": "Kadwa", "category": "serif", "weights": [400, 700], "italic": false, "rank": 796 },
+  { "family": "Coustard", "category": "serif", "weights": [400, 900], "italic": false, "rank": 797 },
+  { "family": "Della Respira", "category": "serif", "weights": [400], "italic": false, "rank": 798 },
+  { "family": "Alike", "category": "serif", "weights": [400], "italic": false, "rank": 799 },
+  { "family": "Zen Antique", "category": "serif", "weights": [400], "italic": false, "rank": 800 },
+  { "family": "Kurale", "category": "serif", "weights": [400], "italic": false, "rank": 803 },
+  { "family": "Balthazar", "category": "serif", "weights": [400], "italic": false, "rank": 819 },
+  {
+    "family": "Piazzolla",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [
+      { "tag": "wght", "min": 100, "max": 900, "default": 400 },
+      { "tag": "opsz", "min": 8, "max": 30, "default": 14 }
+    ],
+    "rank": 824
+  },
+  { "family": "Poly", "category": "serif", "weights": [400], "italic": true, "rank": 825 },
+  {
+    "family": "Buenard",
+    "category": "serif",
+    "weights": [400, 500, 600, 700],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 400, "max": 700, "default": 400 }],
+    "rank": 835
+  },
+  {
+    "family": "Kalnia",
+    "category": "serif",
+    "weights": [100, 200, 300, 400, 500, 600, 700],
+    "italic": false,
+    "axes": [
+      { "tag": "wght", "min": 100, "max": 700, "default": 400 },
+      { "tag": "wdth", "min": 100, "max": 125, "default": 100 }
+    ],
+    "rank": 836
+  },
+  { "family": "Tienne", "category": "serif", "weights": [400, 700, 900], "italic": false, "rank": 839 },
+  {
+    "family": "Rasa",
+    "category": "serif",
+    "weights": [300, 400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 300, "max": 700, "default": 400 }],
+    "rank": 846
+  },
+  { "family": "Vast Shadow", "category": "serif", "weights": [400], "italic": false, "rank": 849 },
+  { "family": "Quando", "category": "serif", "weights": [400], "italic": false, "rank": 850 },
+  { "family": "Cutive", "category": "serif", "weights": [400], "italic": false, "rank": 851 },
+  { "family": "Vesper Libre", "category": "serif", "weights": [400, 500, 700, 900], "italic": false, "rank": 857 },
+  { "family": "Rosarivo", "category": "serif", "weights": [400], "italic": true, "rank": 870 },
+  { "family": "Brawler", "category": "serif", "weights": [400, 700], "italic": false, "rank": 872 },
+  { "family": "Gupter", "category": "serif", "weights": [400, 500, 700], "italic": false, "rank": 875 },
+  { "family": "Bona Nova", "category": "serif", "weights": [400, 700], "italic": true, "rank": 880 },
+  { "family": "Gulzar", "category": "serif", "weights": [400], "italic": false, "rank": 885 },
+  {
+    "family": "Bodoni Moda SC",
+    "category": "serif",
+    "weights": [400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [
+      { "tag": "wght", "min": 400, "max": 900, "default": 400 },
+      { "tag": "opsz", "min": 6, "max": 96, "default": 11 }
+    ],
+    "rank": 890
+  },
+  { "family": "Ruwudu", "category": "serif", "weights": [400, 500, 600, 700], "italic": false, "rank": 895 },
+  { "family": "Prociono", "category": "serif", "weights": [400], "italic": false, "rank": 919 },
+  { "family": "Zen Antique Soft", "category": "serif", "weights": [400], "italic": false, "rank": 920 },
+  { "family": "Vollkorn SC", "category": "serif", "weights": [400, 600, 700, 900], "italic": false, "rank": 934 },
+  { "family": "Cambo", "category": "serif", "weights": [400], "italic": false, "rank": 938 },
+  { "family": "Song Myung", "category": "serif", "weights": [400], "italic": false, "rank": 942 },
+  { "family": "BhuTuka Expanded One", "category": "serif", "weights": [400], "italic": false, "rank": 954 },
+  { "family": "Kaisei Tokumin", "category": "serif", "weights": [400, 500, 700, 800], "italic": false, "rank": 955 },
+  { "family": "Artifika", "category": "serif", "weights": [400], "italic": false, "rank": 965 },
+  { "family": "Holtwood One SC", "category": "serif", "weights": [400], "italic": false, "rank": 966 },
+  { "family": "IM Fell French Canon", "category": "serif", "weights": [400], "italic": true, "rank": 968 },
+  { "family": "IM Fell Double Pica", "category": "serif", "weights": [400], "italic": true, "rank": 969 },
+  { "family": "Suranna", "category": "serif", "weights": [400], "italic": false, "rank": 971 },
+  { "family": "Mirza", "category": "serif", "weights": [400, 500, 600, 700], "italic": false, "rank": 972 },
+  { "family": "Amethysta", "category": "serif", "weights": [400], "italic": false, "rank": 990 },
+  { "family": "Ledger", "category": "serif", "weights": [400], "italic": false, "rank": 991 },
+  { "family": "IM Fell Great Primer", "category": "serif", "weights": [400], "italic": true, "rank": 993 },
+  { "family": "Sumana", "category": "serif", "weights": [400, 700], "italic": false, "rank": 999 }
+]

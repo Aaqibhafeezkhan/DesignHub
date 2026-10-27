@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 /**
- * Regenerates lib/typography/catalog.json from the public Google Fonts metadata.
+ * Regenerates lib/typography/catalog-index.json and lib/typography/catalog/<category>.json from the public Google Fonts metadata.
  * DesignHub ships the catalog statically so the app needs no API key and no backend.
  *
  *   node scripts/generate-font-catalog.mjs [limit]
  */
-import { writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
+
+import { splitCatalog } from "./font-catalog-parts.mjs";
 
 const LIMIT = Number(process.argv[2] ?? 1000);
 const SOURCE = "https://fonts.google.com/metadata/fonts";
-const OUT = fileURLToPath(new URL("../lib/typography/catalog.json", import.meta.url));
+const OUT = fileURLToPath(new URL("../lib/typography/", import.meta.url));
 
 const categories = {
   "Sans Serif": "sans-serif",
@@ -46,5 +48,10 @@ const families = data.familyMetadataList
     };
   });
 
-await writeFile(OUT, `${JSON.stringify(families)}\n`);
+const { index, details } = splitCatalog(families);
+await mkdir(`${OUT}catalog`, { recursive: true });
+await writeFile(`${OUT}catalog-index.json`, `${JSON.stringify(index)}\n`);
+for (const [category, fonts] of Object.entries(details)) {
+  await writeFile(`${OUT}catalog/${category}.json`, `${JSON.stringify(fonts)}\n`);
+}
 console.log(`Wrote ${families.length} families to ${OUT}`);

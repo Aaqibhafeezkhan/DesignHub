@@ -3,12 +3,12 @@
 import { useI18n } from "@/components/layout/locale-provider";
 import { FontPicker } from "@/components/typography/font-picker";
 import { Label } from "@/components/ui/label";
-import { useFontCatalog } from "@/hooks/use-font-catalog";
+import { useFontIndex } from "@/hooks/use-font-catalog";
 import { useTypographyStore } from "@/store/typography-store";
 
 export function BrandTypeFields() {
   const { t } = useI18n();
-  const { fonts } = useFontCatalog();
+  const { fonts } = useFontIndex();
   const headingFont = useTypographyStore((state) => state.headingFont);
   const bodyFont = useTypographyStore((state) => state.bodyFont);
   const setPair = useTypographyStore((state) => state.setPair);

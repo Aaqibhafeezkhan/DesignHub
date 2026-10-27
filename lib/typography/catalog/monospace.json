@@ -1,0 +1,158 @@
+[
+  {
+    "family": "Roboto Mono",
+    "category": "monospace",
+    "weights": [100, 200, 300, 400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 100, "max": 700, "default": 400 }],
+    "rank": 10
+  },
+  {
+    "family": "JetBrains Mono",
+    "category": "monospace",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 100, "max": 800, "default": 400 }],
+    "rank": 36
+  },
+  {
+    "family": "Inconsolata",
+    "category": "monospace",
+    "weights": [200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": false,
+    "axes": [
+      { "tag": "wght", "min": 200, "max": 900, "default": 400 },
+      { "tag": "wdth", "min": 50, "max": 200, "default": 100 }
+    ],
+    "rank": 42
+  },
+  {
+    "family": "Source Code Pro",
+    "category": "monospace",
+    "weights": [200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 200, "max": 900, "default": 400 }],
+    "rank": 57
+  },
+  {
+    "family": "IBM Plex Mono",
+    "category": "monospace",
+    "weights": [100, 200, 300, 400, 500, 600, 700],
+    "italic": true,
+    "rank": 63
+  },
+  { "family": "DM Mono", "category": "monospace", "weights": [300, 400, 500], "italic": true, "rank": 119 },
+  {
+    "family": "Geist Mono",
+    "category": "monospace",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 100, "max": 900, "default": 400 }],
+    "rank": 121
+  },
+  { "family": "Space Mono", "category": "monospace", "weights": [400, 700], "italic": true, "rank": 124 },
+  {
+    "family": "Fira Code",
+    "category": "monospace",
+    "weights": [300, 400, 500, 600, 700],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 300, "max": 700, "default": 400 }],
+    "rank": 171
+  },
+  { "family": "Courier Prime", "category": "monospace", "weights": [400, 700], "italic": true, "rank": 190 },
+  {
+    "family": "Google Sans Code",
+    "category": "monospace",
+    "weights": [300, 400, 500, 600, 700, 800],
+    "italic": true,
+    "axes": [
+      { "tag": "wght", "min": 300, "max": 800, "default": 400 },
+      { "tag": "MONO", "min": 0, "max": 1, "default": 1 }
+    ],
+    "rank": 209
+  },
+  { "family": "VT323", "category": "monospace", "weights": [400], "italic": false, "rank": 243 },
+  { "family": "Share Tech Mono", "category": "monospace", "weights": [400], "italic": false, "rank": 265 },
+  { "family": "Fira Mono", "category": "monospace", "weights": [400, 500, 700], "italic": false, "rank": 287 },
+  { "family": "PT Mono", "category": "monospace", "weights": [400], "italic": false, "rank": 291 },
+  { "family": "Ubuntu Mono", "category": "monospace", "weights": [400, 700], "italic": true, "rank": 345 },
+  { "family": "Cousine", "category": "monospace", "weights": [400, 700], "italic": true, "rank": 373 },
+  { "family": "Anonymous Pro", "category": "monospace", "weights": [400, 700], "italic": true, "rank": 388 },
+  { "family": "Cutive Mono", "category": "monospace", "weights": [400], "italic": false, "rank": 396 },
+  {
+    "family": "Azeret Mono",
+    "category": "monospace",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 100, "max": 900, "default": 400 }],
+    "rank": 443
+  },
+  { "family": "Fragment Mono", "category": "monospace", "weights": [400], "italic": true, "rank": 469 },
+  {
+    "family": "Overpass Mono",
+    "category": "monospace",
+    "weights": [300, 400, 500, 600, 700],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 300, "max": 700, "default": 400 }],
+    "rank": 489
+  },
+  {
+    "family": "Red Hat Mono",
+    "category": "monospace",
+    "weights": [300, 400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 300, "max": 700, "default": 400 }],
+    "rank": 524
+  },
+  {
+    "family": "Spline Sans Mono",
+    "category": "monospace",
+    "weights": [300, 400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 300, "max": 700, "default": 400 }],
+    "rank": 550
+  },
+  {
+    "family": "Chivo Mono",
+    "category": "monospace",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 100, "max": 900, "default": 400 }],
+    "rank": 571
+  },
+  { "family": "Major Mono Display", "category": "monospace", "weights": [400], "italic": false, "rank": 672 },
+  { "family": "Oxygen Mono", "category": "monospace", "weights": [400], "italic": false, "rank": 688 },
+  { "family": "Lekton", "category": "monospace", "weights": [400, 700], "italic": true, "rank": 690 },
+  { "family": "Nova Mono", "category": "monospace", "weights": [400], "italic": false, "rank": 694 },
+  { "family": "Syne Mono", "category": "monospace", "weights": [400], "italic": false, "rank": 713 },
+  {
+    "family": "Martian Mono",
+    "category": "monospace",
+    "weights": [100, 200, 300, 400, 500, 600, 700, 800],
+    "italic": false,
+    "axes": [
+      { "tag": "wght", "min": 100, "max": 800, "default": 400 },
+      { "tag": "wdth", "min": 75, "max": 112.5, "default": 100 }
+    ],
+    "rank": 720
+  },
+  {
+    "family": "Sometype Mono",
+    "category": "monospace",
+    "weights": [400, 500, 600, 700],
+    "italic": true,
+    "axes": [{ "tag": "wght", "min": 400, "max": 700, "default": 400 }],
+    "rank": 725
+  },
+  { "family": "B612 Mono", "category": "monospace", "weights": [400, 700], "italic": true, "rank": 730 },
+  { "family": "Xanh Mono", "category": "monospace", "weights": [400], "italic": true, "rank": 829 },
+  {
+    "family": "Reddit Mono",
+    "category": "monospace",
+    "weights": [200, 300, 400, 500, 600, 700, 800, 900],
+    "italic": false,
+    "axes": [{ "tag": "wght", "min": 200, "max": 900, "default": 400 }],
+    "rank": 981
+  },
+  { "family": "Monofett", "category": "monospace", "weights": [400], "italic": false, "rank": 986 }
+]

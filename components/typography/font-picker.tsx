@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import type { FontFamily } from "@/types/typography";
+import type { FontSummary } from "@/lib/typography/catalog";
 
 const loadList = () => import("@/components/typography/font-picker-list").then((m) => m.FontPickerList);
 
@@ -20,7 +20,7 @@ const FontPickerList = dynamic(loadList, {
 type FontPickerProps = {
   label: string;
   value: string;
-  fonts: FontFamily[];
+  fonts: FontSummary[];
   onChange: (family: string) => void;
   className?: string;
 };
