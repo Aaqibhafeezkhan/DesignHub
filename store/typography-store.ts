@@ -9,9 +9,9 @@ import { specimenSamples } from "@/lib/typography/samples";
 
 import type { OpenTypeSettings, SpecimenSettings, TextRhythm, TypeScaleSettings } from "@/types/typography";
 
-export const DEFAULT_SPECIMEN_TEXT = specimenSamples[0]!.text;
+const DEFAULT_SPECIMEN_TEXT = specimenSamples[0]!.text;
 
-export const defaultSpecimen: SpecimenSettings = {
+const defaultSpecimen: SpecimenSettings = {
   text: DEFAULT_SPECIMEN_TEXT,
   size: 56,
   weight: 500,
@@ -32,7 +32,7 @@ export const defaultScale: TypeScaleSettings = {
   stepsDown: 2,
 };
 
-export const defaultOpenType: OpenTypeSettings = {
+const defaultOpenType: OpenTypeSettings = {
   liga: true,
   dlig: false,
   kern: true,

@@ -72,7 +72,7 @@ export function toHex(value: Oklch): string {
   }`;
 }
 
-export function toHsl(value: Oklch): { h: number; s: number; l: number } {
+function toHsl(value: Oklch): { h: number; s: number; l: number } {
   const hsl = to(toSrgbGamut(value), "hsl");
   const [h, s, l] = hsl.coords;
   return { h: Math.round(normalizeHue(h)), s: Math.round(s ?? 0), l: Math.round(l ?? 0) };

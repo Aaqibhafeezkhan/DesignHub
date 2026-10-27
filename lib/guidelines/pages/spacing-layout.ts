@@ -3,7 +3,7 @@ import type { GuidelinePage } from "@/lib/guidelines/types";
 import { text } from "@/lib/mockups/kit";
 import { radiusScale, spacingScale } from "@/lib/tokens/build";
 
-export const GRID_COLUMNS = 12;
+const GRID_COLUMNS = 12;
 /** A column never gets narrower than this, so a huge spacing base cannot collapse the grid. */
 const MIN_COLUMN = 8;
 

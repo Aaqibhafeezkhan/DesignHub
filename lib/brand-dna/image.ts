@@ -2,7 +2,7 @@ import type { DnaImage } from "@/lib/brand-dna/types";
 import { createId } from "@/lib/id";
 
 const SAMPLE = 160;
-export const MAX_IMAGE_BYTES = 10_000_000;
+const MAX_IMAGE_BYTES = 10_000_000;
 export const ACCEPTED_IMAGES = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/svg+xml", "image/avif"];
 
 /** Decodes an image file in the browser and keeps a small copy of its pixels. */

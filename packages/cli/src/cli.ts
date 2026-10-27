@@ -6,13 +6,13 @@ import type { ExportTier } from "@/types/export";
 
 import { buildTokenFiles, CliError, listFormats } from "./build";
 
-export const VERSION = "1.0.0";
+const VERSION = "1.0.0";
 
 /** How long `--watch` waits after the last change before it rebuilds, so a burst of saves builds once. */
-export const WATCH_DEBOUNCE_MS = 100;
+const WATCH_DEBOUNCE_MS = 100;
 
 /** A running file watcher, closed when the command ends. */
-export type Watcher = { close: () => void };
+type Watcher = { close: () => void };
 
 /** Where the CLI writes, so tests can capture it. */
 export type Io = {
@@ -36,7 +36,7 @@ const TIER_NAMES: [ExportTier, string][] = [
   ["platforms", "Platforms"],
 ];
 
-export async function helpText(): Promise<string> {
+async function helpText(): Promise<string> {
   const formats = await listFormats();
   const width = Math.max(...formats.map((format) => format.id.length));
   return `designhub ${VERSION}: build design tokens from a DesignHub project file.

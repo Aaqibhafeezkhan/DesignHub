@@ -1,8 +1,8 @@
 import { LocalizedError } from "@/lib/i18n/errors";
 
-export const MAX_SVG_BYTES = 2 * 1024 * 1024;
+const MAX_SVG_BYTES = 2 * 1024 * 1024;
 
-export function isSvgFile(file: File): boolean {
+function isSvgFile(file: File): boolean {
   return file.type === "image/svg+xml" || /\.svg$/i.test(file.name);
 }
 

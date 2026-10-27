@@ -6,7 +6,7 @@ import { createWriteQueue } from "@/lib/projects/write-queue";
 import { useFolderSyncStore, type FolderSyncError, type FolderSyncPatch } from "@/store/folder-sync-store";
 
 /** Quiet time after a save before the file is written, on top of the autosave's own delay. */
-export const FOLDER_WRITE_DELAY = 1500;
+const FOLDER_WRITE_DELAY = 1500;
 
 const RECORD_KEY = "autosave-folder";
 
@@ -23,7 +23,7 @@ type NameLister = { keys: () => AsyncIterable<string> };
 const readwrite: PermissionOptions = { mode: "readwrite" };
 
 /** True in browsers that can pick a writable folder (Chromium on a secure origin). Firefox and Safari: false. */
-export function folderSyncSupported(): boolean {
+function folderSyncSupported(): boolean {
   return typeof window !== "undefined" && window.isSecureContext && typeof pickerOf(window) === "function";
 }
 
@@ -104,7 +104,7 @@ const queue = createWriteQueue({
 });
 
 /** Queues a project for writing. A no-op without a connected folder. */
-export function queueFolderSave(projectId: string): void {
+function queueFolderSave(projectId: string): void {
   if (!handle) return;
   if (useFolderSyncStore.getState().status === "ready") patchState({ status: "saving" });
   queue.schedule(projectId);

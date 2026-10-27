@@ -2,7 +2,7 @@ import type { DesignTokens } from "@/types/tokens";
 import { flatten, header } from "@/lib/tokens/formats/shared";
 import { defineFormat } from "@/lib/tokens/formats/define";
 
-export function toReactTheme(tokens: DesignTokens): string {
+function toReactTheme(tokens: DesignTokens): string {
   const groups = new Map<string, Record<string, string>>();
   flatten(tokens).forEach((token) => {
     const key = token.group === "semantic" ? "color" : token.group;

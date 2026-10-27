@@ -4,7 +4,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { indexedDbStorage } from "@/lib/db";
 import type { BrandMission, BrandProfile, BrandVoice, ColorRole } from "@/types/brand";
 
-export const defaultVoice: BrandVoice = {
+const defaultVoice: BrandVoice = {
   personality: ["Clear", "Confident", "Warm"],
   dos: ["Lead with the benefit", "Use plain words", "Write like you talk"],
   donts: ["Jargon without a reason", "Exclamation marks everywhere", "Passive voice"],
@@ -14,7 +14,7 @@ export const defaultVoice: BrandVoice = {
 /** The most values the Mission & Values page lays out. */
 export const MAX_BRAND_VALUES = 4;
 
-export const defaultMission: BrandMission = {
+const defaultMission: BrandMission = {
   statement: "Give every team the tools to turn a good idea into a finished, consistent brand.",
   values: [
     { title: "Craft", description: "Details matter. We sweat the small things so nobody else has to." },
@@ -24,7 +24,7 @@ export const defaultMission: BrandMission = {
   ],
 };
 
-export const defaultProfile: BrandProfile = {
+const defaultProfile: BrandProfile = {
   name: "Acme",
   description: "Design tools for people who ship.",
   logoSvg: null,

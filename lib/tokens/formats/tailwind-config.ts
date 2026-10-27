@@ -5,7 +5,7 @@ import type { DesignTokens } from "@/types/tokens";
 import { header, px } from "@/lib/tokens/formats/shared";
 import { defineFormat } from "@/lib/tokens/formats/define";
 
-export function toTailwindConfig(tokens: DesignTokens): string {
+function toTailwindConfig(tokens: DesignTokens): string {
   const color = (value: Oklch) => formatColor(value, tokens.meta.colorFormat);
   const colors = Object.fromEntries([
     ...tokens.colors.map((token) => [

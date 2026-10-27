@@ -1,6 +1,6 @@
 import type { OpenTypeFeatureTag, OpenTypeSettings } from "@/types/typography";
 
-export type FeatureDefinition = {
+type FeatureDefinition = {
   tag: OpenTypeFeatureTag;
   label: string;
   sample: string;
@@ -64,7 +64,7 @@ export function toggleFeature(settings: OpenTypeSettings, tag: OpenTypeFeatureTa
 }
 
 /** Descriptions for feature tags reported by the font inspector. */
-export const featureNames: Record<string, string> = {
+const featureNames: Record<string, string> = {
   aalt: "Access all alternates",
   calt: "Contextual alternates",
   case: "Case-sensitive forms",

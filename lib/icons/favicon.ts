@@ -4,8 +4,8 @@ import { buildIconSvg } from "@/lib/icons/svg";
 import { createZip, type ZipEntry } from "@/lib/zip";
 import type { IconData, IconStyle } from "@/types/icons";
 
-export const ICO_SIZES = [16, 32, 48];
-export const PNG_TARGETS = [
+const ICO_SIZES = [16, 32, 48];
+const PNG_TARGETS = [
   { name: "apple-touch-icon.png", size: 180 },
   { name: "icon-192.png", size: 192 },
   { name: "icon-512.png", size: 512 },
@@ -96,9 +96,4 @@ export async function buildFaviconPackage(
 ): Promise<Uint8Array> {
   const svg = buildIconSvg(icon, { ...style, size: 512 }, { uniqueIds: true });
   return createZip(await faviconEntries((size) => buildIconSvg(icon, { ...style, size }), svg, options));
-}
-
-/** The same package for a ready-made SVG, such as the Logo Studio's app icon. */
-export async function buildFaviconPackageFromSvg(svg: string, options: FaviconOptions): Promise<Uint8Array> {
-  return createZip(await faviconEntries(() => svg, svg, options));
 }

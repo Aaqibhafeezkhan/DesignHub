@@ -4,7 +4,7 @@ import { useEmbeddedFont } from "@/hooks/use-embedded-font";
 import type { BrandTokens } from "@/types/brand";
 
 /** Printable ASCII plus common typographic punctuation: enough for mockup and social copy. */
-export const TEXT_GLYPHS =
+const TEXT_GLYPHS =
   " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~·•’‘“”…×–";
 
 /**

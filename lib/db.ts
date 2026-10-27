@@ -10,7 +10,7 @@ type KeyValueRecord = {
   updatedAt: number;
 };
 
-export type CachedIconRecord = {
+type CachedIconRecord = {
   id: string;
   body: string;
   width: number;
@@ -129,12 +129,3 @@ export const indexedDbStorage: StateStorage = {
     await safeDb((db) => db.kv.delete(name), undefined);
   },
 };
-
-/** Removes every locally stored DesignHub record. */
-export async function clearLocalData(): Promise<void> {
-  await safeDb(
-    (db) =>
-      Promise.all([db.kv.clear(), db.icons.clear(), db.projects.clear(), db.versions.clear(), db.handles.clear()]),
-    undefined,
-  );
-}

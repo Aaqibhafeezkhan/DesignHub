@@ -19,7 +19,7 @@ export const defaultFontFilters: FontFilters = {
   sort: "popular",
 };
 
-export function normalize(value: string): string {
+function normalize(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 

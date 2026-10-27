@@ -53,7 +53,7 @@ export type PaletteColor = { name: string; hex: string };
  */
 export const DISTINGUISHABLE_THRESHOLD = 0.06;
 
-export type LightnessSuggestion = {
+type LightnessSuggestion = {
   /** Name of the color to change. */
   color: string;
   from: string;
@@ -62,7 +62,7 @@ export type LightnessSuggestion = {
   distance: number;
 };
 
-export type ConfusablePair = {
+type ConfusablePair = {
   a: PaletteColor;
   b: PaletteColor;
   /** ΔE OK under typical vision. */
@@ -72,7 +72,7 @@ export type ConfusablePair = {
   suggestion: LightnessSuggestion | null;
 };
 
-export type PaletteVisionMode = { mode: VisionMode; pass: boolean; pairs: ConfusablePair[] };
+type PaletteVisionMode = { mode: VisionMode; pass: boolean; pairs: ConfusablePair[] };
 
 export type PaletteVisionSection = {
   threshold: number;
@@ -89,7 +89,7 @@ const round3 = (value: number) => Math.round(value * 1000) / 1000;
  * The smallest lightness change to one of the two colors that pulls them apart under `type`
  * without making them collide under typical vision. Tries both colors, away from the other first.
  */
-export function suggestLightness(
+function suggestLightness(
   a: ParsedColor,
   b: ParsedColor,
   type: VisionType,

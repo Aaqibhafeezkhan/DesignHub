@@ -1,4 +1,4 @@
-import { desk, logo, mockupDoc, onPrimaryLarge, text, textWidth, truncate } from "@/lib/mockups/kit";
+import { desk, logo, mockupDoc, onPrimaryLarge, text, truncate } from "@/lib/mockups/kit";
 import type { MockupContext, MockupTemplate } from "@/lib/mockups/types";
 
 const W = 1400;
@@ -15,11 +15,6 @@ export function notebookCopy(ctx: MockupContext): { name: string; website: strin
     name: truncate(ctx, ctx.brand.name, NOTEBOOK_TEXT_WIDTH, 46, "h", 2),
     website: truncate(ctx, ctx.content.website, NOTEBOOK_TEXT_WIDTH, 24, "bb", 2),
   };
-}
-
-/** Width the name takes when drawn, for tests. */
-export function notebookNameWidth(ctx: MockupContext): number {
-  return textWidth(ctx, notebookCopy(ctx).name, 46, "h", 2);
 }
 
 export const notebook: MockupTemplate = {

@@ -132,8 +132,8 @@ export function sealLettering(name: string, measure: (text: string, size: number
   return { text, size: Math.round(size * 10) / 10, copies };
 }
 
-export const SHARE_WIDTH = 1200;
-export const SHARE_HEIGHT = 630;
+const SHARE_WIDTH = 1200;
+const SHARE_HEIGHT = 630;
 /** The lockup may fill this much of the width, inside the area most platforms crop to. */
 const SHARE_MAX = 0.7;
 
@@ -178,7 +178,7 @@ export function monogramInitials(name: string): string {
 }
 
 /** Font size that fits the initials inside the monogram tile. */
-export function monogramLettering(initials: string, measure: (text: string, size: number) => number) {
+function monogramLettering(initials: string, measure: (text: string, size: number) => number) {
   const max = MONOGRAM_SIZE * MONOGRAM_TEXT_MAX;
   const available = MONOGRAM_SIZE * MONOGRAM_FILL;
   const width = measure(initials, max);

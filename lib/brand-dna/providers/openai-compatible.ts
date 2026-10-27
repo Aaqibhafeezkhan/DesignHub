@@ -46,7 +46,7 @@ export function openAiRequestPreview(
   };
 }
 
-export type ChatContentPart = { type: "image_url"; image_url: { url: string } } | { type: "text"; text: string };
+type ChatContentPart = { type: "image_url"; image_url: { url: string } } | { type: "text"; text: string };
 
 /** The chat completions body: the system instructions, then one image part per image and the instruction. */
 export type ChatRequest = {

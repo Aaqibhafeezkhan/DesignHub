@@ -14,7 +14,7 @@ import { sanitizeSvg } from "@/lib/svg/sanitize";
 import { MAX_BRAND_VALUES } from "@/store/brand-store";
 
 export const PROJECT_FORMAT = "designhub.project";
-export const PROJECTS_FORMAT = "designhub.projects";
+const PROJECTS_FORMAT = "designhub.projects";
 
 /** A version as it travels in a file: ids are local to a browser, so they are left out and made fresh on import. */
 export type VersionEntry = Pick<ProjectVersion, "createdAt" | "reason" | "snapshot">;

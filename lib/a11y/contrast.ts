@@ -130,7 +130,7 @@ const passesBoth = (ring: Oklch, background: Oklch, component: Oklch) =>
  * Two constraints can pull in opposite directions, so a binary search won't do: the nearest
  * passing step on either side wins, then black or white as a last resort.
  */
-export function suggestFocusRing(ring: Oklch, background: Oklch, component: Oklch): Oklch | null {
+function suggestFocusRing(ring: Oklch, background: Oklch, component: Oklch): Oklch | null {
   if (passesBoth(ring, background, component)) return null;
   const step = 0.005;
   for (let delta = step; delta <= 1; delta += step) {

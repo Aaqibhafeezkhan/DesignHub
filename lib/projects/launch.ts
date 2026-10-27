@@ -4,7 +4,7 @@ import { parseProjectsFile, type ProjectEntry } from "@/lib/projects/transfer";
 export const MAX_LAUNCH_BYTES = 25 * 1024 * 1024;
 
 /** The cache and key the service worker puts a file shared from another app into. */
-export const SHARE_CACHE = "designhub-share";
+const SHARE_CACHE = "designhub-share";
 export const SHARE_KEY = "/shared-project";
 export const SHARE_PARAM = "shared";
 

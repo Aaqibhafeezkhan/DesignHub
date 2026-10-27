@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useA11yStore } from "@/store/a11y-store";
 
-export const a11yFonts = ["Inter", "Atkinson Hyperlegible Next", "Lexend", "Source Serif 4", "Merriweather"];
+const a11yFonts = ["Inter", "Atkinson Hyperlegible Next", "Lexend", "Source Serif 4", "Merriweather"];
 
 export function A11yTypePanel() {
   const typography = useA11yStore((state) => state.typography);

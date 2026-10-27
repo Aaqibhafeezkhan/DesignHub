@@ -21,7 +21,7 @@ export function componentName(id: IconId): string {
 }
 
 /** Converts SVG markup attributes to their JSX spelling (stroke-width → strokeWidth). */
-export function svgToJsx(svg: string): string {
+function svgToJsx(svg: string): string {
   return svg
     .replace(/\s(class)=/g, " className=")
     .replace(

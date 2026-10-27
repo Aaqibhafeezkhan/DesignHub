@@ -4,10 +4,10 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { indexedDbStorage } from "@/lib/db";
 import type { A11yColors, A11yTab, A11yTypography, TouchTarget, VisionMode } from "@/types/a11y";
 
-export const defaultSample =
+const defaultSample =
   "Good accessibility is good design. Clear contrast, comfortable type and generous targets help everyone read faster, tap with confidence and stay focused on what matters.";
 
-export const defaultTargets: TouchTarget[] = [
+const defaultTargets: TouchTarget[] = [
   { id: "t1", label: "Like", width: 32, height: 32 },
   { id: "t2", label: "Share", width: 32, height: 32 },
   { id: "t3", label: "Buy now", width: 120, height: 44 },

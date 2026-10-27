@@ -33,7 +33,7 @@ type OpenTypeTables = {
 const USE_TYPO_METRICS = 1 << 7;
 
 /** Prefer OS/2 typo metrics when the font asks for them; otherwise use hhea. */
-export function metricsFromTables(unitsPerEm: number, tables: OpenTypeTables): FontMetrics | undefined {
+function metricsFromTables(unitsPerEm: number, tables: OpenTypeTables): FontMetrics | undefined {
   const os2 = tables.os2;
   const hhea = tables.hhea;
   const useTypo = Boolean(os2 && (os2.fsSelection ?? 0) & USE_TYPO_METRICS);

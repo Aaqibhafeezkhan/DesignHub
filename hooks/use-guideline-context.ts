@@ -32,7 +32,7 @@ export function useGuidelineBase(): GuidelineBase {
   );
 }
 
-export function withContents(base: GuidelineBase, pages: GuidelinePage[]): GuidelineContext {
+function withContents(base: GuidelineBase, pages: GuidelinePage[]): GuidelineContext {
   return { ...base, contents: pages.map((page, i) => ({ id: page.id, title: page.title, number: i + 1 })) };
 }
 

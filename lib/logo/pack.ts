@@ -17,7 +17,7 @@ export function slugify(name: string): string {
 }
 
 /** Manifest values for a favicon package: the brand name and primary color. */
-export function faviconOptions(ctx: VariantContext): FaviconOptions {
+function faviconOptions(ctx: VariantContext): FaviconOptions {
   return { appName: ctx.name, themeColor: ctx.primary, backgroundColor: ctx.light };
 }
 

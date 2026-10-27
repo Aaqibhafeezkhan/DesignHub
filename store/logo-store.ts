@@ -6,7 +6,7 @@ import type { LogoVariantId } from "@/lib/logo/variants";
 
 export type LogoBackdrop = "light" | "dark" | "brand" | "checker";
 
-export type LogoGuides = { grid: boolean; clearSpace: boolean; safeArea: boolean };
+type LogoGuides = { grid: boolean; clearSpace: boolean; safeArea: boolean };
 
 /** View preferences only. The logo itself belongs to the brand profile. */
 type LogoState = {

@@ -6,7 +6,7 @@ import { defineFormat } from "@/lib/tokens/formats/define";
  * Less variables. Values with functions (clamp, gradients, shadows with rgb()) are escaped
  * with ~"..." so Less passes them through instead of trying to evaluate the math.
  */
-export function toLess(tokens: DesignTokens): string {
+function toLess(tokens: DesignTokens): string {
   const name = (token: string) => `@${tokens.meta.prefix ? `${tokens.meta.prefix}-` : ""}${token.replace(/\./g, "_")}`;
   const value = (raw: string) => (raw.includes("(") ? `~"${raw.replace(/"/g, '\\"')}"` : raw);
   const vars = flatten(tokens)

@@ -6,7 +6,7 @@ export type PackedCircle = { x: number; y: number; r: number };
 
 /** The most circles and placement attempts for one canvas, however large, so rendering stays fast. */
 export const maxPackedCircles = 420;
-export const maxPackingAttempts = 6000;
+const maxPackingAttempts = 6000;
 
 /**
  * Circles that never overlap (and keep `gap` px apart), by rejection sampling: big circles first,

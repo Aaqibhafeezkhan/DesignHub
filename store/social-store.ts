@@ -16,7 +16,7 @@ export const defaultSocialContent: SocialContent = {
   cta: "Try it free",
 };
 
-export const defaultSocialDesign: SocialDesign = {
+const defaultSocialDesign: SocialDesign = {
   primary: null,
   secondary: null,
   background: "auto",

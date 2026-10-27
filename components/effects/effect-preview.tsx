@@ -12,7 +12,7 @@ function isDark(hex: string): boolean {
   return color ? color.l < 0.6 : true;
 }
 
-export const PREVIEW_SELECTOR = ".dh-effect-preview";
+const PREVIEW_SELECTOR = ".dh-effect-preview";
 
 const PLAIN = new Set<Backdrop>(["light", "dark"]);
 

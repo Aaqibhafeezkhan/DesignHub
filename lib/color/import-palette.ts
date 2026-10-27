@@ -1,7 +1,7 @@
 import { fromHex } from "@/lib/color/color";
 import type { Oklch } from "@/types/color";
 
-export const MAX_IMPORTED_COLORS = 10;
+const MAX_IMPORTED_COLORS = 10;
 
 export type PaletteImportResult = {
   colors: Oklch[];

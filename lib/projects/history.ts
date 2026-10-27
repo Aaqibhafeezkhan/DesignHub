@@ -25,7 +25,7 @@ export type ProjectVersion = {
 export const MAX_VERSIONS = 20;
 
 /** While editing, at most one timed version per this many milliseconds. */
-export const AUTO_VERSION_INTERVAL = 5 * 60_000;
+const AUTO_VERSION_INTERVAL = 5 * 60_000;
 
 /** JSON with sorted keys, so two snapshots with the same values match whatever order they were built in. */
 function stable(value: unknown): string {

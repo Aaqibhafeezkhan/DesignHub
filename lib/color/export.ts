@@ -333,7 +333,7 @@ export function paintNetPalette(
 const kritaSrgbProfile = "sRGB-elle-V2-srgbtrc.icc";
 
 /** The colorset.xml inside a Krita palette. Exported for tests. */
-export function kritaColorsetXml(palette: NamedColor[], includeShades: boolean, name = "DesignHub palette"): string {
+function kritaColorsetXml(palette: NamedColor[], includeShades: boolean, name = "DesignHub palette"): string {
   const entry = (color: Oklch, label: string, column: number, indent: string) => {
     const { r, g, b } = toRgb(color);
     return [
@@ -380,7 +380,7 @@ export function kritaPalette(
 }
 
 /** SVG has no conic gradients; conic falls back to a linear gradient at the same angle. */
-export function gradientSvg(gradient: Gradient, width = 1200, height = 630): string {
+function gradientSvg(gradient: Gradient, width = 1200, height = 630): string {
   const stops = sortedStops(gradient)
     .map((stop) => {
       const opacity = stop.color.alpha < 1 ? ` stop-opacity="${stop.color.alpha}"` : "";

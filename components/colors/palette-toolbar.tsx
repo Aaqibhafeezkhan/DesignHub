@@ -27,7 +27,7 @@ type EyeDropperResult = { sRGBHex: string };
 type EyeDropperConstructor = new () => { open: () => Promise<EyeDropperResult> };
 type EyeDropperWindow = Window & { EyeDropper?: EyeDropperConstructor };
 
-export type PaletteAnnouncementKind = "generated" | "loaded";
+type PaletteAnnouncementKind = "generated" | "loaded";
 export type PaletteAnnouncer = (kind: PaletteAnnouncementKind, swatches: Swatch[]) => void;
 
 export function usePaletteAnnouncement() {

@@ -104,7 +104,7 @@ export function githubChip(
 }
 
 /** Website pill in the primary color, at most `maxWidth` wide. */
-export function websitePill(
+function websitePill(
   ctx: SocialContext,
   x: number,
   y: number,

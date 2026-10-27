@@ -31,7 +31,7 @@ export function createLayer(patch: Partial<ShadowLayer> = {}): ShadowLayer {
  * "Smooth" shadows: several layers whose offset and blur grow on an ease-in curve
  * while opacity stays low - much closer to real light than one big shadow.
  */
-export function smoothShadow(layers: number, distance: number, opacity: number, color = "#000000"): ShadowLayer[] {
+function smoothShadow(layers: number, distance: number, opacity: number, color = "#000000"): ShadowLayer[] {
   return Array.from({ length: layers }, (_, index) => {
     const t = (index + 1) / layers;
     const eased = t * t;

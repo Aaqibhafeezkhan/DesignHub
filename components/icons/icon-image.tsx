@@ -20,7 +20,7 @@ export function IconImage({ icon, style, alt, className }: IconImageProps) {
 }
 
 /** Single-colour icons whose paint is `currentColor` (no hard-coded colours). */
-export function isMonochrome(icon: IconData): boolean {
+function isMonochrome(icon: IconData): boolean {
   return icon.body.includes("currentColor") && !/#[\da-f]{3,8}\b|rgb\(|hsl\(/i.test(icon.body);
 }
 

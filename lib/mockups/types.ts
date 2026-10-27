@@ -23,7 +23,7 @@ export type DrawContext = {
 
 export type MockupContext = DrawContext & { content: MockupContent };
 
-export type MockupCategory = "Print" | "Screens";
+type MockupCategory = "Print" | "Screens";
 
 export type MockupTemplate = {
   id: string;
