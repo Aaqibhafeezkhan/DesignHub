@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -7,6 +8,15 @@ import { toast } from "sonner";
 const REGISTER_DELAY = 3000;
 
 export function PwaRegister() {
+  const pathname = usePathname();
+
+  // Tells the worker which page is showing, so it can keep that studio for offline use. A link followed inside
+  // the app makes no request for the page, so the worker could not know otherwise.
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production" || !("serviceWorker" in navigator)) return;
+    navigator.serviceWorker.controller?.postMessage({ type: "REMEMBER_ROUTE", pathname });
+  }, [pathname]);
+
   useEffect(() => {
     if (process.env.NODE_ENV !== "production" || !("serviceWorker" in navigator)) return;
 
@@ -62,8 +72,8 @@ export function PwaRegister() {
 
     navigator.serviceWorker.addEventListener("controllerchange", onControllerChange);
 
-    // Installing precaches every route and chunk. Wait a moment after the page has loaded and
-    // until the main thread is idle, so that download never competes with the page itself.
+    // Installing downloads the shell (about a fifth of the whole app). Wait a moment after the page has
+    // loaded and until the main thread is idle, so that download never competes with the page itself.
     let idle: number | undefined;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const schedule = () => {
