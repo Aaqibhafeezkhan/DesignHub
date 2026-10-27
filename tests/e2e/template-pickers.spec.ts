@@ -42,3 +42,16 @@ test("the social picker finds a template by name or size and opens the folded pl
   await search.fill("zzzz");
   await expect(page.getByText("No template matches that search.")).toBeVisible();
 });
+
+test("typing in a mockup field keeps the field current and the preview catches up", async ({ page }) => {
+  await page.goto("/mockups");
+  const preview = page.locator('img[src^="data:image/svg+xml"]').first();
+  await expect(preview).toBeVisible();
+  const before = await preview.getAttribute("src");
+  const headline = page.getByLabel("Headline");
+  const text = "Fresh ideas";
+  // Typed with no delay, so the preview has to skip the keystrokes between.
+  await headline.pressSequentially(text, { delay: 0 });
+  await expect(headline).toHaveValue(text);
+  await expect.poll(async () => await preview.getAttribute("src")).not.toBe(before);
+});

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { memo, useDeferredValue, useMemo } from "react";
 
 import { SvgPreviewCanvas } from "@/components/canvas/svg-preview-canvas";
 import { StudioLayout } from "@/components/layout/studio-layout";
@@ -13,13 +13,18 @@ import { withSafeArea } from "@/lib/social/overlay";
 import { getSocialTemplate, socialTemplates } from "@/lib/social/registry";
 import { useSocialStore } from "@/store/social-store";
 
+/** The picker takes no props, so it stays out of the redraws that follow every keystroke. */
+const Templates = memo(SocialPicker);
+
 /** Templates on the left; preview, then content, then export on the right. */
 export function SocialWorkspace() {
   const ctx = useSocialContext();
   const templateId = useSocialStore((state) => state.template);
   const safeArea = useSocialStore((state) => state.safeArea);
   const template = getSocialTemplate(templateId) ?? socialTemplates[0];
-  const svg = useMemo(() => (template ? template.render(ctx) : ""), [template, ctx]);
+  // The inputs answer at once; the preview redraws a frame behind them and skips the keystrokes in between.
+  const drawn = useDeferredValue(ctx);
+  const svg = useMemo(() => (template ? template.render(drawn) : ""), [template, drawn]);
   const preview = useMemo(() => (template && safeArea ? withSafeArea(svg, template) : svg), [svg, template, safeArea]);
   const label = template ? `${template.platform} ${template.label}` : "Social asset";
 
@@ -28,7 +33,7 @@ export function SocialWorkspace() {
       id="social-v2"
       controls={
         <Panel title="Template">
-          <SocialPicker />
+          <Templates />
         </Panel>
       }
       preview={
