@@ -28,7 +28,7 @@ export const MAX_VERSIONS = 20;
 const AUTO_VERSION_INTERVAL = 5 * 60_000;
 
 /** JSON with sorted keys, so two snapshots with the same values match whatever order they were built in. */
-function stable(value: unknown): string {
+export function snapshotKey(value: unknown): string {
   return JSON.stringify(value, (_key, item: unknown) =>
     item && typeof item === "object" && !Array.isArray(item)
       ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)))
@@ -37,7 +37,7 @@ function stable(value: unknown): string {
 }
 
 export function sameSnapshot(a: BrandSnapshot, b: BrandSnapshot): boolean {
-  return stable(a) === stable(b);
+  return snapshotKey(a) === snapshotKey(b);
 }
 
 /** Newest first. */
