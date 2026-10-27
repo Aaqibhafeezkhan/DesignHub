@@ -8,6 +8,7 @@ import { defineEffect } from "@/lib/effects/define";
  */
 export const scrollShadow = defineEffect({
   kind: "scroll-shadow",
+  category: "states",
   label: "Scroll shadow",
   description: "Edge shadows that appear only while there is more content to scroll, with no JavaScript.",
   generate(s) {

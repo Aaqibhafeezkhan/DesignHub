@@ -21,6 +21,7 @@ export function scrollbarContrast(s: ScrollbarSettings): number {
  */
 export const scrollbar = defineEffect({
   kind: "scrollbar",
+  category: "states",
   label: "Scrollbar",
   description: "Thumb and track colors, width and radius, with a standard and a WebKit fallback.",
   generate(s) {

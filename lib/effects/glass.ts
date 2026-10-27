@@ -3,6 +3,7 @@ import { hexToRgba, px } from "@/lib/effects/css";
 
 export const glass = defineEffect({
   kind: "glass",
+  category: "surfaces",
   label: "Glass",
   description: "Frosted glass: backdrop blur, tint, hairline border.",
   generate(s) {

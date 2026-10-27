@@ -11,6 +11,7 @@ export function tone(hex: string, delta: number): string {
 /** Soft UI: one light and one dark shadow cast in opposite directions from a single light source. */
 export const neumorphism = defineEffect({
   kind: "neumorphism",
+  category: "surfaces",
   label: "Neumorphism",
   description: "Soft extruded surfaces lit from one direction.",
   generate(s) {

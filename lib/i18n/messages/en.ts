@@ -913,4 +913,11 @@ export const en = {
     "This file was saved by a newer version of DesignHub (file version {version}). Update the app, then try again.",
   "command.group.recent": "Recent",
   "command.clearRecent": "Clear recent choices",
+  "effects.category.surfaces": "Surfaces",
+  "effects.category.text": "Text",
+  "effects.category.states": "States and focus",
+  "effects.category.motion": "Motion",
+  "effects.category.images": "Images",
+  "effects.picker.search": "Find an effect",
+  "effects.picker.noMatch": "No effect matches that search.",
 } as const;

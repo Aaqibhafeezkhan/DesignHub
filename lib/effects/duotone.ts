@@ -38,6 +38,7 @@ export function duotoneFilterUrl(settings: DuotoneSettings): string {
 
 export const duotone = defineEffect({
   kind: "duotone",
+  category: "images",
   label: "Duotone",
   description: "Maps photo shadows and highlights to two brand colors with an SVG filter.",
   generate(s) {

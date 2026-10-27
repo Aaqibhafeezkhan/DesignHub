@@ -122,6 +122,7 @@ export const shadowPresets: { id: string; label: string; layers: () => ShadowLay
 
 export const shadow = defineEffect({
   kind: "shadow",
+  category: "surfaces",
   label: "Shadow",
   description: "Multi-layer box shadows with smooth presets.",
   generate(s) {

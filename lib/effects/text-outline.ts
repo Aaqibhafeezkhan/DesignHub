@@ -9,6 +9,7 @@ import { defineEffect } from "@/lib/effects/define";
  */
 export const textOutline = defineEffect({
   kind: "text-outline",
+  category: "text",
   label: "Text outline",
   description: "Outlined text with an optional offset shadow copy and a solid fallback.",
   generate(s) {

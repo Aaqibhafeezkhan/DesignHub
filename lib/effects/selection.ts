@@ -19,6 +19,7 @@ export function selectionContrast(s: SelectionSettings): number {
  */
 export const selection = defineEffect({
   kind: "selection",
+  category: "text",
   label: "Selection",
   description: "The background and text color of selected text, with a 4.5:1 contrast check.",
   generate(s) {

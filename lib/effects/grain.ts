@@ -9,6 +9,7 @@ function noiseDataUri(frequency: number): string {
 
 export const grain = defineEffect({
   kind: "grain",
+  category: "images",
   label: "Grain",
   description: "Film-grain texture overlay via a pseudo-element.",
   generate(s) {

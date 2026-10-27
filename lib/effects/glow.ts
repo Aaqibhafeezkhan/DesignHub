@@ -12,6 +12,7 @@ function halo(color: string, radius: number, intensity: number): string {
 
 export const glow = defineEffect({
   kind: "glow",
+  category: "surfaces",
   label: "Glow",
   description: "Neon-style bloom for cards, buttons and text.",
   generate(s) {

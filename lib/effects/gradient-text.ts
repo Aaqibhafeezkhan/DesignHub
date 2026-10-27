@@ -43,6 +43,7 @@ export function textGradient(s: GradientTextSettings, context: EffectContext): T
  */
 export const gradientText = defineEffect({
   kind: "gradient-text",
+  category: "text",
   label: "Gradient text",
   description: "Text filled with your Color Studio gradient, optionally shifting.",
   generate(s, context = defaultEffectContext) {

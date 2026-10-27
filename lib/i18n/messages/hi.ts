@@ -903,4 +903,11 @@ export const hi = {
     "यह फ़ाइल DesignHub के नए वर्शन ने सेव की है (फ़ाइल वर्शन {version})। ऐप अपडेट करें और फिर कोशिश करें।",
   "command.group.recent": "हाल के",
   "command.clearRecent": "हाल के चुनाव हटाएँ",
+  "effects.category.surfaces": "सतहें",
+  "effects.category.text": "टेक्स्ट",
+  "effects.category.states": "स्टेट और फ़ोकस",
+  "effects.category.motion": "मोशन",
+  "effects.category.images": "इमेज",
+  "effects.picker.search": "इफ़ेक्ट खोजें",
+  "effects.picker.noMatch": "इस खोज से कोई इफ़ेक्ट मेल नहीं खाता।",
 } satisfies Catalog;

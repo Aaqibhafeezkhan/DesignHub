@@ -24,6 +24,7 @@ export function linkUnderlineContrast(s: LinkUnderlineSettings): number {
  */
 export const linkUnderline = defineEffect({
   kind: "link-underline",
+  category: "text",
   label: "Link underline",
   description: "A link underline with thickness, offset and color that grows on hover, with a reduced-motion fallback.",
   generate(s) {

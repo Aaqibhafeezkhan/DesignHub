@@ -921,4 +921,11 @@ export const es = {
     "Este archivo lo guardó una versión más reciente de DesignHub (versión de archivo {version}). Actualiza la aplicación e inténtalo de nuevo.",
   "command.group.recent": "Recientes",
   "command.clearRecent": "Borrar elecciones recientes",
+  "effects.category.surfaces": "Superficies",
+  "effects.category.text": "Texto",
+  "effects.category.states": "Estados y foco",
+  "effects.category.motion": "Movimiento",
+  "effects.category.images": "Imágenes",
+  "effects.picker.search": "Buscar un efecto",
+  "effects.picker.noMatch": "Ningún efecto coincide con esa búsqueda.",
 } satisfies Catalog;

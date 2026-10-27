@@ -42,6 +42,7 @@ export function skeletonColors(s: SkeletonSettings, context: EffectContext): Ske
  */
 export const skeleton = defineEffect({
   kind: "skeleton",
+  category: "motion",
   label: "Skeleton",
   description: "A loading placeholder shimmer in your brand's neutral colors.",
   generate(s, context = defaultEffectContext) {
