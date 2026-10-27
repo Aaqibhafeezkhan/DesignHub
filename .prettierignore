@@ -1,7 +1,10 @@
 .next
 node_modules
 pnpm-lock.yaml
-lib/typography/catalog.json
+lib/typography/catalog-index.json
+lib/typography/catalog
+lib/social/template-info.json
+lib/mockups/template-info.json
 public/sw.js
 .claude
 .lighthouseci

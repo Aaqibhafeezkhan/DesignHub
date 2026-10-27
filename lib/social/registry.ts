@@ -1,89 +1,14 @@
 import { matchesQuery } from "@/lib/picker-search";
-import { githubBannerStyles } from "@/lib/social/templates/github";
-import { instagramHighlight } from "@/lib/social/templates/instagram-highlight";
-import { instagramPortrait, instagramSquare, instagramStory } from "@/lib/social/templates/instagram";
-import { linkedinCover } from "@/lib/social/templates/linkedin-cover";
-import { ogTemplates } from "@/lib/social/templates/open-graph";
-import { pinterestBoardCover, pinterestPin } from "@/lib/social/templates/pinterest";
-import { productHuntGallery, youtubeThumbnail } from "@/lib/social/templates/product-hunt";
-import { xBanner } from "@/lib/social/templates/x-banner";
-import { xPostImage } from "@/lib/social/templates/x-post";
-import { blueskyBanner } from "@/lib/social/templates/bluesky";
-import { facebookCover } from "@/lib/social/templates/facebook";
-import { linkedinCompanyCover } from "@/lib/social/templates/linkedin-company";
-import { discordBanner } from "@/lib/social/templates/discord";
-import { mastodonHeader } from "@/lib/social/templates/mastodon";
-import { twitchBanner } from "@/lib/social/templates/twitch";
-import { twitchOffline } from "@/lib/social/templates/twitch-offline";
-import { linkedinEvent } from "@/lib/social/templates/linkedin-event";
-import { youtubeBanner } from "@/lib/social/templates/youtube-banner";
-import { redditBanner } from "@/lib/social/templates/reddit";
-import { tumblrHeader } from "@/lib/social/templates/tumblr";
-import { dribbbleShot } from "@/lib/social/templates/dribbble";
-import { behanceCover } from "@/lib/social/templates/behance";
-import { gumroadCover } from "@/lib/social/templates/gumroad";
-import { kofiBanner } from "@/lib/social/templates/kofi";
-import { buyMeACoffeeCover } from "@/lib/social/templates/buy-me-a-coffee";
-import { patreonCover } from "@/lib/social/templates/patreon";
-import { kickBanner } from "@/lib/social/templates/kick";
-import { bandcampHeader } from "@/lib/social/templates/bandcamp";
-import { productHuntThumbnail } from "@/lib/social/templates/product-hunt-thumbnail";
-import { telegramCover } from "@/lib/social/templates/telegram";
-import { substackBanner } from "@/lib/social/templates/substack";
-import { ghostCover } from "@/lib/social/templates/ghost";
-import { spotifyPlaylistCover } from "@/lib/social/templates/spotify";
-import { devtoCover } from "@/lib/social/templates/devto";
-import { hashnodeCover } from "@/lib/social/templates/hashnode";
-import { etsyShopBanner } from "@/lib/social/templates/etsy";
-import { notionCover } from "@/lib/social/templates/notion";
-import { mediumBanner } from "@/lib/social/templates/medium";
-import type { SocialPlatform, SocialTemplate } from "@/lib/social/types";
+import { socialLoaders } from "@/lib/social/loaders";
+import socialTemplateInfo from "@/lib/social/template-info.json";
+import type { SocialPlatform, SocialTemplate, SocialTemplateInfo } from "@/lib/social/types";
 
-/** Templates register here as they are implemented. */
-export const socialTemplates: SocialTemplate[] = [
-  ...githubBannerStyles,
-  linkedinCover,
-  xBanner,
-  xPostImage,
-  instagramSquare,
-  instagramPortrait,
-  instagramStory,
-  instagramHighlight,
-  ...ogTemplates,
-  productHuntGallery,
-  productHuntThumbnail,
-  youtubeThumbnail,
-  youtubeBanner,
-  pinterestPin,
-  pinterestBoardCover,
-  linkedinCompanyCover,
-  blueskyBanner,
-  facebookCover,
-  discordBanner,
-  twitchBanner,
-  mastodonHeader,
-  redditBanner,
-  tumblrHeader,
-  dribbbleShot,
-  behanceCover,
-  patreonCover,
-  kickBanner,
-  bandcampHeader,
-  twitchOffline,
-  linkedinEvent,
-  telegramCover,
-  substackBanner,
-  ghostCover,
-  spotifyPlaylistCover,
-  devtoCover,
-  hashnodeCover,
-  etsyShopBanner,
-  gumroadCover,
-  kofiBanner,
-  buyMeACoffeeCover,
-  notionCover,
-  mediumBanner,
-];
+/**
+ * Every template as a light list (id, platform, size, safe area), in picker order. The drawing code of a
+ * template is loaded with `loadSocialTemplate`. `template-info.json` is written from the full list by
+ * `lib/social/template-info.test.ts` (run `pnpm test -u` after adding or changing a template).
+ */
+export const socialTemplates = socialTemplateInfo as SocialTemplateInfo[];
 
 export const socialPlatforms: SocialPlatform[] = [
   "GitHub",
@@ -168,20 +93,20 @@ export const orderedSocialPlatforms: SocialPlatform[] = [
   ...socialPlatforms.filter((platform) => socialPlatformGroups[platform] === "more"),
 ];
 
-export function isCoreTemplate(template: SocialTemplate): boolean {
+export function isCoreTemplate(template: SocialTemplateInfo): boolean {
   return socialPlatformGroups[template.platform] === "core";
 }
 
 /** Ids from earlier versions, so saved selections keep working. */
 const aliases: Record<string, string> = { "github-banner": "github-classic" };
 
-export function getSocialTemplate(id: string): SocialTemplate | undefined {
+export function getSocialTemplate(id: string): SocialTemplateInfo | undefined {
   const target = aliases[id] ?? id;
   return socialTemplates.find((template) => template.id === target);
 }
 
 /** What a person can type to find a template: its name, its platform, its size ("1200x630"), its style and group. */
-export function socialSearchItem(template: SocialTemplate) {
+export function socialSearchItem(template: SocialTemplateInfo) {
   return {
     id: template.id,
     label: template.label,
@@ -199,3 +124,18 @@ export function matchingSocialTemplates(query: string): Set<string> | null {
       .map((template) => template.id),
   );
 }
+
+/** A template with its drawing code, fetched the first time it is asked for and kept after that. */
+export function loadSocialTemplate(id: string): Promise<SocialTemplate | undefined> {
+  const target = aliases[id] ?? id;
+  const load = socialLoaders[target];
+  if (!load) return Promise.resolve(undefined);
+  let loaded = loadedSocial.get(target);
+  if (!loaded) {
+    loaded = load();
+    loadedSocial.set(target, loaded);
+  }
+  return loaded;
+}
+
+const loadedSocial = new Map<string, Promise<SocialTemplate>>();

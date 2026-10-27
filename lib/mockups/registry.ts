@@ -1,55 +1,28 @@
-import { billboard } from "@/lib/mockups/templates/billboard";
-import { browserTab } from "@/lib/mockups/templates/browser-tab";
-import { businessCard } from "@/lib/mockups/templates/business-card";
-import { coffeeCup } from "@/lib/mockups/templates/coffee-cup";
-import { deliveryVan } from "@/lib/mockups/templates/delivery-van";
-import { desktopDashboard } from "@/lib/mockups/templates/desktop-dashboard";
-import { emailSignature } from "@/lib/mockups/templates/email-signature";
-import { envelope } from "@/lib/mockups/templates/envelope";
-import { idBadge } from "@/lib/mockups/templates/id-badge";
-import { letterhead } from "@/lib/mockups/templates/letterhead";
-import { laptopLanding } from "@/lib/mockups/templates/laptop-landing";
-import { lockScreenMockup } from "@/lib/mockups/templates/lock-screen";
-import { notebook } from "@/lib/mockups/templates/notebook";
-import { merch } from "@/lib/mockups/templates/merch";
-import { mobileApp } from "@/lib/mockups/templates/mobile-app";
-import { appStoreScreenshots } from "@/lib/mockups/templates/app-store";
-import { presentation } from "@/lib/mockups/templates/presentation";
-import { poster } from "@/lib/mockups/templates/poster";
-import { shoppingBag } from "@/lib/mockups/templates/shopping-bag";
-import { smartwatch } from "@/lib/mockups/templates/smartwatch";
-import { tradeShowBooth } from "@/lib/mockups/templates/trade-show-booth";
-import { sticker } from "@/lib/mockups/templates/sticker";
-import { tabletScreens } from "@/lib/mockups/templates/tablet";
-import type { MockupTemplate } from "@/lib/mockups/types";
+import { mockupLoaders } from "@/lib/mockups/loaders";
+import mockupTemplateInfo from "@/lib/mockups/template-info.json";
+import type { MockupTemplate, MockupTemplateInfo } from "@/lib/mockups/types";
 
-/** Templates register here as they are implemented. */
-export const mockupTemplates: MockupTemplate[] = [
-  businessCard,
-  letterhead,
-  envelope,
-  sticker,
-  poster,
-  billboard,
-  tradeShowBooth,
-  deliveryVan,
-  merch,
-  coffeeCup,
-  notebook,
-  shoppingBag,
-  idBadge,
-  laptopLanding,
-  desktopDashboard,
-  mobileApp,
-  appStoreScreenshots,
-  smartwatch,
-  lockScreenMockup,
-  tabletScreens,
-  presentation,
-  browserTab,
-  emailSignature,
-];
+/**
+ * Every template as a light list (id, label, category), in picker order. The drawing code of a template is
+ * loaded with `loadMockupTemplate`. `template-info.json` is written from the full list by
+ * `lib/mockups/template-info.test.ts` (run `pnpm test -u` after adding or changing a template).
+ */
+export const mockupTemplates = mockupTemplateInfo as MockupTemplateInfo[];
 
-export function getTemplate(id: string): MockupTemplate | undefined {
+export function getTemplate(id: string): MockupTemplateInfo | undefined {
   return mockupTemplates.find((template) => template.id === id);
+}
+
+const loaded = new Map<string, Promise<MockupTemplate>>();
+
+/** A template with its drawing code, fetched the first time it is asked for and kept after that. */
+export function loadMockupTemplate(id: string): Promise<MockupTemplate | undefined> {
+  const load = mockupLoaders[id];
+  if (!load) return Promise.resolve(undefined);
+  let template = loaded.get(id);
+  if (!template) {
+    template = load();
+    loaded.set(id, template);
+  }
+  return template;
 }

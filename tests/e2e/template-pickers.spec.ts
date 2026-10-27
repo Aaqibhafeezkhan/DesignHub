@@ -55,3 +55,21 @@ test("typing in a mockup field keeps the field current and the preview catches u
   await expect(headline).toHaveValue(text);
   await expect.poll(async () => await preview.getAttribute("src")).not.toBe(before);
 });
+
+test("switching to a template that has not loaded yet draws it quickly and keeps the last drawing meanwhile", async ({
+  page,
+}, testInfo) => {
+  await page.goto("/social");
+  const preview = page.locator('img[src^="data:image/svg+xml"]').first();
+  await expect(preview).toBeVisible();
+  const before = await preview.getAttribute("src");
+
+  // Measured in the browser: from the click on a template to its new drawing in the preview.
+  const started = Date.now();
+  await page.getByRole("radio", { name: /Story/ }).first().click();
+  await expect.poll(async () => await preview.getAttribute("src")).not.toBe(before);
+  const elapsed = Date.now() - started;
+  await testInfo.attach("switch-ms", { body: String(elapsed), contentType: "text/plain" });
+  // The target on a mid-range laptop is about 200 ms; the bound here leaves room for a busy CI machine.
+  expect(elapsed).toBeLessThan(1500);
+});

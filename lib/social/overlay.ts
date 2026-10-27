@@ -1,7 +1,7 @@
-import type { SocialTemplate } from "@/lib/social/types";
+import type { SocialTemplateInfo } from "@/lib/social/types";
 
 /** Draws the safe area and platform-covered zones on top of a rendered asset, for preview only. */
-export function withSafeArea(svg: string, template: SocialTemplate): string {
+export function withSafeArea(svg: string, template: SocialTemplateInfo): string {
   const { width, height, safe, covered = [] } = template;
   const stroke = Math.max(2, Math.round(width / 600));
   const shade = `<path d="M0 0H${width}V${height}H0Z M${safe.x} ${safe.y}V${safe.y + safe.height}H${safe.x + safe.width}V${safe.y}Z" fill="#000" fill-opacity=".35" fill-rule="evenodd"/>`;

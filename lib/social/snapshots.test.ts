@@ -3,8 +3,8 @@ import { join } from "node:path";
 
 import { describe, expect, test } from "vitest";
 
-import { mockupTemplates } from "@/lib/mockups/registry";
-import { socialTemplates } from "@/lib/social/registry";
+import { allMockupTemplates as mockupTemplates } from "@/lib/mockups/all";
+import { allSocialTemplates as socialTemplates } from "@/lib/social/all";
 import { mockupContext, socialContext } from "@/lib/test/draw-context";
 import type { BrandMode } from "@/types/brand";
 

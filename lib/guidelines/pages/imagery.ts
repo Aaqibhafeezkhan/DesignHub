@@ -12,7 +12,7 @@ import {
 import type { GuidelineContext, GuidelinePage } from "@/lib/guidelines/types";
 import { nestLogo } from "@/lib/logo/compose";
 import { resolveSocialContent } from "@/lib/social/content";
-import { getSocialTemplate } from "@/lib/social/registry";
+import { allSocialTemplates } from "@/lib/social/all";
 import type { SocialContext } from "@/lib/social/types";
 import { text } from "@/lib/mockups/kit";
 import { defaultSocialContent } from "@/store/social-store";
@@ -175,7 +175,7 @@ export const socialMediaPage: GuidelinePage = {
     const cols = 3;
     const w = (CONTENT_WIDTH - TILE_GAP * (cols - 1)) / cols;
     const boxH = 250;
-    const tiles = SOCIAL_SAMPLES.map((id) => getSocialTemplate(id))
+    const tiles = SOCIAL_SAMPLES.map((id) => allSocialTemplates.find((template) => template.id === id))
       .filter((template) => template !== undefined)
       .map((template, i) => {
         const x = MARGIN + (i % cols) * (w + TILE_GAP);

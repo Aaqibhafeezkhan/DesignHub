@@ -17,10 +17,10 @@ import { SocialPackPicker } from "@/components/social/social-pack-picker";
 import { buildSocialPack, packTemplates } from "@/lib/social/pack";
 import { readmeSnippet } from "@/lib/social/readme";
 import { ogMetaTags } from "@/lib/social/templates/open-graph";
-import type { SocialContext, SocialTemplate } from "@/lib/social/types";
+import type { SocialContext, SocialTemplateInfo } from "@/lib/social/types";
 import { useSocialStore } from "@/store/social-store";
 
-type Props = { svg: string; ctx: SocialContext; template: SocialTemplate | undefined };
+type Props = { svg: string; ctx: SocialContext; template: SocialTemplateInfo | undefined };
 
 type Job = "png" | "png1" | "png2" | "webp" | "copy" | "zip";
 

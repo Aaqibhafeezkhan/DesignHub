@@ -12,11 +12,12 @@ import {
   socialPlatformGroups,
   socialTemplates,
 } from "@/lib/social/registry";
-import type { SocialPlatform, SocialTemplate } from "@/lib/social/types";
+import type { SocialPlatform, SocialTemplateInfo } from "@/lib/social/types";
 import { cn } from "@/lib/utils";
 import { useSocialStore } from "@/store/social-store";
 
-type Entry = { kind: "single"; template: SocialTemplate } | { kind: "group"; name: string; styles: SocialTemplate[] };
+type Entry =
+  { kind: "single"; template: SocialTemplateInfo } | { kind: "group"; name: string; styles: SocialTemplateInfo[] };
 
 /** Templates of one platform, with styles of the same asset folded into one expandable row. */
 function entriesFor(platform: string, matches: Set<string> | null): Entry[] {

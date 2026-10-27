@@ -29,10 +29,14 @@ export type MockupCategory = "Print" | "Objects" | "Devices" | "Screens";
 /** The categories in picker order. */
 export const mockupCategories: readonly MockupCategory[] = ["Print", "Objects", "Devices", "Screens"];
 
-export type MockupTemplate = {
+/** A template as the picker lists it: everything about it except its drawing code, which loads when it is chosen. */
+export type MockupTemplateInfo = {
   id: string;
   label: string;
   category: MockupCategory;
   description: string;
+};
+
+export type MockupTemplate = MockupTemplateInfo & {
   render: (ctx: MockupContext) => string;
 };

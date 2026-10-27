@@ -1,0 +1,140 @@
+[
+  {
+    "id": "business-card",
+    "label": "Business card",
+    "category": "Print",
+    "description": "Front and back, 3.5 × 2 in, on a desk."
+  },
+  {
+    "id": "letterhead",
+    "label": "Letterhead",
+    "category": "Print",
+    "description": "A4 letter with header, signature and footer."
+  },
+  {
+    "id": "envelope",
+    "label": "Envelope",
+    "category": "Print",
+    "description": "DL envelope, front and flap."
+  },
+  {
+    "id": "sticker",
+    "label": "Stickers",
+    "category": "Print",
+    "description": "Die-cut round and badge stickers."
+  },
+  {
+    "id": "poster",
+    "label": "Poster",
+    "category": "Print",
+    "description": "18 × 24 in poster on a wall."
+  },
+  {
+    "id": "billboard",
+    "label": "Billboard",
+    "category": "Objects",
+    "description": "A roadside billboard showing the poster layout in perspective."
+  },
+  {
+    "id": "trade-show-booth",
+    "label": "Trade show booth",
+    "category": "Objects",
+    "description": "A 3 x 3 m booth in perspective with a back wall graphic, a counter and a pull-up banner."
+  },
+  {
+    "id": "delivery-van",
+    "label": "Delivery van",
+    "category": "Objects",
+    "description": "A delivery van with the brand's livery wrapped around the body, with the name, website and phone."
+  },
+  {
+    "id": "merch",
+    "label": "Merch",
+    "category": "Objects",
+    "description": "A T-shirt and a tote bag with the logo printed on them."
+  },
+  {
+    "id": "coffee-cup",
+    "label": "Coffee cup",
+    "category": "Objects",
+    "description": "A takeaway cup with the logo on its sleeve, on a table."
+  },
+  {
+    "id": "notebook",
+    "label": "Notebook",
+    "category": "Objects",
+    "description": "A hardcover notebook with the logo debossed, the name on the cover and an elastic band."
+  },
+  {
+    "id": "shopping-bag",
+    "label": "Shopping bag",
+    "category": "Objects",
+    "description": "Paper shopping bags with rope handles, the logo on the front and the brand color on the side."
+  },
+  {
+    "id": "id-badge",
+    "label": "ID badge",
+    "category": "Objects",
+    "description": "Event or team badge on a lanyard."
+  },
+  {
+    "id": "laptop-landing",
+    "label": "Landing page",
+    "category": "Devices",
+    "description": "Marketing site on a laptop."
+  },
+  {
+    "id": "desktop-dashboard",
+    "label": "Dashboard",
+    "category": "Devices",
+    "description": "Analytics dashboard on a desktop display."
+  },
+  {
+    "id": "mobile-app",
+    "label": "Mobile app",
+    "category": "Devices",
+    "description": "Onboarding, home and profile screens on phones."
+  },
+  {
+    "id": "app-store",
+    "label": "App store screenshots",
+    "category": "Screens",
+    "description": "Three phones on a brand background, each with a caption above it, as in a store listing."
+  },
+  {
+    "id": "smartwatch",
+    "label": "Smartwatch",
+    "category": "Devices",
+    "description": "A watch face with the brand mark and time, and a notification from the app."
+  },
+  {
+    "id": "lock-screen",
+    "label": "Lock screen",
+    "category": "Devices",
+    "description": "A phone lock screen with a brand wallpaper, the time and two notifications from the app."
+  },
+  {
+    "id": "tablet",
+    "label": "Tablet",
+    "category": "Devices",
+    "description": "Dashboard on a landscape tablet beside the mobile layout on a portrait one."
+  },
+  {
+    "id": "presentation",
+    "label": "Presentation",
+    "category": "Screens",
+    "description": "A title slide and a content slide in 16:9 on a stage."
+  },
+  {
+    "id": "browser-tab",
+    "label": "Browser tab",
+    "category": "Screens",
+    "description": "The favicon and page title in a browser tab, with a 16 px and 2x callout, above the landing page."
+  },
+  {
+    "id": "email-signature",
+    "label": "Email signature",
+    "category": "Screens",
+    "description": "A branded signature in a mail window. Copy it as HTML for Gmail or Outlook."
+  }
+]
