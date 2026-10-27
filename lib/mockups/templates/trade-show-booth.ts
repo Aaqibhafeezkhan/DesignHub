@@ -48,7 +48,7 @@ export function boothCopy(ctx: MockupContext) {
 export const tradeShowBooth: MockupTemplate = {
   id: "trade-show-booth",
   label: "Trade show booth",
-  category: "Print",
+  category: "Objects",
   description: "A 3 x 3 m booth in perspective with a back wall graphic, a counter and a pull-up banner.",
   render(ctx) {
     const { surface, mode } = ctx;

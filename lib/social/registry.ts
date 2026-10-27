@@ -1,3 +1,4 @@
+import { matchesQuery } from "@/lib/picker-search";
 import { githubBannerStyles } from "@/lib/social/templates/github";
 import { instagramHighlight } from "@/lib/social/templates/instagram-highlight";
 import { instagramPortrait, instagramSquare, instagramStory } from "@/lib/social/templates/instagram";
@@ -177,4 +178,24 @@ const aliases: Record<string, string> = { "github-banner": "github-classic" };
 export function getSocialTemplate(id: string): SocialTemplate | undefined {
   const target = aliases[id] ?? id;
   return socialTemplates.find((template) => template.id === target);
+}
+
+/** What a person can type to find a template: its name, its platform, its size ("1200x630"), its style and group. */
+export function socialSearchItem(template: SocialTemplate) {
+  return {
+    id: template.id,
+    label: template.label,
+    description: template.description,
+    keywords: `${template.platform} ${template.width}x${template.height} ${template.width} x ${template.height} ${template.group ?? ""} ${template.style ?? ""}`,
+  };
+}
+
+/** The ids of the templates a search matches, or null when nothing is typed (everything is shown). */
+export function matchingSocialTemplates(query: string): Set<string> | null {
+  if (!query.trim()) return null;
+  return new Set(
+    socialTemplates
+      .filter((template) => matchesQuery(socialSearchItem(template), query))
+      .map((template) => template.id),
+  );
 }

@@ -1,22 +1,36 @@
 "use client";
 
+import { useState } from "react";
+
+import { GroupedPicker, type PickerGroup } from "@/components/ui/grouped-picker";
 import { useHotkey } from "@/hooks/use-hotkeys";
-import { useRovingRadio } from "@/hooks/use-roving-radio";
 import { mockupTemplates } from "@/lib/mockups/registry";
-import { cn } from "@/lib/utils";
+import { mockupCategories } from "@/lib/mockups/types";
+import { filterGroups } from "@/lib/picker-search";
 import { useMockupStore } from "@/store/mockup-store";
 
 export function MockupPicker() {
-  const radiosRef = useRovingRadio<HTMLDivElement>();
   const template = useMockupStore((state) => state.template);
   const setTemplate = useMockupStore((state) => state.setTemplate);
-  const categories = [...new Set(mockupTemplates.map((item) => item.category))];
-  // Cycle in the order the picker shows them (grouped by category), wrapping at both ends.
-  const ordered = categories.flatMap((category) => mockupTemplates.filter((item) => item.category === category));
+  const [query, setQuery] = useState("");
+
+  const groups: PickerGroup[] = mockupCategories
+    .map((category) => ({
+      id: category,
+      label: category,
+      items: mockupTemplates
+        .filter((item) => item.category === category)
+        .map((item) => ({ id: item.id, label: item.label, description: item.description, keywords: item.category })),
+    }))
+    .filter((group) => group.items.length > 0);
+
+  // Cycle through what is shown, in the order the picker shows it, wrapping at both ends. A search narrows it;
+  // the selected template is included so cycling always starts from where the person is.
+  const shown = filterGroups(groups, query).flatMap((group) => group.items);
   const cycle = (step: number) => {
-    if (ordered.length === 0) return;
-    const index = ordered.findIndex((item) => item.id === template);
-    const next = ordered[(Math.max(index, 0) + step + ordered.length) % ordered.length];
+    if (shown.length === 0) return;
+    const index = shown.findIndex((item) => item.id === template);
+    const next = shown[(Math.max(index, 0) + step + shown.length) % shown.length];
     if (next) setTemplate(next.id);
   };
   useHotkey("]", () => cycle(1));
@@ -27,32 +41,15 @@ export function MockupPicker() {
   }
 
   return (
-    <div ref={radiosRef} className="flex flex-col gap-3">
-      {categories.map((category) => (
-        <div key={category} role="radiogroup" aria-label={category} className="flex flex-col gap-1.5">
-          <span className="text-[11px] font-medium tracking-[0.12em] text-subtle-foreground uppercase">{category}</span>
-          <div className="grid grid-cols-2 gap-1.5">
-            {mockupTemplates
-              .filter((item) => item.category === category)
-              .map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={item.id === template}
-                  title={item.description}
-                  onClick={() => setTemplate(item.id)}
-                  className={cn(
-                    "flex h-9 min-w-0 items-center truncate rounded-md border px-2.5 text-left text-sm text-muted-foreground transition-colors duration-150 hover:border-border-strong hover:text-foreground",
-                    item.id === template && "border-brand/60 bg-surface-raised text-foreground",
-                  )}
-                >
-                  {item.label}
-                </button>
-              ))}
-          </div>
-        </div>
-      ))}
-    </div>
+    <GroupedPicker
+      groups={groups}
+      value={template}
+      onChange={setTemplate}
+      query={query}
+      onQueryChange={setQuery}
+      label="Mockup template"
+      searchLabel="Find a mockup"
+      noMatch="No mockup matches that search."
+    />
   );
 }

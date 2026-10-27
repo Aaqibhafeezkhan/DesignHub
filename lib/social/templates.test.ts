@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { getTemplate, mockupTemplates } from "@/lib/mockups/registry";
+import { mockupCategories } from "@/lib/mockups/types";
 import { watchFace, watchNotification } from "@/lib/mockups/templates/smartwatch";
 import { storeCaptions, captionLines } from "@/lib/mockups/templates/app-store";
 import { landingNav } from "@/lib/mockups/templates/laptop-landing";
@@ -509,4 +510,14 @@ describe("long copy on the newer print and screen mockups", () => {
       expect(svg).toContain(`stop-color="${ctx.surface.secondary}"`);
     }
   });
+});
+
+test("every mockup is in a category the picker shows, and every category has mockups", () => {
+  for (const template of mockupTemplates) expect(mockupCategories, template.id).toContain(template.category);
+  for (const category of mockupCategories) {
+    expect(
+      mockupTemplates.some((template) => template.category === category),
+      category,
+    ).toBe(true);
+  }
 });

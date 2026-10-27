@@ -132,7 +132,7 @@ export function landingPage(ctx: MockupContext, width: number, height: number): 
 export const laptopLanding: MockupTemplate = {
   id: "laptop-landing",
   label: "Landing page",
-  category: "Screens",
+  category: "Devices",
   description: "Marketing site on a laptop.",
   render(ctx) {
     const width = 1900;

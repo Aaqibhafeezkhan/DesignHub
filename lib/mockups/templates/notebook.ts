@@ -20,7 +20,7 @@ export function notebookCopy(ctx: MockupContext): { name: string; website: strin
 export const notebook: MockupTemplate = {
   id: "notebook",
   label: "Notebook",
-  category: "Print",
+  category: "Objects",
   description: "A hardcover notebook with the logo debossed, the name on the cover and an elastic band.",
   render(ctx) {
     const { surface, mode } = ctx;

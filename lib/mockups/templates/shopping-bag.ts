@@ -74,7 +74,7 @@ function frontPrint(ctx: MockupContext, width: number, height: number): string {
 export const shoppingBag: MockupTemplate = {
   id: "shopping-bag",
   label: "Shopping bag",
-  category: "Print",
+  category: "Objects",
   description: "Paper shopping bags with rope handles, the logo on the front and the brand color on the side.",
   render(ctx) {
     const { surface, mode } = ctx;

@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import { brandSurface } from "@/lib/brand/theme";
 import { buildBrandTokens } from "@/lib/brand/tokens";
@@ -9,6 +9,7 @@ import { defaultPackTemplates, packTemplates } from "@/lib/social/pack";
 import {
   getSocialTemplate,
   isCoreTemplate,
+  matchingSocialTemplates,
   orderedSocialPlatforms,
   socialPlatformGroups,
   socialPlatforms,
@@ -152,4 +153,27 @@ test("the highlight cover shortens a long label to 12 characters", () => {
   });
   expect(svg).toContain("A very long…");
   expect(svg).not.toContain("highlight label");
+});
+
+describe("social template search", () => {
+  test("nothing typed shows everything", () => {
+    expect(matchingSocialTemplates("")).toBeNull();
+    expect(matchingSocialTemplates("   ")).toBeNull();
+  });
+
+  test("finds a template by its name, platform and size", () => {
+    expect(matchingSocialTemplates("story")?.has("instagram-story")).toBe(true);
+    expect(matchingSocialTemplates("highlight")?.has("instagram-highlight")).toBe(true);
+    const og = matchingSocialTemplates("1200x630");
+    expect(og && og.size).toBeGreaterThan(0);
+    for (const id of og ?? []) {
+      const template = getSocialTemplate(id)!;
+      expect(`${template.width}x${template.height}`).toBe("1200x630");
+    }
+    for (const id of matchingSocialTemplates("kick") ?? []) expect(getSocialTemplate(id)!.platform).toBe("Kick");
+  });
+
+  test("a search with no match is an empty set, not null", () => {
+    expect(matchingSocialTemplates("zzzzzz")?.size).toBe(0);
+  });
 });

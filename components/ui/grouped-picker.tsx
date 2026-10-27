@@ -26,6 +26,9 @@ type GroupedPickerProps = {
   label: string;
   /** Columns of items inside a group. */
   columns?: 1 | 2;
+  /** Set both to own the search text, for example to act on what is shown. Otherwise it is kept inside. */
+  query?: string;
+  onQueryChange?: (query: string) => void;
 };
 
 /**
@@ -41,10 +44,14 @@ export function GroupedPicker({
   noMatch,
   label,
   columns = 2,
+  query: controlledQuery,
+  onQueryChange,
 }: GroupedPickerProps) {
   const rovingRef = useRovingRadio<HTMLDivElement>();
   const baseId = useId();
-  const [query, setQuery] = useState("");
+  const [ownQuery, setOwnQuery] = useState("");
+  const query = controlledQuery ?? ownQuery;
+  const setQuery = onQueryChange ?? setOwnQuery;
   const [opened, setOpened] = useState<Record<string, boolean>>({});
   const searching = query.trim().length > 0;
   const shown = searching ? filterGroups(groups, query) : groups;

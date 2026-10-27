@@ -100,7 +100,7 @@ function landingMobile(ctx: MockupContext, width: number, height: number): strin
 export const tabletScreens: MockupTemplate = {
   id: "tablet",
   label: "Tablet",
-  category: "Screens",
+  category: "Devices",
   description: "Dashboard on a landscape tablet beside the mobile layout on a portrait one.",
   render(ctx) {
     const width = 2400;

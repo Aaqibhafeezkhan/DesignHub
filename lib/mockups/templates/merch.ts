@@ -7,7 +7,7 @@ const H = 1200;
 export const merch: MockupTemplate = {
   id: "merch",
   label: "Merch",
-  category: "Print",
+  category: "Objects",
   description: "A T-shirt and a tote bag with the logo printed on them.",
   render(ctx) {
     const { surface, brand } = ctx;

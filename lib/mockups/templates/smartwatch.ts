@@ -36,7 +36,7 @@ export function watchNotification(ctx: MockupContext): string {
 export const smartwatch: MockupTemplate = {
   id: "smartwatch",
   label: "Smartwatch",
-  category: "Screens",
+  category: "Devices",
   description: "A watch face with the brand mark and time, and a notification from the app.",
   render(ctx) {
     const width = 1400;

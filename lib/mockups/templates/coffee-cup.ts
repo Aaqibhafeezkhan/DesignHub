@@ -15,7 +15,7 @@ function band(cx: number, top: number, bottom: number, halfWidth: (y: number) =>
 export const coffeeCup: MockupTemplate = {
   id: "coffee-cup",
   label: "Coffee cup",
-  category: "Print",
+  category: "Objects",
   description: "A takeaway cup with the logo on its sleeve, on a table.",
   render(ctx) {
     const { surface, brand, mode } = ctx;
