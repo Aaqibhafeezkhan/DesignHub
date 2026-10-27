@@ -85,6 +85,7 @@ export function voronoiCells(
 
 /** Seeded Voronoi cells filled with the palette, outlined in the canvas color. */
 export const voronoi: BackgroundDefinition = {
+  heavy: true,
   kind: "voronoi",
   category: "maps",
   label: "Voronoi",

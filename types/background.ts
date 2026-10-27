@@ -97,6 +97,8 @@ export type BackgroundDefinition = {
   css?: (settings: BackgroundSettings) => string;
   /** Needs Paper.js (loaded lazily); renders with a built-in fallback until it's ready. */
   usesPaper?: boolean;
+  /** Does enough work to stall the page while a control moves, so the studio draws it in a worker. */
+  heavy?: boolean;
   /** Preferred starting values when the user switches to this generator. */
   defaults?: Partial<Omit<BackgroundSettings, "kind" | "seed" | "width" | "height" | "options">>;
 };
