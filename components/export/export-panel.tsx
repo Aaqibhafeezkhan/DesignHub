@@ -11,13 +11,18 @@ import { exportTiers } from "@/lib/tokens/tiers";
 import { cn } from "@/lib/utils";
 import type { ExportFormat, ExportTier } from "@/types/export";
 
+/** A format with its code, or without it when `renderCode` writes the code of the open format on demand. */
+export type ExportPanelFormat = Omit<ExportFormat, "code"> & { code?: string };
+
 type ExportPanelProps = {
-  formats: ExportFormat[];
+  formats: ExportPanelFormat[];
   label?: string;
+  /** Writes the code of one format. Called for the open format only, and again only when it or this function changes. */
+  renderCode?: (id: string) => string;
 };
 
 /** The words a search matches on: what a person would type for a format. */
-function matches(format: ExportFormat, query: string): boolean {
+function matches(format: ExportPanelFormat, query: string): boolean {
   const text = `${format.label} ${format.id} ${format.filename}`.toLowerCase();
   return query
     .toLowerCase()
@@ -26,7 +31,7 @@ function matches(format: ExportFormat, query: string): boolean {
     .every((word) => text.includes(word));
 }
 
-function FormatItem({ format }: { format: ExportFormat }) {
+function FormatItem({ format }: { format: ExportPanelFormat }) {
   const { t } = useI18n();
   return (
     <ToggleGroupItem value={format.id} title={format.deprecated}>
@@ -50,7 +55,7 @@ function TieredPicker({
   onSelect,
   label,
 }: {
-  formats: ExportFormat[];
+  formats: ExportPanelFormat[];
   active: string;
   onSelect: (id: string) => void;
   label: string;
@@ -133,10 +138,11 @@ function TieredPicker({
 }
 
 /** Format switcher + code view with one-click copy and download. */
-export function ExportPanel({ formats, label }: ExportPanelProps) {
+export function ExportPanel({ formats, label, renderCode }: ExportPanelProps) {
   const { t } = useI18n();
   const [active, setActive] = useState(formats[0]?.id ?? "");
   const format = formats.find((item) => item.id === active) ?? formats[0];
+  const code = useMemo(() => format?.code ?? renderCode?.(format?.id ?? "") ?? "", [format, renderCode]);
   if (!format) return null;
   const groupLabel = label ?? t("code.format");
 
@@ -165,7 +171,7 @@ export function ExportPanel({ formats, label }: ExportPanelProps) {
           {t("code.deprecatedNote")} {format.deprecated}
         </p>
       ) : null}
-      <CodeBlock code={format.code} filename={format.filename} />
+      <CodeBlock code={code} filename={format.filename} />
     </div>
   );
 }

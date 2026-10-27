@@ -54,7 +54,7 @@ import type { DesignTokens } from "@/types/tokens";
  * The token formats, in the Export Engine's order. Each is one module under `lib/tokens/formats/`: a
  * generator and one `defineFormat` entry. A new format is a new module and one line here.
  */
-const tokenFormatDefinitions: TokenFormatDefinition[] = [
+export const tokenFormatDefinitions: TokenFormatDefinition[] = [
   angularMaterialFormat,
   nuxtUiFormat,
   nuxtUiColorsFormat,
@@ -105,9 +105,53 @@ const tokenFormatDefinitions: TokenFormatDefinition[] = [
   figmaVariablesFormat,
 ];
 
-/** Every token format, in the Export Engine's order, each with its tier and its deprecation note when it has one. */
+/** A token format as it is listed: everything about it except its code, which is written only when it is needed. */
+export type TokenFormatInfo = Omit<ExportFormat, "code">;
+
+const withTier = <T extends Omit<ExportFormat, "code">>(format: T): T & Pick<ExportFormat, "tier" | "deprecated"> => {
+  const deprecated = deprecationOf(format.id);
+  return { ...format, tier: tierOf(format.id), ...(deprecated ? { deprecated } : {}) };
+};
+
+/** The Xcode color sets, one per semantic role: small, and the only formats whose ids depend on the tokens. */
+function xcodeFormats(tokens: DesignTokens): ExportFormat[] {
+  return toXcodeColorSets(tokens).map((set) => ({
+    id: `xcode-${set.role}`,
+    label: `Xcode color set: ${set.name}`,
+    filename: `${set.name}.colorset/Contents.json`,
+    language: "json" as const,
+    code: set.code,
+  }));
+}
+
+/**
+ * Every token format as a list, in the Export Engine's order, each with its tier and its deprecation note when
+ * it has one, and no code. Nothing is generated except the few Xcode sets, so it is cheap to rebuild on every edit.
+ */
+export function tokenFormatList(tokens: DesignTokens): TokenFormatInfo[] {
+  const info = ({ id, label, filename, language }: TokenFormatInfo): TokenFormatInfo => ({
+    id,
+    label,
+    filename,
+    language,
+  });
+  return [...tokenFormatDefinitions, ...xcodeFormats(tokens)].map(info).map(withTier);
+}
+
+/** One format with its code, written for these tokens. Only that format's generator runs. */
+export function tokenFormat(tokens: DesignTokens, id: string): ExportFormat | undefined {
+  const definition = tokenFormatDefinitions.find((item) => item.id === id);
+  if (definition) {
+    const { label, filename, language, generate } = definition;
+    return withTier({ id, label, filename, language, code: generate(tokens) });
+  }
+  const xcode = xcodeFormats(tokens).find((format) => format.id === id);
+  return xcode && withTier(xcode);
+}
+
+/** Every token format with its code, in the Export Engine's order. For the ZIP and the command line. */
 export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
-  const formats: ExportFormat[] = [
+  return [
     ...tokenFormatDefinitions.map(({ id, label, filename, language, generate }) => ({
       id,
       label,
@@ -115,18 +159,8 @@ export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
       language,
       code: generate(tokens),
     })),
-    ...toXcodeColorSets(tokens).map((set) => ({
-      id: `xcode-${set.role}`,
-      label: `Xcode color set: ${set.name}`,
-      filename: `${set.name}.colorset/Contents.json`,
-      language: "json" as const,
-      code: set.code,
-    })),
-  ];
-  return formats.map((format) => {
-    const deprecated = deprecationOf(format.id);
-    return { ...format, tier: tierOf(format.id), ...(deprecated ? { deprecated } : {}) };
-  });
+    ...xcodeFormats(tokens),
+  ].map(withTier);
 }
 
 export { flatten, variable } from "@/lib/tokens/formats/shared";
