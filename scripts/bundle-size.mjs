@@ -21,18 +21,24 @@ import path from "node:path";
 import vm from "node:vm";
 import { gzipSync } from "node:zlib";
 
+import { budgetProblems, checkBudget, parseBudget } from "./bundle-budget.mjs";
+
 function parseArgs(argv) {
-  const options = { dir: process.cwd(), json: null, base: null, threshold: 10 };
+  const options = { dir: process.cwd(), json: null, base: null, threshold: 10, budget: undefined };
   for (let index = 0; index < argv.length; index++) {
     const flag = argv[index];
     const value = argv[index + 1];
+    if (flag === "--no-budget") {
+      options.budget = null;
+      continue;
+    }
     if (flag === "--help" || flag === "-h") {
       console.log(
-        "Usage: bundle-size [--dir <project>] [--json <out.json>] [--base <base.json>] [--threshold <percent>]",
+        "Usage: bundle-size [--dir <project>] [--json <out.json>] [--base <base.json>] [--threshold <percent>] [--budget <file> | --no-budget]",
       );
       process.exit(0);
     }
-    if (!["--dir", "--json", "--base", "--threshold"].includes(flag) || value === undefined) {
+    if (!["--dir", "--json", "--base", "--threshold", "--budget"].includes(flag) || value === undefined) {
       console.error(`Unknown or incomplete option: ${flag}`);
       process.exit(2);
     }
@@ -41,6 +47,7 @@ function parseArgs(argv) {
     if (flag === "--json") options.json = path.resolve(value);
     if (flag === "--base") options.base = path.resolve(value);
     if (flag === "--threshold") options.threshold = Number(value);
+    if (flag === "--budget") options.budget = path.resolve(value);
   }
   return options;
 }
@@ -165,16 +172,40 @@ function main() {
   const base = options.base ? readJson(options.base) : null;
   const { rows, markdown } = compare(current, base, options.threshold);
   const failed = rows.filter((row) => row.status === "failed");
+  // Budgets: the file given, or bundle-budget.json in the project, unless switched off.
+  const budgetFile = options.budget === undefined ? path.join(options.dir, "bundle-budget.json") : options.budget;
+  const budgetRows =
+    budgetFile && existsSync(budgetFile)
+      ? checkBudget(current.routes, parseBudget(readFileSync(budgetFile, "utf8")))
+      : [];
+  const problems = budgetProblems(budgetRows);
+  const budgetTable = budgetRows.length
+    ? [
+        "",
+        "### Budgets",
+        "",
+        "| Route | First-load JS (gzip) | Budget | Status |",
+        "| --- | ---: | ---: | --- |",
+        ...budgetRows.map(
+          (row) =>
+            `| \`${row.route}\` | ${row.kb.toFixed(1)} kB | ${row.limit ?? "none"} kB | ${row.status === "ok" ? "ok" : "fail"} |`,
+        ),
+        "",
+        problems.length ? `**Over budget:** ${problems.join("; ")}.` : "Every route is within its budget.",
+      ].join("\n")
+    : "";
   const verdict = !base
     ? ""
     : failed.length
       ? `**${failed.length} route(s) grew by more than ${options.threshold}%:** ${failed.map((row) => `\`${row.route}\``).join(", ")}.`
       : `No route grew by more than ${options.threshold}%.`;
-  const report = ["## Bundle size", "", "First-load client JS per route.", "", markdown, "", verdict].join("\n").trim();
+  const report = ["## Bundle size", "", "First-load client JS per route.", "", markdown, "", verdict, budgetTable]
+    .join("\n")
+    .trim();
 
   console.log(report);
   if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${report}\n`);
-  if (failed.length) process.exit(1);
+  if (failed.length || problems.length) process.exit(1);
 }
 
 try {

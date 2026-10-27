@@ -35,10 +35,11 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm build
       - name: Measure the base branch
-        run: node scripts/bundle-size.mjs --dir "$RUNNER_TEMP/base" --json "$RUNNER_TEMP/bundle-size-base.json" > /dev/null
+        run: node scripts/bundle-size.mjs --dir "$RUNNER_TEMP/base" --json "$RUNNER_TEMP/bundle-size-base.json" --no-budget > /dev/null
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      # Writes the table to the job summary and fails if any route grew by more than 10%.
+      # Writes the table to the job summary and fails if any route grew by more than 10%
+      # or is over its budget in bundle-budget.json.
       - name: Compare with the base branch
         run: pnpm bundle:size --base "$RUNNER_TEMP/bundle-size-base.json" --json bundle-size.json
       - uses: actions/upload-artifact@v7

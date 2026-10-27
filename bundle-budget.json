@@ -1,0 +1,23 @@
+{
+  "unit": "kB, gzipped first-load JS",
+  "reason": "Limits sit a little above the sizes on main. Raise one only in a reviewed change, with the reason in the pull request.",
+  "routes": {
+    "/": 300,
+    "/accessibility": 450,
+    "/backgrounds": 355,
+    "/brand-dna": 350,
+    "/brand": 345,
+    "/colors": 355,
+    "/effects": 355,
+    "/export": 445,
+    "/guidelines": 420,
+    "/icons": 335,
+    "/logo": 365,
+    "/mockups": 365,
+    "/projects": 350,
+    "/social": 385,
+    "/svg": 360,
+    "/typography": 325,
+    "/_not-found": 300
+  }
+}
