@@ -3,11 +3,18 @@ import { expect, test, type Page } from "@playwright/test";
 const source = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="120" viewBox="0 0 240 120"><metadata>Comparison fixture</metadata><rect x="20.123456" y="10.123456" width="200" height="100" fill="#6366FF"/></svg>`;
 const dividerName = "Original and optimized SVG divider";
 
+/** On a phone one studio pane shows at a time; on a desktop the bar is hidden and every pane is already there. */
+async function show(page: Page, pane: "Controls" | "Preview" | "Output") {
+  const bar = page.getByRole("navigation", { name: "Studio panes" });
+  if (await bar.isVisible()) await bar.getByRole("button", { name: pane, exact: true }).click();
+}
+
 async function openComparison(page: Page) {
   await page.goto("/svg");
   await expect(page.getByRole("button", { name: /^Switch to (light|dark) theme$/ })).toBeVisible();
   await page.getByLabel("Source", { exact: true }).fill(source);
   await expect(page.getByLabel("Source", { exact: true })).toHaveValue(source);
+  await show(page, "Preview");
   await page.getByRole("switch", { name: "Compare optimized SVG", exact: true }).press("Space");
   await expect(page.getByRole("slider", { name: dividerName })).toBeVisible();
 }
@@ -81,6 +88,7 @@ for (const width of [1280, 375]) {
       await expectAligned(page);
       await page.getByRole("button", { name: "Fit to view", exact: true }).click();
       await page.setViewportSize({ width: width === 375 ? 1280 : 375, height: 812 });
+      await show(page, "Preview");
       await expectAligned(page);
       await page.getByRole("switch", { name: "Compare optimized SVG", exact: true }).press("Space");
       await expect(divider).toHaveCount(0);
@@ -95,26 +103,36 @@ test("invalid or empty input hides comparison; new input and options replace bot
   const original = page.getByRole("img", { name: "Original SVG", exact: true });
   const optimized = page.getByRole("img", { name: "Optimized SVG", exact: true });
   const prior = await optimized.getAttribute("src");
+  await show(page, "Controls");
   await page.getByRole("tab", { name: "Optimize", exact: true }).click();
   await page.getByRole("slider", { name: "Precision", exact: true }).press("Home");
+  await show(page, "Preview");
   await expect(optimized).not.toHaveAttribute("src", prior ?? "");
   await expect(original).toHaveAttribute("src", /20\.123456/);
+  await show(page, "Controls");
   await page.getByRole("switch", { name: "Remove width/height", exact: true }).click();
+  await show(page, "Preview");
   await expectAligned(page);
+  await show(page, "Controls");
   await page.getByRole("tab", { name: "Document", exact: true }).click();
   for (const invalid of ["", "not SVG", "<div>wrong root</div>"]) {
+    await show(page, "Controls");
     await input.fill(invalid);
+    await show(page, "Preview");
     await expect(page.getByRole("slider", { name: dividerName })).toHaveCount(0);
     await expect(page.getByRole("switch", { name: "Compare optimized SVG", exact: true })).toHaveCount(0);
     await expect(page.getByRole("region", { name: "Preview", exact: true }).getByRole("alert")).toBeVisible();
   }
   const replacement = source.replace("#6366FF", "#FF3366").replace("240", "320");
+  await show(page, "Controls");
   await page
     .getByLabel("SVG file", { exact: true })
     .setInputFiles({ name: "replacement.svg", mimeType: "image/svg+xml", buffer: Buffer.from(replacement) });
   await expect(original).toHaveAttribute("src", /FF3366/);
+  await show(page, "Preview");
   await expect(optimized).toHaveAttribute("src", /f36/);
   await expectAligned(page);
+  await show(page, "Controls");
   await page.getByRole("tab", { name: "Optimize", exact: true }).click();
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Download optimized SVG", exact: true }).click();
@@ -128,6 +146,7 @@ test("untrusted original and optimized SVG stay sanitized inside image data URLs
     .fill(
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" onload="document.title='unsafe-svg'"><script>document.title='unsafe-svg'</script><foreignObject><div id="unsafe-svg">unsafe</div></foreignObject><rect width="200" height="100" fill="red" onclick="alert(1)"/><a href="javascript:alert(1)"><circle r="10"/></a></svg>`,
     );
+  await show(page, "Preview");
   await expectAligned(page);
   const images = page.getByRole("region", { name: /^SVG preview/ }).locator("img");
   await expect(images).toHaveCount(2);
@@ -158,8 +177,10 @@ test("dropping a document replaces the active comparison", async ({ page }) => {
 
 test("normal preview keeps layer highlighting when comparison is turned off", async ({ page }) => {
   await openComparison(page);
+  await show(page, "Controls");
   await page.getByRole("tab", { name: "Layers", exact: true }).click();
   await page.getByRole("option", { name: "<rect>", exact: true }).click();
+  await show(page, "Preview");
   await expect(page.getByRole("img", { name: "Original SVG", exact: true })).not.toHaveAttribute("src", /dh-highlight/);
   await page.getByRole("switch", { name: "Compare optimized SVG", exact: true }).press("Space");
   await expect(page.getByRole("region", { name: "Preview", exact: true }).locator("img")).toHaveAttribute(
@@ -207,6 +228,7 @@ for (const width of [1280, 375]) {
         .fill(
           `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="120" viewBox="0 0 240 120"><rect width="240" height="120" fill="#ff0000" opacity="0.5"/></svg>`,
         );
+      await show(page, "Preview");
       await page.getByRole("radio", { name: backdrop, exact: true }).click();
       const preview = page.getByRole("region", { name: "Preview", exact: true });
 

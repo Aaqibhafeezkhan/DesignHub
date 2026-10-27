@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useLayoutEffect, type ReactNode } from "react";
+import { Layers, SlidersHorizontal, SquareCode } from "lucide-react";
+import { useCallback, useEffect, useLayoutEffect, useState, type ReactNode } from "react";
 import { useGroupRef, type Layout, type LayoutChangedMeta } from "react-resizable-panels";
 
 import { ResizableGroup, ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
-import { STUDIO_OUTPUT_ID, STUDIO_PREVIEW_ID } from "@/lib/studio-panes";
+import { STUDIO_OUTPUT_ID, STUDIO_PANE_EVENT, STUDIO_PREVIEW_ID, type StudioPane } from "@/lib/studio-panes";
 import { paneRestoreScript, paneRestoreStyleId, readPaneLayout, writePaneLayout } from "@/lib/pane-layout";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +19,15 @@ type StudioLayoutProps = {
   className?: string;
 };
 
+/** Below `lg` only the open pane shows, and the bar at the bottom switches between them. */
+const hiddenOnPhone = (open: StudioPane, pane: StudioPane) => (open === pane ? undefined : "max-lg:hidden");
+
+const paneTabs: { pane: StudioPane; label: string; icon: typeof Layers }[] = [
+  { pane: "controls", label: "Controls", icon: SlidersHorizontal },
+  { pane: "preview", label: "Preview", icon: Layers },
+  { pane: "output", label: "Output", icon: SquareCode },
+];
+
 const panelClass = "flex h-full min-h-0 flex-col gap-4 overflow-y-auto scrollbar-thin lg:px-1 lg:pb-1";
 
 /** Tailwind's `lg`, where the panes sit side by side and can be resized. */
@@ -25,12 +35,13 @@ const RESIZABLE_FROM = "64rem";
 
 /**
  * Three-pane studio layout: controls · live preview · code & exports (or two panes without `output`).
- * Resizable (mouse, touch and arrow keys) from `lg` up; stacked on smaller screens.
+ * Resizable (mouse, touch and arrow keys) from `lg` up; on a phone one pane at a time, with a bar to switch.
  * Sizes are remembered per studio in localStorage, and a double click on a divider resets it.
  * react-resizable-panels sets its sizing inline, so both layouts override it with `!important`.
  */
 export function StudioLayout({ id, controls, preview, output, className }: StudioLayoutProps) {
   const groupRef = useGroupRef();
+  const [open, setOpen] = useState<StudioPane>("controls");
   const panelIds = output ? [`${id}-controls`, `${id}-preview`, `${id}-output`] : [`${id}-controls`, `${id}-preview`];
   const panelKey = panelIds.join(",");
 
@@ -42,6 +53,17 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
     const frame = requestAnimationFrame(() => document.getElementById(paneRestoreStyleId(id))?.remove());
     return () => cancelAnimationFrame(frame);
   }, [id, panelKey, groupRef]);
+
+  // The skip links ask for a pane that a phone may be hiding.
+  useEffect(() => {
+    const show = (event: Event) => {
+      if (event instanceof CustomEvent && (event.detail === "preview" || event.detail === "output")) {
+        setOpen(event.detail);
+      }
+    };
+    window.addEventListener(STUDIO_PANE_EVENT, show);
+    return () => window.removeEventListener(STUDIO_PANE_EVENT, show);
+  }, []);
 
   // Pointer drags and keyboard resizes count as user interaction; mount and window resizes don't.
   const save = useCallback(
@@ -74,18 +96,28 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
         orientation="horizontal"
         className={cn(
           "lg:h-[calc(100dvh-13rem)]! lg:min-h-[560px]",
-          "max-lg:h-auto! max-lg:flex-col! max-lg:gap-6 max-lg:overflow-visible!",
+          "max-lg:h-auto! max-lg:flex-col! max-lg:gap-6 max-lg:overflow-visible! max-lg:pb-16",
           "max-lg:[&>[data-panel]]:basis-auto! max-lg:[&>[data-panel]]:grow-0! max-lg:[&>[data-separator]]:hidden!",
           className,
         )}
       >
-        <ResizablePanel id={panelIds[0]} defaultSize="24%" minSize="220px" className={panelClass}>
+        <ResizablePanel
+          id={panelIds[0]}
+          defaultSize="24%"
+          minSize="220px"
+          className={cn(panelClass, hiddenOnPhone(open, "controls"))}
+        >
           <section aria-label="Controls" className="flex flex-col gap-4">
             {controls}
           </section>
         </ResizablePanel>
         <ResizableHandle aria-label="Resize controls panel" onDoubleClick={saveAfterReset} />
-        <ResizablePanel id={panelIds[1]} defaultSize={output ? "46%" : "76%"} minSize="320px" className={panelClass}>
+        <ResizablePanel
+          id={panelIds[1]}
+          defaultSize={output ? "46%" : "76%"}
+          minSize="320px"
+          className={cn(panelClass, hiddenOnPhone(open, "preview"))}
+        >
           <section
             id={STUDIO_PREVIEW_ID}
             tabIndex={-1}
@@ -98,7 +130,12 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
         {output ? (
           <>
             <ResizableHandle aria-label="Resize code panel" onDoubleClick={saveAfterReset} />
-            <ResizablePanel id={panelIds[2]} defaultSize="30%" minSize="260px" className={panelClass}>
+            <ResizablePanel
+              id={panelIds[2]}
+              defaultSize="30%"
+              minSize="260px"
+              className={cn(panelClass, hiddenOnPhone(open, "output"))}
+            >
               <section
                 id={STUDIO_OUTPUT_ID}
                 tabIndex={-1}
@@ -111,6 +148,28 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
           </>
         ) : null}
       </ResizableGroup>
+      <nav
+        aria-label="Studio panes"
+        className="fixed inset-x-0 bottom-0 z-40 flex border-t bg-background/95 backdrop-blur lg:hidden"
+      >
+        {paneTabs
+          .filter((tab) => output || tab.pane !== "output")
+          .map(({ pane, label, icon: Icon }) => (
+            <button
+              key={pane}
+              type="button"
+              aria-pressed={open === pane}
+              onClick={() => setOpen(pane)}
+              className={cn(
+                "flex min-h-14 flex-1 flex-col items-center justify-center gap-1 text-xs font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-inset",
+                open === pane ? "text-foreground" : "text-muted-foreground",
+              )}
+            >
+              <Icon className="size-4" aria-hidden />
+              {label}
+            </button>
+          ))}
+      </nav>
     </>
   );
 }
