@@ -49,6 +49,9 @@ export function FontInspector() {
 
   return (
     <Panel
+      collapsible
+      id="typography-inspector"
+      defaultOpen={false}
       title="Font inspector"
       description="Inspect a local font file with OpenType.js. It never leaves your device."
     >

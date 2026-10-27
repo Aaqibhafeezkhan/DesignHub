@@ -51,6 +51,9 @@ export function TextSpacingPanel() {
 
   return (
     <Panel
+      collapsible
+      id="a11y-text-spacing"
+      defaultOpen={false}
       title="Text spacing (1.4.12)"
       description={`Applies line height ${TEXT_SPACING.lineHeight}, paragraph spacing ${TEXT_SPACING.paragraphSpacing}x, letter spacing ${TEXT_SPACING.letterSpacing}em and word spacing ${TEXT_SPACING.wordSpacing}em to the preview, never lower than your own values.`}
     >

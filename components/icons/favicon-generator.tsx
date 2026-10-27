@@ -68,6 +68,9 @@ export function FaviconGenerator() {
   return (
     <div className="flex flex-col gap-6">
       <Panel
+        collapsible
+        id="icons-favicon"
+        defaultOpen={false}
         title="Preview"
         description="Tip: give the icon a background shape in Edit for a favicon that works on any tab color."
       >

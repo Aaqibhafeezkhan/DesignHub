@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
 export function MotionResults({ section }: { section: MotionSection }) {
   return (
     <Panel
+      collapsible
+      id="a11y-motion"
       title="Motion"
       description="Reads the CSS each Effects Lab effect exports. Anything that animates or moves needs a prefers-reduced-motion rule."
     >
