@@ -12,7 +12,10 @@ This guide builds a small template end to end, then points at the real ones to c
 | `lib/mockups/templates/*.ts`       | One file per template. Each exports a `MockupTemplate`.                                      |
 | `lib/mockups/kit.ts`               | Drawing helpers: `mockupDoc`, `text`, `logo`, `wrap`, `truncate`, `desk`, `rotate`, `lines`. |
 | `lib/mockups/templates/devices.ts` | Device frames (`phone`, `tablet`, `laptop`, `monitor`, `watch`) and the `studio` backdrop.   |
-| `lib/mockups/registry.ts`          | `mockupTemplates`, the list that fills the picker, in order.                                 |
+| `lib/mockups/all.ts`               | `allMockupTemplates`, every template with its drawing code, in picker order.                 |
+| `lib/mockups/loaders.ts`           | One loader per template: the studio fetches a template's code when it is chosen.             |
+| `lib/mockups/template-info.json`   | The light list (id, label, category) the picker reads. Written by a test, see below.         |
+| `lib/mockups/registry.ts`          | `mockupTemplates` (the light list) and `loadMockupTemplate`.                                 |
 | `lib/social/templates.test.ts`     | The generic tests every registered mockup gets, and the place for tests of one template.     |
 
 ## What a template is
@@ -96,16 +99,26 @@ Three things to notice:
 
 ## Register it
 
-In `lib/mockups/registry.ts`, import the template and add it to `mockupTemplates`. Its position in the array is its position in the picker, grouped by `category`:
+A template is registered in three places, because the studio lists templates without loading their code and loads one when it is chosen.
+
+1. In `lib/mockups/all.ts`, import the template and add it to `allMockupTemplates`. Its position in the array is its position in the picker, grouped by `category`:
 
 ```ts
 import { nameBadge } from "@/lib/mockups/templates/name-badge";
 
-export const mockupTemplates: MockupTemplate[] = [
+export const allMockupTemplates: MockupTemplate[] = [
   // ...the existing templates
   nameBadge,
 ];
 ```
+
+2. In `lib/mockups/loaders.ts`, add a loader (the lines are in id order):
+
+```ts
+  "name-badge": from(() => import("@/lib/mockups/templates/name-badge"), (module) => module.nameBadge),
+```
+
+3. Run `pnpm vitest run lib/mockups -u`. It writes `lib/mockups/template-info.json` (everything but the drawing code), which is the list the picker reads. Without `-u` the same test fails when the list, the loaders and the templates disagree, so a missing step shows up at once. Read the new lines in the diff like any other change.
 
 That is all the wiring. The picker, the live preview, PNG, WebP and PDF export and the studio's theme switch all read the registry.
 
@@ -138,7 +151,7 @@ describe("name badge", () => {
 
 1. Create `lib/mockups/templates/<name>.ts` and export a `MockupTemplate`. Read colors, fonts, radius and the logo from the context.
 2. Draw text with `text()` and every logo with `logo()` and a unique id. Shorten user copy with `truncate()` or `wrap()`.
-3. Register it in `lib/mockups/registry.ts`.
+3. Register it: `lib/mockups/all.ts`, `lib/mockups/loaders.ts`, then `pnpm vitest run lib/mockups -u`.
 4. Add a test for what is specific to it (see above).
 5. Run `pnpm dev`, open the Mockup Studio, and check the template in light and dark, with a long brand name and with an uploaded non-square logo. Export PNG, WebP and PDF.
 6. Add a line under `Unreleased` in `CHANGELOG.md`.

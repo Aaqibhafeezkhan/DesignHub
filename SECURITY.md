@@ -6,6 +6,8 @@ Even so, we take security seriously. Relevant issues include cross-site scriptin
 
 Uploaded SVG is sanitized (scripts, `foreignObject`, event handlers and `javascript:` URLs removed) and only ever rendered through `<img>`, never injected into the page. Imported project files are validated and their logos sanitized again. That includes files opened through the installed app's file handler and share target: they are read on the device (the service worker keeps a shared file in a local cache, never uploads it), size-limited, validated and sanitized exactly like a normal import, and nothing is added without confirmation.
 
+The offline cache (a service worker) keeps only files from DesignHub's own origin, Google Fonts and the Iconify hosts above, on the device, and the heavy background generators run in a worker the page starts from its own code; neither one sends your work anywhere. Reports about either one, for example a file from another origin reaching the cache, are in scope.
+
 Reports about the AI provider's key handling (for example the key reaching storage, logs, exports or any host other than the provider) are in scope.
 
 ## Supported versions

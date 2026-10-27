@@ -30,7 +30,8 @@ A typical design session bounces between a font site, a palette generator, a con
 - **One source of truth** - change a color or font once and every logo variant, mockup, social asset, guideline page and token file updates.
 - **Local first** - brands, projects, palettes and settings persist in IndexedDB.
 - **No login, no backend** - there is no server to send your work to.
-- **Offline first** - color, type scale and export tools work without a connection; icons you have opened are cached for offline use.
+- **Offline first** - a studio you have opened once with a connection works without one; icons you have opened are cached for offline use.
+- **Calm by default** - a short home page, a short command palette, folded groups and panels, and a Simple mode that shows the common controls first (Advanced shows the rest).
 - **Keyboard first** - `⌘K` for everything, `G` + letter to jump, `Space` to shuffle.
 - **Production ready** - exports drop straight into CSS, SCSS, Tailwind (v3 and v4), React and Vue, plus PNG, PDF and ZIP asset packs.
 - **Dark & light** - tuned themes that follow your system preference.
@@ -278,7 +279,7 @@ It imports the same generators the app uses, so the files match what the Export 
 
 ### PWA and offline development
 
-Production builds register a service worker that precaches the prerendered routes and Next.js static assets. Google Fonts and Iconify responses are cached at runtime, so a studio that has been visited online can be reopened while offline.
+Production builds register a service worker that installs only the app shell (about 0.6 MB gzipped) and keeps each studio, its page and its files, the first time you open it online. Google Fonts and Iconify responses are cached at runtime, so a studio that has been visited online can be reopened while offline. A studio you never opened online says so when you are offline.
 
 Installed in Chromium, the app also registers as a handler for `.designhub.json` files (double click one to open the import prompt) and as a share target for project files. The icon menu also jumps straight to Colors, Typography, Brand Projects and the Export Engine. Both file features are handled on the device, validate and sanitize the file like a normal import, and ask before adding anything. If install, file open, share target or a stale offline cache misbehaves, see [The installed app](docs/troubleshooting.md#the-installed-app).
 
@@ -307,18 +308,20 @@ cp .env.example .env.local
 
 ### Scripts
 
-| Command              | Description                                 |
-| -------------------- | ------------------------------------------- |
-| `pnpm dev`           | Start the development server                |
-| `pnpm build`         | Create a production build                   |
-| `pnpm start`         | Serve the production build                  |
-| `pnpm lint`          | Run ESLint                                  |
-| `pnpm typecheck`     | Run the TypeScript compiler in strict mode  |
-| `pnpm test`          | Run the unit tests (Vitest)                 |
-| `pnpm format`        | Format with Prettier                        |
-| `pnpm format:check`  | Check formatting (used in CI)               |
-| `pnpm fonts:catalog` | Regenerate the bundled Google Fonts catalog |
-| `pnpm check:dashes`  | Fail if any file contains an em dash        |
+| Command              | Description                                            |
+| -------------------- | ------------------------------------------------------ |
+| `pnpm dev`           | Start the development server                           |
+| `pnpm build`         | Create a production build                              |
+| `pnpm start`         | Serve the production build                             |
+| `pnpm lint`          | Run ESLint                                             |
+| `pnpm typecheck`     | Run the TypeScript compiler in strict mode             |
+| `pnpm test`          | Run the unit tests (Vitest)                            |
+| `pnpm format`        | Format with Prettier                                   |
+| `pnpm format:check`  | Check formatting (used in CI)                          |
+| `pnpm fonts:catalog` | Regenerate the bundled Google Fonts catalog            |
+| `pnpm check:dashes`  | Fail if any file contains an em dash                   |
+| `pnpm check:unused`  | Fail on unused files, exports or dependencies          |
+| `pnpm bundle:size`   | Report each route's first-load JS and check its budget |
 
 DesignHub builds to fully static pages, so you can deploy it to any static or Node host (Vercel, Netlify, Cloudflare Pages, a VPS).
 

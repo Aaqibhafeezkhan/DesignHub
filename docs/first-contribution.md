@@ -195,7 +195,7 @@ These workflows in `.github/workflows/` run on your pull request:
 | `typecheck.yml`   | `pnpm typecheck`                                                                                                      | TypeScript reports an error                                                                   |
 | `lint.yml`        | `pnpm lint` and `pnpm format:check`                                                                                   | ESLint reports an error, or a file isn't formatted with Prettier                              |
 | `em-dash.yml`     | `node scripts/check-em-dash.mjs`                                                                                      | Any file contains an em dash                                                                  |
-| `bundle-size.yml` | Builds your branch and its base, then compares each route's first-load JS ([details](../CONTRIBUTING.md#bundle-size)) | A route grows by more than 10% gzipped                                                        |
+| `bundle-size.yml` | Builds your branch and its base, then compares each route's first-load JS ([details](../CONTRIBUTING.md#bundle-size)) | A route grows by more than 10% gzipped, or is over its limit in `bundle-budget.json`          |
 | `lighthouse.yml`  | Builds the app and runs Lighthouse CI on the home page and four studios ([details](../CONTRIBUTING.md#lighthouse))    | Accessibility, best practices or SEO score below 100 (performance below 90 is only a warning) |
 | `welcome.yml`     | Posts a welcome comment on your first issue or pull request                                                           | Never; it doesn't check out or run your code                                                  |
 

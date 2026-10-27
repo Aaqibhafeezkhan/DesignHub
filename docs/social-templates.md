@@ -12,7 +12,10 @@ Social templates follow the rules for [mockup templates](mockup-templates.md) an
 | `lib/social/templates/*.ts`      | One file per template. Each exports a `SocialTemplate`.                                                 |
 | `lib/social/templates/shared.ts` | Backdrops, `heading`, `lockup`, `pill` and `share`.                                                     |
 | `lib/mockups/kit.ts`             | Drawing helpers shared with mockups: `mockupDoc`, `text`, `logo`, `wrap`, `truncate`, `onPrimaryLarge`. |
-| `lib/social/registry.ts`         | `socialTemplates` (the list that fills the picker, in order) and `socialPlatforms`.                     |
+| `lib/social/all.ts`              | `allSocialTemplates`, every template with its drawing code, in picker order.                            |
+| `lib/social/loaders.ts`          | One loader per template: the studio fetches a template's code when it is chosen.                        |
+| `lib/social/template-info.json`  | The light list (id, platform, size, safe area) the picker reads. Written by a test, see below.          |
+| `lib/social/registry.ts`         | `socialTemplates` (the light list), `socialPlatforms`, the platform groups and `loadSocialTemplate`.    |
 | `lib/social/registry.test.ts`    | The ids and sizes every template must keep.                                                             |
 | `lib/social/templates.test.ts`   | The generic tests every registered template gets, and the place for tests of one template.              |
 
@@ -148,16 +151,26 @@ What to notice:
 
 ### 3. Register it
 
-In `lib/social/registry.ts`, import the template, add it to `socialTemplates`, add the platform to `socialPlatforms`, and give the platform a group in `socialPlatformGroups` (`core` for the main platforms, shown first and in the default ZIP; `more` for the rest, under "More platforms"). The record is exhaustive, so a new platform will not type-check without one:
+The studio lists templates without loading their code and loads one when it is chosen, so a template is registered in three places.
+
+1. In `lib/social/all.ts`, import the template and add it to `allSocialTemplates` (its position is its place in the picker).
+2. In `lib/social/loaders.ts`, add a loader (the lines are in id order).
+3. Run `pnpm vitest run lib/social -u`. It writes `lib/social/template-info.json`, the light list the picker reads. Without `-u` the same test fails when the list, the loaders and the templates disagree. Read the new lines in the diff.
 
 ```ts
 import { notionCover } from "@/lib/social/templates/notion";
 
-export const socialTemplates: SocialTemplate[] = [
+export const allSocialTemplates: SocialTemplate[] = [
   // ...the existing templates
   notionCover,
 ];
 ```
+
+```ts
+  "notion-cover": from(() => import("@/lib/social/templates/notion"), (module) => module.notionCover),
+```
+
+In `lib/social/registry.ts`, add the platform to `socialPlatforms`, and give it a group in `socialPlatformGroups` (`core` for the main platforms, shown first and in the default ZIP; `more` for the rest, under "More platforms"). The record is exhaustive, so a new platform will not type-check without one:
 
 ```ts
 export const socialPlatforms: SocialPlatform[] = [
@@ -211,7 +224,7 @@ describe.each(["notion-cover", "medium-banner"])("%s with very short and very lo
 1. Add the platform to `SocialPlatform` in `lib/social/types.ts` if it is new.
 2. Create `lib/social/templates/<name>.ts` and export a `SocialTemplate` with the exact size, a `safe` rect and any `covered` zones.
 3. Read colors, fonts and the logo from the context, draw the background through `backdrop()`, and shorten user copy with `heading()`, `wrap()` or `truncate()`.
-4. Register the template and the platform in `lib/social/registry.ts`, and add its id and size to `lib/social/registry.test.ts`.
+4. Register the template (`lib/social/all.ts`, `lib/social/loaders.ts`, then `pnpm vitest run lib/social -u`) and the platform (`lib/social/registry.ts`), and add its id and size to `lib/social/registry.test.ts`.
 5. Run `pnpm dev`, open the Social Media Studio, and check the template in light and dark, with a long brand name and headline, and with an uploaded non-square logo. Export PNG, WebP and the ZIP.
 6. Add a line under `Unreleased` in `CHANGELOG.md`, and the platform to the list in `README.md`.
 7. Run `pnpm typecheck && pnpm test && pnpm lint && pnpm format:check && pnpm check:dashes && pnpm build`.

@@ -8,9 +8,9 @@ See the [storage guide](storage.md) for exactly what is stored and where.
 
 ## Does DesignHub work offline?
 
-Most features work offline after the app and its resources have been loaded and cached. Icon search through Iconify and Google Fonts previews require an internet connection.
+A studio works offline once you have opened it online on that device: the first time a studio is shown, DesignHub keeps its page and files. A studio you never opened online says so when you are offline, and works after you open it once with a connection. Icon search through Iconify and Google Fonts previews require an internet connection.
 
-On the hosted site, the offline app shell and cached resources help DesignHub keep working without a connection.
+On the hosted site, a small app shell is installed at once and each studio is added as you open it.
 
 See the [README](../README.md) for more information about privacy and external services.
 
