@@ -910,4 +910,11 @@ export const hi = {
   "effects.category.images": "इमेज",
   "effects.picker.search": "इफ़ेक्ट खोजें",
   "effects.picker.noMatch": "इस खोज से कोई इफ़ेक्ट मेल नहीं खाता।",
+  "mode.label": "दिखने वाले कंट्रोल",
+  "mode.simple": "सरल",
+  "mode.advanced": "एडवांस्ड",
+  "mode.simpleHint": "आम कंट्रोल। छिपे कंट्रोल अपनी वैल्यू बनाए रखते हैं।",
+  "mode.advancedHint": "सभी कंट्रोल।",
+  "command.modeSimple": "आम कंट्रोल दिखाएँ (सरल मोड)",
+  "command.modeAdvanced": "सभी कंट्रोल दिखाएँ (एडवांस्ड मोड)",
 } satisfies Catalog;

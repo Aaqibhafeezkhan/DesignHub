@@ -69,7 +69,7 @@ export function ShadesStudio() {
         </section>
       </div>
 
-      <Panel title={t("colors.shades.options")}>
+      <Panel advanced title={t("colors.shades.options")}>
         <div className="flex flex-col gap-2">
           <Label>{t("colors.shades.baseColor")}</Label>
           <div

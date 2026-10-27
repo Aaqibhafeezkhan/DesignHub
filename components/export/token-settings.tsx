@@ -2,6 +2,7 @@
 
 import { RotateCcw } from "lucide-react";
 
+import { Advanced } from "@/components/ui/advanced";
 import { Button } from "@/components/ui/button";
 import { SliderField } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -71,36 +72,38 @@ export function TokenSettingsPanel() {
           ))}
         </ToggleGroup>
       </div>
-      <SliderField
-        label="Spacing base"
-        value={settings.spacingBase}
-        min={2}
-        max={12}
-        onChange={(spacingBase) => update({ spacingBase })}
-        format={(value) => `${value}px`}
-      />
-      <SliderField
-        label="Radius base"
-        value={settings.radiusBase}
-        min={0}
-        max={24}
-        onChange={(radiusBase) => update({ radiusBase })}
-        format={(value) => `${value}px`}
-      />
-      <fieldset className="flex flex-col gap-2 border-t pt-4">
-        <legend className="pb-2 text-xs font-medium text-muted-foreground">Include</legend>
-        {(Object.keys(sectionLabels) as (keyof TokenSections)[]).map((section) => (
-          <div key={section} className="flex items-center justify-between">
-            <Label htmlFor={`section-${section}`}>{sectionLabels[section]}</Label>
-            <Switch
-              id={`section-${section}`}
-              checked={settings.sections[section] ?? true}
-              onCheckedChange={() => toggleSection(section)}
-              disabled={section === "shades" && !settings.sections.colors}
-            />
-          </div>
-        ))}
-      </fieldset>
+      <Advanced>
+        <SliderField
+          label="Spacing base"
+          value={settings.spacingBase}
+          min={2}
+          max={12}
+          onChange={(spacingBase) => update({ spacingBase })}
+          format={(value) => `${value}px`}
+        />
+        <SliderField
+          label="Radius base"
+          value={settings.radiusBase}
+          min={0}
+          max={24}
+          onChange={(radiusBase) => update({ radiusBase })}
+          format={(value) => `${value}px`}
+        />
+        <fieldset className="flex flex-col gap-2 border-t pt-4">
+          <legend className="pb-2 text-xs font-medium text-muted-foreground">Include</legend>
+          {(Object.keys(sectionLabels) as (keyof TokenSections)[]).map((section) => (
+            <div key={section} className="flex items-center justify-between">
+              <Label htmlFor={`section-${section}`}>{sectionLabels[section]}</Label>
+              <Switch
+                id={`section-${section}`}
+                checked={settings.sections[section] ?? true}
+                onCheckedChange={() => toggleSection(section)}
+                disabled={section === "shades" && !settings.sections.colors}
+              />
+            </div>
+          ))}
+        </fieldset>
+      </Advanced>
     </Panel>
   );
 }

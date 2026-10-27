@@ -47,6 +47,7 @@ export function VariablePlayground() {
 
   return (
     <Panel
+      advanced
       collapsible
       id="typography-variable"
       title="Variable axes"

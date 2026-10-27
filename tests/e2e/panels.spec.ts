@@ -4,7 +4,8 @@ test("a panel folds with the keyboard, hides its controls, and stays folded afte
   await page.goto("/typography");
   await expect(page.locator("h1").first()).toBeVisible();
 
-  // The advanced OpenType panel starts folded; its controls are not rendered.
+  // The OpenType panel is an Advanced one: switch to Advanced, where it starts folded and renders nothing.
+  await page.getByRole("radio", { name: "Advanced" }).click();
   const toggle = page.getByRole("button", { name: "OpenType features" });
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
 

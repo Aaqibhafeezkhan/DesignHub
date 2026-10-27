@@ -49,6 +49,7 @@ export function FontInspector() {
 
   return (
     <Panel
+      advanced
       collapsible
       id="typography-inspector"
       defaultOpen={false}

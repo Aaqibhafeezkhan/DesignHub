@@ -938,4 +938,11 @@ export const fr = {
   "effects.category.images": "Images",
   "effects.picker.search": "Rechercher un effet",
   "effects.picker.noMatch": "Aucun effet ne correspond à cette recherche.",
+  "mode.label": "Commandes affichées",
+  "mode.simple": "Simple",
+  "mode.advanced": "Avancé",
+  "mode.simpleHint": "Les commandes courantes. Les commandes masquées gardent leurs valeurs.",
+  "mode.advancedHint": "Toutes les commandes.",
+  "command.modeSimple": "Afficher les commandes courantes (mode simple)",
+  "command.modeAdvanced": "Afficher toutes les commandes (mode avancé)",
 } satisfies Catalog;

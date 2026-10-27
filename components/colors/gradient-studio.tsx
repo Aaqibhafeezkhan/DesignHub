@@ -145,7 +145,7 @@ export function GradientStudio() {
             </Button>
           </div>
         </Panel>
-        <Panel title={t("colors.gradient.stops")} description={t("colors.gradient.stopsLimit", { max: 8 })}>
+        <Panel advanced title={t("colors.gradient.stops")} description={t("colors.gradient.stopsLimit", { max: 8 })}>
           <GradientStopList
             gradient={gradient}
             selectedId={selectedStop}

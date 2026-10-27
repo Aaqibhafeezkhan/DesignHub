@@ -920,4 +920,11 @@ export const en = {
   "effects.category.images": "Images",
   "effects.picker.search": "Find an effect",
   "effects.picker.noMatch": "No effect matches that search.",
+  "mode.label": "Controls shown",
+  "mode.simple": "Simple",
+  "mode.advanced": "Advanced",
+  "mode.simpleHint": "The common controls. Hidden controls keep their values.",
+  "mode.advancedHint": "Every control.",
+  "command.modeSimple": "Show the common controls (Simple mode)",
+  "command.modeAdvanced": "Show every control (Advanced mode)",
 } as const;

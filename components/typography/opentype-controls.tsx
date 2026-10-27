@@ -15,6 +15,7 @@ export function OpenTypeControls() {
 
   return (
     <Panel
+      advanced
       collapsible
       id="typography-opentype"
       defaultOpen={false}

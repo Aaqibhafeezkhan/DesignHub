@@ -3,6 +3,7 @@
 import { ChevronDown } from "lucide-react";
 import * as React from "react";
 
+import { useIsAdvanced } from "@/components/ui/advanced";
 import { isPanelOpen } from "@/lib/panel-state";
 import { cn } from "@/lib/utils";
 import { usePanelStore } from "@/store/panel-store";
@@ -15,6 +16,8 @@ type PanelProps = React.ComponentProps<"section"> & {
   collapsible?: boolean;
   /** Open until the person chooses otherwise. Advanced panels start folded. */
   defaultOpen?: boolean;
+  /** Only Advanced mode shows the panel. Hiding it never changes a value. */
+  advanced?: boolean;
 };
 
 /** A titled surface used to group controls inside a studio workspace. */
@@ -26,8 +29,10 @@ function Panel({
   children,
   collapsible = false,
   defaultOpen = true,
+  advanced = false,
   ...props
 }: PanelProps) {
+  const isAdvanced = useIsAdvanced();
   const headingId = React.useId();
   const bodyId = React.useId();
   const panelId = props.id;
@@ -35,6 +40,7 @@ function Panel({
   const chosen = usePanelStore((state) => (panelId ? state.open[panelId] : undefined));
   const setOpen = usePanelStore((state) => state.setOpen);
   const open = isPanelOpen(foldable, chosen, defaultOpen);
+  if (advanced && !isAdvanced) return null;
 
   const heading = foldable ? (
     <h2 id={headingId} className="text-sm font-medium">

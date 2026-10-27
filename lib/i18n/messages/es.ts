@@ -928,4 +928,11 @@ export const es = {
   "effects.category.images": "Imágenes",
   "effects.picker.search": "Buscar un efecto",
   "effects.picker.noMatch": "Ningún efecto coincide con esa búsqueda.",
+  "mode.label": "Controles visibles",
+  "mode.simple": "Simple",
+  "mode.advanced": "Avanzado",
+  "mode.simpleHint": "Los controles habituales. Los ocultos conservan sus valores.",
+  "mode.advancedHint": "Todos los controles.",
+  "command.modeSimple": "Mostrar los controles habituales (modo simple)",
+  "command.modeAdvanced": "Mostrar todos los controles (modo avanzado)",
 } satisfies Catalog;

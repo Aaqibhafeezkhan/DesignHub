@@ -24,6 +24,7 @@ export function ClampGenerator() {
 
   return (
     <Panel
+      advanced
       collapsible
       id="typography-clamp"
       defaultOpen={false}

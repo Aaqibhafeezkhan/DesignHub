@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { BookOpen, Home, Keyboard, Moon, Plus, Sun, Trash2 } from "lucide-react";
+import { BookOpen, Home, Keyboard, Moon, Plus, SlidersHorizontal, Sun, Trash2 } from "lucide-react";
 import { useRef, type ReactNode } from "react";
 
 import { FontCommands } from "@/components/layout/font-commands";
@@ -27,6 +27,7 @@ import { useHotkey } from "@/hooks/use-hotkeys";
 import { studios } from "@/lib/navigation";
 import { siteConfig } from "@/lib/site";
 import type { RecentCommandId } from "@/lib/command-recents";
+import { useModeStore } from "@/store/mode-store";
 import { useCommandRecentsStore } from "@/store/command-recents-store";
 import { useUiStore } from "@/store/ui-store";
 
@@ -52,6 +53,8 @@ export function CommandPalette({ children }: { children?: ReactNode }) {
   const recent = useCommandRecentsStore((state) => state.recent);
   const remember = useCommandRecentsStore((state) => state.remember);
   const clearRecent = useCommandRecentsStore((state) => state.clear);
+  const mode = useModeStore((state) => state.mode);
+  const setMode = useModeStore((state) => state.setMode);
   const requestNewProject = useUiStore((state) => state.requestNewProject);
   // With nothing typed the palette is short: recent choices, the studios and three actions. The rest
   // (brand actions, languages, fonts, icons, links) appears as the person types.
@@ -174,6 +177,13 @@ export function CommandPalette({ children }: { children?: ReactNode }) {
                   <Kbd>⌥</Kbd>
                   <Kbd>T</Kbd>
                 </CommandShortcut>
+              </CommandItem>
+              <CommandItem
+                value={`simple advanced mode controls ${t("mode.simple")} ${t("mode.advanced")}`}
+                onSelect={() => run(() => setMode(mode === "advanced" ? "simple" : "advanced"))}
+              >
+                <SlidersHorizontal />
+                {t(mode === "advanced" ? "command.modeSimple" : "command.modeAdvanced")}
               </CommandItem>
               <CommandItem
                 value={`keyboard shortcuts help ${t("command.shortcuts")}`}

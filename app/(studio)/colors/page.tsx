@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { ColorWorkspace } from "@/components/colors/color-workspace";
 import { Message } from "@/components/layout/message";
 import { Workspace } from "@/components/layout/workspace";
+import { ModeSwitch } from "@/components/layout/mode-switch";
 import { PageHeader } from "@/components/ui/page-header";
 import { getStudio } from "@/lib/navigation";
 
@@ -17,6 +18,7 @@ export default function ColorsPage() {
         eyebrow={<Message id="studio.eyebrow" />}
         title={<Message id="studio.colors.title" />}
         description={<Message id="studio.colors.description" />}
+        actions={<ModeSwitch />}
       />
       <ColorWorkspace />
     </Workspace>
