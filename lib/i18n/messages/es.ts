@@ -919,4 +919,6 @@ export const es = {
   "code.noMatch": "Ningún formato coincide con esa búsqueda.",
   "error.file.newer":
     "Este archivo lo guardó una versión más reciente de DesignHub (versión de archivo {version}). Actualiza la aplicación e inténtalo de nuevo.",
+  "command.group.recent": "Recientes",
+  "command.clearRecent": "Borrar elecciones recientes",
 } satisfies Catalog;

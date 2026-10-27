@@ -911,4 +911,6 @@ export const en = {
   "code.noMatch": "No format matches that search.",
   "error.file.newer":
     "This file was saved by a newer version of DesignHub (file version {version}). Update the app, then try again.",
+  "command.group.recent": "Recent",
+  "command.clearRecent": "Clear recent choices",
 } as const;

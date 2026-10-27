@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { BookOpen, Home, Keyboard, Moon, Sun } from "lucide-react";
+import { BookOpen, Home, Keyboard, Moon, Plus, Sun, Trash2 } from "lucide-react";
 import { useRef, type ReactNode } from "react";
 
 import { FontCommands } from "@/components/layout/font-commands";
@@ -26,6 +26,8 @@ import { Kbd } from "@/components/ui/kbd";
 import { useHotkey } from "@/hooks/use-hotkeys";
 import { studios } from "@/lib/navigation";
 import { siteConfig } from "@/lib/site";
+import type { RecentCommandId } from "@/lib/command-recents";
+import { useCommandRecentsStore } from "@/store/command-recents-store";
 import { useUiStore } from "@/store/ui-store";
 
 // Brand actions read projects and brand stores; load them only when the palette opens.
@@ -47,9 +49,39 @@ export function CommandPalette({ children }: { children?: ReactNode }) {
   useHotkey("mod+k", () => setOpen(!open), { allowInInputs: true });
   useHotkey("/", () => setOpen(true));
 
-  function run(action: () => void) {
+  const recent = useCommandRecentsStore((state) => state.recent);
+  const remember = useCommandRecentsStore((state) => state.remember);
+  const clearRecent = useCommandRecentsStore((state) => state.clear);
+  const requestNewProject = useUiStore((state) => state.requestNewProject);
+  // With nothing typed the palette is short: recent choices, the studios and three actions. The rest
+  // (brand actions, languages, fonts, icons, links) appears as the person types.
+  const typed = query.trim().length > 0;
+
+  function run(action: () => void, id?: RecentCommandId) {
     setOpen(false);
+    if (id) remember(id);
     action();
+  }
+
+  const newProject = () => {
+    requestNewProject();
+    router.push("/projects");
+  };
+  /** What a recent id stands for: its label, icon and what it does. */
+  function recentEntry(id: RecentCommandId) {
+    if (id.startsWith("studio:")) {
+      const studio = studios.find((item) => item.id === id.slice(7));
+      if (!studio) return null;
+      const Icon = studio.icon;
+      return { label: t(`studio.${studio.id}.title`), icon: <Icon />, go: () => router.push(studio.href) };
+    }
+    if (id === "action:theme") {
+      return { label: t(isDark ? "theme.toLight" : "theme.toDark"), icon: isDark ? <Sun /> : <Moon />, go: toggle };
+    }
+    if (id === "action:shortcuts") {
+      return { label: t("command.shortcuts"), icon: <Keyboard />, go: () => setShortcutsOpen(true) };
+    }
+    return { label: t("command.newProject"), icon: <Plus />, go: newProject };
   }
 
   return (
@@ -72,10 +104,28 @@ export function CommandPalette({ children }: { children?: ReactNode }) {
           <CommandInput ref={inputRef} value={query} onValueChange={setQuery} placeholder={t("command.placeholder")} />
           <CommandList>
             <CommandEmpty>{t("command.empty", { query })}</CommandEmpty>
-            {open ? <LanguageCommands query={query} onDone={() => setOpen(false)} /> : null}
+            {!typed && recent.length > 0 ? (
+              <CommandGroup heading={t("command.group.recent")}>
+                {recent.map((id) => {
+                  const entry = recentEntry(id);
+                  if (!entry) return null;
+                  return (
+                    <CommandItem key={id} value={`recent ${id} ${entry.label}`} onSelect={() => run(entry.go, id)}>
+                      {entry.icon}
+                      {entry.label}
+                    </CommandItem>
+                  );
+                })}
+                <CommandItem value="recent clear forget" onSelect={() => clearRecent()}>
+                  <Trash2 />
+                  {t("command.clearRecent")}
+                </CommandItem>
+              </CommandGroup>
+            ) : null}
+            {typed && open ? <LanguageCommands query={query} onDone={() => setOpen(false)} /> : null}
             {children}
-            {open ? <FontCommands query={query} onDone={() => setOpen(false)} /> : null}
-            {open ? <BrandCommands onDone={() => setOpen(false)} /> : null}
+            {typed && open ? <FontCommands query={query} onDone={() => setOpen(false)} /> : null}
+            {typed && open ? <BrandCommands onDone={() => setOpen(false)} /> : null}
             <CommandGroup heading={t("command.group.studios")}>
               <CommandItem value={`home start ${t("nav.home")}`} onSelect={() => run(() => router.push("/"))}>
                 <Home />
@@ -91,7 +141,7 @@ export function CommandPalette({ children }: { children?: ReactNode }) {
                   <CommandItem
                     key={studio.id}
                     value={`${studio.title} ${t(`studio.${studio.id}.title`)} ${studio.description}`}
-                    onSelect={() => run(() => router.push(studio.href))}
+                    onSelect={() => run(() => router.push(studio.href), `studio:${studio.id}`)}
                   >
                     <Icon />
                     {t(`studio.${studio.id}.title`)}
@@ -105,7 +155,19 @@ export function CommandPalette({ children }: { children?: ReactNode }) {
             </CommandGroup>
             <CommandSeparator />
             <CommandGroup heading={t("command.group.actions")}>
-              <CommandItem value={`toggle theme dark light mode ${t("theme.toggle")}`} onSelect={() => run(toggle)}>
+              {!typed ? (
+                <CommandItem
+                  value={`new brand project ${t("command.newProject")}`}
+                  onSelect={() => run(newProject, "action:newProject")}
+                >
+                  <Plus />
+                  {t("command.newProject")}
+                </CommandItem>
+              ) : null}
+              <CommandItem
+                value={`toggle theme dark light mode ${t("theme.toggle")}`}
+                onSelect={() => run(toggle, "action:theme")}
+              >
                 {isDark ? <Sun /> : <Moon />}
                 {t(isDark ? "theme.toLight" : "theme.toDark")}
                 <CommandShortcut>
@@ -115,7 +177,7 @@ export function CommandPalette({ children }: { children?: ReactNode }) {
               </CommandItem>
               <CommandItem
                 value={`keyboard shortcuts help ${t("command.shortcuts")}`}
-                onSelect={() => run(() => setShortcutsOpen(true))}
+                onSelect={() => run(() => setShortcutsOpen(true), "action:shortcuts")}
               >
                 <Keyboard />
                 {t("command.shortcuts")}
@@ -123,24 +185,28 @@ export function CommandPalette({ children }: { children?: ReactNode }) {
                   <Kbd>?</Kbd>
                 </CommandShortcut>
               </CommandItem>
-              <CommandItem
-                value={`github source code star ${t("command.github")}`}
-                onSelect={() => run(() => window.open(siteConfig.github, "_blank"))}
-              >
-                <GithubIcon />
-                {t("command.github")}
-              </CommandItem>
-              <CommandItem
-                value={`roadmap future plans ${t("nav.roadmap")}`}
-                onSelect={() => run(() => window.open(`${siteConfig.github}/blob/main/ROADMAP.md`, "_blank"))}
-              >
-                <BookOpen />
-                {t("nav.roadmap")}
-              </CommandItem>
+              {typed ? (
+                <>
+                  <CommandItem
+                    value={`github source code star ${t("command.github")}`}
+                    onSelect={() => run(() => window.open(siteConfig.github, "_blank"))}
+                  >
+                    <GithubIcon />
+                    {t("command.github")}
+                  </CommandItem>
+                  <CommandItem
+                    value={`roadmap future plans ${t("nav.roadmap")}`}
+                    onSelect={() => run(() => window.open(`${siteConfig.github}/blob/main/ROADMAP.md`, "_blank"))}
+                  >
+                    <BookOpen />
+                    {t("nav.roadmap")}
+                  </CommandItem>
+                </>
+              ) : null}
             </CommandGroup>
             {/* Last on purpose: its value always contains the whole query, and cmdk keeps groups in
                 source order, so anywhere earlier it would be picked over real matches. */}
-            {open ? <IconCommands query={query} onDone={() => setOpen(false)} /> : null}
+            {typed && open ? <IconCommands query={query} onDone={() => setOpen(false)} /> : null}
           </CommandList>
           <footer className="flex h-10 items-center gap-4 border-t px-4 text-[11px] text-subtle-foreground">
             <span className="flex items-center gap-1">

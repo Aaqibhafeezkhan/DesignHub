@@ -901,4 +901,6 @@ export const hi = {
   "code.noMatch": "इस खोज से कोई फ़ॉर्मैट मेल नहीं खाता।",
   "error.file.newer":
     "यह फ़ाइल DesignHub के नए वर्शन ने सेव की है (फ़ाइल वर्शन {version})। ऐप अपडेट करें और फिर कोशिश करें।",
+  "command.group.recent": "हाल के",
+  "command.clearRecent": "हाल के चुनाव हटाएँ",
 } satisfies Catalog;

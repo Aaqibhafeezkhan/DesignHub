@@ -929,4 +929,6 @@ export const fr = {
   "code.noMatch": "Aucun format ne correspond à cette recherche.",
   "error.file.newer":
     "Ce fichier a été enregistré par une version plus récente de DesignHub (version de fichier {version}). Mettez l'application à jour, puis réessayez.",
+  "command.group.recent": "Récents",
+  "command.clearRecent": "Effacer les choix récents",
 } satisfies Catalog;
