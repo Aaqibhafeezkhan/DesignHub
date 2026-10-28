@@ -1,11 +1,12 @@
 import { describe, expect, test, vi } from "vitest";
 
+import type * as ColorModule from "@/lib/color/color";
 import { apcaContrast, fromHex } from "@/lib/color/color";
 import { apcaLevel, matrixCell } from "@/lib/color/matrix";
 
 // Pass through to the real implementation, but let a test pin an exact Lc for one call.
 vi.mock("@/lib/color/color", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/color/color")>();
+  const actual = await importOriginal<typeof ColorModule>();
   return { ...actual, apcaContrast: vi.fn(actual.apcaContrast) };
 });
 

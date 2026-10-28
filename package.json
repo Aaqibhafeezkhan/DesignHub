@@ -9,7 +9,7 @@
     "build": "next build",
     "postbuild": "node scripts/generate-service-worker.mjs",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",

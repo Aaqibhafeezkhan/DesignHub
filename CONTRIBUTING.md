@@ -34,7 +34,7 @@ The app runs at [http://localhost:3000](http://localhost:3000). There is no back
 | `pnpm dev`           | Start the dev server with hot reload                                                |
 | `pnpm build`         | Production build (must pass before merging)                                         |
 | `pnpm start`         | Serve the production build locally                                                  |
-| `pnpm lint`          | ESLint (Next.js + TypeScript rules)                                                 |
+| `pnpm lint`          | ESLint (Next.js + TypeScript rules); any warning fails it, like an error            |
 | `pnpm typecheck`     | `tsc --noEmit` in strict mode                                                       |
 | `pnpm test`          | Unit tests with Vitest (`lib/**` and `packages/*/src/**`)                           |
 | `pnpm test:e2e`      | Playwright tests against the production build: routes, flows, axe (see below)       |
