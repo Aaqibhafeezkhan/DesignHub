@@ -23,7 +23,14 @@ export function ClampGenerator() {
   const value = fluidClamp(inputs.minSize, inputs.maxSize, inputs.minViewport, inputs.maxViewport);
 
   return (
-    <Panel title="clamp() generator" description="Fluid values for anything: type, spacing, radii.">
+    <Panel
+      advanced
+      collapsible
+      id="typography-clamp"
+      defaultOpen={false}
+      title="clamp() generator"
+      description="Fluid values for anything: type, spacing, radii."
+    >
       <div className="grid grid-cols-2 gap-3">
         {fields.map((field) => (
           <div key={field.key} className="flex flex-col gap-2">

@@ -23,12 +23,20 @@ export type DrawContext = {
 
 export type MockupContext = DrawContext & { content: MockupContent };
 
-export type MockupCategory = "Print" | "Screens";
+/** Print stationery, objects with the brand on them, devices that show it, and screens and documents. */
+export type MockupCategory = "Print" | "Objects" | "Devices" | "Screens";
 
-export type MockupTemplate = {
+/** The categories in picker order. */
+export const mockupCategories: readonly MockupCategory[] = ["Print", "Objects", "Devices", "Screens"];
+
+/** A template as the picker lists it: everything about it except its drawing code, which loads when it is chosen. */
+export type MockupTemplateInfo = {
   id: string;
   label: string;
   category: MockupCategory;
   description: string;
+};
+
+export type MockupTemplate = MockupTemplateInfo & {
   render: (ctx: MockupContext) => string;
 };

@@ -7,10 +7,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useI18n } from "@/components/layout/locale-provider";
 import { CommandGroup, CommandItem } from "@/components/ui/command";
 import { useSelectFont } from "@/hooks/use-select-font";
-import { fontCategoryLabels, loadFontCatalog } from "@/lib/typography/catalog";
+import { fontCategoryLabels, loadFontIndex, type FontSummary } from "@/lib/typography/catalog";
 import { defaultFontFilters, filterFonts } from "@/lib/typography/filter";
 import { useTypographyStore } from "@/store/typography-store";
-import type { FontFamily } from "@/types/typography";
 
 const MAX_RESULTS = 6;
 
@@ -20,10 +19,10 @@ export function FontCommands({ query, onDone }: { query: string; onDone: () => v
   const { t } = useI18n();
   const selectFont = useSelectFont();
   const setTab = useTypographyStore((state) => state.setTab);
-  const [fonts, setFonts] = useState<FontFamily[]>([]);
+  const [fonts, setFonts] = useState<FontSummary[]>([]);
 
   useEffect(() => {
-    loadFontCatalog().then(setFonts);
+    loadFontIndex().then(setFonts);
   }, []);
 
   const results = useMemo(

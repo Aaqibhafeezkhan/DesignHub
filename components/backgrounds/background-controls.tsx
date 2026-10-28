@@ -4,6 +4,7 @@ import { Dices, RotateCcw } from "lucide-react";
 
 import { ColorList } from "@/components/backgrounds/color-list";
 import { GeneratorPicker } from "@/components/backgrounds/generator-picker";
+import { Advanced } from "@/components/ui/advanced";
 import { Button } from "@/components/ui/button";
 import { SliderField } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -59,14 +60,16 @@ export function BackgroundControls() {
         <div className="flex flex-col gap-2">
           <Label htmlFor="bg-seed">Seed</Label>
           <div className="flex flex-wrap gap-2">
-            <Input
-              id="bg-seed"
-              type="number"
-              min={1}
-              value={settings.seed}
-              onChange={(event) => update({ seed: Math.max(1, Number(event.target.value) || 1) })}
-              className="min-w-20 flex-1 font-mono tabular-nums"
-            />
+            <Advanced>
+              <Input
+                id="bg-seed"
+                type="number"
+                min={1}
+                value={settings.seed}
+                onChange={(event) => update({ seed: Math.max(1, Number(event.target.value) || 1) })}
+                className="min-w-20 flex-1 font-mono tabular-nums"
+              />
+            </Advanced>
             <Button variant="outline" onClick={randomize} className="shrink-0" title="Randomize · Space">
               <Dices /> Randomize
             </Button>
@@ -131,14 +134,16 @@ export function BackgroundControls() {
           onChange={(scale) => update({ scale })}
           format={(value) => `${value.toFixed(2)}×`}
         />
-        <SliderField
-          label="Rotation"
-          value={settings.rotation}
-          min={0}
-          max={360}
-          onChange={(rotation) => update({ rotation })}
-          format={(value) => `${value}°`}
-        />
+        <Advanced>
+          <SliderField
+            label="Rotation"
+            value={settings.rotation}
+            min={0}
+            max={360}
+            onChange={(rotation) => update({ rotation })}
+            format={(value) => `${value}°`}
+          />
+        </Advanced>
         <div className="flex flex-col gap-2">
           <Label>Canvas</Label>
           <Select

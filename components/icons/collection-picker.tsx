@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import type { IconCollection } from "@/types/icons";
 
 /** Well-maintained sets surfaced as quick chips. Labels are static so the row never reflows on load. */
-export const popularCollections: { prefix: string; label: string }[] = [
+const popularCollections: { prefix: string; label: string }[] = [
   { prefix: "lucide", label: "Lucide" },
   { prefix: "tabler", label: "Tabler" },
   { prefix: "ph", label: "Phosphor" },

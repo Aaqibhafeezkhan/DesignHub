@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { memo, useDeferredValue, useMemo } from "react";
 
 import { SvgPreviewCanvas } from "@/components/canvas/svg-preview-canvas";
 import { StudioLayout } from "@/components/layout/studio-layout";
@@ -8,18 +8,26 @@ import { SocialContentPanel } from "@/components/social/social-content-panel";
 import { SocialExportPanel } from "@/components/social/social-export-panel";
 import { SocialPicker } from "@/components/social/social-picker";
 import { Panel } from "@/components/ui/panel";
+import { useLoadedTemplate } from "@/hooks/use-loaded-template";
 import { useSocialContext } from "@/hooks/use-social-context";
 import { withSafeArea } from "@/lib/social/overlay";
-import { getSocialTemplate, socialTemplates } from "@/lib/social/registry";
+import { getSocialTemplate, loadSocialTemplate, socialTemplates } from "@/lib/social/registry";
 import { useSocialStore } from "@/store/social-store";
+
+/** The picker takes no props, so it stays out of the redraws that follow every keystroke. */
+const Templates = memo(SocialPicker);
 
 /** Templates on the left; preview, then content, then export on the right. */
 export function SocialWorkspace() {
   const ctx = useSocialContext();
   const templateId = useSocialStore((state) => state.template);
   const safeArea = useSocialStore((state) => state.safeArea);
-  const template = getSocialTemplate(templateId) ?? socialTemplates[0];
-  const svg = useMemo(() => (template ? template.render(ctx) : ""), [template, ctx]);
+  const wanted = getSocialTemplate(templateId) ?? socialTemplates[0];
+  // The drawing code loads when a template is chosen; the last drawing stays until it arrives.
+  const template = useLoadedTemplate(wanted?.id, loadSocialTemplate);
+  // The inputs answer at once; the preview redraws a frame behind them and skips the keystrokes in between.
+  const drawn = useDeferredValue(ctx);
+  const svg = useMemo(() => (template ? template.render(drawn) : ""), [template, drawn]);
   const preview = useMemo(() => (template && safeArea ? withSafeArea(svg, template) : svg), [svg, template, safeArea]);
   const label = template ? `${template.platform} ${template.label}` : "Social asset";
 
@@ -28,7 +36,7 @@ export function SocialWorkspace() {
       id="social-v2"
       controls={
         <Panel title="Template">
-          <SocialPicker />
+          <Templates />
         </Panel>
       }
       preview={
@@ -37,8 +45,11 @@ export function SocialWorkspace() {
             {preview ? (
               <SvgPreviewCanvas svg={preview} label={label} defaultBackdrop="checker" minHeight={180} />
             ) : (
-              <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed text-sm text-muted-foreground">
-                Pick a template.
+              <div
+                className="flex flex-1 items-center justify-center rounded-lg border border-dashed text-sm text-muted-foreground"
+                aria-busy={Boolean(wanted)}
+              >
+                {wanted ? "Loading the template…" : "Pick a template."}
               </div>
             )}
           </div>

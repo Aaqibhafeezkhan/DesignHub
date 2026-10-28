@@ -1,6 +1,6 @@
 import { makeAbsolute, parseSVG } from "svg-path-parser";
 
-export type PathCommandSummary = { code: string; label: string; values: string };
+type PathCommandSummary = { code: string; label: string; values: string };
 
 export type PathReport = {
   commands: PathCommandSummary[];

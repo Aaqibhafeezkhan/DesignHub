@@ -5,7 +5,7 @@ import type { BackgroundVariantDefinition, BackgroundSettings } from "@/types/ba
 /** Hard cap so a huge canvas cannot emit hundreds of paths. */
 export const maxConcentricArcs = 48;
 
-export type ConcentricArc = { radius: number; color: string };
+type ConcentricArc = { radius: number; color: string };
 
 export type ConcentricArcLayout = {
   cx: number;

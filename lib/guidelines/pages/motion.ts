@@ -15,7 +15,7 @@ import type { GuidelinePage } from "@/lib/guidelines/types";
 import { text } from "@/lib/mockups/kit";
 
 /** The base duration every other duration is derived from, in ms. */
-export const MOTION_BASE = 250;
+const MOTION_BASE = 250;
 
 export type MotionDurations = { fast: number; base: number; slow: number };
 

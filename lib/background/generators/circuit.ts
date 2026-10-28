@@ -89,6 +89,7 @@ function corners(nodes: GridNode[]): GridNode[] {
 /** Seeded circuit-board traces with 45 degree turns, each ending in a round pad. */
 export const circuit: BackgroundDefinition = {
   kind: "circuit",
+  category: "maps",
   label: "Circuit",
   description: "Circuit-board traces with 45 degree turns, ending in pads.",
   defaults: { density: 50, scale: 1 },

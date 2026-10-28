@@ -18,6 +18,7 @@ export function shade(hex: string): Faces {
 
 export const isometric: BackgroundDefinition = {
   kind: "isometric",
+  category: "shapes",
   label: "Isometric",
   description: "Shaded isometric cubes with seeded gaps.",
   defaults: { density: 45, scale: 1 },

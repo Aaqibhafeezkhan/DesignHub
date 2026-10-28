@@ -27,6 +27,8 @@ jobs:
       - run: pnpm test
       - run: pnpm lint
       - run: pnpm format:check
+      # Unused files, exports and dependencies (knip.json lists the few exceptions, each with a reason in the docs).
+      - run: pnpm check:unused
       - run: pnpm build
       - run: pnpm --filter designhub build
       - name: Smoke test the built CLI

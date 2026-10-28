@@ -23,7 +23,7 @@ export type HierarchyLevel = {
 };
 
 /** Comfortable measure for body copy (characters per line). */
-export const MEASURE = { min: 45, ideal: 66, max: 75 };
+const MEASURE = { min: 45, ideal: 66, max: 75 };
 /** WCAG 1.4.12 asks paragraphs to survive 1.5; the guide never recommends less. */
 export const BODY_MIN_LINE_HEIGHT = 1.5;
 

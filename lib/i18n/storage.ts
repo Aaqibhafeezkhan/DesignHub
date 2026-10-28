@@ -1,7 +1,7 @@
 import { isLocale, LOCALE_STORAGE_KEY, resolveLocale, type Locale } from "@/lib/i18n/locales";
 
 /** The viewer's saved choice, or null. Reads defensively: blocked site data throws on access. */
-export function readStoredLocale(): Locale | null {
+function readStoredLocale(): Locale | null {
   try {
     const value = window.localStorage.getItem(LOCALE_STORAGE_KEY);
     return isLocale(value) ? value : null;

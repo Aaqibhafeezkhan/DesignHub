@@ -1,6 +1,6 @@
 import { en } from "@/lib/i18n/messages/en";
 
-export type Messages = typeof en;
+type Messages = typeof en;
 export type MessageKey = keyof Messages;
 
 /** A translation: any subset of the English keys. Missing keys fall back to English. */
@@ -18,12 +18,12 @@ export type TranslateArgs<K extends MessageKey> = Params<Placeholders<Messages[K
 export type PlainMessageKey = { [K in MessageKey]: TranslateArgs<K> extends [] ? K : never }[MessageKey];
 
 /** The base of every plural message, for which both `<base>.one` and `<base>.other` exist. */
-export type PluralKey = {
+type PluralKey = {
   [K in MessageKey]: K extends `${infer Base}.other` ? (`${Base}.one` extends MessageKey ? Base : never) : never;
 }[MessageKey];
 
 /** Extra arguments for `plural(base, count, ...)`: the placeholders other than `{count}`. */
-export type PluralArgs<B extends PluralKey> = Params<Exclude<Placeholders<Messages[`${B}.other`]>, "count">>;
+type PluralArgs<B extends PluralKey> = Params<Exclude<Placeholders<Messages[`${B}.other`]>, "count">>;
 
 export type Translate = <K extends MessageKey>(key: K, ...args: TranslateArgs<K>) => string;
 export type TranslatePlural = <B extends PluralKey>(base: B, count: number, ...args: PluralArgs<B>) => string;
@@ -36,7 +36,7 @@ export function format(template: string, params?: Record<string, string | number
 }
 
 /** Looks a key up in a catalog, falling back to English when the catalog leaves it out. */
-export function lookup(catalog: Catalog, key: MessageKey): string {
+function lookup(catalog: Catalog, key: MessageKey): string {
   return catalog[key] ?? en[key];
 }
 

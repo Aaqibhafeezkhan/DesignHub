@@ -2,7 +2,7 @@ import { BAD, caption, checkIcon, CONTENT_TOP, GOOD, guidelinePage, MARGIN, para
 import type { GuidelineContext, GuidelinePage } from "@/lib/guidelines/types";
 import { text } from "@/lib/mockups/kit";
 
-export type IllustrationCorner = "sharp" | "soft" | "round";
+type IllustrationCorner = "sharp" | "soft" | "round";
 
 export type IllustrationStyle = {
   corner: IllustrationCorner;

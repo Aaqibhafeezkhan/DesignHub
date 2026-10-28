@@ -5,14 +5,13 @@ import { useMemo } from "react";
 
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { defaultFontFilters, filterFonts } from "@/lib/typography/filter";
-import { fontCategoryLabels } from "@/lib/typography/catalog";
+import { fontCategoryLabels, type FontSummary } from "@/lib/typography/catalog";
 import { cn } from "@/lib/utils";
-import type { FontFamily } from "@/types/typography";
 
 type FontPickerListProps = {
   label: string;
   value: string;
-  fonts: FontFamily[];
+  fonts: FontSummary[];
   query: string;
   onQueryChange: (query: string) => void;
   onSelect: (family: string) => void;

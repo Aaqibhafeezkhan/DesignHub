@@ -9,7 +9,7 @@ import { defineFormat } from "@/lib/tokens/formats/define";
  * the Compose export), spacing and radius as numbers, font families and a type scale typed as
  * `TextStyle`, plus a `useTheme()` hook that follows the device color scheme.
  */
-export function toReactNativeTheme(tokens: DesignTokens): string {
+function toReactNativeTheme(tokens: DesignTokens): string {
   const round = (value: number) => Math.round(value * 100) / 100;
   const rows = (entries: [string, string | number][], indent = "  ") =>
     entries.map(([key, value]) => `${indent}${objectKey(key)}: ${JSON.stringify(value)},`).join("\n");

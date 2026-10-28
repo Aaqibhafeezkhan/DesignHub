@@ -8,6 +8,7 @@ const shapes: Shape[] = ["rect", "rect", "circle", "triangle", "squiggle"];
 /** Scattered, rotated little shapes in the palette colors. */
 export const confetti: BackgroundDefinition = {
   kind: "confetti",
+  category: "shapes",
   label: "Confetti",
   description: "Scattered celebratory shapes.",
   defaults: { density: 40, scale: 1 },

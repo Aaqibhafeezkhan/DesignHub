@@ -105,9 +105,53 @@ export const tokenFormatDefinitions: TokenFormatDefinition[] = [
   figmaVariablesFormat,
 ];
 
-/** Every token format, in the Export Engine's order, each with its tier and its deprecation note when it has one. */
+/** A token format as it is listed: everything about it except its code, which is written only when it is needed. */
+export type TokenFormatInfo = Omit<ExportFormat, "code">;
+
+const withTier = <T extends Omit<ExportFormat, "code">>(format: T): T & Pick<ExportFormat, "tier" | "deprecated"> => {
+  const deprecated = deprecationOf(format.id);
+  return { ...format, tier: tierOf(format.id), ...(deprecated ? { deprecated } : {}) };
+};
+
+/** The Xcode color sets, one per semantic role: small, and the only formats whose ids depend on the tokens. */
+function xcodeFormats(tokens: DesignTokens): ExportFormat[] {
+  return toXcodeColorSets(tokens).map((set) => ({
+    id: `xcode-${set.role}`,
+    label: `Xcode color set: ${set.name}`,
+    filename: `${set.name}.colorset/Contents.json`,
+    language: "json" as const,
+    code: set.code,
+  }));
+}
+
+/**
+ * Every token format as a list, in the Export Engine's order, each with its tier and its deprecation note when
+ * it has one, and no code. Nothing is generated except the few Xcode sets, so it is cheap to rebuild on every edit.
+ */
+export function tokenFormatList(tokens: DesignTokens): TokenFormatInfo[] {
+  const info = ({ id, label, filename, language }: TokenFormatInfo): TokenFormatInfo => ({
+    id,
+    label,
+    filename,
+    language,
+  });
+  return [...tokenFormatDefinitions, ...xcodeFormats(tokens)].map(info).map(withTier);
+}
+
+/** One format with its code, written for these tokens. Only that format's generator runs. */
+export function tokenFormat(tokens: DesignTokens, id: string): ExportFormat | undefined {
+  const definition = tokenFormatDefinitions.find((item) => item.id === id);
+  if (definition) {
+    const { label, filename, language, generate } = definition;
+    return withTier({ id, label, filename, language, code: generate(tokens) });
+  }
+  const xcode = xcodeFormats(tokens).find((format) => format.id === id);
+  return xcode && withTier(xcode);
+}
+
+/** Every token format with its code, in the Export Engine's order. For the ZIP and the command line. */
 export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
-  const formats: ExportFormat[] = [
+  return [
     ...tokenFormatDefinitions.map(({ id, label, filename, language, generate }) => ({
       id,
       label,
@@ -115,25 +159,14 @@ export function tokenFormats(tokens: DesignTokens): ExportFormat[] {
       language,
       code: generate(tokens),
     })),
-    ...toXcodeColorSets(tokens).map((set) => ({
-      id: `xcode-${set.role}`,
-      label: `Xcode color set: ${set.name}`,
-      filename: `${set.name}.colorset/Contents.json`,
-      language: "json" as const,
-      code: set.code,
-    })),
-  ];
-  return formats.map((format) => {
-    const deprecated = deprecationOf(format.id);
-    return { ...format, tier: tierOf(format.id), ...(deprecated ? { deprecated } : {}) };
-  });
+    ...xcodeFormats(tokens),
+  ].map(withTier);
 }
 
-export { flatten, paletteHexes, variable } from "@/lib/tokens/formats/shared";
+export { flatten, variable } from "@/lib/tokens/formats/shared";
 export type { FlatToken } from "@/lib/tokens/formats/shared";
 export { toAndroidColors } from "@/lib/tokens/formats/android";
 export { toAndroidTheme } from "@/lib/tokens/formats/android-theme";
-export { toAngularMaterialTheme } from "@/lib/tokens/formats/angular-material";
 export { toAntTheme } from "@/lib/tokens/formats/antd";
 export { toBootstrapVariables } from "@/lib/tokens/formats/bootstrap";
 export { toChakraTheme } from "@/lib/tokens/formats/chakra";
@@ -145,27 +178,20 @@ export type { FigmaVariablesRequest } from "@/lib/tokens/formats/figma-variables
 export { toGtkCss } from "@/lib/tokens/formats/gtk";
 export { toJsModule } from "@/lib/tokens/formats/js";
 export { toJsonTokens } from "@/lib/tokens/formats/json";
-export { toLess } from "@/lib/tokens/formats/less";
 export { toMantineTheme } from "@/lib/tokens/formats/mantine";
 export { toMaterialTheme } from "@/lib/tokens/formats/mui";
 export { toNuxtUiColorsCss } from "@/lib/tokens/formats/nuxt-ui-colors";
 export { toNuxtUiConfig } from "@/lib/tokens/formats/nuxt-ui";
 export { toPandaPreset } from "@/lib/tokens/formats/panda";
 export { toRadixThemeCss } from "@/lib/tokens/formats/radix-themes";
-export { toReactNativeTheme } from "@/lib/tokens/formats/react-native";
-export { toReactTheme } from "@/lib/tokens/formats/react";
 export { toSassMap } from "@/lib/tokens/formats/sass-map";
 export { toScss } from "@/lib/tokens/formats/scss";
 export { toShadcnTheme } from "@/lib/tokens/formats/shadcn";
-export { toStyleDictionaryConfig, toStyleDictionaryTokens } from "@/lib/tokens/formats/style-dictionary";
 export { toStyledTheme } from "@/lib/tokens/formats/styled";
 export { toStylus } from "@/lib/tokens/formats/stylus";
-export { toTailwindConfig } from "@/lib/tokens/formats/tailwind-config";
-export { toTailwindV4 } from "@/lib/tokens/formats/tailwind-v4";
 export { toTamaguiConfig } from "@/lib/tokens/formats/tamagui";
 export { toUnityUss } from "@/lib/tokens/formats/uss";
 export { toUnoConfig } from "@/lib/tokens/formats/unocss";
-export { toVueTheme } from "@/lib/tokens/formats/vue";
 export { toVuetifyTheme } from "@/lib/tokens/formats/vuetify";
 export { toXcodeColorSets } from "@/lib/tokens/formats/xcode";
 export { toYaml, yamlString } from "@/lib/tokens/formats/yaml";

@@ -3,8 +3,7 @@
  * Terminal, VS Code, Tokens Studio for Figma and the .NET ones). Each one lives in its own module under
  * `lib/tokens/formats/`; this file keeps the old import path working.
  */
-export { materialSlots, roleColor } from "@/lib/tokens/formats/shared-native";
-export type { MaterialSlot, RoleColor } from "@/lib/tokens/formats/shared-native";
+export { roleColor } from "@/lib/tokens/formats/shared-native";
 export { toComposeTheme } from "@/lib/tokens/formats/compose";
 export { toFlutterTheme } from "@/lib/tokens/formats/flutter";
 export { toGodotTheme } from "@/lib/tokens/formats/godot";

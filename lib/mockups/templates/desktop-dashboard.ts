@@ -123,7 +123,7 @@ export function dashboard(ctx: MockupContext, width: number, height: number): st
 export const desktopDashboard: MockupTemplate = {
   id: "desktop-dashboard",
   label: "Dashboard",
-  category: "Screens",
+  category: "Devices",
   description: "Analytics dashboard on a desktop display.",
   render(ctx) {
     const width = 2000;

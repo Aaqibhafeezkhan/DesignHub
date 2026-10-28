@@ -3,6 +3,7 @@ import { describe, expect, test } from "vitest";
 import { effectsBundle } from "@/lib/effects/bundle";
 import { effectStylesheet, reactStyle, scssMixin, tailwindClasses, tailwindUtility } from "@/lib/effects/css";
 import { effectDefaults } from "@/lib/effects/defaults";
+import { effectCategories } from "@/lib/effects/define";
 import { effectDefinitions, generateEffect } from "@/lib/effects/registry";
 
 /** Every registered effect, so new effects are covered without touching this file. */
@@ -46,4 +47,14 @@ test("effect kinds are unique", () => {
 
 test("the bundle has no undefined or NaN", () => {
   expect(effectsBundle(effectDefaults)).not.toMatch(/undefined|NaN/);
+});
+
+test("every effect has a category the picker shows, and every category has effects", () => {
+  for (const definition of effectDefinitions) expect(effectCategories, definition.kind).toContain(definition.category);
+  for (const category of effectCategories) {
+    expect(
+      effectDefinitions.some((definition) => definition.category === category),
+      category,
+    ).toBe(true);
+  }
 });

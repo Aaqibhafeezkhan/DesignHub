@@ -1,0 +1,26 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/*.mjs", "tests/e2e/*.spec.ts", "lib/**/*.test.ts"],
+      "project": [
+        "app/**/*.{ts,tsx}",
+        "components/**/*.{ts,tsx}",
+        "hooks/**/*.ts",
+        "lib/**/*.ts",
+        "store/**/*.ts",
+        "types/**/*.ts"
+      ],
+      "ignore": ["components/ui/**"],
+      "ignoreDependencies": ["tw-animate-css", "tailwindcss", "eslint-config-next"]
+    },
+    "packages/cli": {
+      "entry": ["src/bin.ts", "src/**/*.test.ts"],
+      "project": ["src/**/*.ts"]
+    }
+  },
+  "ignoreIssues": {
+    "components/ui/**": ["exports", "types"]
+  },
+  "ignoreExportsUsedInFile": true
+}

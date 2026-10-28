@@ -4,6 +4,7 @@ import { px } from "@/lib/effects/css";
 /** A skewed marker band behind selectable text, including inline text spanning wrapped lines. */
 export const highlighter = defineEffect({
   kind: "highlighter",
+  category: "text",
   label: "Highlighter",
   description: "A marker-style band behind text with adjustable thickness, offset and contrast.",
   generate(s) {

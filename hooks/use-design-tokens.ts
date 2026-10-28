@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { useFontCatalog } from "@/hooks/use-font-catalog";
+import { useFontMeta } from "@/hooks/use-font-catalog";
 import { effectTokens } from "@/lib/effects/bundle";
 import { buildTokens } from "@/lib/tokens/build";
 import { useBrandStore } from "@/store/brand-store";
@@ -25,7 +25,8 @@ export function useDesignTokens(): DesignTokens {
   const effectSettings = useEffectsStore((state) => state.settings);
   // The brand owns the name; token settings no longer keep their own copy.
   const brandName = useBrandStore((state) => state.profile.name);
-  const { fonts } = useFontCatalog();
+  const heading = useFontMeta(headingFont);
+  const body = useFontMeta(bodyFont);
 
   return useMemo(
     () =>
@@ -34,26 +35,14 @@ export function useDesignTokens(): DesignTokens {
           colors: swatches.map((swatch) => swatch.color),
           shadeOptions,
           gradient,
-          heading: fonts.find((font) => font.family === headingFont),
-          body: fonts.find((font) => font.family === bodyFont),
+          heading,
+          body,
           scale,
           rhythm,
           effects: effectTokens(effectSettings),
         },
         { ...settings, name: brandName.trim() || settings.name },
       ),
-    [
-      swatches,
-      shadeOptions,
-      gradient,
-      fonts,
-      headingFont,
-      bodyFont,
-      scale,
-      rhythm,
-      settings,
-      effectSettings,
-      brandName,
-    ],
+    [swatches, shadeOptions, gradient, heading, body, scale, rhythm, settings, effectSettings, brandName],
   );
 }

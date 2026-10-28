@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { parseCssImport, planCssImport } from "@/lib/brand/import-css";
 import { toHex } from "@/lib/color/color";
 import { applySnapshot, captureSnapshot } from "@/lib/projects/snapshot";
-import { loadFontCatalog } from "@/lib/typography/catalog";
+import { loadFontIndex } from "@/lib/typography/catalog";
 import { MAX_SWATCHES, MIN_SWATCHES, createSwatch, useColorStore } from "@/store/color-store";
 import { useTypographyStore } from "@/store/typography-store";
 
@@ -28,7 +28,7 @@ export function ImportCssButton() {
   useEffect(() => {
     if (!open || families) return;
     let cancelled = false;
-    void loadFontCatalog().then((catalog) => {
+    void loadFontIndex().then((catalog) => {
       if (!cancelled) setFamilies(new Set(catalog.map((font) => font.family)));
     });
     return () => {

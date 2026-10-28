@@ -177,7 +177,7 @@ export function bodyStyle(step: TypeStep = "base") {
 `;
 }
 
-export function typographyTokens(r: Resolved) {
+function typographyTokens(r: Resolved) {
   const dimension = (px: number) => ({ value: Math.round((px / 16) * 10000) / 10000, unit: "rem" });
   return {
     font: {

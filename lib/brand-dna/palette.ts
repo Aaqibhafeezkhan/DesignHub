@@ -2,7 +2,7 @@ import { colorDistance, fromHex, toHex } from "@/lib/color/color";
 import type { Oklch } from "@/types/color";
 
 /** How much of a color one source image supplied, as a fraction of that color (a color's shares sum to 1). */
-export type SourceShare = { id: string; share: number };
+type SourceShare = { id: string; share: number };
 
 export type WeightedColor = {
   color: Oklch;

@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
-import { getTemplate, mockupTemplates } from "@/lib/mockups/registry";
+import { allMockupTemplates as mockupTemplates } from "@/lib/mockups/all";
+import { mockupCategories } from "@/lib/mockups/types";
 import { watchFace, watchNotification } from "@/lib/mockups/templates/smartwatch";
 import { storeCaptions, captionLines } from "@/lib/mockups/templates/app-store";
 import { landingNav } from "@/lib/mockups/templates/laptop-landing";
@@ -14,12 +15,13 @@ import {
 import { BOOTH, boothCopy } from "@/lib/mockups/templates/trade-show-booth";
 import { VAN, vanCopy } from "@/lib/mockups/templates/delivery-van";
 import type { MockupContext } from "@/lib/mockups/types";
-import { socialTemplates } from "@/lib/social/registry";
+import { allSocialTemplates as socialTemplates } from "@/lib/social/all";
 import type { SocialContext } from "@/lib/social/types";
 import { mockupContext, socialContext } from "@/lib/test/draw-context";
 import { rootSize, xmlError } from "@/lib/test/xml";
 import type { BrandMode } from "@/types/brand";
 
+const getTemplate = (id: string) => mockupTemplates.find((template) => template.id === id);
 const modes: BrandMode[] = ["light", "dark"];
 // Characters that must be escaped, to catch text written into the SVG unescaped.
 const trickyName = `Tom & Jerry's "<Studio>"`;
@@ -509,4 +511,14 @@ describe("long copy on the newer print and screen mockups", () => {
       expect(svg).toContain(`stop-color="${ctx.surface.secondary}"`);
     }
   });
+});
+
+test("every mockup is in a category the picker shows, and every category has mockups", () => {
+  for (const template of mockupTemplates) expect(mockupCategories, template.id).toContain(template.category);
+  for (const category of mockupCategories) {
+    expect(
+      mockupTemplates.some((template) => template.category === category),
+      category,
+    ).toBe(true);
+  }
 });

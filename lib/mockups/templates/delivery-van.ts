@@ -41,7 +41,7 @@ function wheel(cx: number, ctxDark: boolean): string {
 export const deliveryVan: MockupTemplate = {
   id: "delivery-van",
   label: "Delivery van",
-  category: "Print",
+  category: "Objects",
   description: "A delivery van with the brand's livery wrapped around the body, with the name, website and phone.",
   render(ctx) {
     const { surface, mode } = ctx;

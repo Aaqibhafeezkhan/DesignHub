@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { BackgroundWorkspace } from "@/components/backgrounds/background-workspace";
 import { Workspace } from "@/components/layout/workspace";
+import { ModeSwitch } from "@/components/layout/mode-switch";
 import { PageHeader } from "@/components/ui/page-header";
 import { getStudio } from "@/lib/navigation";
 
@@ -12,7 +13,7 @@ export const metadata: Metadata = { title: "Background Studio", description: stu
 export default function BackgroundsPage() {
   return (
     <Workspace className="gap-6">
-      <PageHeader eyebrow="Studio" title={studio.title} description={studio.description} />
+      <PageHeader eyebrow="Studio" title={studio.title} description={studio.description} actions={<ModeSwitch />} />
       <BackgroundWorkspace />
     </Workspace>
   );

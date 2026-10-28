@@ -6,7 +6,7 @@ export type PackedCircle = { x: number; y: number; r: number };
 
 /** The most circles and placement attempts for one canvas, however large, so rendering stays fast. */
 export const maxPackedCircles = 420;
-export const maxPackingAttempts = 6000;
+const maxPackingAttempts = 6000;
 
 /**
  * Circles that never overlap (and keep `gap` px apart), by rejection sampling: big circles first,
@@ -33,7 +33,9 @@ export function packCircles(
 
 /** Many non-overlapping circles of varied size filling the canvas, in palette colors. */
 export const circlePacking: BackgroundDefinition = {
+  heavy: true,
   kind: "circle-packing",
+  category: "maps",
   label: "Circle packing",
   description: "Non-overlapping circles of every size, packed edge to edge in your palette.",
   defaults: { density: 55, scale: 1 },

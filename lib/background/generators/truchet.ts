@@ -36,6 +36,7 @@ export function truchetPaths(random: () => number, size: number, cell: number, c
 /** A grid of quarter-circle tiles in palette colors, one path per color. */
 export const truchet: BackgroundDefinition = {
   kind: "truchet",
+  category: "shapes",
   label: "Truchet",
   description: "Quarter-circle tiles rotated by the seed, joining into flowing curves.",
   defaults: { density: 50, scale: 1 },

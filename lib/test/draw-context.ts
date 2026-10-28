@@ -8,7 +8,7 @@ import type { SocialContext } from "@/lib/social/types";
 import type { BrandMode } from "@/types/brand";
 
 /** The default brand, built the same way `useBrandTokens()` builds the live one. */
-export function drawContext(mode: BrandMode, name?: string) {
+function drawContext(mode: BrandMode, name?: string) {
   const { brand, colors, typography, tokens, effects } = defaultSnapshot(name);
   const tokensForBrand = buildBrandTokens({
     profile: brand.profile,

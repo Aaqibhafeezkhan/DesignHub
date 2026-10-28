@@ -18,6 +18,7 @@ export function focusRingCheck(s: FocusRingSettings): FocusIndicatorCheck {
  */
 export const focusRing = defineEffect({
   kind: "focus-ring",
+  category: "states",
   label: "Focus ring",
   description: "A two-tone :focus-visible ring with a built-in WCAG contrast check.",
   generate(s) {

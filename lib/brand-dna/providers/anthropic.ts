@@ -48,7 +48,7 @@ export const AI_OUTPUT_SCHEMA = {
 } as const;
 
 /** One block of a message: an image sent as base64 PNG, or text. */
-export type MessageBlock =
+type MessageBlock =
   { type: "image"; source: { type: "base64"; media_type: "image/png"; data: string } } | { type: "text"; text: string };
 
 /** The request body of the Messages API, with only the fields the provider sends. */
@@ -61,7 +61,7 @@ export type MessagesRequest = {
 };
 
 /** The part of the response the provider reads. */
-export type MessagesResponse = {
+type MessagesResponse = {
   content: { type: string; text?: string }[];
   stop_reason: string | null;
 };

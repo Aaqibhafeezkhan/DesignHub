@@ -5,6 +5,7 @@ DesignHub is built to be driven from the keyboard. This is the full list, the sa
 A few rules apply everywhere:
 
 - `⌘` is `Ctrl` on Windows and Linux, and `⌥` is `Alt`.
+- The command palette opens short: your recent actions, the studios and a few common actions. Type to search fonts, icons, languages and links too. "Switch to Simple mode" and "Switch to Advanced mode" are in it as well; a studio's mode switch does the same thing.
 - Shortcuts don't fire while you type in a text field, except `⌘K`, which always opens the command palette.
 - `Space` keeps its normal job on a focused button, link or toggle, so it only runs the shortcut when nothing interactive has focus.
 - `⌘` `Z` and `⌘` `⇧` `Z` step back and forward through your last 50 brand edits in every studio (fonts, colors, radius, shadow, copy and more). They are ignored inside text fields and code editors, and the Color Studio's `Z` still undoes only the palette.

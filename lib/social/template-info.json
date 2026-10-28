@@ -1,0 +1,1000 @@
+[
+  {
+    "id": "github-minimal",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Minimal",
+    "label": "Repository banner: Minimal",
+    "width": 1280,
+    "height": 640,
+    "description": "Clean typography and generous whitespace. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-editorial",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Editorial",
+    "label": "Repository banner: Editorial",
+    "width": 1280,
+    "height": 640,
+    "description": "Large bold heading in a magazine layout. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-aurora",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Aurora",
+    "label": "Repository banner: Aurora",
+    "width": 1280,
+    "height": 640,
+    "description": "Soft colorful glow and gradient lighting. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-grid",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Grid",
+    "label": "Repository banner: Grid",
+    "width": 1280,
+    "height": 640,
+    "description": "Technical grid background with a developer feel. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-terminal",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Terminal",
+    "label": "Repository banner: Terminal",
+    "width": 1280,
+    "height": 640,
+    "description": "Monospace, code inspired, with green accents. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-glass",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Glass",
+    "label": "Repository banner: Glass",
+    "width": 1280,
+    "height": 640,
+    "description": "Frosted, layered panels over soft color. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-gradient",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Gradient",
+    "label": "Repository banner: Gradient",
+    "width": 1280,
+    "height": 640,
+    "description": "Bold colorful mesh for startup branding. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-split",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Split",
+    "label": "Repository banner: Split",
+    "width": 1280,
+    "height": 640,
+    "description": "Content left, a large logo right, strong asymmetry. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-bento",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Bento",
+    "label": "Repository banner: Bento",
+    "width": 1280,
+    "height": 640,
+    "description": "Modular cards in a modern bento grid. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-spotlight",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Spotlight",
+    "label": "Repository banner: Spotlight",
+    "width": 1280,
+    "height": 640,
+    "description": "Dramatic lighting, a huge logo, minimal content. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-classic",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Classic",
+    "label": "Repository banner: Classic",
+    "width": 1280,
+    "height": 640,
+    "description": "The original banner: headline, tagline and a big mark. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-launch",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Launch",
+    "label": "Repository banner: Launch",
+    "width": 1280,
+    "height": 640,
+    "description": "Classic layout on the brand gradient with a call to action. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-showcase",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Showcase",
+    "label": "Repository banner: Showcase",
+    "width": 1280,
+    "height": 640,
+    "description": "Headline and details beside a product window. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-features",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Features",
+    "label": "Repository banner: Features",
+    "width": 1280,
+    "height": 640,
+    "description": "Headline plus a checklist built from your tagline. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "github-badges",
+    "platform": "GitHub",
+    "group": "Repository banner",
+    "style": "Badges",
+    "label": "Repository banner: Badges",
+    "width": 1280,
+    "height": 640,
+    "description": "Classic layout with README-style badges for your links. Social preview and README header, 1280 × 640.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 560
+    }
+  },
+  {
+    "id": "linkedin-cover",
+    "platform": "LinkedIn",
+    "label": "Profile cover",
+    "width": 1584,
+    "height": 396,
+    "description": "Personal profile background, 1584 × 396. The photo covers the lower left.",
+    "safe": {
+      "x": 190,
+      "y": 24,
+      "width": 1204,
+      "height": 348
+    },
+    "covered": [
+      {
+        "x": 48,
+        "y": 212,
+        "width": 300,
+        "height": 184
+      }
+    ]
+  },
+  {
+    "id": "x-banner",
+    "platform": "X",
+    "label": "Header",
+    "width": 1500,
+    "height": 500,
+    "description": "Profile header, 1500 × 500. Mobile crops the top and bottom; the avatar covers the lower left.",
+    "safe": {
+      "x": 60,
+      "y": 60,
+      "width": 1380,
+      "height": 380
+    },
+    "covered": [
+      {
+        "x": 40,
+        "y": 330,
+        "width": 340,
+        "height": 170
+      }
+    ]
+  },
+  {
+    "id": "x-post-image",
+    "platform": "X",
+    "label": "Post image",
+    "width": 1600,
+    "height": 900,
+    "description": "Post image, 1600 × 900 (16:9). The timeline crops the edges, so the text stays in the central 80 percent.",
+    "safe": {
+      "x": 160,
+      "y": 90,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  {
+    "id": "instagram-square",
+    "platform": "Instagram",
+    "label": "Square post",
+    "width": 1080,
+    "height": 1080,
+    "description": "Feed post, 1080 × 1080. The profile grid shows a 3:4 center crop.",
+    "safe": {
+      "x": 90,
+      "y": 90,
+      "width": 900,
+      "height": 900
+    }
+  },
+  {
+    "id": "instagram-portrait",
+    "platform": "Instagram",
+    "label": "Portrait post",
+    "width": 1080,
+    "height": 1350,
+    "description": "Feed post, 1080 × 1350 (4:5). The profile grid shows a 3:4 center crop.",
+    "safe": {
+      "x": 90,
+      "y": 90,
+      "width": 900,
+      "height": 1170
+    }
+  },
+  {
+    "id": "instagram-story",
+    "platform": "Instagram",
+    "label": "Story",
+    "width": 1080,
+    "height": 1920,
+    "description": "Story and Reel cover, 1080 × 1920. Keep 250 px clear at the top and 340 px at the bottom.",
+    "safe": {
+      "x": 64,
+      "y": 250,
+      "width": 952,
+      "height": 1330
+    },
+    "covered": [
+      {
+        "x": 0,
+        "y": 0,
+        "width": 1080,
+        "height": 200
+      },
+      {
+        "x": 0,
+        "y": 1620,
+        "width": 1080,
+        "height": 300
+      }
+    ]
+  },
+  {
+    "id": "instagram-highlight",
+    "platform": "Instagram",
+    "label": "Highlight cover",
+    "width": 1080,
+    "height": 1920,
+    "description": "Story highlight cover, 1080 × 1920. Instagram shows only the central circle.",
+    "safe": {
+      "x": 0,
+      "y": 480,
+      "width": 1080,
+      "height": 960
+    },
+    "covered": [
+      {
+        "x": 0,
+        "y": 0,
+        "width": 1080,
+        "height": 480
+      },
+      {
+        "x": 0,
+        "y": 1440,
+        "width": 1080,
+        "height": 480
+      }
+    ]
+  },
+  {
+    "id": "og-article",
+    "platform": "Open Graph",
+    "label": "Article",
+    "width": 1200,
+    "height": 630,
+    "description": "Blog posts and docs pages: headline, subtitle and site.",
+    "safe": {
+      "x": 60,
+      "y": 40,
+      "width": 1080,
+      "height": 550
+    }
+  },
+  {
+    "id": "og-product",
+    "platform": "Open Graph",
+    "label": "Product",
+    "width": 1200,
+    "height": 630,
+    "description": "Landing pages: headline, call to action and a product frame.",
+    "safe": {
+      "x": 60,
+      "y": 40,
+      "width": 1080,
+      "height": 550
+    }
+  },
+  {
+    "id": "og-minimal",
+    "platform": "Open Graph",
+    "label": "Minimal",
+    "width": 1200,
+    "height": 630,
+    "description": "Home page: centred logo and name.",
+    "safe": {
+      "x": 60,
+      "y": 40,
+      "width": 1080,
+      "height": 550
+    }
+  },
+  {
+    "id": "product-hunt-gallery",
+    "platform": "Product Hunt",
+    "label": "Gallery image",
+    "width": 1270,
+    "height": 760,
+    "description": "Launch gallery slide, 1270 × 760. The first image doubles as the social preview.",
+    "safe": {
+      "x": 50,
+      "y": 40,
+      "width": 1170,
+      "height": 680
+    }
+  },
+  {
+    "id": "product-hunt-thumbnail",
+    "platform": "Product Hunt",
+    "label": "Thumbnail",
+    "width": 240,
+    "height": 240,
+    "description": "Product thumbnail, 240 × 240, shown next to the product name. Small enough that only the logo reads.",
+    "safe": {
+      "x": 24,
+      "y": 24,
+      "width": 192,
+      "height": 192
+    }
+  },
+  {
+    "id": "youtube-thumbnail",
+    "platform": "YouTube",
+    "label": "Video thumbnail",
+    "width": 1280,
+    "height": 720,
+    "description": "Thumbnail, 1280 × 720. The duration badge covers the lower right.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 1200,
+      "height": 640
+    },
+    "covered": [
+      {
+        "x": 1110,
+        "y": 640,
+        "width": 150,
+        "height": 64
+      }
+    ]
+  },
+  {
+    "id": "youtube-banner",
+    "platform": "YouTube",
+    "label": "Channel banner",
+    "width": 2560,
+    "height": 1440,
+    "description": "Channel banner, 2560 × 1440. Devices crop it differently, so only the central 1546 × 423 always shows.",
+    "safe": {
+      "x": 507,
+      "y": 508,
+      "width": 1546,
+      "height": 423
+    }
+  },
+  {
+    "id": "pinterest-pin",
+    "platform": "Pinterest",
+    "label": "Pin",
+    "width": 1000,
+    "height": 1500,
+    "description": "Standard pin, 1000 × 1500 (2:3). The save button and profile overlay cover the bottom 100 px.",
+    "safe": {
+      "x": 60,
+      "y": 60,
+      "width": 880,
+      "height": 1320
+    },
+    "covered": [
+      {
+        "x": 0,
+        "y": 1400,
+        "width": 1000,
+        "height": 100
+      }
+    ]
+  },
+  {
+    "id": "pinterest-board-cover",
+    "platform": "Pinterest",
+    "label": "Board cover",
+    "width": 600,
+    "height": 600,
+    "description": "Board cover, 600 × 600 (1:1). Shown small in the profile grid, so it carries the logo and the brand name only.",
+    "safe": {
+      "x": 60,
+      "y": 60,
+      "width": 480,
+      "height": 480
+    }
+  },
+  {
+    "id": "linkedin-company",
+    "platform": "LinkedIn",
+    "label": "Company page cover",
+    "width": 1128,
+    "height": 191,
+    "description": "Company page cover, 1128 × 191. The company logo overlaps the lower left on desktop.",
+    "safe": {
+      "x": 40,
+      "y": 20,
+      "width": 1048,
+      "height": 151
+    },
+    "covered": [
+      {
+        "x": 16,
+        "y": 110,
+        "width": 160,
+        "height": 81
+      }
+    ]
+  },
+  {
+    "id": "bluesky-banner",
+    "platform": "Bluesky",
+    "label": "Profile banner",
+    "width": 1500,
+    "height": 500,
+    "description": "Profile banner, 1500 × 500 (3:1). The avatar overlaps the lower left.",
+    "safe": {
+      "x": 60,
+      "y": 60,
+      "width": 1380,
+      "height": 380
+    },
+    "covered": [
+      {
+        "x": 40,
+        "y": 330,
+        "width": 300,
+        "height": 170
+      }
+    ]
+  },
+  {
+    "id": "facebook-cover",
+    "platform": "Facebook",
+    "label": "Page cover",
+    "width": 1640,
+    "height": 624,
+    "description": "Page cover, 1640 × 624. Mobile crops the sides, so everything stays centred.",
+    "safe": {
+      "x": 170,
+      "y": 40,
+      "width": 1300,
+      "height": 544
+    }
+  },
+  {
+    "id": "discord-banner",
+    "platform": "Discord",
+    "label": "Server banner",
+    "width": 960,
+    "height": 540,
+    "description": "Server banner, 960 × 540 (16:9). The server name bar covers the bottom.",
+    "safe": {
+      "x": 40,
+      "y": 40,
+      "width": 880,
+      "height": 400
+    },
+    "covered": [
+      {
+        "x": 0,
+        "y": 440,
+        "width": 960,
+        "height": 100
+      }
+    ]
+  },
+  {
+    "id": "twitch-banner",
+    "platform": "Twitch",
+    "label": "Profile banner",
+    "width": 1200,
+    "height": 480,
+    "description": "Profile banner, 1200 × 480 (5:2). Small screens crop the sides, so everything stays centred.",
+    "safe": {
+      "x": 150,
+      "y": 40,
+      "width": 900,
+      "height": 400
+    }
+  },
+  {
+    "id": "mastodon-header",
+    "platform": "Mastodon",
+    "label": "Profile header",
+    "width": 1500,
+    "height": 500,
+    "description": "Profile header, 1500 × 500 (3:1). The avatar covers the lower left corner.",
+    "safe": {
+      "x": 60,
+      "y": 50,
+      "width": 1380,
+      "height": 400
+    },
+    "covered": [
+      {
+        "x": 40,
+        "y": 300,
+        "width": 320,
+        "height": 200
+      }
+    ]
+  },
+  {
+    "id": "reddit-banner",
+    "platform": "Reddit",
+    "label": "Community banner",
+    "width": 1920,
+    "height": 384,
+    "description": "Community banner, 1920 × 384 (5:1). The community icon covers the lower left.",
+    "safe": {
+      "x": 300,
+      "y": 40,
+      "width": 1560,
+      "height": 304
+    },
+    "covered": [
+      {
+        "x": 40,
+        "y": 224,
+        "width": 200,
+        "height": 160
+      }
+    ]
+  },
+  {
+    "id": "tumblr-header",
+    "platform": "Tumblr",
+    "label": "Blog header",
+    "width": 3000,
+    "height": 1055,
+    "description": "Blog header, 3000 × 1055. Phones crop the sides and the avatar covers the bottom centre.",
+    "safe": {
+      "x": 600,
+      "y": 100,
+      "width": 1800,
+      "height": 740
+    },
+    "covered": [
+      {
+        "x": 1370,
+        "y": 875,
+        "width": 260,
+        "height": 180
+      }
+    ]
+  },
+  {
+    "id": "dribbble-shot",
+    "platform": "Dribbble",
+    "label": "Shot",
+    "width": 1600,
+    "height": 1200,
+    "description": "Shot, 1600 × 1200 (4:3). A showcase of the logo, name and a UI kit sample.",
+    "safe": {
+      "x": 80,
+      "y": 80,
+      "width": 1440,
+      "height": 1040
+    }
+  },
+  {
+    "id": "behance-cover",
+    "platform": "Behance",
+    "label": "Project cover",
+    "width": 808,
+    "height": 632,
+    "description": "Project cover, 808 × 632. The title overlay covers the bottom 120 px on hover.",
+    "safe": {
+      "x": 48,
+      "y": 40,
+      "width": 712,
+      "height": 448
+    },
+    "covered": [
+      {
+        "x": 0,
+        "y": 512,
+        "width": 808,
+        "height": 120
+      }
+    ]
+  },
+  {
+    "id": "patreon-cover",
+    "platform": "Patreon",
+    "label": "Page cover",
+    "width": 1600,
+    "height": 400,
+    "description": "Creator page cover, 1600 × 400 (4:1). The avatar covers the bottom centre and phones crop the sides.",
+    "safe": {
+      "x": 160,
+      "y": 40,
+      "width": 1280,
+      "height": 320
+    },
+    "covered": [
+      {
+        "x": 690,
+        "y": 230,
+        "width": 220,
+        "height": 170
+      }
+    ]
+  },
+  {
+    "id": "kick-banner",
+    "platform": "Kick",
+    "label": "Channel banner",
+    "width": 1920,
+    "height": 480,
+    "description": "Channel banner, 1920 × 480 (4:1). Smaller screens crop it, so keep to the central 1600 × 400.",
+    "safe": {
+      "x": 160,
+      "y": 40,
+      "width": 1600,
+      "height": 400
+    }
+  },
+  {
+    "id": "bandcamp-header",
+    "platform": "Bandcamp",
+    "label": "Page header",
+    "width": 975,
+    "height": 180,
+    "description": "Artist page header, 975 × 180. Phones scale it down, so keep the type large.",
+    "safe": {
+      "x": 24,
+      "y": 16,
+      "width": 927,
+      "height": 148
+    }
+  },
+  {
+    "id": "twitch-offline",
+    "platform": "Twitch",
+    "label": "Offline screen",
+    "width": 1920,
+    "height": 1080,
+    "description": "Offline screen, 1920 × 1080 (16:9). Shown on the channel while the stream is offline.",
+    "safe": {
+      "x": 160,
+      "y": 90,
+      "width": 1600,
+      "height": 900
+    }
+  },
+  {
+    "id": "linkedin-event",
+    "platform": "LinkedIn",
+    "label": "Event cover",
+    "width": 1776,
+    "height": 444,
+    "description": "Event cover, 1776 × 444. Mobile crops the sides, so keep to the central 1200 × 364.",
+    "safe": {
+      "x": 288,
+      "y": 40,
+      "width": 1200,
+      "height": 364
+    }
+  },
+  {
+    "id": "telegram-cover",
+    "platform": "Telegram",
+    "label": "Channel cover",
+    "width": 1280,
+    "height": 720,
+    "description": "Channel cover and link preview, 1280 × 720 (16:9). Mobile crops the edges, so keep to the safe area.",
+    "safe": {
+      "x": 256,
+      "y": 144,
+      "width": 768,
+      "height": 432
+    }
+  },
+  {
+    "id": "substack-banner",
+    "platform": "Substack",
+    "label": "Publication banner",
+    "width": 1100,
+    "height": 220,
+    "description": "Publication banner, 1100 × 220. Scales with the page width, so keep the type large.",
+    "safe": {
+      "x": 60,
+      "y": 24,
+      "width": 980,
+      "height": 172
+    }
+  },
+  {
+    "id": "ghost-cover",
+    "platform": "Ghost",
+    "label": "Publication cover",
+    "width": 2000,
+    "height": 1000,
+    "description": "Publication cover, 2000 x 1000. Ghost crops the sides, so the logo, name and description stay centered.",
+    "safe": {
+      "x": 240,
+      "y": 120,
+      "width": 1520,
+      "height": 760
+    }
+  },
+  {
+    "id": "spotify-playlist-cover",
+    "platform": "Spotify",
+    "label": "Playlist cover",
+    "width": 640,
+    "height": 640,
+    "description": "Playlist cover, 640 × 640. Shown small, so it carries the logo, the name and a short tagline only.",
+    "safe": {
+      "x": 48,
+      "y": 48,
+      "width": 544,
+      "height": 544
+    }
+  },
+  {
+    "id": "devto-cover",
+    "platform": "DEV",
+    "label": "Post cover",
+    "width": 1000,
+    "height": 420,
+    "description": "Post cover, 1000 × 420. Feeds crop it to a wide strip, so keep the title in the central safe area.",
+    "safe": {
+      "x": 150,
+      "y": 56,
+      "width": 700,
+      "height": 308
+    }
+  },
+  {
+    "id": "hashnode-cover",
+    "platform": "Hashnode",
+    "label": "Blog cover",
+    "width": 1600,
+    "height": 840,
+    "description": "Blog cover, 1600 × 840. Keep the title inside the safe area.",
+    "safe": {
+      "x": 160,
+      "y": 84,
+      "width": 1280,
+      "height": 672
+    }
+  },
+  {
+    "id": "etsy-shop-banner",
+    "platform": "Etsy",
+    "label": "Shop banner",
+    "width": 3360,
+    "height": 840,
+    "description": "Shop banner, 3360 × 840. Keep text and logo in the safe area; Etsy's shop icon covers the lower left.",
+    "safe": {
+      "x": 560,
+      "y": 100,
+      "width": 2720,
+      "height": 640
+    },
+    "covered": [
+      {
+        "x": 0,
+        "y": 440,
+        "width": 520,
+        "height": 400
+      }
+    ]
+  },
+  {
+    "id": "gumroad-cover",
+    "platform": "Gumroad",
+    "label": "Profile cover",
+    "width": 1280,
+    "height": 420,
+    "description": "Creator profile cover, 1280 × 420. The avatar covers the bottom left and phones crop the sides.",
+    "safe": {
+      "x": 120,
+      "y": 36,
+      "width": 1040,
+      "height": 348
+    },
+    "covered": [
+      {
+        "x": 120,
+        "y": 270,
+        "width": 150,
+        "height": 150
+      }
+    ]
+  },
+  {
+    "id": "kofi-banner",
+    "platform": "Ko-fi",
+    "label": "Page banner",
+    "width": 1920,
+    "height": 480,
+    "description": "Page banner, 1920 × 480 (4:1). Wide screens center the page and phones crop the sides.",
+    "safe": {
+      "x": 240,
+      "y": 48,
+      "width": 1440,
+      "height": 384
+    }
+  },
+  {
+    "id": "buy-me-a-coffee-cover",
+    "platform": "Buy Me a Coffee",
+    "label": "Page cover",
+    "width": 1200,
+    "height": 400,
+    "description": "Page cover, 1200 x 400. The avatar overlaps the lower left, so the copy and the button keep clear of it.",
+    "safe": {
+      "x": 96,
+      "y": 36,
+      "width": 1008,
+      "height": 328
+    },
+    "covered": [
+      {
+        "x": 96,
+        "y": 252,
+        "width": 124,
+        "height": 124
+      }
+    ]
+  },
+  {
+    "id": "notion-cover",
+    "platform": "Notion",
+    "label": "Page cover",
+    "width": 1500,
+    "height": 600,
+    "description": "Page cover, 1500 × 600. The page icon and title cover the lower left and Notion crops the sides.",
+    "safe": {
+      "x": 150,
+      "y": 48,
+      "width": 1200,
+      "height": 504
+    },
+    "covered": [
+      {
+        "x": 150,
+        "y": 420,
+        "width": 560,
+        "height": 180
+      }
+    ]
+  },
+  {
+    "id": "medium-banner",
+    "platform": "Medium",
+    "label": "Publication banner",
+    "width": 1500,
+    "height": 500,
+    "description": "Publication banner, 1500 × 500. Scales with the page width, so keep the type large.",
+    "safe": {
+      "x": 90,
+      "y": 40,
+      "width": 1320,
+      "height": 420
+    }
+  }
+]

@@ -24,6 +24,7 @@ function ribbon(width: number, height: number, random: () => number, scale: numb
 
 export const aurora: BackgroundDefinition = {
   kind: "aurora",
+  category: "flows",
   label: "Aurora",
   description: "Blurred, glowing ribbons of light on a dark sky.",
   defaults: { density: 50, scale: 1, background: "#05060f" },

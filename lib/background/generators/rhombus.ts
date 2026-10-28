@@ -60,6 +60,7 @@ export function rhombusTile(radius: number, colors: string[], seed: number): Rho
 
 export const rhombus: BackgroundDefinition = {
   kind: "rhombus",
+  category: "shapes",
   label: "Rhombus",
   description: "Tumbling blocks: a seamless tessellation of diamonds in three tones.",
   defaults: { density: 45, scale: 1 },

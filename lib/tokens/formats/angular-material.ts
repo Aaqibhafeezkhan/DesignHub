@@ -58,7 +58,7 @@ ${contrasts.join("\n")}
  * define-theme pair. Include it in styles.scss, then add `@include mat.all-component-colors($theme)`
  * (and the dark pair under a .dark-theme selector) to theme every component.
  */
-export function toAngularMaterialTheme(tokens: DesignTokens): string {
+function toAngularMaterialTheme(tokens: DesignTokens): string {
   const base =
     (tokens.meta.prefix || tokens.meta.name)
       .toLowerCase()

@@ -24,6 +24,9 @@ export function FocusIndicatorResults() {
 
   return (
     <Panel
+      collapsible
+      id="a11y-focus"
+      defaultOpen={false}
       title="Focus indicator"
       description="WCAG 2.2 · 2.4.13 (focus appearance) and 1.4.11. The ring needs 3:1 against the page and the focused button."
     >

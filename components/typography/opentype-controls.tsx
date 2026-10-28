@@ -15,6 +15,10 @@ export function OpenTypeControls() {
 
   return (
     <Panel
+      advanced
+      collapsible
+      id="typography-opentype"
+      defaultOpen={false}
       title="OpenType features"
       description="Support varies per font. Samples render in the active font so you can see what it ships."
     >

@@ -1,5 +1,5 @@
-import { isVariableFont } from "@/lib/typography/catalog";
-import type { FontCategory, FontFamily } from "@/types/typography";
+import { isVariableFont, type FontSummary } from "@/lib/typography/catalog";
+import type { FontCategory } from "@/types/typography";
 
 export type FontSort = "popular" | "alphabetical" | "weights";
 
@@ -19,11 +19,12 @@ export const defaultFontFilters: FontFilters = {
   sort: "popular",
 };
 
-export function normalize(value: string): string {
+function normalize(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-export function filterFonts(fonts: FontFamily[], filters: FontFilters, favorites: string[]): FontFamily[] {
+/** Works on the index as well as on the full catalog; the variable and weight filters need the details. */
+export function filterFonts<T extends FontSummary>(fonts: T[], filters: FontFilters, favorites: string[]): T[] {
   const query = normalize(filters.query);
   const favoriteSet = new Set(favorites);
 
@@ -39,7 +40,7 @@ export function filterFonts(fonts: FontFamily[], filters: FontFilters, favorites
     case "alphabetical":
       return result.sort((a, b) => a.family.localeCompare(b.family));
     case "weights":
-      return result.sort((a, b) => b.weights.length - a.weights.length || a.rank - b.rank);
+      return result.sort((a, b) => (b.weights?.length ?? 0) - (a.weights?.length ?? 0) || a.rank - b.rank);
     case "popular":
       // Exact-prefix matches first so "Inter" beats "Interstate".
       return query

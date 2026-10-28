@@ -14,6 +14,8 @@ export function RhythmControls() {
 
   return (
     <Panel
+      collapsible
+      id="typography-rhythm"
       title="Rhythm"
       description="Line height, letter spacing and weight for headings and body."
       actions={

@@ -97,7 +97,7 @@ export function computeFallbackOverrides(web: FontMetrics, fallbackAvgCharWidth:
 }
 
 /** Format a unitless ratio as a CSS percentage with up to four decimal places. */
-export function formatPercent(ratio: number): string {
+function formatPercent(ratio: number): string {
   const pct = Math.round(ratio * 1_000_000) / 10_000;
   return `${Number(pct.toFixed(4))}%`;
 }

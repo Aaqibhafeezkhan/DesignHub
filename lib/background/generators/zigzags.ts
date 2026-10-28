@@ -5,7 +5,12 @@ import { zigzag } from "@/lib/background/generators/zigzag";
 
 /** Fine zigzags, bold chevron rows and short wavy strokes. */
 export const zigzags = backgroundFamily(
-  { kind: "zigzag", label: "Zigzag", description: "Rows of zigzags, chevrons or short wavy strokes." },
+  {
+    kind: "zigzag",
+    category: "patterns",
+    label: "Zigzag",
+    description: "Rows of zigzags, chevrons or short wavy strokes.",
+  },
   [
     { ...zigzag, label: "Zigzag" },
     { ...chevron, label: "Chevron" },

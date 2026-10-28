@@ -1,4 +1,4 @@
-import { formatColor, toHex, toRgb } from "@/lib/color/color";
+import { formatColor, toRgb } from "@/lib/color/color";
 import { gradientCss } from "@/lib/color/gradient";
 import { siteConfig } from "@/lib/site";
 import { fontStack } from "@/lib/typography/css";
@@ -227,7 +227,3 @@ export const pascal = (value: string) =>
     .filter(Boolean)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join("");
-
-export function paletteHexes(tokens: DesignTokens): { name: string; hex: string }[] {
-  return tokens.colors.map((token) => ({ name: token.name, hex: toHex(token.value) }));
-}

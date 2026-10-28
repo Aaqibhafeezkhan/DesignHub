@@ -18,3 +18,39 @@ test("skip links jump to the preview and the export pane", async ({ page }) => {
   await page.keyboard.press("Enter");
   await expect(page.locator("#studio-output")).toBeFocused();
 });
+
+test.describe("on a phone, one pane shows at a time", () => {
+  test.use({ viewport: { width: 375, height: 812 } });
+
+  test("the bar switches panes and the skip links open a hidden one", async ({ page }) => {
+    await page.goto("/effects");
+    const bar = page.getByRole("navigation", { name: "Studio panes" });
+    await expect(bar).toBeVisible();
+    const controls = page.locator('section[aria-label="Controls"]');
+    const preview = page.locator("#studio-preview");
+    const output = page.locator("#studio-output");
+
+    await expect(controls).toBeVisible();
+    await expect(preview).toBeHidden();
+    await expect(output).toBeHidden();
+
+    await bar.getByRole("button", { name: "Preview" }).click();
+    await expect(preview).toBeVisible();
+    await expect(controls).toBeHidden();
+    await expect(bar.getByRole("button", { name: "Preview" })).toHaveAttribute("aria-pressed", "true");
+
+    await page.goto("/effects");
+    await page.getByRole("link", { name: "Skip to code and exports" }).focus();
+    await page.keyboard.press("Enter");
+    await expect(output).toBeVisible();
+    await expect(output).toBeFocused();
+  });
+
+  test("a desktop width has no bar and shows every pane", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/effects");
+    await expect(page.getByRole("navigation", { name: "Studio panes" })).toBeHidden();
+    await expect(page.locator("#studio-preview")).toBeVisible();
+    await expect(page.locator("#studio-output")).toBeVisible();
+  });
+});

@@ -15,7 +15,8 @@ import {
   saveProject,
   updateProject,
 } from "@/lib/projects/repository";
-import { sameSnapshot, type ProjectVersion } from "@/lib/projects/history";
+import { snapshotKey, type ProjectVersion } from "@/lib/projects/history";
+import { countSave, planSave } from "@/lib/projects/save-plan";
 import { versionProjectName } from "@/lib/projects/names";
 import { addTag, removeTag } from "@/lib/projects/tags";
 import { importedVersions, parseProjectsFile, type ProjectHistories } from "@/lib/projects/transfer";
@@ -47,14 +48,48 @@ export async function ready(): Promise<void> {
   await Promise.all([whenSnapshotStoresHydrated(), whenProjectStoreHydrated()]);
 }
 
-/** Writes the live stores into the active project, keeping a timed version every few minutes of editing. */
-export async function saveActiveProject(): Promise<void> {
+async function saveOnce(): Promise<void> {
   const { activeId } = useProjectStore.getState();
   if (!activeId || !snapshotStoresHydrated() || !useProjectStore.persist.hasHydrated()) return;
   const snapshot = captureSnapshot();
   const previous = await getProject(activeId);
-  await updateProject(activeId, { snapshot, updatedAt: Date.now() });
-  if (previous && !sameSnapshot(previous.snapshot, snapshot)) await autoVersion(activeId, previous.snapshot);
+  const plan = planSave(previous && snapshotKey(previous.snapshot), snapshotKey(snapshot));
+  if (!previous || plan === "skip") {
+    countSave("skipped");
+    return;
+  }
+  await saveProject({ ...previous, snapshot, updatedAt: Date.now() });
+  countSave("written");
+  await autoVersion(activeId, previous.snapshot);
+}
+
+let saving: Promise<void> | null = null;
+let saveAgain = false;
+
+/**
+ * Writes the live stores into the active project, keeping a timed version every few minutes of editing, and
+ * writes nothing when nothing changed. Saves never overlap: one asked for while another runs is folded into a
+ * single run afterwards, and the returned promise settles once the state at the time of asking is saved.
+ */
+export function saveActiveProject(): Promise<void> {
+  countSave("requested");
+  if (saving) {
+    countSave("coalesced");
+    saveAgain = true;
+    return saving;
+  }
+  const run = (async () => {
+    try {
+      do {
+        saveAgain = false;
+        await saveOnce();
+      } while (saveAgain);
+    } finally {
+      saving = null;
+    }
+  })();
+  saving = run;
+  return run;
 }
 
 export async function createProject(

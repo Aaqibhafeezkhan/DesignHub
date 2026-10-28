@@ -47,6 +47,9 @@ export function VariablePlayground() {
 
   return (
     <Panel
+      advanced
+      collapsible
+      id="typography-variable"
       title="Variable axes"
       description={`${meta?.family} ships ${axes.length} ${axes.length === 1 ? "axis" : "axes"}. Drag or play to explore the design space.`}
       actions={

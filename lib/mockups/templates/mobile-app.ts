@@ -113,7 +113,7 @@ export function profile(ctx: MockupContext): string {
 export const mobileApp: MockupTemplate = {
   id: "mobile-app",
   label: "Mobile app",
-  category: "Screens",
+  category: "Devices",
   description: "Onboarding, home and profile screens on phones.",
   render(ctx) {
     const width = 1800;

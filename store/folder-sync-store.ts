@@ -3,7 +3,7 @@ import { create } from "zustand";
 /** Why the last write or connection attempt failed, as a key the interface translates. */
 export type FolderSyncError = "write" | "pick" | "denied" | "missing";
 
-export type FolderSyncStatus =
+type FolderSyncStatus =
   /** No folder chosen. */
   | "off"
   /** A folder is chosen and writable. */

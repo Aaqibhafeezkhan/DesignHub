@@ -35,7 +35,7 @@ function face(ctx: MockupContext): string {
 export const billboard: MockupTemplate = {
   id: "billboard",
   label: "Billboard",
-  category: "Print",
+  category: "Objects",
   description: "A roadside billboard showing the poster layout in perspective.",
   render(ctx) {
     const { surface, mode } = ctx;

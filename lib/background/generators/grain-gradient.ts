@@ -20,6 +20,7 @@ export function grainGradientLayout(settings: BackgroundSettings): { angle: numb
 /** Fractal noise as a gray layer, blended over the gradient. Density sets how strong, scale how coarse. */
 export const grainGradient: BackgroundDefinition = {
   kind: "grain-gradient",
+  category: "textures",
   label: "Grainy gradient",
   description: "A smooth multi-stop gradient with a fine noise layer on top.",
   defaults: { density: 60, scale: 1 },

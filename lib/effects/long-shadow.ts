@@ -68,6 +68,7 @@ export function longShadowSteps(s: Pick<LongShadowSettings, "angle" | "length" |
 /** The flat-design long shadow, on a box (box-shadow) or on text (text-shadow). */
 export const longShadow = defineEffect({
   kind: "long-shadow",
+  category: "surfaces",
   label: "Long shadow",
   description: "Flat-design shadows that run out at an angle, for boxes and text.",
   generate(s) {

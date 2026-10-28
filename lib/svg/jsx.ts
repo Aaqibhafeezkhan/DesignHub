@@ -10,14 +10,14 @@ const SPECIAL: Record<string, string> = {
   "xmlns:xlink": "xmlnsXlink",
 };
 
-export function jsxAttributeName(name: string): string {
+function jsxAttributeName(name: string): string {
   if (SPECIAL[name]) return SPECIAL[name];
   if (name.startsWith("data-") || name.startsWith("aria-")) return name;
   return name.replace(/[:-]([a-z])/g, (_, letter: string) => letter.toUpperCase());
 }
 
 /** "fill-rule: evenodd; opacity:.5" → `{{ fillRule: "evenodd", opacity: ".5" }}` */
-export function styleObject(style: string): string {
+function styleObject(style: string): string {
   const entries = style
     .split(";")
     .map((rule) => rule.split(":"))

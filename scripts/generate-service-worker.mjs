@@ -1,8 +1,11 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import { serviceWorkerSource } from "./service-worker-source.mjs";
+
 const root = process.cwd();
 const appDir = path.join(root, "app");
+const serverAppDir = path.join(root, ".next", "server", "app");
 const staticDir = path.join(root, ".next", "static");
 const publicDir = path.join(root, "public");
 const buildId = (await readFile(path.join(root, ".next", "BUILD_ID"), "utf8")).trim();
@@ -31,101 +34,50 @@ function routeFromPage(file) {
   return "/" + segments.filter((segment) => !/^\(.*\)$/.test(segment)).join("/");
 }
 
+/** The built files a prerendered page loads, and the fonts and images its stylesheets point at. */
+async function filesOf(route) {
+  const html = await readFile(path.join(serverAppDir, route === "/" ? "index.html" : `${route.slice(1)}.html`), "utf8");
+  const files = new Set(html.match(/\/_next\/static\/[A-Za-z0-9_./~%-]+/g) ?? []);
+  for (const file of [...files].filter((item) => item.endsWith(".css"))) {
+    const css = await readFile(path.join(staticDir, file.slice("/_next/static/".length)), "utf8");
+    for (const [, target] of css.matchAll(/url\(\.\.\/media\/([A-Za-z0-9_.~-]+)\)/g)) {
+      files.add(`/_next/static/media/${target}`);
+    }
+  }
+  return [...files].sort();
+}
+
 const pageFiles = (await walk(appDir)).filter((file) => /(?:^|[\\/])page\.(?:js|jsx|ts|tsx)$/.test(file));
-const routes = new Set(pageFiles.map(routeFromPage));
-routes.add("/manifest.webmanifest");
-routes.add("/robots.txt");
-routes.add("/sitemap.xml");
-routes.add("/icon.svg");
+const routes = [...new Set(pageFiles.map(routeFromPage))].sort();
 
-const staticFiles = (await walk(staticDir)).map(
-  (file) => "/" + path.posix.join("_next/static", path.relative(staticDir, file).split(path.sep).join("/")),
+const home = await filesOf("/");
+const icons = (await walk(publicDir))
+  .map((file) => "/" + path.relative(publicDir, file).split(path.sep).join("/"))
+  .filter((file) => /^\/icon-\d+\.png$/.test(file));
+const shell = [...new Set(["/", "/manifest.webmanifest", "/icon.svg", ...icons, ...home])].sort();
+
+const routeFiles = {};
+for (const route of routes) {
+  if (route === "/") continue;
+  const own = (await filesOf(route)).filter((file) => !shell.includes(file));
+  routeFiles[route] = own;
+}
+
+await writeFile(path.join(publicDir, "sw.js"), serviceWorkerSource({ buildId, shell, routeFiles }));
+
+const size = async (urls) => {
+  let bytes = 0;
+  for (const url of urls) {
+    const file = url.startsWith("/_next/static/")
+      ? path.join(staticDir, url.slice("/_next/static/".length))
+      : path.join(publicDir, url);
+    try {
+      bytes += (await readFile(file)).length;
+    } catch {}
+  }
+  return Math.round(bytes / 1024);
+};
+console.log(
+  `Generated public/sw.js for build ${buildId}: ${shell.length} files (${await size(shell)} kB raw) precached, ` +
+    `${routes.length - 1} studios and pages remembered when opened.`,
 );
-const publicFiles = (await walk(publicDir))
-  .filter((file) => path.basename(file) !== "sw.js")
-  .map((file) => "/" + path.relative(publicDir, file).split(path.sep).join("/"));
-const precache = [...new Set([...routes, ...staticFiles, ...publicFiles])].sort();
-
-const sw = [
-  "const BUILD_ID = " + JSON.stringify(buildId) + ";",
-  'const STATIC_CACHE = "designhub-static-" + BUILD_ID;',
-  'const RUNTIME_CACHE = "designhub-runtime-" + BUILD_ID;',
-  "const PRECACHE_URLS = " + JSON.stringify(precache, null, 2) + ";",
-  'const SHARE_CACHE = "designhub-share";',
-  'const ICONIFY_HOSTS = new Set(["api.iconify.design", "api.simplesvg.com", "api.unisvg.com"]);',
-  'const isCacheable = (response) => response.ok || response.type === "opaque";',
-  "",
-  "async function put(cacheName, request, response) {",
-  "  if (!isCacheable(response)) return;",
-  "  const cache = await caches.open(cacheName);",
-  "  await cache.put(request, response.clone());",
-  "}",
-  "",
-  "async function cacheFirst(request) {",
-  "  const cached = await caches.match(request);",
-  "  if (cached) return cached;",
-  "  const response = await fetch(request);",
-  "  await put(RUNTIME_CACHE, request, response);",
-  "  return response;",
-  "}",
-  "",
-  "async function staleWhileRevalidate(request) {",
-  "  const cached = await caches.match(request);",
-  "  const network = fetch(request).then((response) => put(RUNTIME_CACHE, request, response).then(() => response)).catch(() => undefined);",
-  "  return cached || (await network) || Response.error();",
-  "}",
-  "",
-  "async function networkFirst(request) {",
-  "  try {",
-  "    const response = await fetch(request);",
-  "    await put(RUNTIME_CACHE, request, response);",
-  "    return response;",
-  "  } catch {",
-  "    return (await caches.match(request, { ignoreSearch: true })) || Response.error();",
-  "  }",
-  "}",
-  "",
-  'self.addEventListener("install", (event) => {',
-  "  event.waitUntil((async () => {",
-  "    const cache = await caches.open(STATIC_CACHE);",
-  "    await Promise.all(PRECACHE_URLS.map(async (url) => {",
-  '      try { const response = await fetch(url, { cache: "reload" }); if (response.ok) await cache.put(url, response); } catch {}',
-  "    }));",
-  "  })());",
-  "});",
-  "",
-  'self.addEventListener("activate", (event) => {',
-  '  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key.startsWith("designhub-") && key !== STATIC_CACHE && key !== RUNTIME_CACHE && key !== SHARE_CACHE).map((key) => caches.delete(key)))));',
-  "});",
-  "",
-  'self.addEventListener("message", (event) => { if (event.data?.type === "SKIP_WAITING") self.skipWaiting(); });',
-  "",
-  "// A project file shared from another app arrives as a POST. Keep it on the device, in a cache,",
-  "// and send the page to the import prompt: nothing is uploaded.",
-  "async function receiveSharedFile(request) {",
-  "  try {",
-  '    const file = (await request.formData()).get("project");',
-  "    if (file instanceof File) {",
-  "      const cache = await caches.open(SHARE_CACHE);",
-  '      await cache.put("/shared-project", new Response(file, { headers: { "x-file-name": file.name } }));',
-  "    }",
-  "  } catch {}",
-  '  return Response.redirect(new URL("/projects?shared=1", self.location.origin).href, 303);',
-  "}",
-  "",
-  'self.addEventListener("fetch", (event) => {',
-  "  const url = new URL(event.request.url);",
-  '  if (event.request.method === "POST" && url.origin === self.location.origin && url.pathname === "/share-target") { event.respondWith(receiveSharedFile(event.request)); return; }',
-  '  const request = event.request; if (request.method !== "GET") return;',
-  '  if (url.hostname === "fonts.googleapis.com") { event.respondWith(staleWhileRevalidate(request)); return; }',
-  '  if (url.hostname === "fonts.gstatic.com") { event.respondWith(cacheFirst(request)); return; }',
-  "  if (ICONIFY_HOSTS.has(url.hostname)) { event.respondWith(networkFirst(request)); return; }",
-  "  if (url.origin !== self.location.origin) return;",
-  '  if (request.mode === "navigate") { event.respondWith(networkFirst(request)); return; }',
-  '  if (url.pathname.startsWith("/_next/static/") || PRECACHE_URLS.includes(url.pathname)) event.respondWith(cacheFirst(request));',
-  "});",
-  "",
-].join("\n");
-
-await writeFile(path.join(publicDir, "sw.js"), sw);
-console.log("Generated public/sw.js for build " + buildId + " with " + precache.length + " precached resources.");

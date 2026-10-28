@@ -31,7 +31,7 @@ function codeGrid(seed: string, x: number, y: number, size: number, color: strin
 export const idBadge: MockupTemplate = {
   id: "id-badge",
   label: "ID badge",
-  category: "Print",
+  category: "Objects",
   description: "Event or team badge on a lanyard.",
   render(ctx) {
     const { surface, content, brand } = ctx;

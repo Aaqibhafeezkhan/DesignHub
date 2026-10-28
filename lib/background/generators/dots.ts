@@ -12,6 +12,7 @@ function geometry(settings: BackgroundSettings) {
 /** Staggered (hex-like) dot grid; the second color fills the offset rows. */
 export const dots: BackgroundDefinition = {
   kind: "dots",
+  category: "patterns",
   label: "Dots",
   description: "Staggered dot grid, halftone style.",
   defaults: { density: 55, scale: 1 },

@@ -1,6 +1,6 @@
 /** The brand book site's heading structure: one h1 per page, no skipped level, no empty heading. */
 
-export type HeadingsCheck = {
+type HeadingsCheck = {
   /** The page's title, as the brand book's contents list shows it. */
   page: string;
   /** What is wrong with the page's heading structure. */

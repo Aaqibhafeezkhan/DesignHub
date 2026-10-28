@@ -32,14 +32,16 @@ Most studios share `components/layout/studio-layout.tsx`: a resizable three-pane
 
 ## PWA and offline shell
 
-The production build generates `public/sw.js` in the postbuild step. `scripts/generate-service-worker.mjs` reads the Next.js build ID from `.next/BUILD_ID`, discovers every App Router page, and collects every file under `.next/static` from the build output. It also includes public static assets in the precache list.
+The production build generates `public/sw.js` in the postbuild step. `scripts/generate-service-worker.mjs` reads the Next.js build ID from `.next/BUILD_ID`, discovers every App Router page, and reads the files each prerendered page loads (and the fonts its stylesheets point at). The source of the worker is `scripts/service-worker-source.mjs`, a pure function a unit test runs against a fake cache and fetch.
 
-The service worker uses two caches named with the build ID. The static cache contains the prerendered routes and build assets. Runtime requests use these policies:
+Installing downloads only the shell: the home page, the files every page shares and the icons (36 files, about 0.6 MB gzipped). A studio is kept the first time it is shown online: its files first, then its page. That happens when the page is requested by address, or when `components/layout/pwa-register.tsx` tells the worker which studio is showing (a link followed inside the app makes no request for the page, and a prefetch keeps nothing). A studio never opened online gets an offline note instead of a blank page.
+
+The service worker uses two caches named with the build ID: the static cache (the shell and the kept studios) and a runtime cache capped at 300 files, oldest first. Runtime requests use these policies:
 
 - `fonts.googleapis.com`: stale-while-revalidate.
 - `fonts.gstatic.com`: cache-first.
 - Iconify API hosts: network-first with a cache fallback.
-- App navigations: network-first with a precached route fallback.
+- App navigations: network-first, then a kept page, then the offline note.
 - Next.js static assets and other precached public assets: cache-first.
 
 A new worker does not call `skipWaiting()` during installation. When it reaches the waiting state, `components/layout/pwa-register.tsx` shows an "Update available" toast. Reloading is only triggered after the user chooses the reload action. Activation removes older DesignHub caches.
@@ -106,7 +108,7 @@ OKLCH is the source of truth for every color in the app. It is perceptually unif
 
 ## Fonts
 
-`lib/typography/catalog.json` is generated from public Google Fonts metadata by `scripts/generate-font-catalog.mjs`, so the app needs no API key. It is loaded with a dynamic `import()` in its own chunk. Fonts are loaded on demand through the Google Fonts CSS API. Grid previews add `&text=` so only the rendered glyphs download.
+The font catalog is generated from public Google Fonts metadata by `scripts/generate-font-catalog.mjs`, so the app needs no API key. It is two kinds of file: `lib/typography/catalog-index.json` (family and category in popularity order, about 7 kB gzipped, which is all a font picker or a token hook needs) and `lib/typography/catalog/<category>.json` (the details). Each is a dynamic `import()` in its own chunk, so a page that names one font fetches only the category that holds it (`useFontMeta`), and browsing loads them all (`useFontCatalog`). Fonts are loaded on demand through the Google Fonts CSS API. Grid previews add `&text=` so only the rendered glyphs download.
 
 ## Performance notes
 

@@ -36,7 +36,9 @@ export function flowAngle(seed: number, x: number, y: number, frequency: number)
 
 /** Thin curves that follow a seeded noise-driven angle field, one path per palette color. */
 export const flowField: BackgroundDefinition = {
+  heavy: true,
   kind: "flow-field",
+  category: "flows",
   label: "Flow field",
   description: "Many thin curves that follow a seeded noise field, like wind-swept lines.",
   defaults: { density: 55, scale: 1 },

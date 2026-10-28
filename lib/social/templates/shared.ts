@@ -100,7 +100,7 @@ export function meshBackdrop(ctx: DrawContext, width: number, height: number, ba
 }
 
 /** A flat brand background. */
-export function solidBackdrop(ctx: DrawContext, width: number, height: number): string {
+function solidBackdrop(ctx: DrawContext, width: number, height: number): string {
   return `<rect width="${width}" height="${height}" fill="${ctx.surface.background}"/>`;
 }
 

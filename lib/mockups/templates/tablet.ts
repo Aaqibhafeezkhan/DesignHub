@@ -16,7 +16,7 @@ const PORT_W = 560;
 const PORT_H = 896;
 
 /** The landing page as it reflows on a narrow screen: one column, a menu button and stacked cards. */
-export function landingMobile(ctx: MockupContext, width: number, height: number): string {
+function landingMobile(ctx: MockupContext, width: number, height: number): string {
   const { surface, content, brand } = ctx;
   const onPrimary = onPrimaryLarge(ctx);
   const r = Math.min(brand.radius, 20);
@@ -100,7 +100,7 @@ export function landingMobile(ctx: MockupContext, width: number, height: number)
 export const tabletScreens: MockupTemplate = {
   id: "tablet",
   label: "Tablet",
-  category: "Screens",
+  category: "Devices",
   description: "Dashboard on a landscape tablet beside the mobile layout on a portrait one.",
   render(ctx) {
     const width = 2400;

@@ -128,7 +128,7 @@ export function gradientTable(gradient: A11yReportSections["gradientText"]): str
 }
 
 /** One row per effect that moves, with whether its CSS has a reduced-motion rule. */
-export function motionTable(section: MotionSection): string {
+function motionTable(section: MotionSection): string {
   return table(
     ["Effect", "What moves", "Reduced-motion rule", "Result"],
     section.checks.map((row) => [row.check, row.motion, row.reducedMotionRule ? "Yes" : "No", mark(row.pass)]),
@@ -142,7 +142,7 @@ function motionMarkdown(section: MotionSection): string {
 }
 
 /** One row per brand book page whose heading structure has a problem. */
-export function headingsTable(section: HeadingsSection): string {
+function headingsTable(section: HeadingsSection): string {
   return table(
     ["Page", "Problem"],
     section.checks.map((check) => [check.page, check.problem]),
@@ -341,7 +341,7 @@ export function contrastHtmlTable(rows: A11yReportSections["contrast"]): string 
   );
 }
 
-export function focusHtmlTable(focus: A11yReportSections["focusIndicator"]): string {
+function focusHtmlTable(focus: A11yReportSections["focusIndicator"]): string {
   return htmlTable(
     "Focus indicator contrast",
     ["Check", "Ring", "vs background", "vs component", "Required", "Result"],
@@ -358,7 +358,7 @@ export function focusHtmlTable(focus: A11yReportSections["focusIndicator"]): str
   );
 }
 
-export function gradientHtmlTable(gradient: A11yReportSections["gradientText"]): string {
+function gradientHtmlTable(gradient: A11yReportSections["gradientText"]): string {
   return htmlTable(
     "Lowest contrast of each text color on the brand gradient",
     ["Text", "Worst ratio", "Where", "Gradient there", "Required", "Result", "AA large"],
@@ -374,7 +374,7 @@ export function gradientHtmlTable(gradient: A11yReportSections["gradientText"]):
   );
 }
 
-export function paletteVisionHtmlTable(section: PaletteVisionSection): string {
+function paletteVisionHtmlTable(section: PaletteVisionSection): string {
   return htmlTable(
     "Palette pairs that are hard to tell apart under color blindness",
     ["Mode", "Colors", "Distance", "Typical vision", "Required", "Result", "Suggestion"],
@@ -396,7 +396,7 @@ export function paletteVisionHtmlTable(section: PaletteVisionSection): string {
   );
 }
 
-export function motionHtmlTable(section: MotionSection): string {
+function motionHtmlTable(section: MotionSection): string {
   return htmlTable(
     "Effects that move and their reduced-motion rule",
     ["Effect", "What moves", "Reduced-motion rule", "Result"],

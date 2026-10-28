@@ -1,12 +1,12 @@
 "use client";
 
-import { useRovingRadio } from "@/hooks/use-roving-radio";
+import { GroupedPicker, type PickerGroup } from "@/components/ui/grouped-picker";
+import { backgroundCategories } from "@/lib/background/categories";
 import { backgroundGenerators } from "@/lib/background/registry";
-import { cn } from "@/lib/utils";
 import { useBackgroundStore } from "@/store/background-store";
+import type { BackgroundKind } from "@/types/background";
 
 export function GeneratorPicker() {
-  const radiosRef = useRovingRadio<HTMLDivElement>();
   const kind = useBackgroundStore((state) => state.settings.kind);
   const setKind = useBackgroundStore((state) => state.setKind);
 
@@ -14,24 +14,37 @@ export function GeneratorPicker() {
     return <p className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">No generators yet.</p>;
   }
 
+  const groups: PickerGroup[] = backgroundCategories
+    .map((category) => ({
+      id: category.id,
+      label: category.label,
+      items: backgroundGenerators
+        .filter((generator) => generator.category === category.id)
+        .map((generator) => ({
+          id: generator.kind,
+          label: generator.label,
+          description: generator.description,
+          keywords: [
+            generator.kind,
+            ...(generator.variants?.map((variant) => `${variant.label} ${variant.variant}`) ?? []),
+          ].join(" "),
+        })),
+    }))
+    .filter((group) => group.items.length > 0);
+
   return (
-    <div ref={radiosRef} role="radiogroup" aria-label="Generator" className="grid grid-cols-2 gap-1.5">
-      {backgroundGenerators.map((generator) => (
-        <button
-          key={generator.kind}
-          type="button"
-          role="radio"
-          aria-checked={generator.kind === kind}
-          onClick={() => setKind(generator.kind, generator)}
-          title={generator.description}
-          className={cn(
-            "flex h-9 min-w-0 items-center truncate rounded-md border px-2.5 text-left text-sm text-muted-foreground transition-colors duration-150 hover:border-border-strong hover:text-foreground",
-            generator.kind === kind && "border-brand/60 bg-surface-raised text-foreground",
-          )}
-        >
-          {generator.label}
-        </button>
-      ))}
-    </div>
+    <GroupedPicker
+      groups={groups}
+      value={kind}
+      onChange={(id) =>
+        setKind(
+          id as BackgroundKind,
+          backgroundGenerators.find((generator) => generator.kind === id),
+        )
+      }
+      label="Generator"
+      searchLabel="Find a generator"
+      noMatch="No generator matches that search."
+    />
   );
 }

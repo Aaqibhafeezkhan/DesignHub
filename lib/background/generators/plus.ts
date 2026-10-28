@@ -20,6 +20,7 @@ function plusPath(cx: number, cy: number, arm: number, thickness: number): strin
 /** A grid of small plus signs; the second color fills every other one in a checkerboard. */
 export const plus: BackgroundDefinition = {
   kind: "plus",
+  category: "patterns",
   label: "Plus",
   description: "Grid of small plus signs, a subtle backdrop.",
   defaults: { density: 50, scale: 1 },

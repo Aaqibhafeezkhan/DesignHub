@@ -5,7 +5,7 @@ import { safeDb } from "@/lib/db";
 import type { IconCollection, IconData, IconId } from "@/types/icons";
 
 /** Iconify's public API and its official mirrors, tried in order. No API key is needed. */
-export const ICONIFY_HOSTS = ["https://api.iconify.design", "https://api.simplesvg.com", "https://api.unisvg.com"];
+const ICONIFY_HOSTS = ["https://api.iconify.design", "https://api.simplesvg.com", "https://api.unisvg.com"];
 const REQUEST_TIMEOUT = 8000;
 /** Names per request; keeps URLs well under common length limits. */
 const CHUNK = 64;
@@ -13,7 +13,7 @@ const CHUNK = 64;
 const memory = new Map<IconId, IconData>();
 const responses = new Map<string, Promise<unknown>>();
 
-export class IconifyError extends Error {
+class IconifyError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "IconifyError";

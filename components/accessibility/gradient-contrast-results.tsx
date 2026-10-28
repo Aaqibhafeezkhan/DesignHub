@@ -18,6 +18,9 @@ export function GradientContrastResults() {
 
   return (
     <Panel
+      collapsible
+      id="a11y-gradient"
+      defaultOpen={false}
       title="Text on the brand gradient"
       description={`WCAG 1.4.3. The lowest contrast of each text color across ${GRADIENT_SAMPLES} points of the gradient, sampled in ${gradient.interpolation}.`}
     >

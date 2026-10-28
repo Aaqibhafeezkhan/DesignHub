@@ -58,6 +58,7 @@ export function halftoneStrength(gradient: HalftoneGradient, width: number, heig
 /** A staggered grid of dots whose size and color follow a linear or radial gradient. */
 export const halftone: BackgroundDefinition = {
   kind: "halftone",
+  category: "textures",
   label: "Halftone",
   description: "Print-style dots that grow along a linear or radial gradient.",
   defaults: { density: 50, scale: 1 },

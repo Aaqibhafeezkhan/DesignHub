@@ -22,6 +22,7 @@ export function triangleSlot(column: number, row: number, count: number, start: 
 /** A repeating grid of equilateral triangles that alternate between the palette colors. */
 export const triangles: BackgroundDefinition = {
   kind: "triangles",
+  category: "shapes",
   label: "Triangles",
   description: "Grid of equilateral triangles alternating between the palette colors.",
   defaults: { density: 50, scale: 1 },

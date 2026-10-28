@@ -7,6 +7,7 @@ import { px } from "@/lib/effects/css";
  */
 export const border = defineEffect({
   kind: "border",
+  category: "surfaces",
   label: "Border",
   description: "Gradient and animated borders, no extra elements.",
   generate(s) {

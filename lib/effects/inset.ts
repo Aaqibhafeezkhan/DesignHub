@@ -16,6 +16,7 @@ export const insetPresets: { id: string; label: string; shadow: InsetShadow }[] 
 /** An inset box shadow on a solid fill, so it reads as a recessed input or a pressed button. */
 export const inset = defineEffect({
   kind: "inset",
+  category: "surfaces",
   label: "Inner shadow",
   description: "Inset shadows for inputs, wells and pressed states.",
   generate(s) {

@@ -9,7 +9,7 @@ import { SliderField } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useFontCatalog } from "@/hooks/use-font-catalog";
+import { useFontIndex } from "@/hooks/use-font-catalog";
 import type { BrandDna, DnaColor, DnaImage } from "@/lib/brand-dna/types";
 import { contrastRatio, oklch, parseColor } from "@/lib/color/color";
 import { formatRatio } from "@/lib/color/contrast";
@@ -86,7 +86,7 @@ function ColorSources({ color, images }: { color: DnaColor; images: DnaImage[] }
 }
 
 export function DnaResultEditor({ dna, onChange, images = [] }: Props) {
-  const { fonts } = useFontCatalog();
+  const { fonts } = useFontIndex();
   const set = (patch: Partial<BrandDna>) => onChange({ ...dna, ...patch });
 
   return (

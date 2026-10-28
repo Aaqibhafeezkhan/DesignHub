@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { useFontCatalog } from "@/hooks/use-font-catalog";
+import { useFontMeta } from "@/hooks/use-font-catalog";
 import { buildBrandTokens } from "@/lib/brand/tokens";
 import { useBrandStore } from "@/store/brand-store";
 import { useColorStore } from "@/store/color-store";
@@ -26,7 +26,8 @@ export function useBrandTokens(): BrandTokens {
   const radiusBase = useTokensStore((state) => state.settings.radiusBase);
   const spacingBase = useTokensStore((state) => state.settings.spacingBase);
   const shadowLayers = useEffectsStore((state) => state.settings.shadow.layers);
-  const { fonts } = useFontCatalog();
+  const heading = useFontMeta(headingFont);
+  const body = useFontMeta(bodyFont);
 
   return useMemo(
     () =>
@@ -36,13 +37,26 @@ export function useBrandTokens(): BrandTokens {
         gradient,
         headingFont,
         bodyFont,
-        catalog: fonts,
+        catalog: [heading, body].filter((font) => font !== undefined),
         rhythm,
         scale,
         radiusBase,
         spacingBase,
         shadowLayers,
       }),
-    [profile, swatches, gradient, headingFont, bodyFont, fonts, rhythm, scale, radiusBase, spacingBase, shadowLayers],
+    [
+      profile,
+      swatches,
+      gradient,
+      headingFont,
+      bodyFont,
+      heading,
+      body,
+      rhythm,
+      scale,
+      radiusBase,
+      spacingBase,
+      shadowLayers,
+    ],
   );
 }

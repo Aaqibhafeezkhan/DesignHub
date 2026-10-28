@@ -25,6 +25,7 @@ export function buttonPressText(fill: string): string {
  */
 export const buttonPress = defineEffect({
   kind: "button-press",
+  category: "states",
   label: "Button press",
   description: "A hover lift and a pressed state with a transform and shadow change, with a reduced-motion fallback.",
   generate(s) {

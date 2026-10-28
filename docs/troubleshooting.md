@@ -77,7 +77,7 @@ Common problems, what causes them and how to fix them. DesignHub has no server a
 
 ## I still see an old version after an update
 
-**Cause:** On the hosted site, a service worker precaches the app so it opens offline. When a new version is deployed, the new worker installs in the background and waits. DesignHub shows an **Update available** toast with a **Reload** button, and the old version keeps running until you use it (or close every tab of the site). Only production builds register the worker, and it starts a few seconds after the page has loaded.
+**Cause:** On the hosted site, a service worker installs the app shell and keeps each studio the first time you open it online, so it opens offline. When a new version is deployed, the new worker installs in the background and waits. DesignHub shows an **Update available** toast with a **Reload** button, and the old version keeps running until you use it (or close every tab of the site). Only production builds register the worker, and it starts a few seconds after the page has loaded.
 
 **Fix:**
 

@@ -2,19 +2,21 @@
 
 import { useMemo } from "react";
 
+import { useIsAdvanced } from "@/components/ui/advanced";
 import { ExportPanel } from "@/components/export/export-panel";
 import { reactStyle, scssMixin, effectStylesheet, tailwindClasses, tailwindUtility } from "@/lib/effects/css";
 import type { EffectCss, EffectKind } from "@/types/effects";
 import type { ExportFormat } from "@/types/export";
 
 export function EffectOutput({ kind, effect }: { kind: EffectKind; effect: EffectCss | null }) {
+  const advanced = useIsAdvanced();
   const formats = useMemo<ExportFormat[]>(() => {
     if (!effect) return [];
     const selector = `.${kind}`;
     // One utility per line; whitespace inside a class attribute is insignificant.
     const classes = tailwindClasses(effect.declarations).split(" ").join("\n    ");
     const note = effect.tailwindNote ? `\n\n<!-- ${effect.tailwindNote} -->` : "";
-    return [
+    const all: ExportFormat[] = [
       { id: "css", label: "CSS", filename: `${kind}.css`, language: "css", code: effectStylesheet(effect, selector) },
       {
         id: "tailwind",
@@ -33,7 +35,9 @@ export function EffectOutput({ kind, effect }: { kind: EffectKind; effect: Effec
       { id: "scss", label: "SCSS", filename: `_${kind}.scss`, language: "scss", code: scssMixin(`fx-${kind}`, effect) },
       { id: "react", label: "React", filename: `${kind}.ts`, language: "ts", code: reactStyle(kind, effect) },
     ];
-  }, [effect, kind]);
+    // Simple mode: the two formats most people paste. Advanced adds the utility, the mixin and the style object.
+    return advanced ? all : all.filter((format) => format.id === "css" || format.id === "tailwind");
+  }, [effect, kind, advanced]);
 
   if (!effect) return <p className="text-sm text-muted-foreground">Pick an effect to generate code.</p>;
   return <ExportPanel key={kind} formats={formats} label="Effect code format" />;

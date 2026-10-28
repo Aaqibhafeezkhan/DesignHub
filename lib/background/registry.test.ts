@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 
+import { backgroundCategories } from "@/lib/background/categories";
 import { backgroundGenerators } from "@/lib/background/registry";
 import { rootSize, xmlError } from "@/lib/test/xml";
 import { defaultBackground } from "@/store/background-store";
@@ -36,3 +37,22 @@ describe.each(backgroundGenerators.map((generator) => [generator.kind, generator
     });
   },
 );
+
+test("every generator has a category the picker shows, and every category has generators", () => {
+  const ids = backgroundCategories.map((category) => category.id);
+  for (const generator of backgroundGenerators) expect(ids, generator.kind).toContain(generator.category);
+  for (const id of ids)
+    expect(
+      backgroundGenerators.some((generator) => generator.category === id),
+      id,
+    ).toBe(true);
+});
+
+test("no group is long: every category holds at most nine generators", () => {
+  for (const category of backgroundCategories) {
+    expect(
+      backgroundGenerators.filter((generator) => generator.category === category.id).length,
+      category.id,
+    ).toBeLessThanOrEqual(9);
+  }
+});

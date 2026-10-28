@@ -1,7 +1,7 @@
 import { CREDIT_TEXT } from "@/lib/export/credit";
 import { rasterize } from "@/lib/export/raster";
 import { slugify } from "@/lib/logo/pack";
-import { isCoreTemplate, socialTemplates } from "@/lib/social/registry";
+import { isCoreTemplate, loadSocialTemplate, socialTemplates } from "@/lib/social/registry";
 import type { SocialContext } from "@/lib/social/types";
 import { createZip, type ZipEntry } from "@/lib/zip";
 
@@ -26,7 +26,10 @@ export async function buildSocialPack(
   const entries: ZipEntry[] = [];
   const readme = [`${ctx.brand.name} social assets`, ""];
   let done = 0;
-  for (const template of templates) {
+  for (const info of templates) {
+    // Each template's code is loaded as the pack reaches it, so only the chosen ones are fetched.
+    const template = await loadSocialTemplate(info.id);
+    if (!template) throw new Error(`Social template ${info.id} could not be loaded`);
     const image = await rasterize(template.render(ctx), 1);
     const name = `${slugify(template.platform)}/${base}-${template.id}.png`;
     entries.push({ name, data: image.bytes });

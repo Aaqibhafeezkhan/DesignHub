@@ -20,7 +20,7 @@ export function withTextSpacing(typography: A11yTypography): A11yTypography {
 /** The paragraph gap in px for the test: twice the font size. */
 export const paragraphSpacingPx = (size: number) => size * TEXT_SPACING.paragraphSpacing;
 
-export type TextSpacingRow = { check: string; required: string; current: string; pass: boolean };
+type TextSpacingRow = { check: string; required: string; current: string; pass: boolean };
 
 export type TextSpacingSection = {
   criterion: string;

@@ -28,7 +28,12 @@ export function WeightWaterfall() {
   const family = inView ? fontStack(activeFont, meta?.category) : undefined;
 
   return (
-    <Panel title="Weight waterfall" description={`Every weight ${activeFont} ships. Click one to preview it.`}>
+    <Panel
+      collapsible
+      id="typography-waterfall"
+      title="Weight waterfall"
+      description={`Every weight ${activeFont} ships. Click one to preview it.`}
+    >
       <div ref={ref} role="group" aria-label={`${activeFont} weights`} className="-mx-2 flex flex-col">
         {weights.map((weight) => {
           const selected = weight === specimen.weight;

@@ -27,7 +27,7 @@ export function EffectsWorkspace() {
       id="effects"
       controls={
         <>
-          <Panel title="Effect">
+          <Panel collapsible id="effects-picker" title="Effect">
             <EffectPicker />
           </Panel>
           {Controls ? (

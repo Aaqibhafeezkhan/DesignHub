@@ -6,7 +6,7 @@ import type { MockupContent } from "@/lib/mockups/types";
 import type { BrandMode } from "@/types/brand";
 
 /** Empty fields fall back to values derived from the brand (see useMockupContext). */
-export const defaultMockupContent: MockupContent = {
+const defaultMockupContent: MockupContent = {
   person: "Jordan Lee",
   role: "Head of Design",
   email: "",

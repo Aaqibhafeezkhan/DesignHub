@@ -31,6 +31,7 @@ card.addEventListener("pointerleave", () => {
  */
 export const cardTilt = defineEffect({
   kind: "card-tilt",
+  category: "motion",
   label: "Card tilt",
   description: "A perspective hover tilt with a moving glare, static under reduced motion.",
   generate(s: CardTiltSettings) {

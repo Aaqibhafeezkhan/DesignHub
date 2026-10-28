@@ -17,6 +17,7 @@ function geometry(settings: BackgroundSettings) {
 /** Evenly spaced stripes cycling through the palette. Rotation turns them diagonal or horizontal. */
 export const stripes: BackgroundDefinition = {
   kind: "stripes",
+  category: "patterns",
   label: "Stripes",
   description: "Bold or pinstripe bands in your palette, at any angle.",
   defaults: { density: 55, scale: 1, rotation: 45 },

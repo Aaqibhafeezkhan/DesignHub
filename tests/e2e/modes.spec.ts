@@ -1,0 +1,96 @@
+import { expect, test, type Page } from "@playwright/test";
+
+/** Controls that only Advanced mode shows, by studio: the panels and fields listed here are the whole split. */
+const advancedPanels = [{ path: "/typography", names: ["OpenType features"] }];
+
+const modeGroup = (page: Page) =>
+  page.getByRole("group", { name: "Controls shown" }).or(page.getByRole("radiogroup", { name: "Controls shown" }));
+
+test("a first visit starts Simple, Advanced shows the rest, and hidden controls keep their values", async ({
+  page,
+}) => {
+  await page.goto("/backgrounds");
+  await expect(page.locator("h1").first()).toBeVisible();
+  const mode = modeGroup(page);
+  await expect(mode.getByRole("radio", { name: "Simple" })).toHaveAttribute("aria-checked", "true");
+
+  // Simple: no seed field and no rotation slider, but Randomize and the main controls stay.
+  await expect(page.getByLabel("Seed")).toHaveCount(0);
+  await expect(page.getByRole("slider", { name: "Rotation" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Randomize/ })).toBeVisible();
+  await expect(page.getByRole("slider", { name: "Density" })).toBeVisible();
+
+  // Advanced: they are there, and a value set now survives a trip through Simple.
+  await mode.getByRole("radio", { name: "Advanced" }).click();
+  await page.getByLabel("Seed").fill("4242");
+  await mode.getByRole("radio", { name: "Simple" }).click();
+  await expect(page.getByLabel("Seed")).toHaveCount(0);
+  await mode.getByRole("radio", { name: "Advanced" }).click();
+  await expect(page.getByLabel("Seed")).toHaveValue("4242");
+});
+
+for (const { path, names } of advancedPanels) {
+  test(`${path}: Simple hides ${names.join(" and ")}, Advanced shows them`, async ({ page }) => {
+    await page.goto(path);
+    await expect(page.locator("h1").first()).toBeVisible();
+    const mode = modeGroup(page);
+    await expect(mode.getByRole("radio", { name: "Simple" })).toHaveAttribute("aria-checked", "true");
+    for (const name of names) await expect(page.getByRole("region", { name })).toHaveCount(0);
+    await mode.getByRole("radio", { name: "Advanced" }).click();
+    for (const name of names) await expect(page.getByRole("region", { name })).toHaveCount(1);
+  });
+}
+
+test("the effect code formats are CSS and Tailwind in Simple and all five in Advanced", async ({ page }) => {
+  await page.goto("/effects");
+  const mode = modeGroup(page);
+  await expect(mode.getByRole("radio", { name: "Simple" })).toHaveAttribute("aria-checked", "true");
+  const formats = page.getByRole("radiogroup", { name: "Effect code format" }).getByRole("radio");
+  await expect(formats).toHaveCount(2);
+  await mode.getByRole("radio", { name: "Advanced" }).click();
+  await expect(formats).toHaveCount(5);
+});
+
+test("someone who already used the app starts Advanced", async ({ page }) => {
+  // Use the app: a saved palette makes the person a returning one. Then forget only the mode choice.
+  await page.goto("/colors");
+  await expect(page.locator("h1").first()).toBeVisible();
+  await page
+    .getByRole("button", { name: /Generate|Shuffle|Randomize/i })
+    .first()
+    .click()
+    .catch(() => {});
+  await page.waitForTimeout(1500);
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        const open = indexedDB.open("designhub");
+        open.onsuccess = () => {
+          const db = open.result;
+          const tx = db.transaction("kv", "readwrite");
+          tx.objectStore("kv").delete("designhub:mode");
+          tx.oncomplete = () => {
+            db.close();
+            resolve();
+          };
+        };
+      }),
+  );
+  await page.goto("/typography");
+  await expect(modeGroup(page).getByRole("radio", { name: "Advanced" })).toHaveAttribute("aria-checked", "true");
+});
+
+test("the export settings keep the name, prefix and color notation in Simple and add the bases and sections in Advanced", async ({
+  page,
+}) => {
+  await page.goto("/export");
+  const mode = modeGroup(page);
+  await expect(mode.getByRole("radio", { name: "Simple" })).toHaveAttribute("aria-checked", "true");
+  await expect(page.getByLabel("Variable prefix")).toBeVisible();
+  await expect(page.getByRole("radiogroup", { name: "Color notation" })).toBeVisible();
+  await expect(page.getByRole("slider", { name: "Spacing base" })).toHaveCount(0);
+  await expect(page.getByText("Include", { exact: true })).toHaveCount(0);
+  await mode.getByRole("radio", { name: "Advanced" }).click();
+  await expect(page.getByRole("slider", { name: "Spacing base" })).toBeVisible();
+  await expect(page.getByText("Include", { exact: true })).toBeVisible();
+});

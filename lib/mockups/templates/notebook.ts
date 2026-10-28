@@ -1,4 +1,4 @@
-import { desk, logo, mockupDoc, onPrimaryLarge, text, textWidth, truncate } from "@/lib/mockups/kit";
+import { desk, logo, mockupDoc, onPrimaryLarge, text, truncate } from "@/lib/mockups/kit";
 import type { MockupContext, MockupTemplate } from "@/lib/mockups/types";
 
 const W = 1400;
@@ -17,15 +17,10 @@ export function notebookCopy(ctx: MockupContext): { name: string; website: strin
   };
 }
 
-/** Width the name takes when drawn, for tests. */
-export function notebookNameWidth(ctx: MockupContext): number {
-  return textWidth(ctx, notebookCopy(ctx).name, 46, "h", 2);
-}
-
 export const notebook: MockupTemplate = {
   id: "notebook",
   label: "Notebook",
-  category: "Print",
+  category: "Objects",
   description: "A hardcover notebook with the logo debossed, the name on the cover and an elastic band.",
   render(ctx) {
     const { surface, mode } = ctx;

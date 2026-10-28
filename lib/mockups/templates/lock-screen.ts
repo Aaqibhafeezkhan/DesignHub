@@ -90,7 +90,7 @@ function lockScreen(ctx: MockupContext): string {
 export const lockScreenMockup: MockupTemplate = {
   id: "lock-screen",
   label: "Lock screen",
-  category: "Screens",
+  category: "Devices",
   description: "A phone lock screen with a brand wallpaper, the time and two notifications from the app.",
   render(ctx) {
     const width = 1000;

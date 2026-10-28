@@ -4,7 +4,7 @@ import type { SvgNode } from "@/types/svg";
 /** Index path through element children, e.g. [2, 0] = first child of the third element. */
 export type NodePath = number[];
 
-export const elementChildren = (node: SvgNode) => node.children.filter((child) => child.type === "element");
+const elementChildren = (node: SvgNode) => node.children.filter((child) => child.type === "element");
 
 export function getNode(root: SvgNode, path: NodePath): SvgNode | null {
   let node: SvgNode | undefined = root;

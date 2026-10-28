@@ -121,7 +121,34 @@ test("keyboard only: the command palette, a jump with G and a letter, and the co
 });
 
 test("offline: a studio that was opened online still opens with no connection", async ({ page, context }) => {
-  // The service worker precaches the pages once it has installed; wait until it controls the page.
+  // The service worker keeps the shell at once and a studio the first time it is opened with a connection.
+  await page.goto("/colors");
+  await ready(page);
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+  });
+  await page.reload();
+  await expect.poll(() => page.evaluate(() => Boolean(navigator.serviceWorker.controller))).toBe(true);
+
+  // A second studio, opened online from the app's navigation, is kept too.
+  await page.getByRole("link", { name: "Typography" }).first().click();
+  await expect(page).toHaveURL(/\/typography$/);
+  await ready(page);
+  await expect
+    .poll(() => page.evaluate(async () => Boolean(await caches.match("/typography", { ignoreSearch: true }))))
+    .toBe(true);
+
+  await context.setOffline(true);
+  await page.goto("/colors");
+  await ready(page);
+  await expect(page.locator("h1").first()).toContainText("Color");
+
+  await page.goto("/typography");
+  await ready(page);
+  await expect(page.locator("h1").first()).toBeVisible();
+});
+
+test("offline: a studio never opened online says so instead of failing blank", async ({ page, context }) => {
   await page.goto("/colors");
   await ready(page);
   await page.evaluate(async () => {
@@ -131,12 +158,6 @@ test("offline: a studio that was opened online still opens with no connection", 
   await expect.poll(() => page.evaluate(() => Boolean(navigator.serviceWorker.controller))).toBe(true);
 
   await context.setOffline(true);
-  await page.reload();
-  await ready(page);
-  await expect(page.locator("h1").first()).toContainText("Color");
-
-  // Another studio, reached from the app's navigation while offline, opens too.
-  await page.getByRole("link", { name: "Typography" }).first().click();
-  await expect(page).toHaveURL(/\/typography$/);
-  await ready(page);
+  await page.goto("/effects");
+  await expect(page.getByRole("heading", { name: "This page is not on this device yet" })).toBeVisible();
 });

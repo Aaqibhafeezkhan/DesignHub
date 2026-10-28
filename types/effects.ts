@@ -23,7 +23,7 @@ export type EffectKind =
   | "scrim"
   | "card-tilt";
 
-export type GlassSettings = {
+type GlassSettings = {
   blur: number;
   saturation: number;
   tint: string;
@@ -35,7 +35,7 @@ export type GlassSettings = {
 
 export type NeumorphismShape = "flat" | "concave" | "convex" | "pressed";
 
-export type NeumorphismSettings = {
+type NeumorphismSettings = {
   color: string;
   depth: number;
   blur: number;
@@ -56,7 +56,7 @@ export type ShadowLayer = {
   inset: boolean;
 };
 
-export type ShadowSettings = { layers: ShadowLayer[]; radius: number };
+type ShadowSettings = { layers: ShadowLayer[]; radius: number };
 
 /** One inset shadow, for inputs, wells and pressed states. */
 export type InsetSettings = {
@@ -71,7 +71,7 @@ export type InsetSettings = {
   radius: number;
 };
 
-export type GlowSettings = {
+type GlowSettings = {
   color: string;
   radius: number;
   intensity: number;
@@ -79,7 +79,7 @@ export type GlowSettings = {
   radiusCorner: number;
 };
 
-export type BorderSettings = {
+type BorderSettings = {
   colors: string[];
   /** Inner fill painted over the gradient (padding-box). */
   fill: string;
@@ -92,7 +92,7 @@ export type BorderSettings = {
 
 export type BlendMode = "overlay" | "soft-light" | "multiply" | "screen" | "normal";
 
-export type GrainSettings = {
+type GrainSettings = {
   scale: number;
   opacity: number;
   frequency: number;

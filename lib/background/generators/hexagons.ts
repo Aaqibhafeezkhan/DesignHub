@@ -13,6 +13,7 @@ function hexPath(cx: number, cy: number, r: number): string {
 /** Honeycomb outlines, with faint fills from the second color. */
 export const hexagons: BackgroundDefinition = {
   kind: "hexagons",
+  category: "shapes",
   label: "Hexagons",
   description: "Honeycomb grid, techy and structured.",
   defaults: { density: 45, scale: 1 },

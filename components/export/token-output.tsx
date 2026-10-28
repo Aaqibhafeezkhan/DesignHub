@@ -1,13 +1,13 @@
 "use client";
 
 import { FileArchive, FileJson, FileText, ImageDown, Loader2 } from "lucide-react";
-import { useMemo, useState, type RefObject } from "react";
+import { useCallback, useMemo, useState, type RefObject } from "react";
 import { toast } from "sonner";
 
 import { ExportPanel } from "@/components/export/export-panel";
 import { Button } from "@/components/ui/button";
 import { downloadBlob, downloadDataUrl, downloadText } from "@/lib/download";
-import { tokenFormats } from "@/lib/tokens/formats";
+import { tokenFormat, tokenFormatList, tokenFormats } from "@/lib/tokens/formats";
 import { createZip } from "@/lib/zip";
 import type { DesignTokens } from "@/types/tokens";
 
@@ -40,7 +40,9 @@ export function TokenOutput({
   tokens: DesignTokens;
   previewRef: RefObject<HTMLDivElement | null>;
 }) {
-  const formats = useMemo(() => tokenFormats(tokens), [tokens]);
+  // The list is cheap; code is written for the open format only, and for everything when the ZIP is asked for.
+  const formats = useMemo(() => tokenFormatList(tokens), [tokens]);
+  const renderCode = useCallback((id: string) => tokenFormat(tokens, id)?.code ?? "", [tokens]);
   const [busy, setBusy] = useState<Action | null>(null);
   const name = slug(tokens.meta.name);
 
@@ -49,9 +51,10 @@ export function TokenOutput({
     try {
       if (action === "zip") {
         // React and Vue both export theme.ts; files that share a name go in a folder per format.
-        const shared = (filename: string) => formats.filter((item) => item.filename === filename).length > 1;
+        const all = tokenFormats(tokens);
+        const shared = (filename: string) => all.filter((item) => item.filename === filename).length > 1;
         const zip = createZip(
-          formats.map((format) => ({
+          all.map((format) => ({
             name: shared(format.filename) ? `${format.id}/${format.filename}` : format.filename,
             data: format.code,
           })),
@@ -75,7 +78,7 @@ export function TokenOutput({
     }
   }
 
-  const json = formats.find((format) => format.id === "json");
+  const json = tokenFormat(tokens, "json");
   const spinner = (action: Action) => (busy === action ? <Loader2 className="animate-spin" /> : null);
 
   return (
@@ -99,7 +102,7 @@ export function TokenOutput({
           </Button>
         </div>
       </div>
-      <ExportPanel formats={formats} label="Token format" />
+      <ExportPanel formats={formats} renderCode={renderCode} label="Token format" />
     </section>
   );
 }

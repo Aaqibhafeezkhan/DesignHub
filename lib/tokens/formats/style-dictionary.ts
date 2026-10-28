@@ -16,7 +16,7 @@ type StyleDictionaryTree = { [key: string]: StyleDictionaryNode | StyleDictionar
  * group; a dot in a key (spacing "0.5") becomes an underscore, which the kebab-case name
  * transform builds into `spacing-0-5`, so the name stays a valid identifier.
  */
-export function toStyleDictionaryTokens(tokens: DesignTokens): string {
+function toStyleDictionaryTokens(tokens: DesignTokens): string {
   const tree: StyleDictionaryTree = {};
   const put = (path: string[], node: StyleDictionaryNode) => {
     let level = tree;
@@ -88,7 +88,7 @@ export function toStyleDictionaryTokens(tokens: DesignTokens): string {
  * the output exactly as written in the tokens file (the same as the CSS export). Put both files
  * in one folder and run `npx style-dictionary build`.
  */
-export function toStyleDictionaryConfig(tokens: DesignTokens): string {
+function toStyleDictionaryConfig(tokens: DesignTokens): string {
   const prefix = tokens.meta.prefix ? { prefix: tokens.meta.prefix } : {};
   const config = {
     source: ["style-dictionary.tokens.json"],

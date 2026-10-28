@@ -114,6 +114,8 @@ Have an idea, or want to help build something here? Open an issue or discussion 
 
 **Goal:** fewer, better and fully tested studios. DesignHub stays local first, with no login and no backend. No AI is used unless a person pastes their own key, and nothing in the app calls a model without one.
 
+Done so far on the way to calmer and faster: the short home page and command palette, folding sidebar groups and panels, grouped and searchable pickers, Simple and Advanced mode, one pane at a time on phones, a size budget for every route, an unused code check, and the performance work (on-demand token formats, a split font catalog, on-demand templates, a worker for the heavy backgrounds, autosave that writes only changes and a lighter offline install).
+
 Follow the work by label: [issues labelled `v2.0.0`](https://github.com/yakew7/DesignHub/issues?q=is%3Aopen+label%3Av2.0.0).
 
 ### Reduce

@@ -3,7 +3,7 @@ import { flatten, header } from "@/lib/tokens/formats/shared";
 import { defineFormat } from "@/lib/tokens/formats/define";
 
 /** Vue 3: the theme object,an injection key and a plugin that exposes it as CSS variables. */
-export function toVueTheme(tokens: DesignTokens): string {
+function toVueTheme(tokens: DesignTokens): string {
   const groups = new Map<string, Record<string, string>>();
   flatten(tokens).forEach((token) => {
     const key = token.group === "semantic" ? "color" : token.group;

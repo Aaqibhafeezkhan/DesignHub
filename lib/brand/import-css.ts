@@ -7,7 +7,7 @@ import type { Oklch } from "@/types/color";
  * Pure: nothing here touches a store, so the caller decides what to apply and can undo it.
  */
 
-export type CssColor = {
+type CssColor = {
   /** The color as `#rrggbb` (alpha is ignored: translucent colors count as their opaque base). */
   hex: string;
   color: Oklch;
@@ -15,7 +15,7 @@ export type CssColor = {
   count: number;
 };
 
-export type CssFont = {
+type CssFont = {
   family: string;
   count: number;
   /** True when the family is in the font catalog and can be applied. */

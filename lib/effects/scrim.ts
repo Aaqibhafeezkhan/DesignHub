@@ -62,6 +62,7 @@ export function scrimContrast(s: Pick<ScrimSettings, "color" | "strength" | "tex
  */
 export const scrim = defineEffect({
   kind: "scrim",
+  category: "images",
   label: "Scrim",
   description: "A gradient that darkens the bottom or top of an image so text over it stays readable.",
   generate(s) {
