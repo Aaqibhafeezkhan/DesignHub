@@ -6,6 +6,9 @@ import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { featuredIcons, fetchCollectionIcons, searchIcons } from "@/lib/icons/iconify";
 import type { IconId } from "@/types/icons";
 
+/** Results kept per search. The grid only draws the rows in view, so this can be large. */
+export const SEARCH_LIMIT = 600;
+
 export type IconResults = {
   ids: IconId[];
   total: number;
@@ -36,7 +39,7 @@ export function useIconResults(query: string, prefix: string | null): IconResult
     setState((current) => ({ ...current, loading: true, error: false }));
     const request =
       mode === "search"
-        ? searchIcons(debounced, { prefix: prefix ?? undefined, limit: 240, signal: controller.signal })
+        ? searchIcons(debounced, { prefix: prefix ?? undefined, limit: SEARCH_LIMIT, signal: controller.signal })
         : fetchCollectionIcons(prefix ?? "", controller.signal).then((ids) => ({ icons: ids, total: ids.length }));
 
     request

@@ -5,14 +5,11 @@ import { useState } from "react";
 import { CollectionPicker } from "@/components/icons/collection-picker";
 import { IconGrid, IconsError } from "@/components/icons/icon-grid";
 import { IconSearch } from "@/components/icons/icon-search";
-import { Button } from "@/components/ui/button";
 import { useRovingRadio } from "@/hooks/use-roving-radio";
 import { iconSearchSuggestions, iconTopics } from "@/lib/icons/topics";
 import { cn } from "@/lib/utils";
-import { useIconResults } from "@/hooks/use-icon-results";
+import { SEARCH_LIMIT, useIconResults } from "@/hooks/use-icon-results";
 import { useIconStore } from "@/store/icon-store";
-
-const PAGE = 240;
 
 export function IconLibrary() {
   const radiosRef = useRovingRadio<HTMLDivElement>();
@@ -22,15 +19,10 @@ export function IconLibrary() {
   const setPrefix = useIconStore((state) => state.setPrefix);
   const favorites = useIconStore((state) => state.favorites);
   const results = useIconResults(query, prefix);
-  const [limit, setLimit] = useState({ key: "", count: PAGE });
   const [topicId, setTopicId] = useState<string | null>(null);
   const topic = results.mode === "featured" ? iconTopics.find((item) => item.id === topicId) : undefined;
 
-  // Reset pagination whenever the result set changes.
-  const resultKey = `${results.mode}:${query}:${prefix}`;
-  const count = limit.key === resultKey ? limit.count : PAGE;
   const ids = topic ? topic.icons : results.ids;
-  const shown = ids.slice(0, count);
 
   const heading =
     results.mode === "search"
@@ -90,24 +82,17 @@ export function IconLibrary() {
         <h2 className="text-sm font-medium" aria-live="polite">
           {results.loading ? "Searching…" : heading}
         </h2>
-        {results.mode === "search" && results.total >= 240 ? (
-          <p className="text-xs text-subtle-foreground">Showing the top 240. Refine your search or pick a set.</p>
+        {results.mode === "search" && results.total >= SEARCH_LIMIT ? (
+          <p className="text-xs text-subtle-foreground">
+            Showing the top {SEARCH_LIMIT}. Refine your search or pick a set.
+          </p>
         ) : null}
       </div>
       {results.error ? (
         <IconsError onRetry={results.retry} />
       ) : (
-        <IconGrid ids={shown} emptyMessage="No icons match. Try a broader term or another set." />
+        <IconGrid ids={ids} emptyMessage="No icons match. Try a broader term or another set." />
       )}
-      {ids.length > count ? (
-        <Button
-          variant="outline"
-          className="self-center"
-          onClick={() => setLimit({ key: resultKey, count: count + PAGE })}
-        >
-          Show more · {(ids.length - count).toLocaleString()} remaining
-        </Button>
-      ) : null}
     </section>
   );
 }
