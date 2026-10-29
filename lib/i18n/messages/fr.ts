@@ -213,6 +213,7 @@ export const fr = {
   "projects.storageBlocked":
     "Ce navigateur bloque le stockage local, donc les projets ne durent que jusqu'à la fermeture de l'onglet. Exportez-les en JSON pour en garder une copie.",
   "projects.loading": "Chargement des projets",
+  "projects.showMore": "Afficher {count} de plus",
   "projects.noMatch": "Aucun projet ne correspond.",
   "projects.empty": "Aucun projet pour l'instant.",
   "projects.list": "Projets de marque",

@@ -52,6 +52,7 @@ import {
 import { listProjects } from "@/lib/projects/repository";
 import { listVersions } from "@/lib/projects/versions";
 import { projectSorts, sortProjects, type ProjectSort } from "@/lib/projects/sort";
+import { matchesProject, PROJECT_PAGE } from "@/lib/projects/search";
 import { projectTags } from "@/lib/projects/tags";
 import { projectsToJson, projectToJson } from "@/lib/projects/transfer";
 import { projectsZip } from "@/lib/projects/zip";
@@ -141,15 +142,35 @@ export function ProjectManager() {
   const activeTag = tagFilter && tags.includes(tagFilter) ? tagFilter : null;
 
   const visible = useMemo(() => {
-    const term = query.trim().toLowerCase();
     const matching = (projects ?? []).filter(
       (project) =>
         (!favoritesOnly || project.favorite) &&
         (!activeTag || project.tags.includes(activeTag)) &&
-        projectName(project).toLowerCase().includes(term),
+        matchesProject(project, query),
     );
     return sortProjects(matching, sort);
   }, [projects, query, favoritesOnly, activeTag, sort]);
+
+  // Only the first cards are drawn, and more as the end of the list comes into view, so a hundred projects
+  // open as fast as thirty. A new search or filter starts again from the top.
+  const [drawn, setDrawn] = useState({ key: "", count: PROJECT_PAGE });
+  const filterKey = `${query}|${favoritesOnly}|${activeTag}|${sort}`;
+  const count = drawn.key === filterKey ? drawn.count : PROJECT_PAGE;
+  const more = () => setDrawn({ key: filterKey, count: count + PROJECT_PAGE });
+  const sentinel = useRef<HTMLDivElement>(null);
+  const hasMore = visible.length > count;
+  useEffect(() => {
+    const node = sentinel.current;
+    if (!node || !hasMore) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) setDrawn({ key: filterKey, count: count + PROJECT_PAGE });
+      },
+      { rootMargin: "600px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasMore, count, filterKey]);
 
   async function remove(target: BrandProject) {
     const removed = await run(() => removeProject(target.id));
@@ -312,7 +333,7 @@ export function ProjectManager() {
         </p>
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3" aria-label={t("projects.list")}>
-          {visible.map((project) => (
+          {visible.slice(0, count).map((project) => (
             <ProjectCard
               key={project.id}
               project={project}
@@ -373,6 +394,13 @@ export function ProjectManager() {
           ))}
         </ul>
       )}
+      {hasMore ? (
+        <div ref={sentinel} className="flex justify-center">
+          <Button variant="outline" onClick={more}>
+            {t("projects.showMore", { count: visible.length - count })}
+          </Button>
+        </div>
+      ) : null}
 
       <ProjectCompare open={comparing} onOpenChange={setComparing} projects={projects ?? []} initialId={activeId} />
       <ProjectHistory project={history} onClose={() => setHistory(null)} onChanged={() => void refresh()} />

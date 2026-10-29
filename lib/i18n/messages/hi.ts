@@ -205,6 +205,7 @@ export const hi = {
   "projects.storageBlocked":
     "यह ब्राउज़र लोकल स्टोरेज रोक रहा है, इसलिए प्रोजेक्ट टैब बंद करने तक ही रहेंगे। एक कॉपी रखने के लिए उन्हें JSON के रूप में एक्सपोर्ट करें।",
   "projects.loading": "प्रोजेक्ट लोड हो रहे हैं",
+  "projects.showMore": "{count} और दिखाएँ",
   "projects.noMatch": "कोई प्रोजेक्ट मेल नहीं खाता।",
   "projects.empty": "अभी कोई प्रोजेक्ट नहीं है।",
   "projects.list": "ब्रांड प्रोजेक्ट",

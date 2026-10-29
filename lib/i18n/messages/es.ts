@@ -211,6 +211,7 @@ export const es = {
   "projects.storageBlocked":
     "Este navegador bloquea el almacenamiento local, así que los proyectos solo duran hasta que cierres la pestaña. Expórtalos en JSON para guardar una copia.",
   "projects.loading": "Cargando proyectos",
+  "projects.showMore": "Mostrar {count} más",
   "projects.noMatch": "Ningún proyecto coincide.",
   "projects.empty": "Todavía no hay proyectos.",
   "projects.list": "Proyectos de marca",

@@ -215,6 +215,7 @@ export const en = {
   "projects.storageBlocked":
     "This browser is blocking local storage, so projects only last until you close the tab. Export them as JSON to keep a copy.",
   "projects.loading": "Loading projects",
+  "projects.showMore": "Show {count} more",
   "projects.noMatch": "No projects match.",
   "projects.empty": "No projects yet.",
   "projects.list": "Brand projects",
