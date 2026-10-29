@@ -1,10 +1,10 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useSyncExternalStore, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 
-import { catalogs, defaultLocale, isLocale, LOCALE_STORAGE_KEY, type Locale } from "@/lib/i18n/locales";
+import { defaultLocale, isLocale, loadCatalog, LOCALE_STORAGE_KEY, type Locale } from "@/lib/i18n/locales";
 import { preferredLocale, writeStoredLocale } from "@/lib/i18n/storage";
-import { createTranslator, type Translate, type TranslatePlural } from "@/lib/i18n/translate";
+import { createTranslator, type Catalog, type Translate, type TranslatePlural } from "@/lib/i18n/translate";
 
 type I18n = {
   locale: Locale;
@@ -49,15 +49,33 @@ const getSnapshot = (): Locale => chosen ?? preferredLocale();
 // re-renders with the viewer's language straight after.
 const getServerSnapshot = (): Locale => defaultLocale;
 
-function i18nFor(locale: Locale): I18n {
-  return { locale, setLocale, ...createTranslator(catalogs[locale], locale) };
+function i18nFor(locale: Locale, catalog: Catalog = {}, reading: Locale = locale): I18n {
+  // `reading` is the language the messages are in: English until the chosen language has loaded.
+  return { locale, setLocale, ...createTranslator(catalog, reading) };
 }
 
 const I18nContext = createContext<I18n>(i18nFor(defaultLocale));
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const locale = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  const value = useMemo(() => i18nFor(locale), [locale]);
+  // The chosen language's messages load when it is chosen. Until they arrive, English shows, which is also what
+  // the prerendered page shows, so only the active language is ever downloaded.
+  const [loadedCatalog, setLoadedCatalog] = useState<{ locale: Locale; catalog: Catalog }>({
+    locale: defaultLocale,
+    catalog: {},
+  });
+  useEffect(() => {
+    let current = true;
+    void loadCatalog(locale).then((catalog) => current && setLoadedCatalog({ locale, catalog }));
+    return () => {
+      current = false;
+    };
+  }, [locale]);
+  const value = useMemo(
+    () =>
+      loadedCatalog.locale === locale ? i18nFor(locale, loadedCatalog.catalog) : i18nFor(locale, {}, defaultLocale),
+    [locale, loadedCatalog],
+  );
 
   useEffect(() => {
     document.documentElement.lang = locale;

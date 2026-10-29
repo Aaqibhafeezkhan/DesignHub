@@ -1,7 +1,8 @@
 import { describe, expect, test } from "vitest";
 
 import { contrastPairs } from "@/lib/a11y/contrast";
-import { catalogs, locales } from "@/lib/i18n/locales";
+import { catalogs } from "@/lib/i18n/all-catalogs";
+import { locales } from "@/lib/i18n/locales";
 import { en } from "@/lib/i18n/messages/en";
 import { createTranslator } from "@/lib/i18n/translate";
 import type { A11yTab } from "@/types/a11y";

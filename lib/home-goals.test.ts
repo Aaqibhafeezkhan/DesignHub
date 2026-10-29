@@ -1,7 +1,8 @@
 import { describe, expect, test } from "vitest";
 
 import { homeGoals } from "@/lib/home-goals";
-import { catalogs, locales } from "@/lib/i18n/locales";
+import { catalogs } from "@/lib/i18n/all-catalogs";
+import { locales } from "@/lib/i18n/locales";
 import { en } from "@/lib/i18n/messages/en";
 import { getStudio, studios } from "@/lib/navigation";
 

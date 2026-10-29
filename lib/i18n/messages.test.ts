@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { completeAreas } from "@/lib/i18n/complete-areas";
 import { LocalizedError, translateLocalized } from "@/lib/i18n/errors";
-import { catalogs, locales, resolveLocale } from "@/lib/i18n/locales";
+import { catalogs } from "@/lib/i18n/all-catalogs";
+import { locales, resolveLocale } from "@/lib/i18n/locales";
 import { en } from "@/lib/i18n/messages/en";
 import { createTranslator, format } from "@/lib/i18n/translate";
 

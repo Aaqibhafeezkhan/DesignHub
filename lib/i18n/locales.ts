@@ -1,7 +1,3 @@
-import { en } from "@/lib/i18n/messages/en";
-import { es } from "@/lib/i18n/messages/es";
-import { fr } from "@/lib/i18n/messages/fr";
-import { hi } from "@/lib/i18n/messages/hi";
 import type { Catalog } from "@/lib/i18n/translate";
 
 export const locales = ["en", "es", "fr", "hi"] as const;
@@ -10,7 +6,25 @@ export type Locale = (typeof locales)[number];
 
 export const defaultLocale: Locale = "en";
 
-export const catalogs: Record<Locale, Catalog> = { en, es, fr, hi };
+/** English is always loaded (it is the fallback for every key), so it needs no catalog of its own. */
+const loaders: Record<Exclude<Locale, "en">, () => Promise<Catalog>> = {
+  es: () => import("@/lib/i18n/messages/es").then((module) => module.es),
+  fr: () => import("@/lib/i18n/messages/fr").then((module) => module.fr),
+  hi: () => import("@/lib/i18n/messages/hi").then((module) => module.hi),
+};
+
+const loaded = new Map<Locale, Promise<Catalog>>();
+
+/** The messages of one language, fetched the first time it is asked for. English is empty: it is the fallback. */
+export function loadCatalog(locale: Locale): Promise<Catalog> {
+  if (locale === "en") return Promise.resolve({});
+  let catalog = loaded.get(locale);
+  if (!catalog) {
+    catalog = loaders[locale]();
+    loaded.set(locale, catalog);
+  }
+  return catalog;
+}
 
 /** Each language in its own name, so people can find theirs whatever the interface shows. */
 export const localeNames: Record<Locale, string> = {
