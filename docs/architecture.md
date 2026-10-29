@@ -48,6 +48,13 @@ A new worker does not call `skipWaiting()` during installation. When it reaches 
 
 The worker is registered only when `NODE_ENV` is production. Development builds never register it.
 
+## Keeping pages light
+
+- **Windowing.** `lib/windowing.ts` and `hooks/use-windowed-grid.ts` draw only the rows of a grid near the view (the Icon Studio results); the font browser windows its list the same way, and Brand Projects draws thirty cards and more as the end comes into view.
+- **On demand.** Social and mockup templates, the token format being shown, the font catalog (an index plus one file per category) and every language but the active one are fetched when needed. Where a list and its code are separate, a test keeps them in step (`template-info.json` and the loaders).
+- **Off the page.** The heavy background generators draw in a module worker (`lib/background/heavy.ts`, `render-protocol.ts`), keeping only the newest request. SVG cannot be decoded in a worker in Chromium, so PNG, WebP and PDF export still draw on the page.
+- **Budgets.** `bundle-budget.json` sets a first-load limit per route and `pnpm bundle:size` enforces it; `pnpm check:unused` (knip) keeps dead code out.
+
 ## State
 
 Each studio owns one [Zustand](https://zustand.docs.pmnd.rs) store in `store/`:

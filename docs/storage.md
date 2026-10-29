@@ -9,7 +9,7 @@ DesignHub has no accounts and no server. Everything you make is saved in your ow
 | IndexedDB     | `designhub` database, `kv` table                                                                      | The settings of every studio (one row per store, listed below).                                                                                                                                                                                |
 | IndexedDB     | `designhub` database, `icons` table                                                                   | Icons you have opened, cached so Icon Studio keeps working offline.                                                                                                                                                                            |
 | IndexedDB     | `designhub` database, `projects` table                                                                | Your brand projects: one full snapshot of the brand per project.                                                                                                                                                                               |
-| IndexedDB     | `designhub` database, `versions` table                                                                | Version history: up to 20 earlier snapshots per project, deleted with the project.                                                                                                                                                             |
+| IndexedDB     | `designhub` database, `versions` table                                                                | Version history: up to 20 earlier versions per project (the newest whole, the rest as changes from the next newer one), deleted with the project.                                                                                              |
 | IndexedDB     | `designhub` database, `kv` table, keys `designhub:brand-dna-key` and `designhub:brand-dna-openai-key` | The key (and model, and for the OpenAI-compatible provider the endpoint) you pasted for a Brand DNA AI provider, and whether you reviewed what it sends. Never in a project, export, share link or version history. Removed by **Remove key**. |
 | Cache Storage | `designhub-share`                                                                                     | Only for a moment: a project file shared to the installed app, kept on the device until the import prompt reads and deletes it.                                                                                                                |
 | IndexedDB     | `designhub` database, `handles` table                                                                 | The folder you chose for autosave (a directory handle, never its contents). Chromium browsers only.                                                                                                                                            |
@@ -24,28 +24,28 @@ The database and its tables are defined in [`lib/db.ts`](../lib/db.ts). Every re
 
 Each row in the `kv` table is one Zustand store, saved under the key shown here. "In projects" means the store is part of a brand project snapshot ([`lib/projects/snapshot.ts`](../lib/projects/snapshot.ts)), so switching projects swaps it.
 
-| Key                         | Holds                                                                            | In projects                     |
-| --------------------------- | -------------------------------------------------------------------------------- | ------------------------------- |
-| `designhub:brand`           | Brand name, description, uploaded logo, color roles, voice, mission and values   | Yes                             |
-| `designhub:colors`          | Palette swatches, shade options, gradient, contrast pair                         | Yes (palette, shades, gradient) |
-| `designhub:typography`      | Heading and body fonts, type scale, rhythm, specimen, OpenType features          | Yes (fonts, scale, rhythm)      |
-| `designhub:tokens`          | Export Engine settings: prefix, color format, spacing and radius bases           | Yes                             |
-| `designhub:effects`         | Effects Lab settings, including the shadow the brand uses                        | Yes                             |
-| `designhub:logo`            | Logo Studio view: guides, clear space, selected variant                          | Yes (clear space)               |
-| `designhub:mockups`         | Mockup template, theme, copy and export scale                                    | Yes (copy and theme)            |
-| `designhub:social`          | Social template, copy, design overrides, safe area, README credit, ZIP selection | Yes (copy, theme, design)       |
-| `designhub:guidelines`      | Selected page, excluded pages, book theme, cover style                           | No                              |
-| `designhub:project`         | Which project is open, and how the project list is sorted                        | No                              |
-| `designhub:brand-dna`       | Chosen Brand DNA provider and the "Ignore background" option                     | No                              |
-| `designhub:backgrounds`     | Background Studio settings                                                       | No                              |
-| `designhub:icons`           | Icon Studio search, selected icon, style, favorite icons                         | No                              |
-| `designhub:library`         | Favorite and recent fonts, saved font pairs, saved palettes                      | No                              |
-| `designhub:svg`             | SVG Playground source and optimizer options                                      | No                              |
-| `designhub:a11y`            | Accessibility Lab colors, text settings and targets                              | No                              |
-| `designhub:mode`            | Simple or Advanced mode                                                          | No                              |
-| `designhub:panels`          | Which collapsible control panels you folded                                      | No                              |
-| `designhub:nav`             | Which sidebar groups you folded                                                  | No                              |
-| `designhub:command-recents` | The last few actions you ran from the command palette (names, never content)     | No                              |
+| Key                         | Holds                                                                                                                     | In projects                     |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| `designhub:brand`           | Brand name, description, uploaded logo, color roles, voice, mission and values                                            | Yes                             |
+| `designhub:colors`          | Palette swatches, shade options, gradient, contrast pair                                                                  | Yes (palette, shades, gradient) |
+| `designhub:typography`      | Heading and body fonts, type scale, rhythm, specimen, OpenType features                                                   | Yes (fonts, scale, rhythm)      |
+| `designhub:tokens`          | Export Engine settings: prefix, color format, spacing and radius bases; also which format is open (not part of a project) | Yes (settings only)             |
+| `designhub:effects`         | Effects Lab settings, including the shadow the brand uses                                                                 | Yes                             |
+| `designhub:logo`            | Logo Studio view: guides, clear space, selected variant                                                                   | Yes (clear space)               |
+| `designhub:mockups`         | Mockup template, theme, copy and export scale                                                                             | Yes (copy and theme)            |
+| `designhub:social`          | Social template, copy, design overrides, safe area, README credit, ZIP selection                                          | Yes (copy, theme, design)       |
+| `designhub:guidelines`      | Selected page, excluded pages, book theme, cover style                                                                    | No                              |
+| `designhub:project`         | Which project is open, and how the project list is sorted                                                                 | No                              |
+| `designhub:brand-dna`       | Chosen Brand DNA provider and the "Ignore background" option                                                              | No                              |
+| `designhub:backgrounds`     | Background Studio settings                                                                                                | No                              |
+| `designhub:icons`           | Icon Studio search, selected icon, style, favorite icons                                                                  | No                              |
+| `designhub:library`         | Favorite and recent fonts, saved font pairs, saved palettes                                                               | No                              |
+| `designhub:svg`             | SVG Playground source and optimizer options                                                                               | No                              |
+| `designhub:a11y`            | Accessibility Lab colors, text settings and targets                                                                       | No                              |
+| `designhub:mode`            | Simple or Advanced mode                                                                                                   | No                              |
+| `designhub:panels`          | Which collapsible control panels you folded                                                                               | No                              |
+| `designhub:nav`             | Which sidebar groups you folded                                                                                           | No                              |
+| `designhub:command-recents` | The last few actions you ran from the command palette (names, never content)                                              | No                              |
 
 Uploaded images for Brand DNA are never saved. They stay in memory until you leave the page.
 
@@ -55,9 +55,13 @@ In Chromium, once DesignHub is installed, double clicking a `.designhub.json` fi
 
 Manual test plan: build and start the app, install it from Chrome, export a project, double click the `.designhub.json` file, and check the prompt names the project; cancel and confirm nothing was added; repeat with a renamed text file and with a broken JSON file.
 
+## The Storage panel
+
+**Brand Projects, Storage** shows what DesignHub keeps on this device: the number and size of projects, version history, the icon cache and the offline caches, and the share of the space this browser allows. Only counts and sizes are read; no project content is shown or sent. **Clear the offline cache** deletes the `designhub-static-*` and `designhub-runtime-*` caches and nothing else (projects, settings and the share cache stay), and the studios you opened are kept again the next time you open them with a connection.
+
 ## Version history
 
-Each project keeps up to 20 versions in the `versions` table (added in database version 4; older databases upgrade in place and keep every project). A version is a full brand snapshot with its project id, the time it was taken and why:
+Each project keeps up to 20 versions in the `versions` table (added in database version 4; older databases upgrade in place and keep every project). A version is a brand snapshot with its project id, the time it was taken and why. The newest version of a project is stored whole, and each older one as the change that takes the next newer version back to it (`lib/projects/delta.ts` and `version-storage.ts`), so twenty versions cost about the size of their edits and not twenty copies of the brand. Reading rebuilds every version whole, so history, restore and compare work as before, and rows written before this stay valid with no database change:
 
 - every few minutes while you edit the open project (the state before the latest edits), and
 - just before Surprise me, a token import, Brand DNA's Apply to brand, a share link import or loading a saved palette.

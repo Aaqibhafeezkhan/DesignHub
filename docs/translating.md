@@ -26,7 +26,7 @@ Some areas must be complete in every language, and a test fails when a key is mi
 3. Copy the structure and keys from `lib/i18n/messages/en.ts`.
 4. Translate the values while preserving every key and placeholder.
 5. Export the catalog using the existing TypeScript pattern, `satisfies Catalog`.
-6. Register the language in `lib/i18n/locales.ts`. Update `locales`, `catalogs`, and `localeNames` following the existing examples.
+6. Register the language in `lib/i18n/locales.ts`. Update `locales`, `localeNames` and the `loaders` table (the app downloads only the language in use, so a new language is one `import()` line there), following the existing examples. The tests read every language from `lib/i18n/all-catalogs.ts`, so add the new language there too.
 7. Check that the translations are natural and consistent.
 
 If you are unsure how to translate a message, leave it in English rather than guessing.

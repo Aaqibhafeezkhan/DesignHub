@@ -154,6 +154,7 @@ DesignHub can be installed as a Progressive Web App. Once installed in Chromium,
 
 **Fix:**
 
+- **In the app:** **Brand Projects, Storage, Clear the offline cache** removes exactly these caches and keeps your projects. Use it first.
 - **Chrome and Edge:** DevTools > **Application** > **Cache Storage**. Delete `designhub-static-*` and `designhub-runtime-*`. Leave the `designhub` IndexedDB database untouched if you want to keep your work. Then reload (or close and reopen the installed app).
 - **Safari:** Enable the Develop menu if needed. Open the storage inspector for the DesignHub site and remove the DesignHub caches, or remove the site under **Manage Website Data** when you are fine clearing everything (export projects first). Then reload.
 - To wipe projects, settings and caches together, use [How do I reset everything?](#how-do-i-reset-everything) instead.

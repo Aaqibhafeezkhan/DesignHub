@@ -31,7 +31,7 @@ A typical design session bounces between a font site, a palette generator, a con
 - **Local first** - brands, projects, palettes and settings persist in IndexedDB.
 - **No login, no backend** - there is no server to send your work to.
 - **Offline first** - a studio you have opened once with a connection works without one; icons you have opened are cached for offline use.
-- **Calm by default** - a short home page, a short command palette, folded groups and panels, and a Simple mode that shows the common controls first (Advanced shows the rest).
+- **Calm by default** - a short home page, a short command palette, folded groups and panels, one pane at a time on a phone, and a Simple mode that shows the common controls first (Advanced shows the rest).
 - **Keyboard first** - `⌘K` for everything, `G` + letter to jump, `Space` to shuffle.
 - **Production ready** - exports drop straight into CSS, SCSS, Tailwind (v3 and v4), React and Vue, plus PNG, PDF and ZIP asset packs.
 - **Dark & light** - tuned themes that follow your system preference.
@@ -418,7 +418,7 @@ DesignHub/
 └── docs/                   # Architecture notes and screenshots
 ```
 
-Read [docs/architecture.md](docs/architecture.md) for how the pieces fit together and [docs/design-tokens.md](docs/design-tokens.md) for the token format. [docs/glossary.md](docs/glossary.md) defines the terms DesignHub uses. To migrate from 1.0, see [docs/migrating-to-v2.md](docs/migrating-to-v2.md). To add a mockup, follow [docs/mockup-templates.md](docs/mockup-templates.md); for a social template, [docs/social-templates.md](docs/social-templates.md); for a brand book page, [docs/guidelines-pages.md](docs/guidelines-pages.md); for an export format, [docs/export-formats.md](docs/export-formats.md).
+Read [docs/architecture.md](docs/architecture.md) for how the pieces fit together and [docs/design-tokens.md](docs/design-tokens.md) for the token format. [docs/glossary.md](docs/glossary.md) defines the terms DesignHub uses. To migrate from 1.0, see [docs/migrating-to-v2.md](docs/migrating-to-v2.md). For what Simple and Advanced mode show in each studio, see [docs/simple-and-advanced.md](docs/simple-and-advanced.md). To add a mockup, follow [docs/mockup-templates.md](docs/mockup-templates.md); for a social template, [docs/social-templates.md](docs/social-templates.md); for a brand book page, [docs/guidelines-pages.md](docs/guidelines-pages.md); for an export format, [docs/export-formats.md](docs/export-formats.md).
 
 ## Privacy
 

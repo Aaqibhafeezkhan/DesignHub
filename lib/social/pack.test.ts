@@ -34,7 +34,12 @@ describe("buildSocialPack", () => {
       return { bytes: new Uint8Array([1]), width: 1, height: 1 };
     });
     await expect(
-      buildSocialPack(socialContext("light"), undefined, ["x-banner", "linkedin-cover", "github-classic"], controller.signal),
+      buildSocialPack(
+        socialContext("light"),
+        undefined,
+        ["x-banner", "linkedin-cover", "github-classic"],
+        controller.signal,
+      ),
     ).rejects.toMatchObject({ name: "AbortError" });
     expect(rasterize).toHaveBeenCalledTimes(1);
   });
@@ -42,7 +47,9 @@ describe("buildSocialPack", () => {
   test("a signal that is already aborted rasterizes nothing", async () => {
     const controller = new AbortController();
     controller.abort();
-    await expect(buildSocialPack(socialContext("light"), undefined, ["x-banner"], controller.signal)).rejects.toMatchObject({
+    await expect(
+      buildSocialPack(socialContext("light"), undefined, ["x-banner"], controller.signal),
+    ).rejects.toMatchObject({
       name: "AbortError",
     });
     expect(rasterize).not.toHaveBeenCalled();
