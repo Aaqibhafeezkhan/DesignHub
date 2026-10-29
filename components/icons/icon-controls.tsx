@@ -5,6 +5,7 @@ import { FlipHorizontal2, FlipVertical2, RotateCcw, RotateCw } from "lucide-reac
 import { Button } from "@/components/ui/button";
 import { SliderField } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
+import { Advanced } from "@/components/ui/advanced";
 import { Panel } from "@/components/ui/panel";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useIcon } from "@/hooks/use-icon-data";
@@ -114,79 +115,81 @@ export function IconControls() {
         className={cn(!stroked && "pointer-events-none opacity-50")}
       />
 
-      <div className="flex flex-col gap-2">
-        <Label>Corners</Label>
-        <ToggleGroup
-          type="single"
-          value={style.corners}
-          onValueChange={(value) => value && updateStyle({ corners: value as IconCorners })}
-          aria-label="Stroke corners"
-          className="w-full"
-          disabled={!stroked}
-        >
-          <ToggleGroupItem value="default" className="flex-1">
-            Original
-          </ToggleGroupItem>
-          <ToggleGroupItem value="rounded" className="flex-1">
-            Rounded
-          </ToggleGroupItem>
-          <ToggleGroupItem value="sharp" className="flex-1">
-            Sharp
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <Label>Transform</Label>
-        <div className="grid grid-cols-4 gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            aria-label="Rotate left"
-            title="Rotate left · ⇧R"
-            onClick={() => rotateBy(-90)}
+      <Advanced>
+        <div className="flex flex-col gap-2">
+          <Label>Corners</Label>
+          <ToggleGroup
+            type="single"
+            value={style.corners}
+            onValueChange={(value) => value && updateStyle({ corners: value as IconCorners })}
+            aria-label="Stroke corners"
+            className="w-full"
+            disabled={!stroked}
           >
-            <RotateCcw />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            aria-label="Rotate right"
-            title="Rotate right · R"
-            onClick={() => rotateBy(90)}
-          >
-            <RotateCw />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            aria-label="Flip horizontally"
-            aria-pressed={style.flipH}
-            className={cn(style.flipH && "border-brand/60 text-brand")}
-            onClick={() => updateStyle({ flipH: !style.flipH })}
-          >
-            <FlipHorizontal2 />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            aria-label="Flip vertically"
-            aria-pressed={style.flipV}
-            className={cn(style.flipV && "border-brand/60 text-brand")}
-            onClick={() => updateStyle({ flipV: !style.flipV })}
-          >
-            <FlipVertical2 />
-          </Button>
+            <ToggleGroupItem value="default" className="flex-1">
+              Original
+            </ToggleGroupItem>
+            <ToggleGroupItem value="rounded" className="flex-1">
+              Rounded
+            </ToggleGroupItem>
+            <ToggleGroupItem value="sharp" className="flex-1">
+              Sharp
+            </ToggleGroupItem>
+          </ToggleGroup>
         </div>
-        <SliderField
-          label="Rotation"
-          value={style.rotate}
-          min={0}
-          max={359}
-          onChange={(rotate) => updateStyle({ rotate })}
-          format={(v) => `${v}°`}
-        />
-      </div>
+
+        <div className="flex flex-col gap-2">
+          <Label>Transform</Label>
+          <div className="grid grid-cols-4 gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              aria-label="Rotate left"
+              title="Rotate left · ⇧R"
+              onClick={() => rotateBy(-90)}
+            >
+              <RotateCcw />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              aria-label="Rotate right"
+              title="Rotate right · R"
+              onClick={() => rotateBy(90)}
+            >
+              <RotateCw />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              aria-label="Flip horizontally"
+              aria-pressed={style.flipH}
+              className={cn(style.flipH && "border-brand/60 text-brand")}
+              onClick={() => updateStyle({ flipH: !style.flipH })}
+            >
+              <FlipHorizontal2 />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              aria-label="Flip vertically"
+              aria-pressed={style.flipV}
+              className={cn(style.flipV && "border-brand/60 text-brand")}
+              onClick={() => updateStyle({ flipV: !style.flipV })}
+            >
+              <FlipVertical2 />
+            </Button>
+          </div>
+          <SliderField
+            label="Rotation"
+            value={style.rotate}
+            min={0}
+            max={359}
+            onChange={(rotate) => updateStyle({ rotate })}
+            format={(v) => `${v}°`}
+          />
+        </div>
+      </Advanced>
 
       <SliderField
         label="Padding"

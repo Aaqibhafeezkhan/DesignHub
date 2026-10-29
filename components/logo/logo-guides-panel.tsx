@@ -23,7 +23,7 @@ export function LogoGuidesPanel() {
   const setBackdrop = useLogoStore((state) => state.setBackdrop);
 
   return (
-    <Panel collapsible id="logo-guides" title="Guides">
+    <Panel collapsible advanced id="logo-guides" title="Guides">
       <SwitchField label="Construction grid" checked={guides.grid} onChange={() => toggleGuide("grid")} />
       <SwitchField label="Clear space" checked={guides.clearSpace} onChange={() => toggleGuide("clearSpace")} />
       <SwitchField label="Safe area" checked={guides.safeArea} onChange={() => toggleGuide("safeArea")} />

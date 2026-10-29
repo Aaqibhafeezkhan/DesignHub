@@ -45,7 +45,7 @@ export function LogoEditorPanel() {
   }
 
   return (
-    <Panel title="Edit" description="Recolor or edit the markup. Scripts are always stripped.">
+    <Panel advanced title="Edit" description="Recolor or edit the markup. Scripts are always stripped.">
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <Label>Colors in this logo</Label>

@@ -1,7 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
 
 /** Controls that only Advanced mode shows, by studio: the panels and fields listed here are the whole split. */
-const advancedPanels = [{ path: "/typography", names: ["OpenType features"] }];
+const advancedPanels = [
+  { path: "/typography", names: ["OpenType features"] },
+  { path: "/logo", names: ["Guides", "Edit"] },
+];
 
 const modeGroup = (page: Page) =>
   page.getByRole("group", { name: "Controls shown" }).or(page.getByRole("radiogroup", { name: "Controls shown" }));
@@ -93,4 +96,41 @@ test("the export settings keep the name, prefix and color notation in Simple and
   await mode.getByRole("radio", { name: "Advanced" }).click();
   await expect(page.getByRole("slider", { name: "Spacing base" })).toBeVisible();
   await expect(page.getByText("Include", { exact: true })).toBeVisible();
+});
+
+test("the Icon Studio hides corners and transforms in Simple and keeps their values", async ({ page }) => {
+  await page.goto("/icons");
+  await expect(page.locator("h1").first()).toBeVisible();
+  const mode = modeGroup(page);
+  await expect(mode.getByRole("radio", { name: "Simple" })).toHaveAttribute("aria-checked", "true");
+  await expect(page.getByRole("radiogroup", { name: "Stroke corners" })).toHaveCount(0);
+  await expect(page.getByRole("slider", { name: "Rotation" })).toHaveCount(0);
+  await expect(page.getByRole("slider", { name: "Padding" })).toBeVisible();
+
+  await mode.getByRole("radio", { name: "Advanced" }).click();
+  const corners = page
+    .getByRole("group", { name: "Stroke corners" })
+    .or(page.getByRole("radiogroup", { name: "Stroke corners" }));
+  await corners.getByRole("radio", { name: "Rounded" }).click();
+  await mode.getByRole("radio", { name: "Simple" }).click();
+  await mode.getByRole("radio", { name: "Advanced" }).click();
+  await expect(corners.getByRole("radio", { name: "Rounded" })).toHaveAttribute("aria-checked", "true");
+});
+
+test("the SVG Playground shows Layers and Sprite only in Advanced, and leaves them when Advanced is left", async ({
+  page,
+}) => {
+  await page.goto("/svg");
+  await expect(page.locator("h1").first()).toBeVisible();
+  const mode = modeGroup(page);
+  const tools = page.getByRole("tablist", { name: "SVG tools" });
+  await expect(tools.getByRole("tab", { name: "Optimize" })).toBeVisible();
+  await expect(tools.getByRole("tab", { name: "Layers" })).toHaveCount(0);
+  await expect(tools.getByRole("tab", { name: "Sprite" })).toHaveCount(0);
+
+  await mode.getByRole("radio", { name: "Advanced" }).click();
+  await tools.getByRole("tab", { name: "Sprite" }).click();
+  await expect(tools.getByRole("tab", { name: "Sprite" })).toHaveAttribute("aria-selected", "true");
+  await mode.getByRole("radio", { name: "Simple" }).click();
+  await expect(tools.getByRole("tab", { name: "Document" })).toHaveAttribute("aria-selected", "true");
 });

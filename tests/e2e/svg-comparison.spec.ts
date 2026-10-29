@@ -178,6 +178,7 @@ test("dropping a document replaces the active comparison", async ({ page }) => {
 test("normal preview keeps layer highlighting when comparison is turned off", async ({ page }) => {
   await openComparison(page);
   await show(page, "Controls");
+  await page.getByRole("radio", { name: "Advanced" }).click();
   await page.getByRole("tab", { name: "Layers", exact: true }).click();
   await page.getByRole("option", { name: "<rect>", exact: true }).click();
   await show(page, "Preview");
