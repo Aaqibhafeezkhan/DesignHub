@@ -20,9 +20,10 @@ export function VariablePlayground() {
   const meta = useFontMeta(activeFont);
   const axes = meta?.axes ?? [];
 
-  const animation = useAxisAnimation((value) => {
-    if (animation.playing === "wght") updateSpecimen({ weight: value });
-    else if (animation.playing) setAxis(animation.playing, value);
+  const animation = useAxisAnimation((value, id) => {
+    const activeAxis = id ?? animation.playing;
+    if (activeAxis === "wght") updateSpecimen({ weight: value });
+    else if (activeAxis) setAxis(activeAxis, value);
   });
   const { stop } = animation;
 
