@@ -336,6 +336,8 @@ export const es = {
   "colors.toolbar.undoHint": "Deshacer · Z",
   "colors.toolbar.redo": "Rehacer",
   "colors.toolbar.redoHint": "Rehacer · ⇧Z",
+  "colors.toolbar.more": "Más",
+  "colors.toolbar.eyedropper": "Cuentagotas",
   "colors.toolbar.add": "Añadir color",
   "colors.toolbar.lockTip": "Bloquea colores para conservarlos entre generaciones.",
   "colors.toolbar.saved": "Paleta guardada",

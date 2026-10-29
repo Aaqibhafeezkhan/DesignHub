@@ -342,6 +342,8 @@ export const en = {
   "colors.toolbar.undoHint": "Undo · Z",
   "colors.toolbar.redo": "Redo",
   "colors.toolbar.redoHint": "Redo · ⇧Z",
+  "colors.toolbar.more": "More",
+  "colors.toolbar.eyedropper": "Eyedropper",
   "colors.toolbar.add": "Add color",
   "colors.toolbar.lockTip": "Lock colors to keep them between generations.",
   "colors.toolbar.saved": "Palette saved",

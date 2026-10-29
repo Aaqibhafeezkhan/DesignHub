@@ -2,12 +2,13 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bookmark, Download, Pipette, Plus, Redo2, Shuffle, Undo2 } from "lucide-react";
+import { Bookmark, Download, MoreHorizontal, Pipette, Plus, Redo2, Shuffle, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useI18n } from "@/components/layout/locale-provider";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useHotkey } from "@/hooks/use-hotkeys";
 import { fromEyeDropperResult } from "@/lib/color/eyedropper";
@@ -71,10 +72,12 @@ export function PaletteToolbar({ nextColors, announce }: PaletteToolbarProps) {
   const canUndo = useColorStore((state) => state.past.length > 0);
   const canRedo = useColorStore((state) => state.future.length > 0);
   const savePalette = useLibraryStore((state) => state.savePalette);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [importMounted, setImportMounted] = useState(false);
   const [eyeDropperAvailable, setEyeDropperAvailable] = useState(false);
-  const importRef = useRef<HTMLButtonElement>(null);
+  // The import dialog returns focus to the menu button, which stays when the menu closes.
+  const moreRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setEyeDropperAvailable(
@@ -91,6 +94,7 @@ export function PaletteToolbar({ nextColors, announce }: PaletteToolbarProps) {
   useHotkey("shift+z", redo);
 
   async function pickColor() {
+    setMenuOpen(false);
     const EyeDropperApi = (window as EyeDropperWindow).EyeDropper;
     if (!EyeDropperApi || swatches.length >= MAX_SWATCHES) return;
 
@@ -103,6 +107,7 @@ export function PaletteToolbar({ nextColors, announce }: PaletteToolbarProps) {
   }
 
   function save() {
+    setMenuOpen(false);
     const colors = swatches.map((swatch) => swatch.color);
     const name = paletteNames(colors).slice(0, 3).join(" · ");
     savePalette({ id: createId("pal"), name, colors, createdAt: Date.now() });
@@ -139,40 +144,59 @@ export function PaletteToolbar({ nextColors, announce }: PaletteToolbarProps) {
         </TooltipTrigger>
         <TooltipContent>{t("colors.toolbar.redoHint")}</TooltipContent>
       </Tooltip>
-      <Button
-        variant="outline"
-        onClick={() => addSwatch(randomColor(), selectedId ?? undefined)}
-        disabled={swatches.length >= MAX_SWATCHES}
-      >
-        <Plus /> {t("colors.toolbar.add")}
-      </Button>
-      {eyeDropperAvailable ? (
-        <Button variant="outline" onClick={pickColor} disabled={swatches.length >= MAX_SWATCHES}>
-          <Pipette /> Eyedropper
-        </Button>
-      ) : null}
-      <Button
-        ref={importRef}
-        variant="outline"
-        aria-haspopup="dialog"
-        aria-expanded={importOpen}
-        aria-controls={importOpen ? "palette-import" : undefined}
-        data-state={importOpen ? "open" : "closed"}
-        onPointerEnter={() => void loadImportDialog()}
-        onFocus={() => void loadImportDialog()}
-        onClick={() => {
-          setImportMounted(true);
-          setImportOpen(true);
-        }}
-      >
-        <Download /> {t("common.import")}
-      </Button>
+      <Popover open={menuOpen} onOpenChange={setMenuOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            ref={moreRef}
+            variant="outline"
+            onPointerEnter={() => void loadImportDialog()}
+            onFocus={() => void loadImportDialog()}
+          >
+            <MoreHorizontal /> {t("colors.toolbar.more")}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent align="start" className="flex w-56 flex-col gap-1 p-1.5">
+          <Button
+            variant="ghost"
+            className="justify-start"
+            onClick={() => {
+              addSwatch(randomColor(), selectedId ?? undefined);
+              setMenuOpen(false);
+            }}
+            disabled={swatches.length >= MAX_SWATCHES}
+          >
+            <Plus /> {t("colors.toolbar.add")}
+          </Button>
+          {eyeDropperAvailable ? (
+            <Button
+              variant="ghost"
+              className="justify-start"
+              onClick={pickColor}
+              disabled={swatches.length >= MAX_SWATCHES}
+            >
+              <Pipette /> {t("colors.toolbar.eyedropper")}
+            </Button>
+          ) : null}
+          <Button
+            variant="ghost"
+            className="justify-start"
+            aria-haspopup="dialog"
+            onClick={() => {
+              setMenuOpen(false);
+              setImportMounted(true);
+              setImportOpen(true);
+            }}
+          >
+            <Download /> {t("common.import")}
+          </Button>
+          <Button variant="ghost" className="justify-start" onClick={save}>
+            <Bookmark /> {t("common.save")}
+          </Button>
+        </PopoverContent>
+      </Popover>
       {importMounted ? (
-        <PaletteImportDialog open={importOpen} onOpenChange={setImportOpen} triggerRef={importRef} />
+        <PaletteImportDialog open={importOpen} onOpenChange={setImportOpen} triggerRef={moreRef} />
       ) : null}
-      <Button variant="outline" onClick={save}>
-        <Bookmark /> {t("common.save")}
-      </Button>
       <p className="ml-auto hidden text-xs text-subtle-foreground md:block">{t("colors.toolbar.lockTip")}</p>
     </div>
   );

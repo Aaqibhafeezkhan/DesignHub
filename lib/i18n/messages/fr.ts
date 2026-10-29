@@ -339,6 +339,8 @@ export const fr = {
   "colors.toolbar.undoHint": "Annuler · Z",
   "colors.toolbar.redo": "Rétablir",
   "colors.toolbar.redoHint": "Rétablir · ⇧Z",
+  "colors.toolbar.more": "Plus",
+  "colors.toolbar.eyedropper": "Pipette",
   "colors.toolbar.add": "Ajouter une couleur",
   "colors.toolbar.lockTip": "Verrouillez des couleurs pour les garder d'une génération à l'autre.",
   "colors.toolbar.saved": "Palette enregistrée",

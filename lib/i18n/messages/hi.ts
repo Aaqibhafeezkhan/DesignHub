@@ -332,6 +332,8 @@ export const hi = {
   "colors.toolbar.undoHint": "पूर्ववत करें · Z",
   "colors.toolbar.redo": "फिर से करें",
   "colors.toolbar.redoHint": "फिर से करें · ⇧Z",
+  "colors.toolbar.more": "और",
+  "colors.toolbar.eyedropper": "आईड्रॉपर",
   "colors.toolbar.add": "रंग जोड़ें",
   "colors.toolbar.lockTip": "रंगों को अगली बार बनाने पर भी बनाए रखने के लिए उन्हें लॉक करें।",
   "colors.toolbar.saved": "पैलेट सेव किया गया",
