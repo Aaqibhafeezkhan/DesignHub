@@ -4,6 +4,7 @@ import { Layers, SlidersHorizontal, SquareCode } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useState, type ReactNode } from "react";
 import { useGroupRef, type Layout, type LayoutChangedMeta } from "react-resizable-panels";
 
+import { useI18n } from "@/components/layout/locale-provider";
 import { ResizableGroup, ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
 import { STUDIO_OUTPUT_ID, STUDIO_PANE_EVENT, STUDIO_PREVIEW_ID, type StudioPane } from "@/lib/studio-panes";
 import { paneRestoreScript, paneRestoreStyleId, readPaneLayout, writePaneLayout } from "@/lib/pane-layout";
@@ -22,11 +23,11 @@ type StudioLayoutProps = {
 /** Below `lg` only the open pane shows, and the bar at the bottom switches between them. */
 const hiddenOnPhone = (open: StudioPane, pane: StudioPane) => (open === pane ? undefined : "max-lg:hidden");
 
-const paneTabs: { pane: StudioPane; label: string; icon: typeof Layers }[] = [
-  { pane: "controls", label: "Controls", icon: SlidersHorizontal },
-  { pane: "preview", label: "Preview", icon: Layers },
-  { pane: "output", label: "Output", icon: SquareCode },
-];
+const paneTabs = [
+  { pane: "controls", label: "studio.pane.controls", icon: SlidersHorizontal },
+  { pane: "preview", label: "studio.pane.preview", icon: Layers },
+  { pane: "output", label: "studio.pane.output", icon: SquareCode },
+] as const;
 
 const panelClass = "flex h-full min-h-0 flex-col gap-4 overflow-y-auto scrollbar-thin lg:px-1 lg:pb-1";
 
@@ -40,6 +41,7 @@ const RESIZABLE_FROM = "64rem";
  * react-resizable-panels sets its sizing inline, so both layouts override it with `!important`.
  */
 export function StudioLayout({ id, controls, preview, output, className }: StudioLayoutProps) {
+  const { t } = useI18n();
   const groupRef = useGroupRef();
   const [open, setOpen] = useState<StudioPane>("controls");
   const panelIds = output ? [`${id}-controls`, `${id}-preview`, `${id}-output`] : [`${id}-controls`, `${id}-preview`];
@@ -107,11 +109,11 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
           minSize="220px"
           className={cn(panelClass, hiddenOnPhone(open, "controls"))}
         >
-          <section aria-label="Controls" className="flex flex-col gap-4">
+          <section aria-label={t("studio.pane.controls")} className="flex flex-col gap-4">
             {controls}
           </section>
         </ResizablePanel>
-        <ResizableHandle aria-label="Resize controls panel" onDoubleClick={saveAfterReset} />
+        <ResizableHandle aria-label={t("studio.pane.resizeControls")} onDoubleClick={saveAfterReset} />
         <ResizablePanel
           id={panelIds[1]}
           defaultSize={output ? "46%" : "76%"}
@@ -121,7 +123,7 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
           <section
             id={STUDIO_PREVIEW_ID}
             tabIndex={-1}
-            aria-label="Preview"
+            aria-label={t("studio.pane.preview")}
             className="flex min-h-0 flex-1 flex-col gap-4 outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
           >
             {preview}
@@ -129,7 +131,7 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
         </ResizablePanel>
         {output ? (
           <>
-            <ResizableHandle aria-label="Resize code panel" onDoubleClick={saveAfterReset} />
+            <ResizableHandle aria-label={t("studio.pane.resizeCode")} onDoubleClick={saveAfterReset} />
             <ResizablePanel
               id={panelIds[2]}
               defaultSize="30%"
@@ -139,7 +141,7 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
               <section
                 id={STUDIO_OUTPUT_ID}
                 tabIndex={-1}
-                aria-label="Code and exports"
+                aria-label={t("studio.pane.codeExports")}
                 className="flex flex-col gap-4 outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
               >
                 {output}
@@ -149,7 +151,7 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
         ) : null}
       </ResizableGroup>
       <nav
-        aria-label="Studio panes"
+        aria-label={t("studio.pane.bar")}
         className="fixed inset-x-0 bottom-0 z-40 flex border-t bg-background/95 backdrop-blur lg:hidden"
       >
         {paneTabs
@@ -166,7 +168,7 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
               )}
             >
               <Icon className="size-4" aria-hidden />
-              {label}
+              {t(label)}
             </button>
           ))}
       </nav>

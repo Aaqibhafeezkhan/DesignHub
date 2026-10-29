@@ -18,6 +18,7 @@ export const completeAreas = [
   "history.",
   "home.",
   "language.",
+  "mode.",
   "launch.",
   "nav.",
   "projects.",
