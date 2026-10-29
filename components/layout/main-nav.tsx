@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
-import Link from "next/link";
+import { StudioLink as Link } from "@/components/layout/studio-link";
 import { usePathname } from "next/navigation";
 import { DropdownMenu } from "radix-ui";
 

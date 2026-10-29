@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { StudioLink as Link } from "@/components/layout/studio-link";
 import { ArrowUpRight } from "lucide-react";
 
 import { Message } from "@/components/layout/message";

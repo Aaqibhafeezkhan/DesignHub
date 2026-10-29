@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { StudioLink as Link } from "@/components/layout/studio-link";
 import { usePathname } from "next/navigation";
 import { BookOpen, ChevronDown, Home } from "lucide-react";
 

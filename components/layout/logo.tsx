@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { StudioLink as Link } from "@/components/layout/studio-link";
 
 import { cn } from "@/lib/utils";
 
