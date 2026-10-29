@@ -6,6 +6,10 @@ const port = Number(process.env.E2E_PORT ?? 3100);
 export default defineConfig({
   testDir: "./tests/e2e",
   outputDir: "./test-results",
+  // Screenshots are made by the visual workflow on its Linux image, so one set serves every machine that
+  // runs it there (see tests/e2e/visual.spec.ts). They are not named by platform.
+  snapshotPathTemplate: "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
+  expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: "disabled", caret: "hide" } },
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,

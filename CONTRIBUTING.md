@@ -67,6 +67,10 @@ pnpm test:e2e
 
 The config starts `pnpm start` on port 3100 (set `E2E_PORT` to change it) and reuses a server already running there. Failed runs keep a trace in `test-results/` (gitignored); open it with `pnpm exec playwright show-trace <trace.zip>`. Vitest only reads `lib/**/*.test.ts`, so the e2e specs never run under `pnpm test`.
 
+### Screenshots
+
+`tests/e2e/visual.spec.ts` takes screenshots of the home page, the Color Studio and the Effects Lab at 375, 768 and 1280 px in light and dark, and fails when one no longer matches, so a layout that looks wrong is caught even when every behaviour test passes. They run only in `visual.yml`, on its Linux image, because other machines draw text a little differently (the images are stored in `tests/e2e/__screenshots__`, not named by platform). After a layout change you meant to make, open **Actions, Visual, Run workflow** with "update" ticked: it makes the screenshots again and commits them, and you read the new images in that commit. Locally, `VISUAL=1 pnpm exec playwright test tests/e2e/visual.spec.ts` compares them, which only passes on the same image.
+
 ### Lighthouse
 
 `lighthouse.yml` builds the app and runs [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) on the home page, `/brand`, `/colors`, `/typography` and `/social` for every pull request and push to `main`. Each page is audited five times and the median run is checked. Accessibility, best practices and SEO must score 100 everywhere. Performance must score 90 on the home page (below that fails the check); on the studios it is a warning, because CI runners are noisy and a studio is a much larger page. The scores of each page are in the job summary. The thresholds live in `lighthouserc.json`, and the HTML reports are uploaded as the `lighthouse-reports` artifact.
