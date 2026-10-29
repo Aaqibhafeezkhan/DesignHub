@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useDeferredValue, useMemo } from "react";
 
 import { useBrandTokens } from "@/hooks/use-brand";
 import { useFocusRing } from "@/hooks/use-focus-ring";
@@ -20,20 +20,26 @@ import { brandSiteFiles } from "@/lib/guidelines/site";
 import { useA11yStore } from "@/store/a11y-store";
 import { useEffectsStore } from "@/store/effects-store";
 
-/** The full accessibility audit for the current Accessibility Lab settings. */
+/**
+ * The full accessibility audit for the current Accessibility Lab settings. The audit, the brand book pages it
+ * reads headings from and the vision simulations are heavy, so they follow a deferred copy of the settings:
+ * the fields answer at once and the report catches up a frame behind, skipping the keystrokes in between.
+ */
 export function useA11yReport(): A11yReport {
-  const colors = useA11yStore((state) => state.colors);
-  const typography = useA11yStore((state) => state.typography);
-  const targets = useA11yStore((state) => state.targets);
-  const targetGap = useA11yStore((state) => state.targetGap);
+  const colors = useDeferredValue(useA11yStore((state) => state.colors));
+  const typography = useDeferredValue(useA11yStore((state) => state.typography));
+  const targets = useDeferredValue(useA11yStore((state) => state.targets));
+  const targetGap = useDeferredValue(useA11yStore((state) => state.targetGap));
   const readability = useReadability();
   const { ring } = useFocusRing();
   const gradientText = useGradientContrast();
   const brandColors = useBrandTokens().colors.all;
   const palette = useMemo(() => brandColors.map(({ name, hex }) => ({ name, hex })), [brandColors]);
-  const effectSettings = useEffectsStore((state) => state.settings);
+  const effectSettings = useDeferredValue(useEffectsStore((state) => state.settings));
   const effectContext = useEffectContext();
-  const { ctx: guidelineCtx, pages: guidelinePages } = useGuidelineContext();
+  const guideline = useGuidelineContext();
+  const guidelineCtx = useDeferredValue(guideline.ctx);
+  const guidelinePages = useDeferredValue(guideline.pages);
   const headings = useMemo(
     () =>
       headingSection(
