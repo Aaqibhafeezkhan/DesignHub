@@ -1,7 +1,7 @@
 "use client";
 
 import { FileArchive, FileJson, FileText, ImageDown, Loader2 } from "lucide-react";
-import { useCallback, useMemo, useState, type RefObject } from "react";
+import { useCallback, useEffect, useMemo, useState, type RefObject } from "react";
 import { toast } from "sonner";
 
 import { ExportPanel } from "@/components/export/export-panel";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { downloadBlob, downloadDataUrl, downloadText } from "@/lib/download";
 import { tokenFormat, tokenFormatList, tokenFormats } from "@/lib/tokens/formats";
 import { createZip } from "@/lib/zip";
+import { useTokensStore } from "@/store/tokens-store";
 import type { DesignTokens } from "@/types/tokens";
 
 type Action = "zip" | "png" | "pdf";
@@ -43,7 +44,20 @@ export function TokenOutput({
   // The list is cheap; code is written for the open format only, and for everything when the ZIP is asked for.
   const formats = useMemo(() => tokenFormatList(tokens), [tokens]);
   const renderCode = useCallback((id: string) => tokenFormat(tokens, id)?.code ?? "", [tokens]);
+  const openFormat = useTokensStore((state) => state.openFormat);
+  const setOpenFormat = useTokensStore((state) => state.setOpenFormat);
   const [busy, setBusy] = useState<Action | null>(null);
+
+  // `/export?format=css` opens that format, once the saved choice has loaded so the link wins over it.
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get("format");
+    if (!wanted || !formats.some((format) => format.id === wanted)) return;
+    const apply = () => setOpenFormat(wanted);
+    if (useTokensStore.persist.hasHydrated()) return apply();
+    return useTokensStore.persist.onFinishHydration(apply);
+    // Only on arrival: later edits to the tokens must not reopen the linked format.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const name = slug(tokens.meta.name);
 
   async function run(action: Action) {
@@ -102,7 +116,13 @@ export function TokenOutput({
           </Button>
         </div>
       </div>
-      <ExportPanel formats={formats} renderCode={renderCode} label="Token format" />
+      <ExportPanel
+        formats={formats}
+        renderCode={renderCode}
+        label="Token format"
+        activeId={formats.some((format) => format.id === openFormat) ? openFormat : (formats[0]?.id ?? null)}
+        onActiveChange={setOpenFormat}
+      />
     </section>
   );
 }

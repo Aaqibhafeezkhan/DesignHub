@@ -23,6 +23,9 @@ export const defaultTokenSettings: TokenSettings = {
 
 type TokensState = {
   settings: TokenSettings;
+  /** The format open in the Export Engine. A view choice, not part of a project, so it is outside `settings`. */
+  openFormat: string | null;
+  setOpenFormat: (id: string | null) => void;
   update: (patch: Partial<TokenSettings>) => void;
   toggleSection: (section: keyof TokenSections) => void;
   reset: () => void;
@@ -32,6 +35,8 @@ export const useTokensStore = create<TokensState>()(
   persist(
     (set) => ({
       settings: defaultTokenSettings,
+      openFormat: null,
+      setOpenFormat: (openFormat) => set({ openFormat }),
       update: (patch) => set((state) => ({ settings: { ...state.settings, ...patch } })),
       toggleSection: (section) =>
         set((state) => ({

@@ -19,6 +19,9 @@ type ExportPanelProps = {
   label?: string;
   /** Writes the code of one format. Called for the open format only, and again only when it or this function changes. */
   renderCode?: (id: string) => string;
+  /** Controls which format is open. Without it the panel keeps its own choice. */
+  activeId?: string | null;
+  onActiveChange?: (id: string) => void;
 };
 
 /** The words a search matches on: what a person would type for a format. */
@@ -138,9 +141,11 @@ function TieredPicker({
 }
 
 /** Format switcher + code view with one-click copy and download. */
-export function ExportPanel({ formats, label, renderCode }: ExportPanelProps) {
+export function ExportPanel({ formats, label, renderCode, activeId, onActiveChange }: ExportPanelProps) {
   const { t } = useI18n();
-  const [active, setActive] = useState(formats[0]?.id ?? "");
+  const [own, setOwn] = useState(formats[0]?.id ?? "");
+  const active = (onActiveChange ? activeId : own) ?? "";
+  const setActive = (id: string) => (onActiveChange ? onActiveChange(id) : setOwn(id));
   const format = formats.find((item) => item.id === active) ?? formats[0];
   const code = useMemo(() => format?.code ?? renderCode?.(format?.id ?? "") ?? "", [format, renderCode]);
   if (!format) return null;
