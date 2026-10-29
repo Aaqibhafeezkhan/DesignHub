@@ -1,7 +1,7 @@
 "use client";
 
 import { ClipboardCopy, FileArchive, FileCode, ImageDown, Loader2 } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -72,22 +72,29 @@ export function SocialExportPanel({ svg, ctx, template }: Props) {
       toast.success("Image copied to the clipboard");
     });
 
+  const stopPack = useRef<AbortController | null>(null);
+
   async function downloadAll() {
     setPackProgress(0);
+    const controller = new AbortController();
+    stopPack.current = controller;
     try {
       const zip = await buildSocialPack(
         ctx,
         (done, total) => setPackProgress(Math.round((done / total) * 100)),
         packSelection,
+        controller.signal,
       );
       downloadBlob(
         new Blob([zip.slice().buffer], { type: "application/zip" }),
         `${slugify(ctx.brand.name)}-social.zip`,
       );
       toast.success("Social pack ready");
-    } catch {
-      toast.error("Export failed in this browser.");
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") toast("Pack cancelled");
+      else toast.error("Export failed in this browser.");
     } finally {
+      stopPack.current = null;
       setPackProgress(null);
     }
   }
@@ -127,6 +134,11 @@ export function SocialExportPanel({ svg, ctx, template }: Props) {
           ? `Rendering ${packProgress}%`
           : `${packCount} ${packCount === 1 ? "asset" : "assets"} (ZIP)`}
       </Button>
+      {packProgress !== null ? (
+        <Button variant="ghost" size="sm" onClick={() => stopPack.current?.abort()}>
+          Cancel
+        </Button>
+      ) : null}
       {readme ? (
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-2">

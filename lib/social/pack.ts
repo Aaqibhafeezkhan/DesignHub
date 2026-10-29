@@ -15,11 +15,18 @@ export function packTemplates(selection: string[] | null) {
   return selection ? socialTemplates.filter((template) => selection.includes(template.id)) : defaultPackTemplates();
 }
 
-/** The selected social templates as PNGs at their platform sizes, grouped by platform. */
+/** Lets the page handle input between two templates: rasterizing each one takes long enough to be felt. */
+const yieldToPage = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+
+/**
+ * The selected social templates as PNGs at their platform sizes, grouped by platform. Pass a `signal` to
+ * stop between templates: the build then rejects with an AbortError and nothing is returned.
+ */
 export async function buildSocialPack(
   ctx: SocialContext,
   onProgress?: (done: number, total: number) => void,
   selection: string[] | null = null,
+  signal?: AbortSignal,
 ): Promise<Uint8Array> {
   const templates = packTemplates(selection);
   const base = slugify(ctx.brand.name);
@@ -27,6 +34,8 @@ export async function buildSocialPack(
   const readme = [`${ctx.brand.name} social assets`, ""];
   let done = 0;
   for (const info of templates) {
+    await yieldToPage();
+    signal?.throwIfAborted();
     // Each template's code is loaded as the pack reaches it, so only the chosen ones are fetched.
     const template = await loadSocialTemplate(info.id);
     if (!template) throw new Error(`Social template ${info.id} could not be loaded`);
