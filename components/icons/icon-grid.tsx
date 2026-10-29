@@ -1,7 +1,8 @@
 "use client";
 
 import { AlertTriangle, RotateCw } from "lucide-react";
-import { memo, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { memo, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { flushSync } from "react-dom";
 
 import { IconGlyph } from "@/components/icons/icon-image";
 import { Button } from "@/components/ui/button";
@@ -56,13 +57,6 @@ export function IconGrid({ ids, emptyMessage = "No icons found." }: IconGridProp
   const known = useRef(new Map<IconId, IconData>());
   icons.forEach((icon, id) => known.current.set(id, icon));
 
-  // Tab past the last drawn tile moves to the next icon, which is drawn first.
-  useEffect(() => {
-    if (focused === null) return;
-    const node = listRef.current?.querySelector<HTMLElement>(`[data-index="${focused}"]`);
-    if (node && document.activeElement !== node && listRef.current?.contains(document.activeElement)) node.focus();
-  }, [focused, grid.start, grid.end]);
-
   if (error) return <IconsError onRetry={retry} />;
   if (ids.length === 0) {
     return (
@@ -78,7 +72,9 @@ export function IconGrid({ ids, emptyMessage = "No icons found." }: IconGridProp
     const edge = event.shiftKey ? index === grid.start : index === grid.end - 1;
     if (!edge || next < 0 || next >= ids.length) return;
     event.preventDefault();
-    setFocused(next);
+    // Draw the next tile now, then focus it, so a quick run of Tab presses never outruns the drawing.
+    flushSync(() => setFocused(next));
+    listRef.current?.querySelector<HTMLElement>(`[data-index="${next}"]`)?.focus();
   };
 
   return (

@@ -8,6 +8,9 @@ import { CopyButton } from "@/components/ui/copy-button";
 import { downloadText } from "@/lib/download";
 import { cn } from "@/lib/utils";
 
+/** More than this many characters are not drawn: laying out a megabyte of text stalls the page. */
+export const CODE_DISPLAY_LIMIT = 60_000;
+
 type CodeBlockProps = {
   code: string;
   filename?: string;
@@ -19,6 +22,8 @@ export function CodeBlock({ code, filename, className, maxHeight = "28rem" }: Co
   const { t } = useI18n();
   // Minified output is one very long line; wrap it instead of forcing a horizontal scroll.
   const singleLine = !code.trimEnd().includes("\n");
+  const clipped = code.length > CODE_DISPLAY_LIMIT;
+  const shown = clipped ? code.slice(0, CODE_DISPLAY_LIMIT) : code;
   return (
     <figure className={cn("flex min-w-0 flex-col overflow-hidden rounded-lg border bg-surface", className)}>
       <figcaption className="flex h-10 items-center justify-between gap-2 border-b px-3">
@@ -47,8 +52,13 @@ export function CodeBlock({ code, filename, className, maxHeight = "28rem" }: Co
         )}
         style={{ maxHeight }}
       >
-        <code>{code}</code>
+        <code>{shown}</code>
       </pre>
+      {clipped ? (
+        <p className="border-t px-3 py-2 text-xs text-muted-foreground">
+          {t("code.clipped", { shown: CODE_DISPLAY_LIMIT.toLocaleString(), total: code.length.toLocaleString() })}
+        </p>
+      ) : null}
     </figure>
   );
 }

@@ -944,6 +944,7 @@ export const fr = {
   "code.tier.platforms": "Plateformes",
   "code.deprecated": "Obsolète",
   "code.deprecatedNote": "Ce format est obsolète.",
+  "code.clipped": "Affichage des {shown} premiers caractères sur {total}. Copier et télécharger incluent tout.",
   "code.noMatch": "Aucun format ne correspond à cette recherche.",
   "error.file.newer":
     "Ce fichier a été enregistré par une version plus récente de DesignHub (version de fichier {version}). Mettez l'application à jour, puis réessayez.",

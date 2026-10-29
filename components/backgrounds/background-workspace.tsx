@@ -12,13 +12,25 @@ import { useBackgroundStore } from "@/store/background-store";
 export function BackgroundWorkspace() {
   const settings = useBackgroundStore((state) => state.settings);
   const paperReady = usePaper(Boolean(getGenerator(settings.kind)?.usesPaper));
-  const svg = useBackgroundSvg(settings, paperReady);
+  const { svg, busy } = useBackgroundSvg(settings, paperReady);
 
   return (
     <StudioLayout
       id="backgrounds"
       controls={<BackgroundControls />}
-      preview={<SvgPreviewCanvas svg={svg} label={`${settings.kind} background preview`} defaultBackdrop="dark" />}
+      preview={
+        <div className="relative flex min-h-0 flex-1 flex-col" aria-busy={busy}>
+          <SvgPreviewCanvas svg={svg} label={`${settings.kind} background preview`} defaultBackdrop="dark" />
+          {busy ? (
+            <p
+              role="status"
+              className="pointer-events-none absolute top-3 right-3 rounded-md border bg-background/90 px-2 py-1 text-xs text-muted-foreground"
+            >
+              Drawing…
+            </p>
+          ) : null}
+        </div>
+      }
       output={<BackgroundOutput svg={svg} />}
     />
   );

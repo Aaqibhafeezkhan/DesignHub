@@ -56,3 +56,40 @@ test("dragging a slider on a heavy generator does not block the page for long", 
   // The target is 50 ms; the bound leaves room for a busy CI machine.
   expect(longest).toBeLessThan(150);
 });
+
+test("the isometric generator, the slowest at a large canvas, is drawn in the worker without blocking input", async ({
+  page,
+}) => {
+  await page.goto("/backgrounds");
+  await expect(page.locator("h1").first()).toBeVisible();
+  await page.getByRole("searchbox", { name: "Find a generator" }).fill("isometric");
+  await page
+    .getByRole("group", { name: "Generator" })
+    .getByRole("radio", { name: /Isometric/ })
+    .click();
+  const slider = page.getByRole("slider", { name: "Density", exact: true });
+  await expect(slider).toBeVisible();
+  await page.getByRole("combobox", { name: "Canvas size" }).click();
+  await page.getByRole("option", { name: /Full HD/ }).click();
+  await page.evaluate(() => {
+    const longTasks: number[] = [];
+    Object.assign(window, { longTasks });
+    new PerformanceObserver((entries) =>
+      entries.getEntries().forEach((entry) => longTasks.push(entry.duration)),
+    ).observe({
+      type: "longtask",
+    });
+  });
+
+  await slider.focus();
+  await page.keyboard.press("End");
+  for (let step = 0; step < 10; step += 1) await page.keyboard.press("ArrowLeft");
+  await expect(slider).toHaveAttribute("aria-valuenow", "90");
+  expect(page.workers().length).toBeGreaterThan(0);
+  // No "Drawing…" note is left behind once the last drawing has arrived.
+  await expect(page.getByRole("status").filter({ hasText: "Drawing" })).toHaveCount(0);
+  const longest = await page.evaluate(() => Math.max(0, ...(window as unknown as { longTasks: number[] }).longTasks));
+  // The drawing is in the worker (checked above). The bound is loose because this page also paints a one megabyte SVG
+  // and the other tests share the machine; inline, this drawing alone took over 200 ms at this size.
+  expect(longest).toBeLessThan(300);
+});

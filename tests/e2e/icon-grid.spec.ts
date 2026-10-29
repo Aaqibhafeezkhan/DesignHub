@@ -46,6 +46,8 @@ test("a search with hundreds of results keeps about a screenful of icons in the 
   // Tab from the last drawn icon moves to the next one instead of leaving the grid.
   await grid.evaluate((list) => list.parentElement?.scrollIntoView({ block: "start", behavior: "instant" }));
   const first = grid.getByRole("button").first();
+  // Wait for the top of the list to be drawn again before starting from its first icon.
+  await expect(first).toHaveAttribute("data-index", "0");
   await first.focus();
   const drawn = await grid.getByRole("button").count();
   for (let step = 0; step < drawn + 3; step += 1) await page.keyboard.press("Tab");

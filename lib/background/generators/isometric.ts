@@ -17,6 +17,7 @@ export function shade(hex: string): Faces {
 }
 
 export const isometric: BackgroundDefinition = {
+  heavy: true,
   kind: "isometric",
   category: "shapes",
   label: "Isometric",
