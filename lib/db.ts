@@ -1,7 +1,7 @@
 import type { Dexie, EntityTable } from "dexie";
 import type { StateStorage } from "zustand/middleware";
 
-import type { ProjectVersion } from "@/lib/projects/history";
+import type { StoredVersion } from "@/lib/projects/version-storage";
 import type { BrandProject } from "@/lib/projects/types";
 
 type KeyValueRecord = {
@@ -32,7 +32,7 @@ type DesignHubDatabase = Dexie & {
   kv: EntityTable<KeyValueRecord, "key">;
   icons: EntityTable<CachedIconRecord, "id">;
   projects: EntityTable<BrandProject, "id">;
-  versions: EntityTable<ProjectVersion, "id">;
+  versions: EntityTable<StoredVersion, "id">;
   handles: EntityTable<FolderRecord, "key">;
 };
 

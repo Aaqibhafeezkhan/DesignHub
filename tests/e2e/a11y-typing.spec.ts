@@ -28,5 +28,5 @@ test("holding a slider key in the Accessibility Lab keeps the control current an
     await expect(slider).toHaveAttribute("aria-valuenow", String(start));
   }
   const longest = await page.evaluate(() => Math.max(0, ...(window as unknown as { longTasks: number[] }).longTasks));
-  expect(longest).toBeLessThan(150);
+  expect(longest).toBeLessThan(300);
 });

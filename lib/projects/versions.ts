@@ -7,6 +7,8 @@ import {
   type ProjectVersion,
   type VersionReason,
 } from "@/lib/projects/history";
+import { sameJson, type Json } from "@/lib/projects/delta";
+import { compactVersions, expandVersions } from "@/lib/projects/version-storage";
 import { newProjectId } from "@/lib/projects/repository";
 import { captureSnapshot, snapshotStoresHydrated, type BrandSnapshot } from "@/lib/projects/snapshot";
 import { useProjectStore } from "@/store/project-store";
@@ -17,7 +19,8 @@ const memory = new Map<string, ProjectVersion[]>();
 /** Newest first. */
 export async function listVersions(projectId: string): Promise<ProjectVersion[]> {
   const stored = await safeDb((db) => db.versions.where("projectId").equals(projectId).toArray(), null);
-  return sortVersions((stored ?? memory.get(projectId) ?? []).map(upgradeStored));
+  if (stored) return expandVersions(stored, upgradeStored);
+  return sortVersions((memory.get(projectId) ?? []).map(upgradeStored));
 }
 
 /** Saves a version unless it matches the newest one, then trims the history to the cap. */
@@ -36,10 +39,16 @@ export async function recordVersion(
   const plan = planVersion(await listVersions(projectId), version);
   if (!plan) return null;
   memory.set(projectId, plan.keep);
+  // The new version is whole and the one before it becomes a change from it; only rows whose form changed are
+  // written, so a save writes about two rows however long the history is.
+  const rows = compactVersions(plan.keep);
   await safeDb(
     (db) =>
       db.transaction("rw", db.versions, async () => {
-        await db.versions.put(version);
+        const stored = await db.versions.where("projectId").equals(projectId).toArray();
+        const before = new Map(stored.map((row) => [row.id, row as unknown as Json]));
+        const changed = rows.filter((row) => !sameJson(before.get(row.id) ?? null, row as unknown as Json));
+        if (changed.length) await db.versions.bulkPut(changed);
         if (plan.drop.length) await db.versions.bulkDelete(plan.drop);
       }),
     undefined,
@@ -50,7 +59,7 @@ export async function recordVersion(
 /** Puts versions back as they were, used when a deleted project is restored. */
 export async function putVersions(projectId: string, versions: ProjectVersion[]): Promise<void> {
   memory.set(projectId, sortVersions(versions));
-  await safeDb((db) => db.versions.bulkPut(versions), undefined);
+  await safeDb((db) => db.versions.bulkPut(compactVersions(versions)), undefined);
 }
 
 export async function deleteVersions(projectId: string): Promise<void> {
