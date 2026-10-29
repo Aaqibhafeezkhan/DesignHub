@@ -34,15 +34,43 @@ function routeFromPage(file) {
   return "/" + segments.filter((segment) => !/^\(.*\)$/.test(segment)).join("/");
 }
 
+/** The prerendered page of a route, wherever the build put it (a host may lay `.next` out differently), or null. */
+async function pageHtml(route) {
+  const name = route === "/" ? "index" : route.slice(1);
+  for (const candidate of [`${name}.html`, path.join(name, "index.html")]) {
+    try {
+      return await readFile(path.join(serverAppDir, candidate), "utf8");
+    } catch {}
+  }
+  return null;
+}
+
+/** The built files every page loads, from the build manifest: the fallback when a page's HTML is not there. */
+async function manifestFiles() {
+  try {
+    const manifest = JSON.parse(await readFile(path.join(root, ".next", "build-manifest.json"), "utf8"));
+    return [...(manifest.polyfillFiles ?? []), ...(manifest.rootMainFiles ?? [])].map((file) => "/_next/" + file);
+  } catch {
+    return [];
+  }
+}
+
 /** The built files a prerendered page loads, and the fonts and images its stylesheets point at. */
 async function filesOf(route) {
-  const html = await readFile(path.join(serverAppDir, route === "/" ? "index.html" : `${route.slice(1)}.html`), "utf8");
+  const html = await pageHtml(route);
+  if (html === null) {
+    // The page is still kept when it is opened; only its files cannot be listed ahead of time.
+    console.warn(`No prerendered HTML for ${route}; its files will be cached as they load.`);
+    return route === "/" ? await manifestFiles() : [];
+  }
   const files = new Set(html.match(/\/_next\/static\/[A-Za-z0-9_./~%-]+/g) ?? []);
   for (const file of [...files].filter((item) => item.endsWith(".css"))) {
-    const css = await readFile(path.join(staticDir, file.slice("/_next/static/".length)), "utf8");
-    for (const [, target] of css.matchAll(/url\(\.\.\/media\/([A-Za-z0-9_.~-]+)\)/g)) {
-      files.add(`/_next/static/media/${target}`);
-    }
+    try {
+      const css = await readFile(path.join(staticDir, file.slice("/_next/static/".length)), "utf8");
+      for (const [, target] of css.matchAll(/url\(\.\.\/media\/([A-Za-z0-9_.~-]+)\)/g)) {
+        files.add(`/_next/static/media/${target}`);
+      }
+    } catch {}
   }
   return [...files].sort();
 }
