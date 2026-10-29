@@ -25,12 +25,15 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      # Starts `pnpm start` (see lighthouserc.json), audits the home page and four studios three
-      # times each, checks the thresholds and writes the reports to .lighthouseci/.
-      # Accessibility, best practices and SEO must score 100. Performance below 90 is only a
-      # warning: shared CI runners are noisy, so the same build can swing several points
-      # between runs, and failing on it would block pull requests that changed nothing.
+      # Starts `pnpm start` (see lighthouserc.json), audits the home page and four studios five
+      # times each, checks the thresholds on the median run and writes the reports to .lighthouseci/.
+      # Accessibility, best practices and SEO must score 100 everywhere. Performance must score 90 on
+      # the home page (it fails below that); on the studios it is only a warning, because shared CI
+      # runners are noisy and a studio is a much larger page.
       - run: pnpm dlx @lhci/cli autorun
+      - name: Scores in the job summary
+        if: always()
+        run: node scripts/lighthouse-summary.mjs >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v7
         if: always()
         with:

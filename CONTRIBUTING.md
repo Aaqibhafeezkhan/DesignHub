@@ -69,7 +69,7 @@ The config starts `pnpm start` on port 3100 (set `E2E_PORT` to change it) and re
 
 ### Lighthouse
 
-`lighthouse.yml` builds the app and runs [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) on the home page, `/brand`, `/colors`, `/typography` and `/social` for every pull request and push to `main`. Accessibility, best practices and SEO must score 100; performance below 90 is a warning, because CI runners are noisy. The thresholds live in `lighthouserc.json`, and the HTML reports are uploaded as the `lighthouse-reports` artifact.
+`lighthouse.yml` builds the app and runs [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) on the home page, `/brand`, `/colors`, `/typography` and `/social` for every pull request and push to `main`. Each page is audited five times and the median run is checked. Accessibility, best practices and SEO must score 100 everywhere. Performance must score 90 on the home page (below that fails the check); on the studios it is a warning, because CI runners are noisy and a studio is a much larger page. The scores of each page are in the job summary. The thresholds live in `lighthouserc.json`, and the HTML reports are uploaded as the `lighthouse-reports` artifact.
 
 To run it locally (it needs Chrome, and nothing else running on port 3000):
 
