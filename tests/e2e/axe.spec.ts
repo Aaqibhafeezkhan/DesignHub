@@ -26,6 +26,8 @@ const USER_COLORS = "[data-user-colors]";
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"];
 
 async function scan(page: Page, where: string): Promise<string[]> {
+  // A lazily loaded tab shows a placeholder first; scan what the person ends up with, not the placeholder.
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
   const disabled = DISABLED_RULES.map((item) => item.rule);
   // The page without the user-color regions, with every rule; then those regions without the contrast rule.
   const outside = await new AxeBuilder({ page }).withTags(TAGS).disableRules(disabled).exclude(USER_COLORS).analyze();
