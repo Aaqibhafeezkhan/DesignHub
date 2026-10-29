@@ -13,7 +13,13 @@ const connected: StudioId[] = ["typography", "colors", "icons", "backgrounds", "
 export function BrandLinksPanel() {
   const { t } = useI18n();
   return (
-    <Panel title={t("brand.links.title")} description={t("brand.links.description")}>
+    <Panel
+      id="brand-links"
+      collapsible
+      defaultOpen={false}
+      title={t("brand.links.title")}
+      description={t("brand.links.description")}
+    >
       <ul className="flex flex-col gap-1">
         {studios
           .filter((studio) => connected.includes(studio.id))

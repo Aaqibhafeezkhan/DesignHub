@@ -22,17 +22,22 @@ export function BrandSettingsPanel() {
         <ImportCssButton />
         <ShareLinkButton />
       </div>
-      <Panel title={t("brand.panel.identity")}>
+      <Panel id="brand-identity" collapsible title={t("brand.panel.identity")}>
         <BrandIdentityFields />
         <BrandLogoField />
       </Panel>
-      <Panel title={t("brand.panel.colors")} description={t("brand.panel.colorsHint")}>
+      <Panel id="brand-colors" collapsible title={t("brand.panel.colors")} description={t("brand.panel.colorsHint")}>
         <BrandColorsField />
       </Panel>
-      <Panel title={t("brand.panel.typography")} description={t("brand.panel.typographyHint")}>
+      <Panel
+        id="brand-typography"
+        collapsible
+        title={t("brand.panel.typography")}
+        description={t("brand.panel.typographyHint")}
+      >
         <BrandTypeFields />
       </Panel>
-      <Panel title={t("brand.panel.shape")}>
+      <Panel id="brand-shape" collapsible defaultOpen={false} title={t("brand.panel.shape")}>
         <BrandScaleFields />
       </Panel>
     </>
