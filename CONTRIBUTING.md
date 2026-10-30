@@ -71,7 +71,7 @@ The config starts `pnpm start` on port 3100 (set `E2E_PORT` to change it) and re
 
 ### Screenshots
 
-`tests/e2e/visual.spec.ts` takes screenshots of the home page, the Color Studio and the Effects Lab at 375, 768 and 1280 px in light and dark, and fails when one no longer matches, so a layout that looks wrong is caught even when every behaviour test passes. They run only in `visual.yml`, on its Linux image, because other machines draw text a little differently (the images are stored in `tests/e2e/__screenshots__`, not named by platform). After a layout change you meant to make, open **Actions, Visual, Run workflow** with "update" ticked: it makes the screenshots again and commits them, and you read the new images in that commit. Locally, `VISUAL=1 pnpm exec playwright test tests/e2e/visual.spec.ts` compares them, which only passes on the same image.
+`tests/e2e/visual.spec.ts` takes screenshots of the home page, the Color Studio, the Effects Lab, the Background Studio, the Logo Studio and the Brand Studio at 375, 768 and 1280 px in light and dark, and of the phone pane bar with each pane of the Effects Lab open, and fails when one no longer matches, so a layout that looks wrong is caught even when every behaviour test passes. They run only in `visual.yml`, on its Linux image, because other machines draw text a little differently (the images are stored in `tests/e2e/__screenshots__`, not named by platform). After a layout change you meant to make, open **Actions, Visual, Run workflow** with "update" ticked: it makes the screenshots again and commits them, and you read the new images in that commit. Locally, `VISUAL=1 pnpm exec playwright test tests/e2e/visual.spec.ts` compares them, which only passes on the same image.
 
 ### Lighthouse
 
