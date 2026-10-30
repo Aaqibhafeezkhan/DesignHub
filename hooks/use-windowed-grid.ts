@@ -79,6 +79,7 @@ export function useWindowedGrid<T extends HTMLElement>({ count, minTile, gap, ov
   return {
     ref,
     columns,
+    rowHeight,
     start: range.start,
     end: range.end,
     /** Full height of the grid, as if every row were drawn. */

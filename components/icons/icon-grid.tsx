@@ -41,8 +41,8 @@ const TILE_GAP = 8;
 
 /**
  * Icons as a grid of tiles. Only the rows near the view are in the page, and only their bodies are fetched, so
- * a collection of thousands costs as much as a screenful. Tab still walks the whole list: at the last drawn tile
- * it draws the next one first.
+ * a collection of thousands costs as much as a screenful. The grid is one tab stop and the arrow keys, Page Up and
+ * Page Down, Home and End move through the whole list: the target tile is drawn, then focused.
  */
 export function IconGrid({ ids, emptyMessage = "No icons found." }: IconGridProps) {
   const selected = useIconStore((state) => state.selected);
@@ -64,17 +64,33 @@ export function IconGrid({ ids, emptyMessage = "No icons found." }: IconGridProp
     );
   }
 
+  // One tab stop for the whole grid: the icon that has focus, or the first one drawn.
+  const stop = Math.min(ids.length - 1, Math.max(0, focused ?? grid.start));
+
   const onKeyDown = (event: KeyboardEvent<HTMLUListElement>) => {
-    if (event.key !== "Tab" || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
     const index = Number((event.target as HTMLElement).closest<HTMLElement>("[data-index]")?.dataset.index);
     if (Number.isNaN(index)) return;
-    const next = event.shiftKey ? index - 1 : index + 1;
-    const edge = event.shiftKey ? index === grid.start : index === grid.end - 1;
-    if (!edge || next < 0 || next >= ids.length) return;
+    const screen = Math.max(1, Math.floor((window.innerHeight * 0.8) / grid.rowHeight)) * grid.columns;
+    const moves: Record<string, number> = {
+      ArrowRight: index + 1,
+      ArrowLeft: index - 1,
+      ArrowDown: index + grid.columns,
+      ArrowUp: index - grid.columns,
+      PageDown: index + screen,
+      PageUp: index - screen,
+      Home: 0,
+      End: ids.length - 1,
+    };
+    const target = moves[event.key];
+    if (target === undefined) return;
     event.preventDefault();
-    // Draw the next tile now, then focus it, so a quick run of Tab presses never outruns the drawing.
+    // A move past either end stops at it. The tile is drawn first, then focused and scrolled into view.
+    const next = Math.max(0, Math.min(ids.length - 1, target));
     flushSync(() => setFocused(next));
-    listRef.current?.querySelector<HTMLElement>(`[data-index="${next}"]`)?.focus();
+    const tile = listRef.current?.querySelector<HTMLElement>(`[data-index="${next}"]`);
+    tile?.focus();
+    tile?.scrollIntoView({ block: "nearest" });
   };
 
   return (
@@ -99,6 +115,7 @@ export function IconGrid({ ids, emptyMessage = "No icons found." }: IconGridProp
                 total={ids.length}
                 icon={known.current.get(id)}
                 failed={failed.has(id) || (!loading && !known.current.has(id))}
+                tabStop={index === stop}
                 active={id === selected}
                 onSelect={select}
                 onFocusTile={setFocused}
@@ -121,6 +138,8 @@ type IconTileProps = {
   index: number;
   total: number;
   onFocusTile: (index: number) => void;
+  /** The one tile in the grid that Tab reaches. */
+  tabStop: boolean;
   icon: IconData | undefined;
   failed: boolean;
   active: boolean;
@@ -134,6 +153,7 @@ const IconTile = memo(function IconTile({
   icon,
   failed,
   active,
+  tabStop,
   onSelect,
   onFocusTile,
 }: IconTileProps) {
@@ -143,6 +163,7 @@ const IconTile = memo(function IconTile({
       <button
         type="button"
         data-index={index}
+        tabIndex={tabStop ? 0 : -1}
         onFocus={() => onFocusTile(index)}
         onClick={() => onSelect(id)}
         aria-pressed={active}

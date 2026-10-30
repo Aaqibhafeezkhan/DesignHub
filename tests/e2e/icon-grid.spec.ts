@@ -43,14 +43,39 @@ test("a search with hundreds of results keeps about a screenful of icons in the 
   await expect(grid.getByRole("button", { name: `mdi:glyph-${TOTAL - 1}` })).toBeVisible();
   expect(await grid.getByRole("button").count()).toBeLessThanOrEqual(120);
 
-  // Tab from the last drawn icon moves to the next one instead of leaving the grid.
+  // The grid is one tab stop, and the arrow keys move through every icon, drawing each one before focusing it.
   await grid.evaluate((list) => list.parentElement?.scrollIntoView({ block: "start", behavior: "instant" }));
   const first = grid.getByRole("button").first();
-  // Wait for the top of the list to be drawn again before starting from its first icon.
   await expect(first).toHaveAttribute("data-index", "0");
+  expect(await grid.locator('button[tabindex="0"]').count()).toBe(1);
   await first.focus();
-  const drawn = await grid.getByRole("button").count();
-  for (let step = 0; step < drawn + 3; step += 1) await page.keyboard.press("Tab");
+  const focusedIndex = () =>
+    page.evaluate(() => Number((document.activeElement as HTMLElement | null)?.getAttribute("data-index") ?? -1));
+
+  await page.keyboard.press("ArrowRight");
+  expect(await focusedIndex()).toBe(1);
+  await page.keyboard.press("ArrowLeft");
+  expect(await focusedIndex()).toBe(0);
+  await page.keyboard.press("ArrowDown");
+  const columns = await focusedIndex();
+  expect(columns).toBeGreaterThan(1);
+  await page.keyboard.press("ArrowUp");
+  expect(await focusedIndex()).toBe(0);
+  // A move past the start stops there.
+  await page.keyboard.press("ArrowLeft");
+  expect(await focusedIndex()).toBe(0);
+
+  await page.keyboard.press("PageDown");
+  expect(await focusedIndex()).toBeGreaterThan(columns);
+  await page.keyboard.press("End");
+  expect(await focusedIndex()).toBe(TOTAL - 1);
+  await expect(grid.getByRole("button", { name: `mdi:glyph-${TOTAL - 1}` })).toBeFocused();
+  expect(await grid.getByRole("button").count()).toBeLessThanOrEqual(120);
+  await page.keyboard.press("Home");
+  expect(await focusedIndex()).toBe(0);
+
+  // Tab leaves the grid after one stop.
+  await page.keyboard.press("Tab");
   const inGrid = await page.evaluate(() => Boolean(document.activeElement?.closest('ul[aria-label="Icons"]')));
-  expect(inGrid).toBe(true);
+  expect(inGrid).toBe(false);
 });
