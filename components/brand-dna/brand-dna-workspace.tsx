@@ -36,6 +36,7 @@ export function BrandDnaWorkspace() {
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [notice, setNotice] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
+  const [choosingProvider, setChoosingProvider] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
   // The latest images, for async uploads and the unmount cleanup.
@@ -258,31 +259,57 @@ export function BrandDnaWorkspace() {
             ) : null}
           </Panel>
           <Panel title="Provider">
-            <div ref={providersRef} role="radiogroup" aria-label="Analysis provider" className="flex flex-col gap-1.5">
-              {dnaProviders.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={item.id === provider.id}
-                  onClick={() => {
-                    setProvider(item.id);
-                    if (images.length > 0) void analyze(images, item.id);
-                  }}
-                  className={cn(
-                    "flex flex-col gap-1 rounded-md border p-2.5 text-left transition-colors duration-150 hover:border-border-strong",
-                    item.id === provider.id && "border-brand/60 bg-surface-raised",
-                  )}
-                >
-                  <span className="flex items-center gap-2 text-sm font-medium">
-                    {item.label}
-                    {item.local ? <Badge variant="success">Private</Badge> : null}
-                    {item.mocked ? <Badge variant="warning">Sample data</Badge> : null}
+            {choosingProvider ? (
+              <div
+                ref={providersRef}
+                role="radiogroup"
+                aria-label="Analysis provider"
+                className="flex flex-col gap-1.5"
+              >
+                {dnaProviders.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={item.id === provider.id}
+                    onClick={() => {
+                      setProvider(item.id);
+                      setChoosingProvider(false);
+                      if (images.length > 0) void analyze(images, item.id);
+                    }}
+                    className={cn(
+                      "flex flex-col gap-1 rounded-md border p-2.5 text-left transition-colors duration-150 hover:border-border-strong",
+                      item.id === provider.id && "border-brand/60 bg-surface-raised",
+                    )}
+                  >
+                    <span className="flex items-center gap-2 text-sm font-medium">
+                      {item.label}
+                      {item.local ? <Badge variant="success">Private</Badge> : null}
+                      {item.mocked ? <Badge variant="warning">Sample data</Badge> : null}
+                    </span>
+                    <span className="text-xs text-muted-foreground">{item.description}</span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="flex items-start justify-between gap-2 rounded-md border p-2.5">
+                <div className="flex min-w-0 flex-col gap-1">
+                  <span className="flex flex-wrap items-center gap-2 text-sm font-medium">
+                    {provider.label}
+                    {provider.local ? <Badge variant="success">Private</Badge> : null}
+                    {provider.mocked ? <Badge variant="warning">Sample data</Badge> : null}
                   </span>
-                  <span className="text-xs text-muted-foreground">{item.description}</span>
-                </button>
-              ))}
-            </div>
+                  <span className="text-xs text-muted-foreground">
+                    {provider.local
+                      ? "Your images stay on this device."
+                      : "Choose what is sent, and where, below before the first request."}
+                  </span>
+                </div>
+                <Button variant="outline" size="sm" onClick={() => setChoosingProvider(true)}>
+                  Change provider
+                </Button>
+              </div>
+            )}
             {provider.id === "anthropic" || provider.id === "openai-compatible" ? (
               <AiKeyPanel
                 key={provider.id}

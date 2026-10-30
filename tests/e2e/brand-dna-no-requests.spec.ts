@@ -35,6 +35,7 @@ test.describe("Brand DNA makes no AI request without a key", () => {
     test(`${provider} with no key set sends nothing`, async ({ page }) => {
       const hosts = await watch(page);
       await page.goto("/brand-dna");
+      await page.getByRole("button", { name: "Change provider" }).click();
       await page.getByRole("radio", { name: provider }).click();
       await page
         .locator('input[type="file"][aria-label="Source images"]')
@@ -48,6 +49,7 @@ test.describe("Brand DNA makes no AI request without a key", () => {
   test("a saved but unreviewed OpenAI-compatible connection still sends nothing", async ({ page }) => {
     const hosts = await watch(page);
     await page.goto("/brand-dna");
+    await page.getByRole("button", { name: "Change provider" }).click();
     await page.getByRole("radio", { name: /AI \(OpenAI-compatible\)/ }).click();
     await page
       .locator('input[type="file"][aria-label="Source images"]')

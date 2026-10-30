@@ -57,6 +57,7 @@ test("the AI key is reviewed before anything is sent, and removing it deletes th
   );
 
   await page.goto(BRAND_DNA_PATH);
+  await page.getByRole("button", { name: "Change provider" }).click();
   await page.getByRole("radio", { name: /AI \(your key\)/ }).click();
   await page
     .locator('input[type="file"][aria-label="Source images"]')
