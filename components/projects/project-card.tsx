@@ -25,6 +25,8 @@ type Props = {
   onDelete: () => void;
   /** Extra actions (duplicate, export). */
   actions?: ReactNode;
+  /** Present in select mode: a checkbox over the card. */
+  select?: { checked: boolean; onToggle: () => void };
 };
 
 function ago(time: number, locale: string, t: Translate): string {
@@ -52,6 +54,7 @@ export function ProjectCard({
   onRemoveTag,
   onDelete,
   actions,
+  select,
 }: Props) {
   const { locale, t } = useI18n();
   const tokens = useMemo(() => snapshotTokens(project.snapshot), [project.snapshot]);
@@ -67,10 +70,20 @@ export function ProjectCard({
   return (
     <li
       className={cn(
-        "flex flex-col overflow-hidden rounded-xl border bg-card transition-colors duration-150",
+        "relative flex flex-col overflow-hidden rounded-xl border bg-card transition-colors duration-150",
         active && "border-brand/60 ring-1 ring-brand/30",
+        select?.checked && "border-brand ring-2 ring-brand/40",
       )}
     >
+      {select ? (
+        <input
+          type="checkbox"
+          checked={select.checked}
+          onChange={select.onToggle}
+          aria-label={t("projects.selectNamed", { name })}
+          className="absolute top-2 left-2 z-10 size-5 cursor-pointer accent-[var(--brand)]"
+        />
+      ) : null}
       <button
         type="button"
         onClick={onOpen}

@@ -8,10 +8,12 @@ import {
   FileDown,
   History,
   Link2,
+  ListChecks,
   Plus,
   Search,
   Star,
   Tag,
+  Trash2,
   Upload,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -55,6 +57,7 @@ import { listVersions } from "@/lib/projects/versions";
 import { projectSorts, sortProjects, type ProjectSort } from "@/lib/projects/sort";
 import { matchesProject, PROJECT_PAGE } from "@/lib/projects/search";
 import { projectTags } from "@/lib/projects/tags";
+import { deletable, pruned, toggled, toggledAll } from "@/lib/projects/selection";
 import { projectsToJson, projectToJson } from "@/lib/projects/transfer";
 import { projectsZip } from "@/lib/projects/zip";
 import { projectName, type BrandProject } from "@/lib/projects/types";
@@ -77,6 +80,9 @@ export function ProjectManager() {
   const [deleting, setDeleting] = useState<BrandProject | null>(null);
   const [comparing, setComparing] = useState(false);
   const [history, setHistory] = useState<BrandProject | null>(null);
+  const [selecting, setSelecting] = useState(false);
+  const [chosen, setChosen] = useState<Set<string>>(new Set());
+  const [bulkTag, setBulkTag] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const newProjectRequested = useUiStore((state) => state.newProjectRequested);
   const clearNewProjectRequest = useUiStore((state) => state.clearNewProjectRequest);
@@ -151,6 +157,74 @@ export function ProjectManager() {
     );
     return sortProjects(matching, sort);
   }, [projects, query, favoritesOnly, activeTag, sort]);
+
+  // A project that was deleted, here or in another tab, leaves the selection.
+  useEffect(() => {
+    setChosen((current) => {
+      const next = pruned(
+        current,
+        (projects ?? []).map((project) => project.id),
+      );
+      return next.size === current.size ? current : next;
+    });
+  }, [projects]);
+
+  function leaveSelecting() {
+    setSelecting(false);
+    setChosen(new Set());
+    setBulkTag("");
+  }
+
+  async function exportChosen() {
+    await saveActiveProject();
+    const all = (await listProjects()).filter((project) => chosen.has(project.id));
+    if (!all.length) return;
+    const histories = exportHistory ? await projectHistories(all) : undefined;
+    downloadBlob(
+      new Blob([projectsZip(all, histories)], { type: "application/zip" }),
+      `designhub-projects-${new Date().toISOString().slice(0, 10)}.zip`,
+    );
+    toast.success(plural("projects.toast.exportedZip", all.length));
+  }
+
+  async function tagChosen() {
+    const tag = bulkTag.trim();
+    if (!tag) return;
+    const ids = [...chosen];
+    await run(async () => {
+      for (const id of ids) await addProjectTag(id, tag);
+    });
+    setBulkTag("");
+    toast.success(plural("projects.bulk.tagged", ids.length));
+  }
+
+  async function removeChosen() {
+    const { ids, keptOpen } = deletable(chosen, activeId);
+    const removed: NonNullable<Awaited<ReturnType<typeof removeProject>>>[] = [];
+    await run(async () => {
+      for (const id of ids) {
+        const result = await removeProject(id);
+        if (result) removed.push(result);
+      }
+    });
+    setChosen(new Set());
+    if (removed.length === 0) {
+      if (keptOpen) toast(t("projects.bulk.openKept"));
+      return;
+    }
+    // One undo puts every deleted project back, with its history.
+    toast.success(plural("projects.bulk.deleted", removed.length), {
+      description: keptOpen ? t("projects.bulk.openKept") : undefined,
+      duration: 8000,
+      action: {
+        label: t("common.undo"),
+        onClick: () =>
+          void run(async () => {
+            for (const item of removed) await restoreProject(item.project, false, item.versions);
+          }).then(() => toast.success(plural("projects.bulk.restored", removed.length))),
+      },
+    });
+  }
 
   // Only the first cards are drawn, and more as the end of the list comes into view, so a hundred projects
   // open as fast as thirty. A new search or filter starts again from the top.
@@ -256,6 +330,15 @@ export function ProjectManager() {
           </SelectContent>
         </Select>
         <span className="flex-1" />
+        <Button
+          variant="outline"
+          size="sm"
+          aria-pressed={selecting}
+          onClick={() => (selecting ? leaveSelecting() : setSelecting(true))}
+          disabled={(projects?.length ?? 0) === 0}
+        >
+          <ListChecks /> {t("projects.select")}
+        </Button>
         <Button variant="outline" size="sm" onClick={() => setComparing(true)} disabled={(projects?.length ?? 0) < 2}>
           <ArrowLeftRight /> {t("projects.compare")}
         </Button>
@@ -323,6 +406,61 @@ export function ProjectManager() {
         </p>
       ) : null}
 
+      {selecting ? (
+        <div
+          role="region"
+          aria-label={t("projects.bulk.label")}
+          className="sticky top-16 z-20 flex flex-wrap items-center gap-2 rounded-lg border bg-card/95 p-2.5 backdrop-blur"
+        >
+          <span role="status" className="text-sm font-medium">
+            {plural("projects.bulk.count", chosen.size)}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              setChosen(
+                toggledAll(
+                  chosen,
+                  visible.map((project) => project.id),
+                ),
+              )
+            }
+          >
+            {t("projects.bulk.all")}
+          </Button>
+          <form
+            className="flex items-center gap-1"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void tagChosen();
+            }}
+          >
+            <Input
+              value={bulkTag}
+              onChange={(event) => setBulkTag(event.target.value)}
+              aria-label={t("projects.bulk.tagLabel")}
+              placeholder={t("projects.bulk.tagLabel")}
+              maxLength={24}
+              className="h-8 w-36 text-sm"
+            />
+            <Button type="submit" variant="outline" size="sm" disabled={chosen.size === 0 || !bulkTag.trim()}>
+              {t("projects.bulk.tag")}
+            </Button>
+          </form>
+          <Button variant="outline" size="sm" onClick={() => void exportChosen()} disabled={chosen.size === 0}>
+            <FileArchive /> {t("projects.bulk.export")}
+          </Button>
+          <Button variant="destructive" size="sm" onClick={() => void removeChosen()} disabled={chosen.size === 0}>
+            <Trash2 /> {t("common.delete")}
+          </Button>
+          <span className="flex-1" />
+          <Button variant="ghost" size="sm" onClick={leaveSelecting}>
+            {t("projects.bulk.done")}
+          </Button>
+        </div>
+      ) : null}
+
       {projects === null ? (
         <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3" aria-busy="true" aria-label={t("projects.loading")}>
           {[0, 1, 2].map((i) => (
@@ -339,6 +477,11 @@ export function ProjectManager() {
             <ProjectCard
               key={project.id}
               project={project}
+              select={
+                selecting
+                  ? { checked: chosen.has(project.id), onToggle: () => setChosen(toggled(chosen, project.id)) }
+                  : undefined
+              }
               active={project.id === activeId}
               onOpen={() => void open(project)}
               onRename={(name) => void run(() => renameProject(project.id, name))}
