@@ -4,11 +4,13 @@ import { join } from "node:path";
 
 import { expect, test } from "@playwright/test";
 
+import { expectUnder } from "./timing";
+
 type Entry = { favorite: boolean; tags: string[]; snapshot: { brand: { profile: { name: string } } } };
 
 test("a hundred and fifty projects draw thirty cards first, search by name and tag, and draw more as you scroll", async ({
   page,
-}) => {
+}, testInfo) => {
   const fixture = JSON.parse(readFileSync(join(__dirname, "../../lib/projects/__fixtures__/v1/projects.json"), "utf8"));
   const template = fixture.projects[0] as Entry;
   fixture.projects = Array.from({ length: 150 }, (_, index) => {
@@ -30,7 +32,7 @@ test("a hundred and fifty projects draw thirty cards first, search by name and t
   // Newest first, so the last imported is on top; the first page is a screenful, not all hundred and fifty.
   await expect(page.getByRole("button", { name: "Open Brand 149" })).toBeVisible();
   expect(await cards.count()).toBeLessThanOrEqual(36);
-  expect(Date.now() - started).toBeLessThan(10_000);
+  await expectUnder(testInfo, "import-ms", Date.now() - started, 10_000);
 
   // A search matches the name or a tag, and covers the whole list, not only what is drawn.
   const search = page.getByLabel("Search projects");

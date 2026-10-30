@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-test("the whole catalog is listed, but only the rows near the view are in the page", async ({ page }) => {
+import { expectUnder } from "./timing";
+
+test("the whole catalog is listed, but only the rows near the view are in the page", async ({ page }, testInfo) => {
   await page.goto("/typography");
   const list = page.getByRole("listbox", { name: "Fonts" });
   await expect(list).toBeVisible();
@@ -32,5 +34,5 @@ test("the whole catalog is listed, but only the rows near the view are in the pa
 
   const longest = await page.evaluate(() => Math.max(0, ...(window as unknown as { longTasks: number[] }).longTasks));
   // The target is 50 ms; the bound leaves room for a busy CI machine.
-  expect(longest).toBeLessThan(300);
+  await expectUnder(testInfo, "longest-task", longest, 300);
 });

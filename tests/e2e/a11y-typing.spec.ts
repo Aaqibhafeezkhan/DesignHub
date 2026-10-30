@@ -1,8 +1,10 @@
 import { expect, test } from "@playwright/test";
 
+import { expectUnder } from "./timing";
+
 test("holding a slider key in the Accessibility Lab keeps the control current and the report catches up", async ({
   page,
-}) => {
+}, testInfo) => {
   await page.goto("/accessibility");
   await expect(page.locator("h1").first()).toBeVisible();
   await page.getByRole("tab", { name: "Reading" }).click();
@@ -28,5 +30,5 @@ test("holding a slider key in the Accessibility Lab keeps the control current an
     await expect(slider).toHaveAttribute("aria-valuenow", String(start));
   }
   const longest = await page.evaluate(() => Math.max(0, ...(window as unknown as { longTasks: number[] }).longTasks));
-  expect(longest).toBeLessThan(300);
+  await expectUnder(testInfo, "longest-task", longest, 300);
 });

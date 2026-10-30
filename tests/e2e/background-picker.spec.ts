@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { expectUnder } from "./timing";
+
 test("the generator picker is grouped, searchable, and finds a merged look by its old name", async ({ page }) => {
   await page.goto("/backgrounds");
   await expect(page.locator("h1").first()).toBeVisible();
@@ -24,7 +26,7 @@ test("the generator picker is grouped, searchable, and finds a merged look by it
   await expect(page.getByText("No generator matches that search.")).toBeVisible();
 });
 
-test("dragging a slider on a heavy generator does not block the page for long", async ({ page }) => {
+test("dragging a slider on a heavy generator does not block the page for long", async ({ page }, testInfo) => {
   await page.goto("/backgrounds");
   await expect(page.locator("h1").first()).toBeVisible();
   const search = page.getByRole("searchbox", { name: "Find a generator" });
@@ -54,12 +56,12 @@ test("dragging a slider on a heavy generator does not block the page for long", 
   // The drawing really happened in a worker, not on the page.
   expect(page.workers().length).toBeGreaterThan(0);
   // The target is 50 ms; the bound leaves room for a busy CI machine.
-  expect(longest).toBeLessThan(300);
+  await expectUnder(testInfo, "longest-task", longest, 300);
 });
 
 test("the isometric generator, the slowest at a large canvas, is drawn in the worker without blocking input", async ({
   page,
-}) => {
+}, testInfo) => {
   await page.goto("/backgrounds");
   await expect(page.locator("h1").first()).toBeVisible();
   await page.getByRole("searchbox", { name: "Find a generator" }).fill("isometric");
@@ -91,5 +93,5 @@ test("the isometric generator, the slowest at a large canvas, is drawn in the wo
   const longest = await page.evaluate(() => Math.max(0, ...(window as unknown as { longTasks: number[] }).longTasks));
   // The drawing is in the worker (checked above). The bound is loose because this page also paints a one megabyte SVG
   // and the other tests share the machine; inline, this drawing alone took over 200 ms at this size.
-  expect(longest).toBeLessThan(300);
+  await expectUnder(testInfo, "longest-task", longest, 300);
 });

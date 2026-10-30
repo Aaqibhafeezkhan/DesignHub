@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { expectUnder } from "./timing";
+
 test("the mockup picker has four groups and a search, and the bracket keys cycle through what is shown", async ({
   page,
 }) => {
@@ -71,5 +73,5 @@ test("switching to a template that has not loaded yet draws it quickly and keeps
   const elapsed = Date.now() - started;
   await testInfo.attach("switch-ms", { body: String(elapsed), contentType: "text/plain" });
   // The target on a mid-range laptop is about 200 ms; the bound here leaves room for a busy CI machine.
-  expect(elapsed).toBeLessThan(1500);
+  await expectUnder(testInfo, "switch-ms", elapsed, 1500);
 });
