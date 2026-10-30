@@ -1,6 +1,9 @@
 import { withPngCredit } from "@/lib/export/credit";
 import { svgToDataUrl } from "@/lib/icons/svg";
 
+/** An SVG decoded by the browser, ready to be drawn at any size. */
+export type DecodedSvg = HTMLImageElement;
+
 function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -10,6 +13,11 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
+/** Decodes an SVG once, so it can be drawn at several sizes without being decoded again. */
+export function decodeSvg(svg: string): Promise<DecodedSvg> {
+  return loadImage(svgToDataUrl(svg));
+}
+
 /** Rasterizes an SVG string into a PNG, JPEG or WebP (square unless `height` is given). */
 export async function svgToPngBlob(
   svg: string,
@@ -17,7 +25,16 @@ export async function svgToPngBlob(
   height = size,
   type: "image/png" | "image/jpeg" | "image/webp" = "image/png",
 ): Promise<Blob> {
-  const image = await loadImage(svgToDataUrl(svg));
+  return decodedToBlob(await decodeSvg(svg), size, height, type);
+}
+
+/** Draws an already decoded SVG at a size and encodes it. */
+export async function decodedToBlob(
+  image: DecodedSvg,
+  size: number,
+  height = size,
+  type: "image/png" | "image/jpeg" | "image/webp" = "image/png",
+): Promise<Blob> {
   const canvas = document.createElement("canvas");
   canvas.width = size;
   canvas.height = height;

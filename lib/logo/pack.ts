@@ -1,6 +1,6 @@
 import { CREDIT_TEXT } from "@/lib/export/credit";
 import { imagesToPdf } from "@/lib/export/pdf";
-import { rasterize } from "@/lib/export/raster";
+import { rasterize, rasterizeMany } from "@/lib/export/raster";
 import { faviconEntries, type FaviconOptions } from "@/lib/icons/favicon";
 import { faviconSvg } from "@/lib/logo/favicon-preview";
 import { logoVariants, type LogoVariantId, type VariantContext } from "@/lib/logo/variants";
@@ -73,13 +73,16 @@ export async function buildLogoPack(ctx: VariantContext, clearSpace: number): Pr
   const entries: ZipEntry[] = [{ name: "README.txt", data: usageNotes(ctx, clearSpace) }];
   for (const variant of logoVariants) {
     const svg = variant.render(ctx);
-    const image = await rasterize(svg, 4);
-    // Variants with fixed sizes (the avatar) export one square PNG per size instead of the 4x render.
+    // Variants with fixed sizes (the avatar) export one square PNG per size instead of the 4x render. The SVG is
+    // decoded once for the 4x image (the PDF page) and every size.
     const { width } = svgDimensions(svg);
+    const sizes = variant.pngSizes ?? [];
+    const [image, ...sized] = await rasterizeMany(svg, [4, ...sizes.map((size) => size / width)]);
+    if (!image) throw new Error("Could not rasterize the logo");
     const pngs: ZipEntry[] = [];
-    for (const size of variant.pngSizes ?? []) {
-      pngs.push({ name: `png/${base}-${variant.id}-${size}.png`, data: (await rasterize(svg, size / width)).bytes });
-    }
+    sizes.forEach((size, index) => {
+      pngs.push({ name: `png/${base}-${variant.id}-${size}.png`, data: sized[index]!.bytes });
+    });
     if (pngs.length === 0) pngs.push({ name: `png/${base}-${variant.id}.png`, data: image.bytes });
     entries.push({ name: `svg/${base}-${variant.id}.svg`, data: svg }, ...pngs, {
       name: `pdf/${base}-${variant.id}.pdf`,
