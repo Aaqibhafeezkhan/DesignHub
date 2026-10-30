@@ -943,6 +943,7 @@ export const en = {
   "mode.advanced": "Advanced",
   "mode.simpleHint": "The common controls. Hidden controls keep their values.",
   "mode.advancedHint": "Every control.",
+  "studio.pane.shown": "{pane} pane shown",
   "studio.pane.controls": "Controls",
   "studio.pane.preview": "Preview",
   "studio.pane.output": "Output",

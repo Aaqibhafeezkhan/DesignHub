@@ -46,6 +46,21 @@ test.describe("on a phone, one pane shows at a time", () => {
     await expect(output).toBeFocused();
   });
 
+  test("the open pane is announced and remembered for the studio after a reload", async ({ page }) => {
+    await page.goto("/effects");
+    const bar = page.getByRole("navigation", { name: "Studio panes" });
+    await bar.getByRole("button", { name: "Output" }).click();
+    await expect(page.getByRole("status").filter({ hasText: "Output pane shown" })).toBeAttached();
+    await expect(page.locator("#studio-output")).toBeVisible();
+
+    await page.reload();
+    await expect(page.locator("#studio-output")).toBeVisible();
+    await expect(bar.getByRole("button", { name: "Output" })).toHaveAttribute("aria-pressed", "true");
+    // Another studio keeps its own choice.
+    await page.goto("/backgrounds");
+    await expect(bar.getByRole("button", { name: "Controls" })).toHaveAttribute("aria-pressed", "true");
+  });
+
   test("a desktop width has no bar and shows every pane", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto("/effects");

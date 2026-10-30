@@ -933,6 +933,7 @@ export const hi = {
   "mode.advanced": "एडवांस्ड",
   "mode.simpleHint": "आम कंट्रोल। छिपे कंट्रोल अपनी वैल्यू बनाए रखते हैं।",
   "mode.advancedHint": "सभी कंट्रोल।",
+  "studio.pane.shown": "{pane} पैनल दिख रहा है",
   "studio.pane.controls": "कंट्रोल",
   "studio.pane.preview": "प्रीव्यू",
   "studio.pane.output": "आउटपुट",

@@ -6,6 +6,7 @@ import { useGroupRef, type Layout, type LayoutChangedMeta } from "react-resizabl
 
 import { useI18n } from "@/components/layout/locale-provider";
 import { ResizableGroup, ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
+import { usePaneStore } from "@/store/pane-store";
 import { STUDIO_OUTPUT_ID, STUDIO_PANE_EVENT, STUDIO_PREVIEW_ID, type StudioPane } from "@/lib/studio-panes";
 import { paneRestoreScript, paneRestoreStyleId, readPaneLayout, writePaneLayout } from "@/lib/pane-layout";
 import { cn } from "@/lib/utils";
@@ -43,7 +44,17 @@ const RESIZABLE_FROM = "64rem";
 export function StudioLayout({ id, controls, preview, output, className }: StudioLayoutProps) {
   const { t } = useI18n();
   const groupRef = useGroupRef();
-  const [open, setOpen] = useState<StudioPane>("controls");
+  const open = usePaneStore((state) => state.open[id]) ?? "controls";
+  const setPane = usePaneStore((state) => state.setPane);
+  const [announcement, setAnnouncement] = useState("");
+  const setOpen = useCallback(
+    (pane: StudioPane) => {
+      setPane(id, pane);
+      // Said after a change the person made, never on load.
+      setAnnouncement(t("studio.pane.shown", { pane: t(`studio.pane.${pane}`) }));
+    },
+    [id, setPane, t],
+  );
   const panelIds = output ? [`${id}-controls`, `${id}-preview`, `${id}-output`] : [`${id}-controls`, `${id}-preview`];
   const panelKey = panelIds.join(",");
 
@@ -65,7 +76,7 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
     };
     window.addEventListener(STUDIO_PANE_EVENT, show);
     return () => window.removeEventListener(STUDIO_PANE_EVENT, show);
-  }, []);
+  }, [setOpen]);
 
   // Pointer drags and keyboard resizes count as user interaction; mount and window resizes don't.
   const save = useCallback(
@@ -150,6 +161,9 @@ export function StudioLayout({ id, controls, preview, output, className }: Studi
           </>
         ) : null}
       </ResizableGroup>
+      <p className="sr-only" role="status" aria-live="polite">
+        {announcement}
+      </p>
       <nav
         aria-label={t("studio.pane.bar")}
         className="fixed inset-x-0 bottom-0 z-40 flex border-t bg-background/95 backdrop-blur lg:hidden"

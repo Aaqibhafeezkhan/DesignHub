@@ -962,6 +962,7 @@ export const fr = {
   "mode.advanced": "Avancé",
   "mode.simpleHint": "Les commandes courantes. Les commandes masquées gardent leurs valeurs.",
   "mode.advancedHint": "Toutes les commandes.",
+  "studio.pane.shown": "Volet {pane} affiché",
   "studio.pane.controls": "Commandes",
   "studio.pane.preview": "Aperçu",
   "studio.pane.output": "Sortie",

@@ -952,6 +952,7 @@ export const es = {
   "mode.advanced": "Avanzado",
   "mode.simpleHint": "Los controles habituales. Los ocultos conservan sus valores.",
   "mode.advancedHint": "Todos los controles.",
+  "studio.pane.shown": "Panel {pane} mostrado",
   "studio.pane.controls": "Controles",
   "studio.pane.preview": "Vista previa",
   "studio.pane.output": "Salida",

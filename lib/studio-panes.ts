@@ -11,3 +11,15 @@ export const STUDIO_PANE_EVENT = "designhub:studio-pane";
 export function paneOfId(id: string): StudioPane | null {
   return id === STUDIO_PREVIEW_ID ? "preview" : id === STUDIO_OUTPUT_ID ? "output" : null;
 }
+
+const PANES: readonly StudioPane[] = ["controls", "preview", "output"];
+const STUDIO_ID = /^[a-z0-9][a-z0-9-]{0,40}$/;
+
+/** Saved panes with anything that is not a studio id and a pane dropped, and a cap on how many are kept. */
+export function cleanPaneState(value: unknown, max = 50): Record<string, StudioPane> {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return {};
+  const entries = Object.entries(value).filter(
+    (entry): entry is [string, StudioPane] => STUDIO_ID.test(entry[0]) && PANES.includes(entry[1] as StudioPane),
+  );
+  return Object.fromEntries(entries.slice(0, max));
+}
