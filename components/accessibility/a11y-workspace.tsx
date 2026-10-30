@@ -18,6 +18,7 @@ import { TargetsPreview } from "@/components/accessibility/targets-preview";
 import { TextSpacingPanel } from "@/components/accessibility/text-spacing-panel";
 import { A11yTypePanel } from "@/components/accessibility/a11y-type-panel";
 import { A11yReportPanel } from "@/components/accessibility/a11y-report-panel";
+import { useIsAdvanced } from "@/components/ui/advanced";
 import { useI18n } from "@/components/layout/locale-provider";
 import { StudioLayout } from "@/components/layout/studio-layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -28,10 +29,15 @@ import { useA11yStore } from "@/store/a11y-store";
 import type { A11yTab } from "@/types/a11y";
 
 const tabs = ["contrast", "vision", "readability", "targets", "motion"] as const satisfies readonly A11yTab[];
+/** Tabs only Advanced mode shows. Their results are still in the report, which is the same in both modes. */
+const advancedTabs: readonly A11yTab[] = ["vision", "targets", "motion"];
 
 export function A11yWorkspace() {
   const { t } = useI18n();
-  const tab = useA11yStore((state) => state.tab);
+  const stored = useA11yStore((state) => state.tab);
+  const advanced = useIsAdvanced();
+  // Leaving Advanced while an Advanced tab is open returns to Contrast; the choice itself is kept.
+  const tab = !advanced && advancedTabs.includes(stored) ? "contrast" : stored;
   const setTab = useA11yStore((state) => state.setTab);
   const typography = useA11yStore((state) => state.typography);
   useGoogleFonts([useFontMeta(typography.family)]);
@@ -45,11 +51,13 @@ export function A11yWorkspace() {
       controls={
         <Tabs value={tab} onValueChange={(value) => setTab(value as A11yTab)} className="gap-4">
           <TabsList aria-label={t("a11y.tabs.label")} className="h-auto w-full flex-wrap">
-            {tabs.map((item) => (
-              <TabsTrigger key={item} value={item} className="h-auto min-w-fit px-1.5 py-1.5 text-xs">
-                {t(`a11y.tab.${item}`)}
-              </TabsTrigger>
-            ))}
+            {tabs
+              .filter((item) => advanced || !advancedTabs.includes(item))
+              .map((item) => (
+                <TabsTrigger key={item} value={item} className="h-auto min-w-fit px-1.5 py-1.5 text-xs">
+                  {t(`a11y.tab.${item}`)}
+                </TabsTrigger>
+              ))}
           </TabsList>
           <TabsContent value="contrast" className="flex flex-col gap-4">
             <A11yColorsPanel />

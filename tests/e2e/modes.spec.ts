@@ -134,3 +134,27 @@ test("the SVG Playground shows Layers and Sprite only in Advanced, and leaves th
   await mode.getByRole("radio", { name: "Simple" }).click();
   await expect(tools.getByRole("tab", { name: "Document" })).toHaveAttribute("aria-selected", "true");
 });
+
+test("the Accessibility Lab shows Contrast and Reading in Simple, the rest in Advanced, and the report is the same", async ({
+  page,
+}) => {
+  await page.goto("/accessibility");
+  await expect(page.locator("h1").first()).toBeVisible();
+  const mode = modeGroup(page);
+  const tabs = page.getByRole("tablist").first();
+  await expect(mode.getByRole("radio", { name: "Simple" })).toHaveAttribute("aria-checked", "true");
+  await expect(tabs.getByRole("tab", { name: "Contrast" })).toBeVisible();
+  await expect(tabs.getByRole("tab", { name: "Reading" })).toBeVisible();
+  for (const name of ["Vision", "Targets", "Motion"]) await expect(tabs.getByRole("tab", { name })).toHaveCount(0);
+  const report = page.locator("pre").last();
+  const simple = await report.innerText();
+
+  await mode.getByRole("radio", { name: "Advanced" }).click();
+  for (const name of ["Vision", "Targets", "Motion"]) await expect(tabs.getByRole("tab", { name })).toBeVisible();
+  expect(await report.innerText()).toBe(simple);
+
+  // Leaving Advanced from an Advanced tab goes back to Contrast.
+  await tabs.getByRole("tab", { name: "Motion" }).click();
+  await mode.getByRole("radio", { name: "Simple" }).click();
+  await expect(tabs.getByRole("tab", { name: "Contrast" })).toHaveAttribute("aria-selected", "true");
+});
