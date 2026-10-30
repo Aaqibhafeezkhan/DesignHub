@@ -31,7 +31,7 @@ A typical design session bounces between a font site, a palette generator, a con
 - **Local first** - brands, projects, palettes and settings persist in IndexedDB.
 - **No login, no backend** - there is no server to send your work to.
 - **Offline first** - a studio you have opened once with a connection works without one; icons you have opened are cached for offline use.
-- **Calm by default** - a short home page, a short command palette, folded groups and panels, one pane at a time on a phone, and a Simple mode that shows the common controls first (Advanced shows the rest).
+- **Calm by default** - a short home page, a short command palette, folded groups and panels, one pane at a time on a phone, a sidebar that collapses to icons, and a Simple mode that shows the common controls first (Advanced shows the rest).
 - **Keyboard first** - `⌘K` for everything, `G` + letter to jump, `Space` to shuffle.
 - **Production ready** - exports drop straight into CSS, SCSS, Tailwind (v3 and v4), React and Vue, plus PNG, PDF and ZIP asset packs.
 - **Dark & light** - tuned themes that follow your system preference.

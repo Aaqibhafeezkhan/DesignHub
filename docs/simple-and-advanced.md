@@ -6,17 +6,20 @@ Every studio can show its common controls first (Simple) or every control (Advan
 
 ## What each mode shows
 
-| Studio                | Simple                                                                   | Advanced adds                                                      |
-| --------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------ |
-| Typography Studio     | The font browser, pairing, scale and export                              | The OpenType features panel                                        |
-| Color Studio          | Palette, harmonies, shades and contrast                                  | Fine controls of the OKLCH editor and gradient                     |
-| Effects Lab           | The effect, its main controls and the CSS and Tailwind code              | The other settings of each effect and the three other code formats |
-| Background Studio     | The generator, density, scale, colors, size and Randomize                | Seed, rotation and the generator's own options                     |
-| Export Engine         | Brand name, variable prefix and color notation                           | Spacing and radius bases, and which sections to include            |
-| Logo Studio           | The logo, the Variants view and the export                               | The Guides panel and the Edit panel (recolor and source)           |
-| Icon Studio           | Search, the library, color, stroke width, padding and the background     | Stroke corners and the transform controls (rotate, flip, rotation) |
-| SVG Playground        | The Document and Optimize tabs                                           | The Layers and Sprite tabs                                         |
-| Brand Studio and more | Not switched: they show everything, with folded panels for the long ones | -                                                                  |
+| Studio                | Simple                                                                   | Advanced adds                                                                |
+| --------------------- | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| Typography Studio     | The font browser, pairing, scale and export                              | The OpenType features panel                                                  |
+| Color Studio          | Palette, harmonies, shades and contrast                                  | Fine controls of the OKLCH editor and gradient                               |
+| Effects Lab           | The effect, its main controls and the CSS and Tailwind code              | The other settings of each effect and the three other code formats           |
+| Background Studio     | The generator, density, scale, colors, size and Randomize                | Seed, rotation and the generator's own options                               |
+| Export Engine         | Brand name, variable prefix and color notation                           | Spacing and radius bases, and which sections to include                      |
+| Logo Studio           | The logo, the Variants view and the export                               | The Guides panel and the Edit panel (recolor and source)                     |
+| Icon Studio           | Search, the library, color, stroke width, padding and the background     | Stroke corners and the transform controls (rotate, flip, rotation)           |
+| SVG Playground        | The Document and Optimize tabs                                           | The Layers and Sprite tabs                                                   |
+| Accessibility Lab     | The Contrast and Reading tabs                                            | The Vision, Targets and Motion tabs (the report is the same in both)         |
+| Mockup Studio         | The headline, call to action, name and title                             | Email, phone, website and address                                            |
+| Social Media Studio   | The content, the logo and the theme                                      | Colors, background style, radius, padding, safe area and the ZIP pack choice |
+| Brand Studio and more | Not switched: they show everything, with folded panels for the long ones | -                                                                            |
 
 ## For contributors
 

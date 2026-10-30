@@ -43,8 +43,9 @@ Each row in the `kv` table is one Zustand store, saved under the key shown here.
 | `designhub:svg`             | SVG Playground source and optimizer options                                                                               | No                              |
 | `designhub:a11y`            | Accessibility Lab colors, text settings and targets                                                                       | No                              |
 | `designhub:mode`            | Simple or Advanced mode                                                                                                   | No                              |
+| `designhub:pane`            | The pane each studio showed last on a phone (Controls, Preview or Output)                                                 | No                              |
 | `designhub:panels`          | Which collapsible control panels you folded                                                                               | No                              |
-| `designhub:nav`             | Which sidebar groups you folded                                                                                           | No                              |
+| `designhub:nav`             | Which sidebar groups you folded, and whether the sidebar is collapsed to icons                                            | No                              |
 | `designhub:command-recents` | The last few actions you ran from the command palette (names, never content)                                              | No                              |
 
 Uploaded images for Brand DNA are never saved. They stay in memory until you leave the page.
