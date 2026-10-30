@@ -4,6 +4,7 @@ import { ClipboardCopy, FileArchive, FileCode, ImageDown, Loader2 } from "lucide
 import { useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 
+import { Advanced } from "@/components/ui/advanced";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
 import { Label } from "@/components/ui/label";
@@ -127,7 +128,9 @@ export function SocialExportPanel({ svg, ctx, template }: Props) {
           {spin("copy", <ClipboardCopy />)} Copy image
         </Button>
       </div>
-      <SocialPackPicker />
+      <Advanced>
+        <SocialPackPicker />
+      </Advanced>
       <Button variant="outline" onClick={downloadAll} disabled={packProgress !== null || packCount === 0}>
         {packProgress !== null ? <Loader2 className="animate-spin" /> : <FileArchive />}
         {packProgress !== null

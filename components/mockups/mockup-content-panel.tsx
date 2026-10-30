@@ -4,6 +4,7 @@ import { Moon, Sun } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useIsAdvanced } from "@/components/ui/advanced";
 import { Panel } from "@/components/ui/panel";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { MockupContent } from "@/lib/mockups/types";
@@ -21,7 +22,11 @@ const fields: { key: keyof MockupContent; label: string }[] = [
   { key: "address", label: "Address" },
 ];
 
+/** Contact details are Advanced: the headline, the call to action and the person are what most sessions edit. */
+const advancedFields: (keyof MockupContent)[] = ["email", "phone", "website", "address"];
+
 export function MockupContentPanel() {
+  const advanced = useIsAdvanced();
   const mode = useMockupStore((state) => state.mode);
   const setMode = useMockupStore((state) => state.setMode);
   const content = useMockupStore((state) => state.content);
@@ -46,23 +51,25 @@ export function MockupContentPanel() {
           </ToggleGroupItem>
         </ToggleGroup>
       </div>
-      {fields.map((field) => (
-        <div key={field.key} className="flex flex-col gap-1.5">
-          <Label htmlFor={`mockup-${field.key}`}>{field.label}</Label>
-          <Input
-            id={`mockup-${field.key}`}
-            value={content[field.key]}
-            maxLength={80}
-            placeholder={
-              field.key === "headline" || field.key === "email" || field.key === "website"
-                ? "From your brand"
-                : undefined
-            }
-            onChange={(event) => setContent({ [field.key]: event.target.value })}
-            className="h-8 text-sm"
-          />
-        </div>
-      ))}
+      {fields
+        .filter((field) => advanced || !advancedFields.includes(field.key))
+        .map((field) => (
+          <div key={field.key} className="flex flex-col gap-1.5">
+            <Label htmlFor={`mockup-${field.key}`}>{field.label}</Label>
+            <Input
+              id={`mockup-${field.key}`}
+              value={content[field.key]}
+              maxLength={80}
+              placeholder={
+                field.key === "headline" || field.key === "email" || field.key === "website"
+                  ? "From your brand"
+                  : undefined
+              }
+              onChange={(event) => setContent({ [field.key]: event.target.value })}
+              className="h-8 text-sm"
+            />
+          </div>
+        ))}
     </Panel>
   );
 }

@@ -158,3 +158,31 @@ test("the Accessibility Lab shows Contrast and Reading in Simple, the rest in Ad
   await mode.getByRole("radio", { name: "Simple" }).click();
   await expect(tabs.getByRole("tab", { name: "Contrast" })).toHaveAttribute("aria-selected", "true");
 });
+
+test("the Mockup and Social studios keep content in Simple and put contact details and design overrides in Advanced", async ({
+  page,
+}) => {
+  await page.goto("/mockups");
+  await expect(page.locator("h1").first()).toBeVisible();
+  const mode = modeGroup(page);
+  await expect(page.getByLabel("Headline")).toBeVisible();
+  for (const label of ["Email", "Phone", "Website", "Address"]) await expect(page.getByLabel(label)).toHaveCount(0);
+  await mode.getByRole("radio", { name: "Advanced" }).click();
+  await page.getByLabel("Website").fill("example.test");
+  await mode.getByRole("radio", { name: "Simple" }).click();
+  await expect(page.getByLabel("Website")).toHaveCount(0);
+  await mode.getByRole("radio", { name: "Advanced" }).click();
+  await expect(page.getByLabel("Website")).toHaveValue("example.test");
+
+  await page.goto("/social");
+  await expect(page.locator("h1").first()).toBeVisible();
+  const social = modeGroup(page);
+  // The mode is one choice for every studio, and the Mockup part of this test left it on Advanced.
+  await social.getByRole("radio", { name: "Simple" }).click();
+  await expect(page.getByLabel("Project name")).toBeVisible();
+  await expect(page.getByLabel("Show safe area")).toHaveCount(0);
+  await expect(page.getByRole("slider", { name: "Padding" })).toHaveCount(0);
+  await social.getByRole("radio", { name: "Advanced" }).click();
+  await expect(page.getByLabel("Show safe area")).toBeVisible();
+  await expect(page.getByRole("slider", { name: "Padding" })).toBeVisible();
+});

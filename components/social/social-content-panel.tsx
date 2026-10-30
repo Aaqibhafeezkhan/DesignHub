@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { SliderField } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Advanced } from "@/components/ui/advanced";
 import { Panel } from "@/components/ui/panel";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
@@ -137,26 +138,28 @@ export function SocialContentPanel({ ctx }: { ctx: SocialContext }) {
       </div>
 
       <div className="grid gap-4 border-t pt-4 sm:grid-cols-2">
-        {colorField("primary", "Primary color", ctx.surface.primary)}
-        {colorField("secondary", "Secondary color", ctx.surface.secondary)}
-        <div className="flex flex-col gap-1.5">
-          <Label>Background style</Label>
-          <Select
-            value={design.background}
-            onValueChange={(value) => setDesign({ background: value as SocialBackground })}
-          >
-            <SelectTrigger size="sm" aria-label="Background style">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {backgrounds.map((item) => (
-                <SelectItem key={item.value} value={item.value}>
-                  {item.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <Advanced>
+          {colorField("primary", "Primary color", ctx.surface.primary)}
+          {colorField("secondary", "Secondary color", ctx.surface.secondary)}
+          <div className="flex flex-col gap-1.5">
+            <Label>Background style</Label>
+            <Select
+              value={design.background}
+              onValueChange={(value) => setDesign({ background: value as SocialBackground })}
+            >
+              <SelectTrigger size="sm" aria-label="Background style">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {backgrounds.map((item) => (
+                  <SelectItem key={item.value} value={item.value}>
+                    {item.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </Advanced>
         <div className="flex flex-col gap-1.5">
           <Label>Theme</Label>
           <ToggleGroup
@@ -174,27 +177,29 @@ export function SocialContentPanel({ ctx }: { ctx: SocialContext }) {
             </ToggleGroupItem>
           </ToggleGroup>
         </div>
-        <SliderField
-          label="Border radius"
-          value={ctx.brand.radius}
-          min={0}
-          max={40}
-          onChange={(radius) => setDesign({ radius })}
-          format={(value) => `${value}px${design.radius === null ? " (brand)" : ""}`}
-        />
-        <SliderField
-          label="Padding"
-          value={design.padding}
-          min={40}
-          max={140}
-          step={4}
-          onChange={(padding) => setDesign({ padding })}
-          format={(value) => `${value}px`}
-        />
-        <div className="flex items-center justify-between gap-3 sm:col-span-2">
-          <Label htmlFor="social-safe-area">Show safe area</Label>
-          <Switch id="social-safe-area" checked={safeArea} onCheckedChange={setSafeArea} />
-        </div>
+        <Advanced>
+          <SliderField
+            label="Border radius"
+            value={ctx.brand.radius}
+            min={0}
+            max={40}
+            onChange={(radius) => setDesign({ radius })}
+            format={(value) => `${value}px${design.radius === null ? " (brand)" : ""}`}
+          />
+          <SliderField
+            label="Padding"
+            value={design.padding}
+            min={40}
+            max={140}
+            step={4}
+            onChange={(padding) => setDesign({ padding })}
+            format={(value) => `${value}px`}
+          />
+          <div className="flex items-center justify-between gap-3 sm:col-span-2">
+            <Label htmlFor="social-safe-area">Show safe area</Label>
+            <Switch id="social-safe-area" checked={safeArea} onCheckedChange={setSafeArea} />
+          </div>
+        </Advanced>
       </div>
     </Panel>
   );
