@@ -32,6 +32,10 @@ jobs:
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm build
       - run: pnpm test:e2e
+      - name: Tests that needed a retry
+        if: always()
+        run: |
+          if [ -f test-results/report.json ]; then node scripts/flaky-tests.mjs test-results/report.json >> "$GITHUB_STEP_SUMMARY"; fi
       - uses: actions/upload-artifact@v7
         if: failure()
         with:

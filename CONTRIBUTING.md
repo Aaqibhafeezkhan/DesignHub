@@ -65,6 +65,8 @@ pnpm build
 pnpm test:e2e
 ```
 
+A test that fails and then passes on its retry (CI retries once) still passes the job, but the job summary lists it under "End-to-end tests that needed a retry" with a warning on the file, and it is a test to fix. To find a flaky test, run `pnpm exec playwright test --repeat-each=10 --workers=8`: load makes real races show up. Wait for what the test needs (an element, a URL, a stored value), never for a fixed time, and give a first visit to a studio, which downloads its code, a generous timeout.
+
 The config starts `pnpm start` on port 3100 (set `E2E_PORT` to change it) and reuses a server already running there. Failed runs keep a trace in `test-results/` (gitignored); open it with `pnpm exec playwright show-trace <trace.zip>`. Vitest only reads `lib/**/*.test.ts`, so the e2e specs never run under `pnpm test`.
 
 ### Screenshots

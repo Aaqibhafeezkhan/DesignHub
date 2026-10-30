@@ -19,7 +19,8 @@ test("the palette opens short, remembers a choice and shows the rest as you type
 
   // Choose a studio: it is the first recent the next time.
   await palette.getByRole("option", { name: /^Color Studio/ }).click();
-  await expect(page).toHaveURL(/\/colors$/);
+  // A first visit to a studio fetches its code, which a loaded machine takes a while over.
+  await expect(page).toHaveURL(/\/colors$/, { timeout: 20_000 });
   await page.keyboard.press("ControlOrMeta+k");
   await expect(palette.getByText("Recent", { exact: true })).toBeVisible();
   await expect(palette.getByRole("option").first()).toContainText("Color Studio");
