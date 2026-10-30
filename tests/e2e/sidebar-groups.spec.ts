@@ -32,3 +32,27 @@ test("sidebar groups fold with the keyboard, remember it, and the current studio
   await page.keyboard.press("e");
   await expect(page).toHaveURL(/\/export$/);
 });
+
+test("the sidebar collapses to icons, keeps every studio reachable by name, and remembers it", async ({ page }) => {
+  await page.goto("/colors");
+  const nav = page.getByRole("navigation", { name: "Studios" });
+  const wide = await nav.evaluate((node) => node.getBoundingClientRect().width);
+  expect(wide).toBeGreaterThan(200);
+
+  await nav.getByRole("button", { name: "Collapse sidebar" }).click();
+  await expect(nav.getByRole("button", { name: "Expand sidebar" })).toHaveAttribute("aria-pressed", "true");
+  expect(await nav.evaluate((node) => node.getBoundingClientRect().width)).toBeLessThan(80);
+  // No text is drawn, but every studio is a link with its name, and the current one is marked.
+  await expect(nav.getByRole("link", { name: "Typography" })).toBeVisible();
+  await expect(nav.getByRole("link", { name: /^Color/ })).toHaveAttribute("aria-current", "page");
+  await nav.getByRole("link", { name: "Typography" }).focus();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/typography$/);
+
+  // It survives a reload, and the shortcut opens it again.
+  await page.reload();
+  expect(await nav.evaluate((node) => node.getBoundingClientRect().width)).toBeLessThan(80);
+  await page.keyboard.press("ControlOrMeta+b");
+  await expect(nav.getByRole("button", { name: "Collapse sidebar" })).toBeVisible();
+  expect(await nav.evaluate((node) => node.getBoundingClientRect().width)).toBeGreaterThan(200);
+});

@@ -66,6 +66,8 @@ export const hi = {
   "studio.export.short": "एक्सपोर्ट",
   "studio.export.description": "अपने चुनावों को CSS, SCSS, Tailwind, React और JSON के डिज़ाइन टोकन में बदलें।",
 
+  "nav.collapse": "साइडबार छोटा करें",
+  "nav.expand": "साइडबार बड़ा करें",
   "nav.home": "होम",
   "nav.group.Brand": "ब्रांड",
   "nav.group.Design": "डिज़ाइन",

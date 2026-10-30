@@ -70,6 +70,8 @@ export const en = {
   "studio.export.description": "Turn your choices into design tokens for CSS, SCSS, Tailwind, React and JSON.",
 
   // Navigation and header
+  "nav.collapse": "Collapse sidebar",
+  "nav.expand": "Expand sidebar",
   "nav.home": "Home",
   "nav.group.Brand": "Brand",
   "nav.group.Design": "Design",

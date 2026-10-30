@@ -68,6 +68,8 @@ export const fr = {
   "studio.export.short": "Export",
   "studio.export.description": "Transformez vos choix en tokens de design pour CSS, SCSS, Tailwind, React et JSON.",
 
+  "nav.collapse": "Réduire la barre latérale",
+  "nav.expand": "Développer la barre latérale",
   "nav.home": "Accueil",
   "nav.group.Brand": "Marque",
   "nav.group.Design": "Design",

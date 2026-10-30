@@ -67,6 +67,8 @@ export const es = {
   "studio.export.short": "Exportación",
   "studio.export.description": "Convierte tus decisiones en tokens de diseño para CSS, SCSS, Tailwind, React y JSON.",
 
+  "nav.collapse": "Contraer la barra lateral",
+  "nav.expand": "Expandir la barra lateral",
   "nav.home": "Inicio",
   "nav.group.Brand": "Marca",
   "nav.group.Design": "Diseño",
